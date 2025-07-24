@@ -84,7 +84,7 @@ export const banners = [
     }
   ];
 
-  export   const defaultWebinars = [
+  export const defaultWebinars = [
     {
       id: 1,
       title: "Advanced Physics Problem Solving",
@@ -151,5 +151,108 @@ export const banners = [
       profileLink: "/instructors/meera-patel",
       status: "upcoming",
       topics: ["Named Reactions", "Mechanisms", "Synthesis"]
+    }
+  ];
+
+  export const defaultClasses = [
+    {
+      id: 1,
+      title: "JEE Advanced Physics",
+      instructor: "Dr. Vikram Singh",
+      batch: "Morning Batch",
+      schedule: "Mon, Wed, Fri - 8:00 AM",
+      duration: "12 months",
+      students: "45",
+      maxStudents: "50",
+      price: "15999",
+      originalPrice: "19999",
+      image: "/images/classes/class-1.jpg",
+      description: "Intensive physics preparation for JEE Advanced with problem-solving focus.",
+      enrollLink: "/classes/jee-physics-advanced",
+      profileLink: "/instructors/vikram-singh",
+      level: "Advanced",
+      subjects: ["Mechanics", "Electrodynamics", "Modern Physics"],
+      nextClass: "Tomorrow 8:00 AM",
+      progress: 65
+    },
+    {
+      id: 2,
+      title: "NEET Biology Foundation",
+      instructor: "Dr. Anjali Sharma",
+      batch: "Evening Batch",
+      schedule: "Tue, Thu, Sat - 6:00 PM",
+      duration: "10 months",
+      students: "38",
+      maxStudents: "45",
+      price: "12999",
+      originalPrice: "16999",
+      image: "/images/classes/class-2.jpg",
+      description: "Comprehensive biology foundation for NEET with concept clarity.",
+      enrollLink: "/classes/neet-biology-foundation",
+      profileLink: "/instructors/anjali-sharma",
+      level: "Foundation",
+      subjects: ["Botany", "Zoology", "Human Physiology"],
+      nextClass: "Today 6:00 PM",
+      progress: 40
+    },
+    {
+      id: 3,
+      title: "JEE Main Mathematics",
+      instructor: "Prof. Rahul Gupta",
+      batch: "Afternoon Batch",
+      schedule: "Daily - 2:00 PM",
+      duration: "8 months",
+      students: "42",
+      maxStudents: "50",
+      price: "13999",
+      originalPrice: "17999",
+      image: "/images/classes/class-3.jpg",
+      description: "Complete mathematics preparation for JEE Main with regular practice.",
+      enrollLink: "/classes/jee-math-main",
+      profileLink: "/instructors/rahul-gupta",
+      level: "Intermediate",
+      subjects: ["Algebra", "Calculus", "Coordinate Geometry"],
+      nextClass: "Today 2:00 PM",
+      progress: 25
+    },
+    {
+      id: 4,
+      title: "Chemistry Crash Course",
+      instructor: "Dr. Pooja Mehta",
+      batch: "Weekend Batch",
+      schedule: "Sat, Sun - 10:00 AM",
+      duration: "4 months",
+      students: "35",
+      maxStudents: "40",
+      price: "8999",
+      originalPrice: "11999",
+      image: "/images/classes/class-4.jpg",
+      description: "Intensive chemistry revision course for quick preparation.",
+      enrollLink: "/classes/chemistry-crash",
+      profileLink: "/instructors/pooja-mehta",
+      level: "Revision",
+      subjects: ["Organic", "Inorganic", "Physical"],
+      nextClass: "Saturday 10:00 AM",
+      progress: 75
+    },
+    {
+      id: 5,
+      title: "Foundation Science Class 11",
+      instructor: "Prof. Amit Kumar",
+      batch: "Morning Batch",
+      schedule: "Daily - 9:00 AM",
+      duration: "12 months",
+      students: "48",
+      maxStudents: "50",
+      price: "18999",
+      originalPrice: "22999",
+      image: "/images/classes/class-5.jpg",
+      description: "Complete foundation course for Class 11 science students.",
+      enrollLink: "/classes/foundation-class11",
+      profileLink: "/instructors/amit-kumar",
+      level: "Foundation",
+      subjects: ["Physics", "Chemistry", "Mathematics"],
+      nextClass: "Tomorrow 9:00 AM",
+      progress: 30
     }
   ];
