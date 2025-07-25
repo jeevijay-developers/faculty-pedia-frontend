@@ -41,6 +41,8 @@ const Banner = () => {
                 width={1200}
                 className='object-cover w-full h-full'
               />
+              {/* Dark overlay for better text visibility */}
+              <div className="absolute inset-0 bg-black/40 z-5 pointer-events-none" />
                       
               {/* Content Overlay for each slide */}
               <div className="absolute inset-0 flex items-center justify-center px-6 md:px-12 z-10">

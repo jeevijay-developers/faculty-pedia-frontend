@@ -35,7 +35,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Menu - Middle */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {menuItems.map((item) => (
                 <Link
@@ -51,7 +51,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Auth Buttons - Right */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <div className="ml-4 flex items-center space-x-4">
               <Link
                 href="/login"
@@ -69,7 +69,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <button
               onClick={toggleMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-200"
@@ -115,7 +115,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile menu */}
-      <div className={`md:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+      <div className={`lg:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 border-t border-gray-200">
           {menuItems.map((item) => (
             <Link

@@ -1,21 +1,21 @@
 export const banners = [
     {
-      image: "/images/Banner/1.jpg",
+      image: "/images/Banner/1.png",
       title: "Master IIT JEE with Expert Guidance",
       subtitle: "Comprehensive preparation with proven methodologies and experienced faculty",
     },
     {
-      image: "/images/Banner/banner-1.jpg", 
+      image: "/images/Banner/2.png", 
       title: "NEET Success Starts Here",
       subtitle: "Complete medical entrance exam preparation with focused study plans",
     },
     {
-      image: "/images/Banner/1.jpg",
+      image: "/images/Banner/3.png",
       title: "Online Learning Excellence", 
       subtitle: "Interactive courses and live webinars for comprehensive learning",
     },
     {
-      image: "/images/Banner/banner-1.jpg",
+      image: "/images/Banner/4.png",
       title: "Your Academic Success Partner",
       subtitle: "Personalized learning experiences designed for your success",
     }
@@ -254,5 +254,83 @@ export const banners = [
       subjects: ["Physics", "Chemistry", "Mathematics"],
       nextClass: "Tomorrow 9:00 AM",
       progress: 30
+    }
+  ];
+
+  export const defaultExams = [
+    {
+      id: 1,
+      title: "JEE Main Mock Test - 2025",
+      instructor: "Dr. Rajesh Kumar",
+      duration: "3 hours",
+      price: "199",
+      originalPrice: "299",
+      image: "/images/exams/exam-1.jpg",
+      description: "Complete JEE Main mock test with detailed analysis and solutions for comprehensive preparation.",
+      testLink: "/exams/jee-main-mock",
+      detailLink: "/exams/jee-main-mock/details",
+      profileLink: "/instructors/rajesh-kumar",
+      questions: "90 Questions",
+      difficulty: "Advanced"
+    },
+    {
+      id: 2,
+      title: "NEET Biology Chapter Test",
+      instructor: "Dr. Priya Singh",
+      duration: "2 hours",
+      price: "149",
+      originalPrice: "199",
+      image: "/images/exams/exam-2.jpg",
+      description: "Comprehensive chapter-wise biology test covering all important NEET topics with instant results.",
+      testLink: "/exams/neet-biology-test",
+      detailLink: "/exams/neet-biology-test/details",
+      profileLink: "/instructors/priya-singh",
+      questions: "60 Questions",
+      difficulty: "Intermediate"
+    },
+    {
+      id: 3,
+      title: "Physics Problem Solving Test",
+      instructor: "Prof. Amit Sharma",
+      duration: "2.5 hours",
+      price: "179",
+      originalPrice: "249",
+      image: "/images/exams/exam-3.jpg",
+      description: "Advanced physics problem-solving test focusing on numerical and conceptual questions.",
+      testLink: "/exams/physics-problem-test",
+      detailLink: "/exams/physics-problem-test/details",
+      profileLink: "/instructors/amit-sharma",
+      questions: "75 Questions",
+      difficulty: "Advanced"
+    },
+    {
+      id: 4,
+      title: "Mathematics Speed Test",
+      instructor: "Ms. Meera Patel",
+      duration: "1.5 hours",
+      price: "99",
+      originalPrice: "149",
+      image: "/images/exams/exam-4.jpg",
+      description: "Fast-paced mathematics test to improve speed and accuracy for competitive exams.",
+      testLink: "/exams/math-speed-test",
+      detailLink: "/exams/math-speed-test/details",
+      profileLink: "/instructors/meera-patel",
+      questions: "50 Questions",
+      difficulty: "Intermediate"
+    },
+    {
+      id: 5,
+      title: "Chemistry Complete Assessment",
+      instructor: "Dr. Vikram Gupta",
+      duration: "3 hours",
+      price: "229",
+      originalPrice: "299",
+      image: "/images/exams/exam-5.jpg",
+      description: "Comprehensive chemistry assessment covering organic, inorganic, and physical chemistry.",
+      testLink: "/exams/chemistry-assessment",
+      detailLink: "/exams/chemistry-assessment/details",
+      profileLink: "/instructors/vikram-gupta",
+      questions: "90 Questions",
+      difficulty: "Advanced"
     }
   ];
