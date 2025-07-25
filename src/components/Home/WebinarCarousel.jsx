@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
@@ -16,7 +17,7 @@ const WebinarCarousel = ({
   viewMoreLink = "/webinars",
   webinars = [],
   autoplay = true,
-  slidesPerView = 3,
+  slidesPerView = 2,
   spaceBetween = 24
 }) => {
   const [swiperRef, setSwiperRef] = useState(null);
@@ -93,9 +94,16 @@ const WebinarCarousel = ({
               },
             }}
           >
-            {webinarsToRender.map((webinar) => (
+            {webinarsToRender.map((webinar, idx) => (
               <SwiperSlide key={webinar.id}>
-                <WebinarCard webinar={webinar} />
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.5, delay: idx * 0.08 }}
+                >
+                  <WebinarCard webinar={webinar} />
+                </motion.div>
               </SwiperSlide>
             ))}
           </Swiper>

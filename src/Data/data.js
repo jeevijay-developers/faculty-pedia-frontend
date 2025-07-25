@@ -334,3 +334,42 @@ export const banners = [
       difficulty: "Advanced"
     }
   ];
+
+export const defaultPosts = [
+  {
+    id: 1,
+    title: 'How to Prepare for JEE: Tips from Our Top Instructors',
+    image: '/images/courses/course-1.jpg',
+    excerpt: 'Get expert advice and actionable strategies to boost your JEE preparation and maximize your score.',
+    category: 'JEE',
+    readTime: '6 min read',
+    slug: '/blog/jee-preparation-tips',
+  },
+  {
+    id: 2,
+    title: 'Why Join a Live Webinar? Benefits for NEET Aspirants',
+    image: '/images/webinars/webinar-2.jpg',
+    excerpt: 'Discover how live webinars can help you clarify concepts, interact with experts, and stay motivated for NEET.',
+    category: 'Webinar',
+    readTime: '5 min read',
+    slug: '/blog/benefits-of-live-webinars-neet',
+  },
+  {
+    id: 3,
+    title: 'Choosing the Right Foundation Class for Class 11 Science',
+    image: '/images/classes/class-5.jpg',
+    excerpt: 'A guide to selecting the best foundation class for your science stream, including what to look for in a program.',
+    category: 'Classes',
+    readTime: '7 min read',
+    slug: '/blog/choosing-foundation-class-11',
+  },
+  {
+    id: 4,
+    title: 'Mock Tests: The Secret to Cracking Competitive Exams',
+    image: '/images/exams/exam-1.jpg',
+    excerpt: 'Learn why regular mock tests are essential for exam success and how to make the most of them.',
+    category: 'Exams',
+    readTime: '4 min read',
+    slug: '/blog/importance-of-mock-tests',
+  },
+];

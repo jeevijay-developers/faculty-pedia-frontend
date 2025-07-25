@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
@@ -102,9 +103,16 @@ const ClassesCarousel = ({
               },
             }}
           >
-            {classesToRender.map((classItem) => (
+            {classesToRender.map((classItem, idx) => (
               <SwiperSlide key={classItem.id}>
-                <ClassCard classItem={classItem} />
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.5, delay: idx * 0.08 }}
+                >
+                  <ClassCard classItem={classItem} />
+                </motion.div>
               </SwiperSlide>
             ))}
           </Swiper>

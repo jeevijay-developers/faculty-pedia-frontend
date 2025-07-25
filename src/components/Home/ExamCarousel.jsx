@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
@@ -101,9 +102,16 @@ const ExamCarousel = ({
               },
             }}
           >
-            {examsToRender.map((exam) => (
+            {examsToRender.map((exam, idx) => (
               <SwiperSlide key={exam.id}>
-                <ExamCard exam={exam} />
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.5, delay: idx * 0.08 }}
+                >
+                  <ExamCard exam={exam} />
+                </motion.div>
               </SwiperSlide>
             ))}
           </Swiper>

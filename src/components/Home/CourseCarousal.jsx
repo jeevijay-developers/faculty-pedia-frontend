@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
@@ -103,9 +104,16 @@ const CommonCarousel = ({
               },
             }}
           >
-            {coursesToRender.map((course) => (
+            {coursesToRender.map((course, idx) => (
               <SwiperSlide key={course.id}>
-                <CourseCard course={course} />
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.5, delay: idx * 0.08 }}
+                >
+                  <CourseCard course={course} />
+                </motion.div>
               </SwiperSlide>
             ))}
           </Swiper>

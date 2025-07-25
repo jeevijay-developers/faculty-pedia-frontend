@@ -4,6 +4,8 @@ import WebinarCarousel from "../components/Home/WebinarCarousel";
 import ClassesCarousel from "../components/Home/ClassesCarousel";
 import ExamCarousel from "@/components/Home/ExamCarousel";
 import MobileAppAdSection from "@/components/Home/MobileAppAdSection";
+import TrustedBy from "@/components/Home/TrustedBy";
+import OurPosts from "@/components/Home/OurPosts";
 
 export default function Home() {
 
@@ -23,6 +25,10 @@ export default function Home() {
       <ExamCarousel />
 
       <MobileAppAdSection />
+
+      <TrustedBy />
+
+      <OurPosts />
 
     </div>
   );

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { RiAppleFill, RiAndroidFill, RiDownload2Line } from 'react-icons/ri';
+import { motion } from 'framer-motion';
 
 const MobileAppAdSection = () => {
   return (
@@ -10,7 +11,13 @@ const MobileAppAdSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left column - App Description */}
-          <div className="order-2 lg:order-1 space-y-6">
+          <motion.div
+            className="order-2 lg:order-1 space-y-6"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7 }}
+          >
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 leading-tight">
               Faculty Pedia connects students and educators in one powerful platform
             </h2>
@@ -51,10 +58,16 @@ const MobileAppAdSection = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
           
           {/* Right column - App Image */}
-          <div className="order-1 lg:order-2 flex justify-center items-center relative">
+          <motion.div
+            className="order-1 lg:order-2 flex justify-center items-center relative"
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7 }}
+          >
             <div className="w-full max-w-md">
               <div className="relative h-[26rem] w-full overflow-hidden">
                 <Image 
@@ -66,7 +79,7 @@ const MobileAppAdSection = () => {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
