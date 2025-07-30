@@ -129,7 +129,7 @@ const PostCard = ({ post }) => {
       <div className="p-5 flex-grow flex flex-col">
         {/* Title */}
         <Link href={post.slug}>
-          <h3 className="text-xl font-bold text-gray-800 mb-3 hover:text-blue-600 transition-colors line-clamp-2">
+          <h3 className="text-xl font-bold text-gray-800 mb-3 transition-colors line-clamp-2">
             {post.title}
           </h3>
         </Link>

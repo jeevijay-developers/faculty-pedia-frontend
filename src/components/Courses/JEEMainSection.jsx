@@ -6,16 +6,16 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
 import Image from 'next/image';
-import { defaultClasses } from '@/Data/classesdata';
+import { jeeMainCourseData } from '@/Data/jeeMainCourseData';
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
-import { FiArrowRight, FiCalendar, FiUser, FiClock } from 'react-icons/fi';
+import { FiUser, FiClock, FiCalendar, FiArrowRight } from 'react-icons/fi';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-const CommonCarousel = ({
-    title = "Online Classes",
+const JEEMainSection = ({
+    title = "JEE Main Courses",
     viewMoreLink = "/courses",
     courses = [],
     autoplay = true,
@@ -30,15 +30,15 @@ const CommonCarousel = ({
         if (swiperRef) swiperRef.slideNext();
     };
 
-    // Always use defaultClasses if no courses are passed
-    const coursesToRender = courses.length > 0 ? courses : defaultClasses;
+    const coursesToRender = courses.length > 0 ? courses : jeeMainCourseData;
+    // console.log('Courses to render:', coursesToRender);
 
     return (
         <section className="py-16 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="flex flex-row justify-between items-center gap-2 mb-8">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-ellipsis truncate">{title}</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800  truncate">{title}</h2>
                     <Link
                         href={viewMoreLink}
                         className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
@@ -50,11 +50,11 @@ const CommonCarousel = ({
 
                 {/* Carousel Container */}
 
-                <div className="relative px-8 lg:px-0">
+                <div className="relative">
                     {/* Navigation Buttons */}
                     <button
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 lg:-translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 lg:-translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
                         aria-label="Previous slide"
                         style={{ left: '-1rem' }}
                     >
@@ -63,7 +63,7 @@ const CommonCarousel = ({
 
                     <button
                         onClick={nextSlide}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 lg:translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
                         aria-label="Next slide"
                         style={{ right: '-1rem' }}
                     >
@@ -129,8 +129,8 @@ const CommonCarousel = ({
 const CourseCard = ({ course }) => {
     return (
         <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-            {/* Course Image */}
-            <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
+            {/* Course Image at the very top */}
+            <div className="relative w-full h-40 bg-gray-200 overflow-hidden flex-shrink-0">
                 {course.image ? (
                     <Image
                         src={course.image}
@@ -156,11 +156,21 @@ const CourseCard = ({ course }) => {
 
             {/* Course Content */}
             <div className="p-5 flex flex-col flex-grow">
+
                 {/* Course Title */}
-                <h3 className="text-lg font-bold text-gray-800 mb-3 leading-tight overflow-hidden">
+                <h3 className="text-lg font-bold text-gray-800 mb-3 leading-tight text-ellipsis truncate overflow-hidden">
                     {course.title}
                 </h3>
-                <div className="flex items-center mb-3 text-gray-600 ">
+
+                {/* Description */}
+                <div className="mb-4 flex-grow">
+                    <p className="text-sm text-gray-600 line-clamp-2 text-ellipsis overflow-hidden min-h-[2.6em] leading-tight">
+                        {course.description}
+                    </p>
+                </div>
+
+                {/* Instructor */}
+                <div className="flex items-center mb-3 text-gray-600">
                     <FiUser className="mr-2 text-blue-600" size={16} />
                     <p className="text-sm">{course.instructor}</p>
                 </div>
@@ -169,19 +179,14 @@ const CourseCard = ({ course }) => {
                 <div className="flex flex-col space-y-2 mb-4 text-gray-600">
                     <div className="flex items-center">
                         <FiClock className="mr-2 text-blue-600" size={16} />
-                        <span className="text-sm">{course.hours}</span>
+                        <span className="text-sm">{course.duration}</span>
                     </div>
-
+                    <div className="flex items-center">
+                        <FiCalendar className="mr-2 text-blue-600" size={16} />
+                        <span className="text-sm">Starts {course.startDate ? course.startDate : '-'}</span>
+                    </div>
                 </div>
 
-
-
-                {/* Description */}
-                <div className="mb-4 flex-grow">
-                    <p className="text-sm text-gray-600 line-clamp-2 text-ellipsis overflow-hidden min-h-[2.6em] leading-tight">
-                        {course.description}
-                    </p>
-                </div>
 
                 {/* Price */}
                 <div className="mb-4">
@@ -195,12 +200,12 @@ const CourseCard = ({ course }) => {
 
                 {/* Actions */}
                 <div className="space-y-2 mt-auto">
-                    {/* <Link
+                    <Link
                         href={course.enrollLink}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
                     >
                         Enroll Now
-                    </Link> */}
+                    </Link>
                     <div className="flex space-x-2">
                         <Link
                             href={course.enrollLink}
@@ -209,10 +214,10 @@ const CourseCard = ({ course }) => {
                             View Details
                         </Link>
                         <Link
-                            href={course.enrollLink}
-                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+                            href={course.profileLink}
+                            className="flex-1 border border-blue-300 text-blue-600 hover:bg-blue-50 py-2 px-3 rounded-md text-xs font-medium transition-colors duration-200 text-center"
                         >
-                            Enroll Now
+                            View Profile
                         </Link>
                     </div>
                 </div>
@@ -221,4 +226,4 @@ const CourseCard = ({ course }) => {
     );
 };
 
-export default CommonCarousel;
+export default JEEMainSection;
