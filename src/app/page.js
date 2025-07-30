@@ -12,24 +12,13 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Banner />
-
-      {/* Course Carousel - Vertical card layout */}
-      <CommonCarousel />
-
-      {/* Webinar Carousel - Horizontal card layout */}
-      <WebinarCarousel />
-
-      {/* Classes Carousel - Compact card layout with progress bars */}
+      <CommonCarousel /> 
+      <WebinarCarousel /> 
       <ClassesCarousel />
-
       <ExamCarousel />
-
       <MobileAppAdSection />
-
       <TrustedBy />
-
       <OurPosts />
-
     </div>
   );
 }
