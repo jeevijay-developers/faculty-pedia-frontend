@@ -6,7 +6,7 @@ import { Navigation } from 'swiper/modules';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowRight, FiCalendar, FiUser, FiClock } from 'react-icons/fi';
-import { neetExamData } from '@/Data/exam.data';
+import { offlineExamData } from '@/Data/exam.data';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 // Import Swiper styles
@@ -14,7 +14,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const NEETExamSection = () => {
+const OfflineExamSection = () => {
   const [swiperRef, setSwiperRef] = useState(null);
   
   const prevSlide = () => {
@@ -30,9 +30,9 @@ const NEETExamSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">NEET Exams</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Offline Exams</h2>
           <Link 
-            href="/exams/neet"
+            href="/exams/offline"
             className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
           >
             <span className="mr-2">View all</span>
@@ -65,7 +65,7 @@ const NEETExamSection = () => {
             onSwiper={setSwiperRef}
             spaceBetween={24}
             slidesPerView={1}
-            loop={neetExamData.length > 4}
+            loop={offlineExamData.length > 4}
             className="exam-carousel pb-12"
             breakpoints={{
               640: {
@@ -82,7 +82,7 @@ const NEETExamSection = () => {
               },
             }}
           >
-            {neetExamData.map((exam) => (
+            {offlineExamData.map((exam) => (
               <SwiperSlide key={exam.id}>
                 <ExamCard exam={exam} />
               </SwiperSlide>
@@ -166,4 +166,4 @@ const ExamCard = ({ exam }) => {
   );
 };
 
-export default NEETExamSection;
+export default OfflineExamSection;
