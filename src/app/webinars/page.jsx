@@ -1,4 +1,4 @@
-import Banner from '@/components/Classes/Banner'
+import Banner from '@/components/Banner'
 import Footer from '@/components/Footer'
 import LiveWebinarSection from '@/components/Webinars/LiveWebinarSection'
 import OneToOneWebinar from '@/components/Webinars/OneToOneWebinar'

@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { defaultClasses } from '@/Data/class.data';
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
-import { FiUser, FiClock } from 'react-icons/fi';
+import { FiUser, FiClock, FiArrowRight } from 'react-icons/fi';
 
 // Import Swiper styles
 import 'swiper/css';
