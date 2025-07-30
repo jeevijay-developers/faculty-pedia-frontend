@@ -39,14 +39,14 @@ const ExamCarousel = ({
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800">{title}</h2>
           <Link 
             href={viewMoreLink}
-            className="bg-white text-gray-700 px-6 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium"
+            className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
           >
             View More
           </Link>
         </div>
 
         {/* Carousel Container */}
-        <div className="relative px-8 lg:px-0">
+        <div className="relative">
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}

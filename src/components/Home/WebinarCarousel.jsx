@@ -11,9 +11,10 @@ import { defaultWebinars } from '@/Data/data';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 
-const WebinarCarousel = ({ 
-  title = "Featured Webinars", 
+const WebinarCarousel = ({
+  title = "Featured Webinars",
   viewMoreLink = "/webinars",
   webinars = [],
   autoplay = true,
@@ -41,7 +42,7 @@ const WebinarCarousel = ({
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800">{title}</h2>
           <Link 
             href={viewMoreLink}
-            className="bg-white text-gray-700 px-6 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium"
+            className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
           >
             View More
           </Link>
@@ -52,22 +53,20 @@ const WebinarCarousel = ({
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-blue-600 text-white rounded-full p-3 shadow-lg hover:bg-blue-700 transition-all duration-300"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 lg:-translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
             aria-label="Previous slide"
+            style={{ left: '-1rem' }}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <RiArrowLeftSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 z-10 bg-blue-600 text-white rounded-full p-3 shadow-lg hover:bg-blue-700 transition-all duration-300"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 lg:translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
             aria-label="Next slide"
+            style={{ right: '-1rem' }}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            <RiArrowRightSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
           </button>
 
           {/* Swiper Carousel */}
@@ -137,13 +136,13 @@ const WebinarCard = ({ webinar }) => {
             <div className="text-white text-center">
               <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-2">
                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                  <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
                 </svg>
               </div>
               <p className="text-sm opacity-80">Live Webinar</p>
             </div>
           </div>
-          
+
           {/* Live Badge */}
           {isLive && (
             <div className="absolute top-3 left-3">
@@ -153,7 +152,7 @@ const WebinarCard = ({ webinar }) => {
               </span>
             </div>
           )}
-          
+
           {/* Free Badge */}
           {isFree && (
             <div className="absolute top-3 right-3">
@@ -171,15 +170,15 @@ const WebinarCard = ({ webinar }) => {
             <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2 leading-tight">
               {webinar.title}
             </h3>
-            
+
             {/* Instructor */}
             <p className="text-blue-600 font-semibold mb-3 text-base">{webinar.instructor}</p>
-            
+
             {/* Description */}
             <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
               {webinar.description}
             </p>
-            
+
             {/* Topics */}
             <div className="flex flex-wrap gap-1 mb-4">
               {webinar.topics && webinar.topics.slice(0, 3).map((topic, index) => (
@@ -189,24 +188,24 @@ const WebinarCard = ({ webinar }) => {
               ))}
             </div>
           </div>
-          
+
           <div className="flex-shrink-0">
             {/* Date and Time */}
             <div className="flex items-center justify-between mb-4 text-sm">
               <div className="flex items-center text-gray-600">
                 <svg className="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className="truncate">{webinar.date}</span>
               </div>
               <div className="flex items-center text-gray-600 ml-2">
                 <svg className="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span className="truncate">{webinar.time}</span>
               </div>
             </div>
-            
+
             {/* Price Section */}
             <div className="mb-3">
               <div className="flex items-baseline space-x-2">
@@ -222,20 +221,19 @@ const WebinarCard = ({ webinar }) => {
             {/* Attendees */}
             <div className="flex items-center text-gray-500 text-xs mb-4">
               <svg className="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               <span className="truncate">{webinar.attendees} registered</span>
             </div>
-            
+
             {/* Join Button */}
             <div className="w-full">
               <Link
                 href={webinar.joinLink}
-                className={`w-full px-4 py-2.5 rounded-lg font-medium transition-all duration-200 text-center block text-sm ${
-                  isLive 
-                    ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
+                className={`w-full px-4 py-2.5 rounded-lg font-medium transition-all duration-200 text-center block text-sm ${isLive
+                    ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
                     : 'bg-blue-600 hover:bg-blue-700 text-white'
-                }`}
+                  }`}
               >
                 {isLive ? 'Join Live' : 'Register Now'}
               </Link>

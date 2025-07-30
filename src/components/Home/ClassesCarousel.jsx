@@ -12,6 +12,7 @@ import { defaultClasses } from '@/Data/data';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 
 const ClassesCarousel = ({ 
   title = "Popular Classes", 
@@ -60,24 +61,22 @@ const ClassesCarousel = ({
         <div className="relative">
           {/* Navigation Buttons */}
           <button
-            onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6 z-10 bg-white text-gray-600 rounded-full p-3 shadow-lg hover:bg-gray-50 hover:text-blue-600 transition-all duration-300 border border-gray-200"
-            aria-label="Previous slide"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-6 z-10 bg-white text-gray-600 rounded-full p-3 shadow-lg hover:bg-gray-50 hover:text-blue-600 transition-all duration-300 border border-gray-200"
-            aria-label="Next slide"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+                      onClick={prevSlide}
+                      className="absolute left-0 top-1/2 transform -translate-y-1/2 lg:-translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                      aria-label="Previous slide"
+                      style={{ left: '-1rem' }}
+                    >
+                      <RiArrowLeftSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                    </button>
+          
+                    <button
+                      onClick={nextSlide}
+                      className="absolute right-0 top-1/2 transform -translate-y-1/2 lg:translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                      aria-label="Next slide"
+                      style={{ right: '-1rem' }}
+                    >
+                      <RiArrowRightSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                    </button>
 
           {/* Swiper Carousel */}
           <Swiper

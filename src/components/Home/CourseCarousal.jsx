@@ -13,7 +13,7 @@ import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-const CommonCarousel = ({ 
+const CourseCarousel = ({ 
   title = "Our Top Courses", 
   viewMoreLink = "/courses",
   courses = [],
@@ -48,11 +48,11 @@ const CommonCarousel = ({
 
         {/* Carousel Container */}
 
-        <div className="relative px-8 lg:px-0">
+        <div className="relative">
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 lg:-translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
             aria-label="Previous slide"
             style={{ left: '-1rem' }}
           >
@@ -61,7 +61,7 @@ const CommonCarousel = ({
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 lg:translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
             aria-label="Next slide"
             style={{ right: '-1rem' }}
           >
@@ -212,4 +212,4 @@ const CourseCard = ({ course }) => {
   );
 };
 
-export default CommonCarousel;
+export default CourseCarousel;
