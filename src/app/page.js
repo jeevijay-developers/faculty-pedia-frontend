@@ -1,11 +1,12 @@
 import Banner from "../components/Home/Banner";
-import WebinarCarousel from "../components/Home/WebinarCarousel";
 import ClassesCarousel from "../components/Home/ClassesCarousel";
 import ExamCarousel from "@/components/Home/ExamCarousel";
 import MobileAppAdSection from "@/components/Home/MobileAppAdSection";
 import TrustedBy from "@/components/Home/TrustedBy";
 import OurPosts from "@/components/Home/OurPosts";
 import CourseCarousel from "../components/Home/CourseCarousal";
+import OneToOneWebinar from "../components/Webinars/OneToOneWebinar";
+import LiveWebinarSection from "../components/Webinars/LiveWebinarSection";
 
 export default function Home() {
 
@@ -13,7 +14,8 @@ export default function Home() {
     <div className="min-h-screen">
       <Banner />
       <CourseCarousel /> 
-      <WebinarCarousel /> 
+      <LiveWebinarSection />
+      <OneToOneWebinar /> 
       <ClassesCarousel />
       <ExamCarousel />
       <MobileAppAdSection />

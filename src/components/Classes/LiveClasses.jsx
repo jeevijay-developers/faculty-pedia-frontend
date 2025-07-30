@@ -6,9 +6,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
 import Image from 'next/image';
-import { defaultLiveClasses } from '@/Data/liveclassesdata';
+import { defaultLiveClasses } from '@/Data/class.data';
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
-import { FiArrowRight, FiCalendar, FiUser, FiClock } from 'react-icons/fi';
+import { FiUser, FiClock } from 'react-icons/fi';
 
 // Import Swiper styles
 import 'swiper/css';
