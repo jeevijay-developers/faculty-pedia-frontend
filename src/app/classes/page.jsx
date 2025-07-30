@@ -7,7 +7,10 @@ import OfflineClasses from '@/components/Classes/OfflineClasses'
 function page() {
   return (
     <div>
-      <Banner />
+      <Banner 
+        url="/images/placeholders/1.svg" 
+        title="Welcome to Our Classes" 
+        subtitle="Explore a variety of classes designed to help you learn and grow with expert faculty guidance." />
       <OnlineClasses />
       <LiveClasses />
       <OfflineClasses />
