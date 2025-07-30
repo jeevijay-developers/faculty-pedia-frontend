@@ -1,4 +1,4 @@
-import Banner from '@/components/Courses/Banner'
+import Banner from '@/components/Banner'
 import CompetitiveSection from '@/components/Courses/CompetitiveSection'
 import JEEAdvanceSection from '@/components/Courses/JEEAdvanceSection'
 import JEEMainSection from '@/components/Courses/JEEMainSection'
@@ -8,7 +8,10 @@ import React from 'react'
 function page() {
   return (
     <div>
-     <Banner />
+       <Banner 
+             url="/images/placeholders/1.svg" 
+             title="Explore Our Top Courses" 
+             subtitle="Explore a variety of classes designed to help you learn and grow with expert faculty guidance." />
      <JEEMainSection />
      <NEETSection />
      <JEEAdvanceSection />

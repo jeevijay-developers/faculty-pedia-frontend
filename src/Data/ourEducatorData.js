@@ -1,7 +1,7 @@
 export const ourEducatorData = [
   {
     name: "Meera Sharma",
-    bio: "A passionate Computer Science educator with 7+ years of experience in teaching...",
+    bio: "A passionate Computer Science educator with 7+ years of experience in teaching.",
     experience: "8 years",
     subject: "Physics",
     degree: "M.Sc. PhD",
