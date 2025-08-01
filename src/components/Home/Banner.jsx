@@ -15,7 +15,7 @@ import 'swiper/css/pagination';
 const Banner = () => {
 
   return (
-    <div className="relative h-[80vh] min-h-[450px] w-full overflow-hidden">
+    <div className="relative h-[80vh] min-h-[450px] w-full overflow-hidden ">
       {/* Swiper Carousel */}
       <Swiper
         modules={[Autoplay, EffectFade]}
@@ -45,7 +45,7 @@ const Banner = () => {
               {/* <div className="absolute inset-0 bg-black/40 z-5 pointer-events-none" /> */}
                       
               {/* Content Overlay for each slide */}
-              <div className="absolute inset-0 flex items-center justify-center px-6 md:px-12 z-10">
+              <div className="absolute inset-0 flex items-center justify-center px-6 md:px-12 z-10 bg-black/40">
                 <div className="text-center text-white max-w-4xl">
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                     {banner.title}
