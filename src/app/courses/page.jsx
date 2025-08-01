@@ -1,4 +1,4 @@
-import Banner from '@/components/Banner'
+import Banner from '@/components/Common/Banner'
 import CompetitiveSection from '@/components/Courses/CompetitiveSection'
 import JEEAdvanceSection from '@/components/Courses/JEEAdvanceSection'
 import JEEMainSection from '@/components/Courses/JEEMainSection'

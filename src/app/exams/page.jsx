@@ -3,7 +3,7 @@ import NEETExamSection from '@/components/Exams/NEETExam'
 import CBSESection from '@/components/Exams/CBSESection'
 import React from 'react'
 import OfflineExamSection from '@/components/Exams/OfflineSections'
-import Banner from '@/components/Banner'
+import Banner from '@/components/Common/Banner'
 
 const page = () => {
   return (

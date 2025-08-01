@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { FaStar, FaRegStar, FaStarHalfAlt, FaPlay } from 'react-icons/fa';
 
-const ProfileHeader = ({ name, rating, reviewCount, image, bio }) => {
+const ProfileHeader = ({ username, rating, reviewCount, image, bio }) => {
   // Generate star rating display
   const renderStars = (rating) => {
     const stars = [];
@@ -35,19 +35,16 @@ const ProfileHeader = ({ name, rating, reviewCount, image, bio }) => {
       <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
         <Image 
           src={image || "/images/placeholders/profile.jpg"} 
-          alt={name} 
+          alt={username || "Educator Profile"} 
           fill 
           className="object-cover"
-          onError={(e) => {
-            e.target.src = "/images/placeholders/profile.jpg";
-          }}
         />
       </div>
       
       <div className="flex-grow">
         {/* Name and Rating */}
         <div className="mb-4">
-          <h1 className="text-2xl font-bold text-gray-800">{name}</h1>
+          <h1 className="text-2xl font-bold text-gray-800">{username}</h1>
           <div className="flex items-center mt-1">
             <div className="flex">{renderStars(rating)}</div>
             <span className="ml-2 text-sm text-gray-600">{reviewCount}</span>

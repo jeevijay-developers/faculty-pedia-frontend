@@ -1,5 +1,5 @@
 import React from 'react'
-import Banner from '../../components/Banner'
+import Banner from '../../components/Common/Banner'
 import OnlineClasses from '@/components/Classes/OnlineClasses'
 import LiveClasses from '@/components/Classes/LiveClasses'
 import OfflineClasses from '@/components/Classes/OfflineClasses'

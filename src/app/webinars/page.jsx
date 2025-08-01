@@ -1,5 +1,4 @@
-import Banner from '@/components/Classes/Banner'
-import Footer from '@/components/Common/Footer'
+import Banner from '@/components/Common/Banner'
 import LiveWebinarSection from '@/components/Webinars/LiveWebinarSection'
 import OneToOneWebinar from '@/components/Webinars/OneToOneWebinar'
 import UpcomingWebinarSection from '@/components/Webinars/UpcomingWebinarSection'

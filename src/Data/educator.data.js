@@ -4,7 +4,7 @@ export const educatorData = [
     name: "Meera Sharma",
     rating: 4.5,
     reviewCount: 124,
-    image: "/images/placeholders/profile.jpg",
+    image: "/images/placeholders/1.svg",
     videoUrl: "/videos/intro-meera.mp4",
     bio: "A passionate Computer Science educator with 7+ years of experience in teaching programming, data structures, and software development. Known for making complex concepts simple and engaging through real-world examples and interactive sessions.",
     specialization: [
@@ -59,7 +59,7 @@ export const educatorData = [
     name: "Dr. Rajesh Kumar",
     rating: 4.8,
     reviewCount: 156,
-    image: "/images/placeholders/profile.jpg",
+    image: "/images/placeholders/1.svg",
     videoUrl: "/videos/intro-rajesh.mp4",
     bio: "An expert in Physics with over 12 years of teaching experience at prestigious institutions. Specialized in making complex physics concepts understandable through visualization and practical applications.",
     specialization: [

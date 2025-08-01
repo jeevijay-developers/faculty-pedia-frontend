@@ -7,20 +7,22 @@ import OurPosts from "@/components/Home/OurPosts";
 import CourseCarousel from "../components/Home/CourseCarousal";
 import OneToOneWebinar from "../components/Webinars/OneToOneWebinar";
 import LiveWebinarSection from "../components/Webinars/LiveWebinarSection";
+import HomeExamMenu from "@/components/Home/HomeExamMenu";
 
 export default function Home() {
 
   return (
     <div className="min-h-screen">
       <Banner />
-      <CourseCarousel /> 
+      <HomeExamMenu />
+      {/* <CourseCarousel /> 
       <LiveWebinarSection />
       <OneToOneWebinar /> 
       <ClassesCarousel />
-      <ExamCarousel />
+      <ExamCarousel /> */}
       <MobileAppAdSection />
       <TrustedBy />
-      <OurPosts />
+      {/* <OurPosts /> */}
     </div>
   );
 }

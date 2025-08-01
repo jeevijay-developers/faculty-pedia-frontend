@@ -32,13 +32,10 @@ const CourseCard = ({ course }) => {
       {/* Course Thumbnail */}
       <div className="relative h-40 w-full">
         <Image
-          src={thumbnail || "/images/placeholders/course.jpg"}
+          src={thumbnail || "/images/placeholders/1.svg"}
           alt={title}
           fill
           className="object-cover"
-          onError={(e) => {
-            e.target.src = "/images/placeholders/course.jpg";
-          }}
         />
       </div>
       
