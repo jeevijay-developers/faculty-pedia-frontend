@@ -1,24 +1,24 @@
 export const banners = [
     {
-      image: "/images/Banner/1.png",
-      title: "Master IIT JEE with Expert Guidance",
-      subtitle: "Comprehensive preparation with proven methodologies and experienced faculty",
+      image: "/images/Banner/2.png",
+      title: "Meet your favorite educators",
+      subtitle: "Join live classes and webinars with top educators to enhance your learning experience",
     },
     {
-      image: "/images/Banner/2.png", 
-      title: "NEET Success Starts Here",
-      subtitle: "Complete medical entrance exam preparation with focused study plans",
+      image: "/images/Banner/3.png", 
+      title: "Start teaching online",
+      subtitle: "Become an educator and share your knowledge with students worldwide through our platform",
     },
-    {
-      image: "/images/Banner/3.png",
-      title: "Online Learning Excellence", 
-      subtitle: "Interactive courses and live webinars for comprehensive learning",
-    },
-    {
-      image: "/images/Banner/4.png",
-      title: "Your Academic Success Partner",
-      subtitle: "Personalized learning experiences designed for your success",
-    }
+    // {
+    //   image: "/images/Banner/3.png",
+    //   title: "Online Learning Excellence", 
+    //   subtitle: "Interactive courses and live webinars for comprehensive learning",
+    // },
+    // {
+    //   image: "/images/Banner/4.png",
+    //   title: "Your Academic Success Partner",
+    //   subtitle: "Personalized learning experiences designed for your success",
+    // }
   ];
 
   export const defaultCourses = [

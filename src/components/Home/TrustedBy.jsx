@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const TrustedBy = () => {
   const statsRef = useRef(null);
@@ -61,7 +62,7 @@ const TrustedBy = () => {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        {/* <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Growing With Our Learners</h2>
           <p className="text-lg text-gray-600">
             Faculty Pedia is building a vibrant learning community—join us as we grow, improve, and empower education together!
@@ -87,19 +88,19 @@ const TrustedBy = () => {
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </motion.div> */}
         
-        <div className="mt-16 text-center">
+        <div className="mt-8 text-center">
           <p className="text-lg font-medium text-gray-700">
-            Be among the first to experience a new era of learning. Your journey starts here!
+            If you're passionate about education and want to make a difference by being in digital education, <br /> join us at Faculty Pedia!
           </p>
           <div className="mt-8">
-            <a 
+            <Link 
               href="/signup" 
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-all duration-300 inline-block"
             >
               Join Faculty Pedia
-            </a>
+            </Link>
           </div>
         </div>
       </div>

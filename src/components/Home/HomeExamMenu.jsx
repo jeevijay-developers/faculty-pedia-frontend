@@ -24,32 +24,32 @@ const HomeExamMenu = () => {
       {/* Exam Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         <div className='group font-bold text-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-16 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('jee-mains')}
+        onClick={() => handleCardClick('jee')}
         >
           <div className="text-center">
             <div className="mb-2">📚</div>
-            <div>JEE Mains</div>
+            <div>IIT JEE</div>
             <p className="text-sm font-normal mt-2 opacity-90">Joint Entrance Exam</p>
           </div>
         </div>
         <div className='group font-bold text-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white p-16 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('jee-advanced')}
+        onClick={() => handleCardClick('neet')}
         >
           <div className="text-center">
             <div className="mb-2">🎯</div>
-            <div>JEE Advanced</div>
-            <p className="text-sm font-normal mt-2 opacity-90">Joint Entrance Exam Advanced</p>
+            <div>NEET</div>
+            <p className="text-sm font-normal mt-2 opacity-90">National Eligibility cum Entrance Test</p>
           </div>
         </div>
         
         <div 
         className='group font-bold text-2xl bg-gradient-to-br from-green-500 to-green-600 text-white p-16 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('neet')}
+        onClick={() => handleCardClick('cbse')}
         >
           <div className="text-center">
             <div className="mb-2">🏥</div>
-            <div>NEET</div>
-            <p className="text-sm font-normal mt-2 opacity-90">National Eligibility cum Entrance Test</p>
+            <div>CBSE</div>
+            <p className="text-sm font-normal mt-2 opacity-90">Central Board of Secondary Education</p>
           </div>
         </div>
       </div>

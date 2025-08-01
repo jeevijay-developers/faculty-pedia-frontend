@@ -55,7 +55,7 @@ const Banner = () => {
                   </p>
                   
                   {/* Action Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                  {/* <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                     <Link 
                       href="/courses" 
                       className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
@@ -68,7 +68,7 @@ const Banner = () => {
                     >
                       Join Webinars
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
