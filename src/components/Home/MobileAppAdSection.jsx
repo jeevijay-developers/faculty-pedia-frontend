@@ -71,7 +71,7 @@ const MobileAppAdSection = () => {
             <div className="w-full max-w-md">
               <div className="relative h-[26rem] w-full overflow-hidden">
                 <Image 
-                  src="/images/home/MobileApp.png" 
+                  src="/images/Home/MobileApp.png" 
                   alt="Faculty Pedia Mobile App" 
                   fill
                   className="object-contain bg-transparent"
