@@ -10,6 +10,7 @@ import {
 } from 'react-icons/fa';
 import { IoMail } from 'react-icons/io5';
 import { FiPhone, FiMapPin } from 'react-icons/fi';
+import Image from 'next/image';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -61,14 +62,17 @@ return (
           
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center space-x-2 group mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">FP</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">
-                Faculty Pedia
-              </span>
+            <div className="flex-shrink-0 flex items-center justify-center mb-5">
+            <Link href="/" className="flex items-center space-x-2 group">
+              <Image
+                src={"/logo/logo-blue.png"}
+                alt="Logo"
+                width={40}
+                height={40}
+                className="rounded-lg"
+              />
             </Link>
+          </div>
 
             <p className="text-sm text-gray-600 mb-6">
               Your trusted platform for educational resources, courses, and exam preparation from the best educators across India.

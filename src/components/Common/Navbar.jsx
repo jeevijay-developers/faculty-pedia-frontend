@@ -56,16 +56,16 @@ const Navbar = () => {
           <div className="hidden lg:block">
             <div className="ml-4 flex items-center space-x-4">
               <Link
-                href="/login"
+                href="/join-as-student"
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50"
               >
-                Login
+                As Student
               </Link>
               <Link
-                href="/signup"
+                href="/join-as-educator"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
               >
-                Sign Up
+                As Educator
               </Link>
             </div>
           </div>

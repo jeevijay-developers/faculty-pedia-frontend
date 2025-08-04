@@ -90,16 +90,17 @@ const TrustedBy = () => {
           ))}
         </motion.div> */}
         
-        <div className="mt-8 text-center">
-          <p className="text-lg font-medium text-gray-700">
-            If you're passionate about education and want to make a difference by being in digital education, <br /> join us at Faculty Pedia!
-          </p>
-          <div className="mt-8">
+        <div className="mt-8">
+          <div className="bg-blue-600 rounded-lg p-6 md:p-8 flex flex-col md:flex-row justify-between items-center">
+            <div className="text-white text-left mb-6 md:mb-0">
+              <h3 className="text-2xl font-bold mb-1">Become a FacultyPedia Educator</h3>
+              <p className="text-lg text-blue-100">Share your expertise, inspire learners, and earn for your impact. Join our growing network of passionate educators today!</p>
+            </div>
             <Link 
-              href="/signup" 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-all duration-300 inline-block"
+              href="/join-as-educator" 
+              className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg text-lg font-bold transition-all duration-300 inline-block"
             >
-              Join Faculty Pedia
+              Join
             </Link>
           </div>
         </div>

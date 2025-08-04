@@ -24,7 +24,7 @@ const HomeExamMenu = () => {
       {/* Exam Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         <div className='group font-bold text-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-16 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('jee')}
+        onClick={() => handleCardClick('iit-jee')}
         >
           <div className="text-center">
             <div className="mb-2">📚</div>
