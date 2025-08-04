@@ -1,63 +1,63 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+// import { useEffect, useState, useRef } from 'react';
+// import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 const TrustedBy = () => {
-  const statsRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  // const statsRef = useRef(null);
+  // const [isVisible, setIsVisible] = useState(false);
   
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     ([entry]) => {
+  //       if (entry.isIntersecting) {
+  //         setIsVisible(true);
+  //         observer.unobserve(entry.target);
+  //       }
+  //     },
+  //     { threshold: 0.1 }
+  //   );
     
-    if (statsRef.current) {
-      observer.observe(statsRef.current);
-    }
+  //   if (statsRef.current) {
+  //     observer.observe(statsRef.current);
+  //   }
     
-    return () => {
-      if (statsRef.current) {
-        observer.unobserve(statsRef.current);
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (statsRef.current) {
+  //       observer.unobserve(statsRef.current);
+  //     }
+  //   };
+  // }, []);
 
   // Statistics data
-  const stats = [
-    { value: '1,200+', label: 'Registered Learners', color: 'bg-amber-50 text-amber-800', highlightColor: 'text-amber-600' },
-    { value: '80+', label: 'Expert Educators', color: 'bg-rose-50 text-rose-800', highlightColor: 'text-rose-600' },
-    { value: '150+', label: 'Courses & Classes', color: 'bg-sky-50 text-sky-800', highlightColor: 'text-sky-600' },
-    { value: '300+', label: 'Assessments & Quizzes', color: 'bg-purple-50 text-purple-800', highlightColor: 'text-purple-600' },
-  ];
+  // const stats = [
+  //   { value: '1,200+', label: 'Registered Learners', color: 'bg-amber-50 text-amber-800', highlightColor: 'text-amber-600' },
+  //   { value: '80+', label: 'Expert Educators', color: 'bg-rose-50 text-rose-800', highlightColor: 'text-rose-600' },
+  //   { value: '150+', label: 'Courses & Classes', color: 'bg-sky-50 text-sky-800', highlightColor: 'text-sky-600' },
+  //   { value: '300+', label: 'Assessments & Quizzes', color: 'bg-purple-50 text-purple-800', highlightColor: 'text-purple-600' },
+  // ];
 
   // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      }
-    }
-  };
+  // const containerVariants = {
+  //   hidden: { opacity: 0 },
+  //   visible: { 
+  //     opacity: 1,
+  //     transition: { 
+  //       staggerChildren: 0.2,
+  //       delayChildren: 0.3,
+  //     }
+  //   }
+  // };
   
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
+  // const itemVariants = {
+  //   hidden: { y: 20, opacity: 0 },
+  //   visible: { 
+  //     y: 0, 
+  //     opacity: 1,
+  //     transition: { duration: 0.6, ease: "easeOut" }
+  //   }
+  // };
 
   return (
     <section className="py-20 bg-white">
