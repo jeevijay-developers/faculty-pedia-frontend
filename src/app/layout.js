@@ -16,11 +16,15 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Faculty Pedia - Educational Platform",
   description: "Comprehensive educational platform for exams, classes, courses, webinars, and educators",
+  
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/logo/logo.png" type="image/png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >

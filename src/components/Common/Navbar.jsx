@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,12 +26,13 @@ const Navbar = () => {
           {/* Logo Section */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center space-x-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
-                <span className="text-white font-bold text-lg">FP</span>
-              </div>
-              <span className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-200">
-                Faculty Pedia
-              </span>
+              <Image
+                src={"/logo/logo.png"}
+                alt="Logo"
+                width={40}
+                height={40}
+                className="rounded-lg"
+              />
             </Link>
           </div>
 
