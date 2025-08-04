@@ -8,6 +8,7 @@ import CourseCarousel from "../components/Home/CourseCarousal";
 import OneToOneWebinar from "../components/Webinars/OneToOneWebinar";
 import LiveWebinarSection from "../components/Webinars/LiveWebinarSection";
 import HomeExamMenu from "@/components/Home/HomeExamMenu";
+import FeaturesMenu from "@/components/Home/FeaturesMenu";
 
 export default function Home() {
 
@@ -20,6 +21,7 @@ export default function Home() {
       <OneToOneWebinar /> 
       <ClassesCarousel />
       <ExamCarousel /> */}
+      <FeaturesMenu />
       <MobileAppAdSection />
       <TrustedBy />
       {/* <OurPosts /> */}
