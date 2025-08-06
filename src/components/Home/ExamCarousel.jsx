@@ -213,7 +213,7 @@ const ExamCard = ({ exam }) => {
           </Link>
           <div className="flex space-x-2">
             <Link
-              href={exam.detailLink}
+              href={`/exam/${exam.id}/details`}
               className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-3 rounded-md text-xs font-medium transition-colors duration-200 text-center"
             >
               View Details

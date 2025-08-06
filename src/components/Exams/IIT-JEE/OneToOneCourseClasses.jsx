@@ -21,14 +21,14 @@ const OneToOneCourseClasses = () => {
   const nextSlide = () => {
     if (swiperRef) swiperRef.slideNext();
   };
-  
+
   return (
     <section className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row justify-between items-center gap-2 mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800">1-1 Live Course Classes</h2>
-          <Link 
-            href="/courses/iit-jee/one-to-one"
+          <Link
+            href="/courses/iit-jee/one-to-one-course"
             className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
           >
             View More
@@ -53,16 +53,16 @@ const OneToOneCourseClasses = () => {
           >
             <RiArrowRightSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
           </button>
-          
+
           <Swiper
             modules={[Navigation, Autoplay]}
             onSwiper={setSwiperRef}
             spaceBetween={16}
             slidesPerView={1}
-            autoplay={{ 
-              delay: 3000, 
+            autoplay={{
+              delay: 3000,
               disableOnInteraction: false,
-              pauseOnMouseEnter: true 
+              pauseOnMouseEnter: true
             }}
             loop={iitJeeOneToOneCourseCourses.length > 1}
             className="one-to-one-carousel"
@@ -86,7 +86,7 @@ const OneToOneCourseClasses = () => {
                 <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                   <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
                     <Image
-                      src={course.educatorPhoto}
+                      src={course.postImage}
                       alt={course.educatorName}
                       fill
                       className="object-cover"
@@ -109,18 +109,18 @@ const OneToOneCourseClasses = () => {
                     <div className="mb-4 text-sm text-gray-600">
                       <span className="font-medium">Fee: </span>₹{course.fee.toLocaleString()}
                     </div>
-                    
+
                     {/* Action Buttons */}
                     <div className="flex flex-row gap-2">
-                    
+
                       <Link
-                        href={`/courses/iit-jee/one-to-one/${course.id}`}
+                        href={`/courses/iit-jee/one-to-one-course/${course.id}`}
                         className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
                       >
                         View Details
                       </Link>
-                        <Link
-                        href={`/courses/iit-jee/one-to-one/${course.id}/enroll`}
+                      <Link
+                        href={`/courses/iit-jee/one-to-one-course/${course.id}/enroll`}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
                       >
                         Enroll Now
