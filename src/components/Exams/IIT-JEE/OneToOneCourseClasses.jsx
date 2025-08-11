@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
-import { iitJeeOneToOneCourseCourses } from '@/Data/IIT-JEE/iit-jee.data';
+import { iitJeeOneToOneCourseCourses } from '@/Data/Exams/iit-jee.data';
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 
 import 'swiper/css';

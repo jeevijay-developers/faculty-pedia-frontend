@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
-import { iitJeeEducators } from '@/Data/Exams/iit-jee.data';
+import { neetEducators } from '@/Data/Exams/neet.data';
 import { useRouter } from 'next/navigation';
 
 // Import Swiper styles
@@ -33,7 +33,7 @@ const EducatorSection = () => {
                 <div className="flex flex-row justify-between items-center gap-2 mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">Top Educators</h2>
           <Link 
-            href={'/educators/iit-jee'}
+            href={'/educators/neet'}
             className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
           >
             View More
@@ -81,7 +81,7 @@ const EducatorSection = () => {
           }}
           className="educator-swiper"
         >
-          {iitJeeEducators.map((educator) => (
+          {neetEducators.map((educator) => (
             <SwiperSlide key={educator.id}>
               <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full">
                 <div className="relative h-48 w-full bg-gray-200">

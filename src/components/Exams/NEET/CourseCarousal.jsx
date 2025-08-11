@@ -6,8 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
 import Image from 'next/image';
-import { defaultCourses } from '@/Data/data';
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
+import { neetCourses } from '@/Data/Exams/neet.data';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -29,8 +29,21 @@ const CourseCarousel = ({
     if (swiperRef) swiperRef.slideNext();
   };
 
-  const coursesToRender = courses.length > 0 ? courses : defaultCourses;
+  const coursesToRender = courses.length > 0 ? courses : (neetCourses || []);
   // console.log('Courses to render:', coursesToRender);
+  
+  // Safety check to prevent errors
+  if (!coursesToRender || coursesToRender.length === 0) {
+    return (
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <p className="text-gray-600">No courses available at the moment.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
   
   return (
     <section className="py-16 bg-gray-50">
@@ -128,17 +141,14 @@ const CourseCard = ({ course }) => {
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
       {/* Course Image */}
-      <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
+      <div className="relative h-40 bg-gradient-to-br from-blue-500 to-blue-600 overflow-hidden flex-shrink-0">
         <Image
-          src={course.image}
+          src={course.image || "/images/placeholders/1.svg"}
           alt={course.title}
           fill
-          className="object-cover"
-          onError={(e) => {
-            e.target.style.display = 'none';
-          }}
+          className="object-cover z-10"
         />
-        {/* Fallback gradient if image fails */}
+        {/* Fallback content - only shows if image doesn't load */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
           <div className="text-white text-center">
             <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-2">

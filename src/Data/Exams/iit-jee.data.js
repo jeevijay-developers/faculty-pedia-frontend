@@ -20,7 +20,7 @@ export const iitJeeLatestPosts = [
     educatorName: "Dr. Rajiv Mehta",
     postImage: "/images/placeholders/1.svg",
     description: "Quick hacks and proven methods to solve tough physics problems in JEE exams. Improve your accuracy and speed.",
-  }, 
+  },
   {
     id: 4,
     title: "Effective Study Plans for JEE",
@@ -203,5 +203,68 @@ export const iitJeeEducators = [
     experience: "11 years",
     subject: "Physics",
     specialization: "Thermodynamics & Optics"
+  }
+];
+
+export const defaultCourses = [
+  {
+    id: 1,
+    title: "JEE Maths Foundation Course",
+    instructor: "Meera Sharma",
+    duration: "6 months starting from 8 Aug 2025",
+    price: "7999",
+    originalPrice: "9999",
+    image: "/images/placeholders/1.svg",
+    description: "This is a comprehensive math foundation course designed for JEE preparation with expert guidance.",
+    enrollLink: "/courses/jee-maths",
+    profileLink: "/instructors/meera-sharma"
+  },
+  {
+    id: 2,
+    title: "NEET Biology Masterclass",
+    instructor: "Dr. Rajesh Kumar",
+    duration: "8 months starting from 15 Aug 2025",
+    price: "8999",
+    originalPrice: "11999",
+    image: "/images/placeholders/1.svg",
+    description: "Complete biology preparation for NEET with detailed concepts and practice sessions.",
+    enrollLink: "/courses/neet-biology",
+    profileLink: "/instructors/rajesh-kumar"
+  },
+  {
+    id: 3,
+    title: "Physics for Engineering",
+    instructor: "Prof. Anita Singh",
+    duration: "5 months starting from 1 Sep 2025",
+    price: "6999",
+    originalPrice: "8999",
+    image: "/images/placeholders/1.svg",
+    description: "Advanced physics concepts for engineering entrance exams with practical applications.",
+    enrollLink: "/courses/physics-engineering",
+    profileLink: "/instructors/anita-singh"
+  },
+  {
+    id: 4,
+    title: "Chemistry Complete Package",
+    instructor: "Dr. Vikram Patel",
+    duration: "7 months starting from 20 Aug 2025",
+    price: "7499",
+    originalPrice: "9499",
+    image: "/images/placeholders/1.svg",
+    description: "Comprehensive chemistry course covering organic, inorganic, and physical chemistry.",
+    enrollLink: "/courses/chemistry-complete",
+    profileLink: "/instructors/vikram-patel"
+  },
+  {
+    id: 5,
+    title: "English for Competitive Exams",
+    instructor: "Ms. Priya Mehta",
+    duration: "4 months starting from 10 Sep 2025",
+    price: "4999",
+    originalPrice: "6999",
+    image: "/images/placeholders/1.svg",
+    description: "Complete English preparation for all competitive exams with grammar and comprehension.",
+    enrollLink: "/courses/english-competitive",
+    profileLink: "/instructors/priya-mehta"
   }
 ];

@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowRight } from 'react-icons/fi';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
-import { iitJeeTestSeries } from '@/Data/Exams/iit-jee.data';
+import { neetTestSeries } from '@/Data/Exams/neet.data';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -32,7 +32,7 @@ const TestSeriesSection = () => {
                 <div className="flex justify-between items-center mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Online Test Series</h2>
                     <Link
-                        href="/exams/iit-jee/test-series"
+                        href="/exams/neet/test-series"
                         className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
                     >
                         <span className="mr-2">View All</span>
@@ -70,7 +70,7 @@ const TestSeriesSection = () => {
                             disableOnInteraction: false,
                             pauseOnMouseEnter: true
                         }}
-                        loop={iitJeeTestSeries.length > 3}
+                        loop={neetTestSeries.length > 3}
                         className="test-series-carousel pb-12"
                         breakpoints={{
                             640: {
@@ -87,7 +87,7 @@ const TestSeriesSection = () => {
                             },
                         }}
                     >
-                        {iitJeeTestSeries.map((testSeries) => (
+                        {neetTestSeries.map((testSeries) => (
                             <SwiperSlide key={testSeries.id}>
                                 <TestSeriesCard testSeries={testSeries} />
                             </SwiperSlide>
@@ -137,13 +137,13 @@ const TestSeriesCard = ({ testSeries }) => {
                 {/* Action Button */}
                 <div className="flex flex-row gap-2">
                     <Link
-                        href={`/exams/iit-jee/test-series/${testSeries.slug}`}
+                        href={`/exams/neet/test-series/${testSeries.slug}`}
                         className="w-full text-gray-700 border border-gray-300 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
                     >
                         View details
                     </Link>
                     <Link
-                        href={`/exams/iit-jee/test-series/${testSeries.id}`}
+                        href={`/exams/neet/test-series/${testSeries.id}`}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
                     >
                         Grab the series

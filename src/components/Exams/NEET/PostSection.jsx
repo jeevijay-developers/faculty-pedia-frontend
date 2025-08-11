@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
-import { iitJeeOneToOneCourseCourses, iitJeeLatestPosts } from '@/Data/Exams/iit-jee.data';
+import { neetOneToOneCourseCourses, neetLatestPosts } from '@/Data/Exams/neet.data';
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 
@@ -29,7 +29,7 @@ const OneToOnePPHClasses = () => {
         <div className="flex flex-row justify-between items-center gap-2 mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">Latest Posts</h2>
           <Link
-            href="/courses/iit-jee/one-to-one-pph"
+            href="/courses/neet/posts"
             className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
           >
             View More
@@ -65,7 +65,7 @@ const OneToOnePPHClasses = () => {
               disableOnInteraction: false,
               pauseOnMouseEnter: true
             }}
-            loop={iitJeeOneToOneCourseCourses.length > 1}
+            loop={neetOneToOneCourseCourses.length > 1}
             className="one-to-one-carousel"
             breakpoints={{
               480: {
@@ -82,7 +82,7 @@ const OneToOnePPHClasses = () => {
               },
             }}
           >
-            {iitJeeLatestPosts.map((post) => (
+            {neetLatestPosts.map((post) => (
               <SwiperSlide key={post.id}>
                 <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                   <div className="p-5 flex flex-col flex-grow">
@@ -103,7 +103,7 @@ const OneToOnePPHClasses = () => {
                         <p className='text-md font-semibold text-gray-600'>{post.educatorName}</p>
                       </div>
                       <Link
-                        href={`/courses/iit-jee/posts/${post.id}`}
+                        href={`/courses/neet/posts/${post.id}`}
                         className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors duration-200 ml-auto flex items-center gap-1"
                       >
                         Read More
