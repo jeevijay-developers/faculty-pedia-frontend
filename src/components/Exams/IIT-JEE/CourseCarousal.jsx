@@ -6,17 +6,17 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
 import Image from 'next/image';
-import { defaultExams } from '@/Data/data';
-import { RiArrowLeftSLine, RiArrowRightSLine, RiTimeLine, RiQuestionLine } from "react-icons/ri";
+import { defaultCourses } from '@/Data/data';
+import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-const ExamCarousel = ({ 
-  title = "Practice DDPs & Mock tests", 
-  viewMoreLink = "/exams",
-  exams = [],
+const CourseCarousel = ({ 
+  title = "Our Top Courses", 
+  viewMoreLink = "/courses",
+  courses = [],
   autoplay = true,
 }) => {
   const [swiperRef, setSwiperRef] = useState(null);
@@ -29,13 +29,14 @@ const ExamCarousel = ({
     if (swiperRef) swiperRef.slideNext();
   };
 
-  const examsToRender = exams.length > 0 ? exams : defaultExams;
+  const coursesToRender = courses.length > 0 ? courses : defaultCourses;
+  // console.log('Courses to render:', coursesToRender);
   
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-row justify-between items-center gap-2 mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800">{title}</h2>
           <Link 
             href={viewMoreLink}
@@ -46,11 +47,12 @@ const ExamCarousel = ({
         </div>
 
         {/* Carousel Container */}
+
         <div className="relative">
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
             aria-label="Previous slide"
             style={{ left: '-1rem' }}
           >
@@ -59,7 +61,7 @@ const ExamCarousel = ({
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
             aria-label="Next slide"
             style={{ right: '-1rem' }}
           >
@@ -73,12 +75,12 @@ const ExamCarousel = ({
             spaceBetween={16}
             slidesPerView={1}
             autoplay={autoplay ? { 
-              delay: 3500, 
+              delay: 3000, 
               disableOnInteraction: false,
               pauseOnMouseEnter: true 
             } : false}
-            loop={examsToRender.length > 1}
-            className="exam-carousel"
+            loop={coursesToRender.length > 1}
+            className="course-carousel"
             breakpoints={{
               480: {
                 slidesPerView: 1,
@@ -102,15 +104,15 @@ const ExamCarousel = ({
               },
             }}
           >
-            {examsToRender.map((exam, idx) => (
-              <SwiperSlide key={exam.id}>
+            {coursesToRender.map((course, idx) => (
+              <SwiperSlide key={course.id}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
                 >
-                  <ExamCard exam={exam} />
+                  <CourseCard course={course} />
                 </motion.div>
               </SwiperSlide>
             ))}
@@ -121,15 +123,15 @@ const ExamCarousel = ({
   );
 };
 
-// Exam Card Component
-const ExamCard = ({ exam }) => {
+// Course Card Component
+const CourseCard = ({ course }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100">
-      {/* Exam Image */}
+    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+      {/* Course Image */}
       <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
         <Image
-          src={exam.image}
-          alt={exam.title}
+          src={course.image}
+          alt={course.title}
           fill
           className="object-cover"
           onError={(e) => {
@@ -137,98 +139,69 @@ const ExamCard = ({ exam }) => {
           }}
         />
         {/* Fallback gradient if image fails */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-          <div className="text-black text-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+          <div className="text-white text-center">
             <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-2">
-              {/* <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg> */}
+              </svg>
             </div>
-            <p className="text-xs opacity-80">Test</p>
+            <p className="text-xs opacity-80">Course</p>
           </div>
-        </div>
-        
-        {/* Difficulty Badge */}
-        <div className="absolute top-3 right-3">
-          <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-            exam.difficulty === 'Advanced' 
-              ? 'bg-red-100 text-red-700' 
-              : exam.difficulty === 'Intermediate'
-              ? 'bg-yellow-100 text-yellow-700'
-              : 'bg-blue-100 text-blue-700'
-          }`}>
-            {exam.difficulty}
-          </span>
         </div>
       </div>
 
-      {/* Exam Content */}
+      {/* Course Content */}
       <div className="p-5 flex flex-col flex-grow">
-        {/* Exam Title */}
-        <h3 className="text-lg font-bold text-gray-800 mb-1 leading-tight">
-          {exam.title}
+        {/* Course Title */}
+        <h3 className="text-lg font-bold text-gray-800 mb-1 leading-tight overflow-hidden">
+          {course.title}
         </h3>
-        
-        {/* Instructor */}
-        <h4 className="text-base font-semibold text-blue-600 mb-3">{exam.instructor}</h4>
+          <h4 className="text-base font-semibold text-gray-600 mb-1">{course.instructor}</h4>
 
-        {/* Description */}
+        {/* Instructor */}
         <div className="mb-4 flex-grow">
           <p className="text-sm text-gray-600 line-clamp-2">
-            {exam.description}
+            {course.description}
           </p>
         </div>
 
-        {/* Test Details */}
-        <div className="mb-4 space-y-2">
-          <div className="flex items-center space-x-4 text-sm text-gray-600">
-            <div className="flex items-center space-x-1">
-              <RiTimeLine className="w-4 h-4" />
-              <span>{exam.duration}</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <RiQuestionLine className="w-4 h-4" />
-              <span>{exam.questions}</span>
-            </div>
-          </div>
+        {/* Duration */}
+        <div className="mb-3">
+          <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-medium">
+            {course.duration}
+          </span>
         </div>
+
 
         {/* Price */}
         <div className="mb-4">
           <div className="flex items-baseline space-x-2">
-            <span className="text-xl font-bold text-gray-800">₹{exam.price}</span>
-            {exam.originalPrice && (
-              <span className="text-sm text-gray-500 line-through">₹{exam.originalPrice}</span>
+            <span className="text-xl font-bold text-gray-800">₹{course.price}</span>
+            {course.originalPrice && (
+              <span className="text-sm text-gray-500 line-through">₹{course.originalPrice}</span>
             )}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="space-y-2 mt-auto">
+        <div className="flex gap-2 mt-auto">
           <Link
-            href={exam.testLink}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+            href={`${course.enrollLink}/details`}
+            className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center"
           >
-            Take Test
+            View Details
           </Link>
-          <div className="flex space-x-2">
-            <Link
-              href={`/exam/${exam.id}/details`}
-              className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-3 rounded-md text-xs font-medium transition-colors duration-200 text-center"
-            >
-              View Details
-            </Link>
-            <Link
-              href={exam.profileLink}
-              className="flex-1 border border-blue-300 text-blue-600 hover:bg-blue-50 py-2 px-3 rounded-md text-xs font-medium transition-colors duration-200 text-center"
-            >
-              View Profile
-            </Link>
-          </div>
+                    <Link
+            href={course.enrollLink}
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center"
+          >
+            Enroll Now
+          </Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default ExamCarousel;
+export default CourseCarousel;

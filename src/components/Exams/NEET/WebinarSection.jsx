@@ -45,7 +45,7 @@ const UpcomingWebinarSection = () => {
                     {/* Navigation Buttons */}
                     <button
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 lg:-translate-x-14 z-10 bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
                         aria-label="Previous slide"
                     >
                         <MdOutlineKeyboardArrowLeft className='w-5 h-5 text-gray-500 hover:text-gray-900' />
@@ -155,17 +155,18 @@ const WebinarCard = ({ webinar }) => {
 
                 {/* Buttons */}
                 <div className="flex flex-row gap-2 mb-3">
-                    <Link
-                        href={`/webinars/upcoming/${webinar.id}`}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 text-xs font-medium rounded transition-colors duration-200 text-center"
-                    >
-                        Join Now
-                    </Link>
+
                     <Link
                         href={`/webinars/upcoming/${webinar.id}/details`}
                         className="flex-1 border border-gray-300 text-gray-800 text-xs font-medium py-1.5 px-3 rounded hover:bg-gray-50 transition-colors duration-200 text-center"
                     >
                         View Details
+                    </Link>
+                                        <Link
+                        href={`/webinars/upcoming/${webinar.id}`}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 text-xs font-medium rounded transition-colors duration-200 text-center"
+                    >
+                        Join Now
                     </Link>
                 </div>
             </div>

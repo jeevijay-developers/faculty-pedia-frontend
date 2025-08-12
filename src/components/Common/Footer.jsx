@@ -48,9 +48,7 @@ const Footer = () => {
 
   const socialLinks = [
     { icon: FaFacebookF, href: 'https://facebook.com/facultypedia', label: 'Facebook' },
-    { icon: FaTwitter, href: 'https://twitter.com/facultypedia', label: 'Twitter' },
     { icon: FaInstagram, href: 'https://instagram.com/facultypedia', label: 'Instagram' },
-    { icon: FaLinkedinIn, href: 'https://linkedin.com/company/facultypedia', label: 'LinkedIn' },
     { icon: FaYoutube, href: 'https://youtube.com/facultypedia', label: 'YouTube' },
   ];
 
@@ -82,15 +80,15 @@ return (
             <div className="space-y-3 mb-8">
               <div className="flex items-start space-x-3">
                 <FiMapPin className="text-blue-600 mt-1 flex-shrink-0" />
-                <span className="text-sm">123 Education Street, Academic District, New Delhi 110001</span>
+                <span className="text-sm"> C304 om enclave, Anantpura, Kota,  Rajasthan, 324005</span>
               </div>
               <div className="flex items-center space-x-3">
                 <FiPhone className="text-blue-600 flex-shrink-0" />
-                <span className="text-sm">+91 98765 43210</span>
+                <span className="text-sm">+91 80007 93693 </span>
               </div>
               <div className="flex items-center space-x-3">
                 <IoMail className="text-blue-600 flex-shrink-0" />
-                <span className="text-sm">contact@facultypedia.com</span>
+                <span className="text-sm">nucleonorder@gmail.com</span>
               </div>
             </div>
 

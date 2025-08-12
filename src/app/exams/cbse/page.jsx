@@ -1,5 +1,9 @@
+'use client'
 import Banner from '@/components/Common/Banner'
 import React from 'react'
+import dynamic from 'next/dynamic'
+
+const CBSEPageContent = dynamic(() => import('@/components/Exams/CBSE/CBSEPageContent'), { ssr: false });
 
 const page = () => {
   return (
@@ -11,6 +15,7 @@ const page = () => {
         btnTitle={" Join as Educator"}
         btnUrl={"/join-as-educator"}
       />
+      <CBSEPageContent />
     </>
   )
 }
