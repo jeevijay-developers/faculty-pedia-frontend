@@ -155,17 +155,18 @@ const WebinarCard = ({ webinar }) => {
 
                 {/* Buttons */}
                 <div className="flex flex-row gap-2 mb-3">
-                    <Link
-                        href={`/webinars/upcoming/${webinar.id}`}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 text-xs font-medium rounded transition-colors duration-200 text-center"
-                    >
-                        Join Now
-                    </Link>
+
                     <Link
                         href={`/webinars/upcoming/${webinar.id}/details`}
                         className="flex-1 border border-gray-300 text-gray-800 text-xs font-medium py-1.5 px-3 rounded hover:bg-gray-50 transition-colors duration-200 text-center"
                     >
                         View Details
+                    </Link>
+                                        <Link
+                        href={`/webinars/upcoming/${webinar.id}`}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-3 text-xs font-medium rounded transition-colors duration-200 text-center"
+                    >
+                        Join Now
                     </Link>
                 </div>
             </div>

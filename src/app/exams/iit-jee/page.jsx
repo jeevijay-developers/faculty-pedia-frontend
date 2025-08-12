@@ -23,9 +23,9 @@ const page = () => {
       <CourseCarousel title='Online Courses for IIT-JEE' viewMoreLink='/courses/iit-jee'  />
       <OneToOneCourseClasses />
       <OneToOnePPHClasses />
-      <PostSection />
       <UpcomingWebinarSection />
       <TestSeriesSection />
+      <PostSection />
     </>
   )
 }

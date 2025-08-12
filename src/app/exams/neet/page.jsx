@@ -22,9 +22,9 @@ const page = () => {
       <CourseCarousel title='Online Courses for NEET' viewMoreLink='/courses/neet' />
       <OneToOneCourseClasses />
       <OneToOnePPHClasses />
-      <PostSection />
       <UpcomingWebinarSection />
       <TestSeriesSection />
+      <PostSection />
     </>
   )
 }
