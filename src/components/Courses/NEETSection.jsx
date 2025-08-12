@@ -54,7 +54,7 @@ const NEETSection = ({
                     {/* Navigation Buttons */}
                     <button
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 lg:-translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-white z-20 rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
                         aria-label="Previous slide"
                         style={{ left: '-1rem' }}
                     >
@@ -63,7 +63,7 @@ const NEETSection = ({
 
                     <button
                         onClick={nextSlide}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 lg:translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-white z-20 rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
                         aria-label="Next slide"
                         style={{ right: '-1rem' }}
                     >

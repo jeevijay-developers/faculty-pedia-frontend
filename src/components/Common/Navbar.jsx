@@ -13,7 +13,6 @@ const Navbar = () => {
 
   const menuItems = [
     { name: 'Exams', href: '/exams' },
-    { name: 'Classes', href: '/classes' },
     { name: 'Courses', href: '/courses' },
     { name: 'Webinars', href: '/webinars' },
     { name: 'Educators', href: '/educators' }
