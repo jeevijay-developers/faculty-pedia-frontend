@@ -289,7 +289,7 @@ const EducatorSignup = () => {
                         onChange={handleInputChange}
                         className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.firstName ? 'border-red-300' : 'border-gray-300'
                             }`}
-                        placeholder="Enter your first name"
+                        placeholder="Arav"
                     />
                     {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
                 </div>
@@ -307,7 +307,7 @@ const EducatorSignup = () => {
                         onChange={handleInputChange}
                         className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.lastName ? 'border-red-300' : 'border-gray-300'
                             }`}
-                        placeholder="Enter your last name"
+                        placeholder="Sinha"
                     />
                     {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
                 </div>
@@ -327,7 +327,7 @@ const EducatorSignup = () => {
                         onChange={handleInputChange}
                         className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.email ? 'border-red-300' : 'border-gray-300'
                             }`}
-                        placeholder="Enter your email address"
+                        placeholder="arav@example.com"
                     />
                     {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
                 </div>
@@ -345,7 +345,7 @@ const EducatorSignup = () => {
                         onChange={handleInputChange}
                         className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.mobileNumber ? 'border-red-300' : 'border-gray-300'
                             }`}
-                        placeholder="Enter your 10-digit mobile number"
+                        placeholder="XXXXXX9658"
                     />
                     {errors.mobileNumber && <p className="mt-1 text-sm text-red-600">{errors.mobileNumber}</p>}
                 </div>
@@ -365,7 +365,7 @@ const EducatorSignup = () => {
                             onChange={handleInputChange}
                             className={`block w-full px-3 py-2 pr-10 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.password ? 'border-red-300' : 'border-gray-300'
                                 }`}
-                            placeholder="Create a password"
+                            placeholder="******"
                         />
                         <button
                             type="button"
@@ -391,7 +391,7 @@ const EducatorSignup = () => {
                         onChange={handleInputChange}
                         className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                             }`}
-                        placeholder="Confirm your password"
+                        placeholder="******"
                     />
                     {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
                 </div>
@@ -820,7 +820,7 @@ const EducatorSignup = () => {
                         <p className="text-gray-600">
                             Already have an account?{' '}
                             <Link
-                                href="/login/educator"
+                                href="/educator-login"
                                 className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
                             >
                                 Sign in here

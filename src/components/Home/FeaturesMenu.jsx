@@ -6,12 +6,6 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import { GrTest } from "react-icons/gr";
 
 const FeaturesMenu = () => {
-  const router = useRouter();
-
-  const handleCardClick = (feature) => {
-    // You can customize the routing based on your app structure
-    router.push(`/${feature}`);
-  };
 
   return (
     <section className="my-20 px-4">
@@ -28,7 +22,6 @@ const FeaturesMenu = () => {
       {/* Feature Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
         <div className='group font-bold text-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('classes')}
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
@@ -40,7 +33,6 @@ const FeaturesMenu = () => {
         </div>
 
         <div className='group font-bold text-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('classes')}
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
@@ -52,7 +44,6 @@ const FeaturesMenu = () => {
         </div>
 
         <div className='group font-bold text-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('webinars')}
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
@@ -64,7 +55,6 @@ const FeaturesMenu = () => {
         </div>
         
         <div className='group font-bold text-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('study-material')}
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
@@ -76,7 +66,6 @@ const FeaturesMenu = () => {
         </div>
 
         <div className='group font-bold text-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl cursor-pointer hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
-        onClick={() => handleCardClick('online-tests')}
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">

@@ -335,11 +335,11 @@ const StudentSignup = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
                             <div className="flex items-center space-x-2">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                <span>Access to expert educators</span>
+                                <span>1-on-1 Live Classes</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                <span>Comprehensive test series</span>
+                                <span>Study Material</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -347,11 +347,11 @@ const StudentSignup = () => {
                             </div>
                             <div className="flex items-center space-x-2">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                <span>Personalized learning path</span>
+                                <span>Online Tests and series</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                <span>Progress tracking</span>
+                                <span>Learn from your favourite teachers</span>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
