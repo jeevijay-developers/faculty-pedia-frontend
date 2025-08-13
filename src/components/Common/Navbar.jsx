@@ -15,7 +15,8 @@ const Navbar = () => {
     { name: 'Exams', href: '/exams' },
     { name: 'Courses', href: '/courses' },
     { name: 'Webinars', href: '/webinars' },
-    { name: 'Educators', href: '/educators' }
+    { name: 'Educators', href: '/educators' },
+    { name: 'Posts', href: '/posts' }
   ];
 
   return (
