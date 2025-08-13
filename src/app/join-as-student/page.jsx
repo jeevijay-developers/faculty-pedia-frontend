@@ -1,8 +1,11 @@
+import StudentSignup from '@/components/Login-Signup/StudentSignup'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>Join as Student</div>
+    <div>
+      <StudentSignup />
+    </div>
   )
 }
 

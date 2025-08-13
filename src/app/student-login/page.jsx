@@ -1,6 +1,6 @@
 'use client';
 
-import Login from '@/components/Login/Login';
+import Login from '@/components/Login-Signup/Login';
 
 const page = () => {
   const handleStudentLogin = async (formData, userType) => {
@@ -41,7 +41,7 @@ const page = () => {
       userType="Student"
       onSubmit={handleStudentLogin}
       forgotPasswordLink="/forgot-password/student"
-      signupLink="/signup/student"
+      signupLink="/join-as-student"
       redirectAfterLogin="/student/dashboard"
     />
   );

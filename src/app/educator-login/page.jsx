@@ -1,5 +1,5 @@
 'use client';
-import Login from '@/components/Login/Login';
+import Login from '@/components/Login-Signup/Login';
 
 const page = () => {
   const handleEducatorLogin = async (formData, userType) => {
@@ -40,7 +40,7 @@ const page = () => {
       userType="Educator"
       onSubmit={handleEducatorLogin}
       forgotPasswordLink="/forgot-password/educator"
-      signupLink="/signup/educator"
+      signupLink="/join-as-educator"
       redirectAfterLogin="/educator/dashboard"
     />
   );
