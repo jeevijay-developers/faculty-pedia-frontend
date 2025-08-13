@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { LuLoaderCircle, LuUser, LuBriefcase, LuGraduationCap, LuShare2, LuCheck } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { FiUpload } from "react-icons/fi";
+import { FiTrash2, FiUpload } from "react-icons/fi";
 
 const EducatorSignup = () => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -200,9 +200,7 @@ const EducatorSignup = () => {
         setCurrentStep(prev => Math.max(prev - 1, 1));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const handleSubmit = async () => {
         if (!validateStep(currentStep)) {
             return;
         }
@@ -463,7 +461,7 @@ const EducatorSignup = () => {
                     onClick={addExperience}
                     className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                 >
-                    Add Experience
+                    Add More Experience
                 </button>
             </div>
 
@@ -477,7 +475,7 @@ const EducatorSignup = () => {
                                 onClick={() => removeExperience(index)}
                                 className="text-red-600 hover:text-red-800 text-sm"
                             >
-                                Remove
+                                <FiTrash2 className='h-5 w-5 cursor-pointer' />
                             </button>
                         )}
                     </div>
@@ -556,7 +554,7 @@ const EducatorSignup = () => {
                     onClick={addQualification}
                     className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                 >
-                    Add Qualification
+                    Add More Qualification
                 </button>
             </div>
 
@@ -570,7 +568,7 @@ const EducatorSignup = () => {
                                 onClick={() => removeQualification(index)}
                                 className="text-red-600 hover:text-red-800 text-sm"
                             >
-                                Remove
+                                <FiTrash2 className='h-5 w-5 cursor-pointer'/>
                             </button>
                         )}
                     </div>
@@ -764,7 +762,7 @@ const EducatorSignup = () => {
 
                 {/* Form */}
                 <div className="bg-white rounded-2xl shadow-xl p-8">
-                    <form onSubmit={handleSubmit}>
+                    <div>
                         {/* Step Content */}
                         <div className="mb-8">
                             {currentStep === 1 && renderPersonalInfo()}
@@ -794,7 +792,8 @@ const EducatorSignup = () => {
                                 </button>
                             ) : (
                                 <button
-                                    type="submit"
+                                    type="button"
+                                    onClick={handleSubmit}
                                     disabled={isLoading}
                                     className="px-8 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
                                 >
@@ -813,7 +812,7 @@ const EducatorSignup = () => {
                         {errors.submit && (
                             <p className="mt-4 text-sm text-red-600 text-center">{errors.submit}</p>
                         )}
-                    </form>
+                    </div>
 
                     {/* Login Link */}
                     <div className="mt-8 text-center">
