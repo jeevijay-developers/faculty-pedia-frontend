@@ -27,21 +27,12 @@ const Footer = () => {
     { name: 'IIT JEE', href: '/exams/iitjee' },
     { name: 'NEET', href: '/exams/neet' },
     { name: 'CBSE', href: '/exams/cbse' },
-    { name: 'ICSE', href: '/exams/icse' },
     { name: 'Other Exams', href: '/exams/others' },
-  ];
-
-  const classTypes = [
-    { name: 'Live Classes', href: '/classes/live' },
-    { name: '1:1 Classes', href: '/classes/one-to-one' },
-    { name: 'Recorded Classes', href: '/classes/recorded' },
-    { name: 'Group Classes', href: '/classes/group' },
   ];
 
   const companyInfo = [
     { name: 'About Us', href: '/about' },
     { name: 'Contact Us', href: '/contact' },
-    { name: 'Careers', href: '/careers' },
     { name: 'Terms & Conditions', href: '/terms' },
     { name: 'Privacy Policy', href: '/privacy' },
   ];
@@ -56,7 +47,7 @@ return (
     <footer className="bg-gray-50">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           
           {/* Brand Column */}
           <div className="lg:col-span-1">
@@ -131,23 +122,6 @@ return (
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Exam Categories</h3>
             <ul className="space-y-3">
               {examCategories.map((link, index) => (
-                <li key={index}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Class Types */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">Class Types</h3>
-            <ul className="space-y-3">
-              {classTypes.map((link, index) => (
                 <li key={index}>
                   <Link
                     href={link.href}

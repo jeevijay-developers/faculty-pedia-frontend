@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import Link from "next/link";
-import Image from "next/image";
-import { FiArrowRight, FiCalendar, FiUser, FiClock } from "react-icons/fi";
-import { CBSEData } from "@/Data/Exams/cbse.data";
-import {
-  MdOutlineKeyboardArrowLeft,
-  MdOutlineKeyboardArrowRight,
-} from "react-icons/md";
+import { useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+import Link from 'next/link';
+import Image from 'next/image';
+import { FiArrowRight, FiCalendar, FiUser, FiClock } from 'react-icons/fi';
+import { CBSEData } from '@/Data/Exams/cbse.data';
+import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 // Import Swiper styles
 import "swiper/css";
@@ -19,7 +16,8 @@ import "swiper/css/pagination";
 
 const CBSESection = () => {
   const [swiperRef, setSwiperRef] = useState(null);
-
+  
+  
   const prevSlide = () => {
     if (swiperRef) swiperRef.slidePrev();
   };

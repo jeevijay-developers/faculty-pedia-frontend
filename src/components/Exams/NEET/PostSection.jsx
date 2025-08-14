@@ -5,15 +5,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
-import { neetOneToOneCourseCourses, neetLatestPosts } from '@/Data/Exams/neet.data';
+import { postsData, getPostsByCategory } from '@/Data/Posts/posts.data';
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-const OneToOnePPHClasses = () => {
+const PostSection = () => {
   const [swiperRef, setSwiperRef] = useState(null);
+  
+  // Get NEET posts for this section
+  const neetPosts = getPostsByCategory('NEET');
 
   const prevSlide = () => {
     if (swiperRef) swiperRef.slidePrev();
@@ -27,12 +30,12 @@ const OneToOnePPHClasses = () => {
     <section className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row justify-between items-center gap-2 mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">Latest Posts</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">Latest NEET Posts</h2>
           <Link
-            href="/courses/neet/posts"
+            href="/posts"
             className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
           >
-            View More
+            View All Posts
           </Link>
         </div>
         <div className="relative">
@@ -65,8 +68,8 @@ const OneToOnePPHClasses = () => {
               disableOnInteraction: false,
               pauseOnMouseEnter: true
             }}
-            loop={neetOneToOneCourseCourses.length > 1}
-            className="one-to-one-carousel"
+            loop={neetPosts.length > 1}
+            className="posts-carousel"
             breakpoints={{
               480: {
                 slidesPerView: 1,
@@ -82,28 +85,28 @@ const OneToOnePPHClasses = () => {
               },
             }}
           >
-            {neetLatestPosts.map((post) => (
+            {neetPosts.map((post) => (
               <SwiperSlide key={post.id}>
                 <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                   <div className="p-5 flex flex-col flex-grow">
                     <h3 className='font-semibold'>{post.title}</h3>
                     <p className="text-gray-600 mt-1 line-clamp-2">{post.description}</p>
+                    
                     {/* Action Buttons */}
-
                     <div className='flex items-center gap-2 mt-4'>
                       <div className='flex items-center gap-3'>
-                      <div className="relative h-12 w-12 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
-                        <Image
-                          src={post.postImage}
-                          alt={post.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                        <p className='text-md font-semibold text-gray-600'>{post.educatorName}</p>
+                        <div className="relative h-12 w-12 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+                          <Image
+                            src={post.facultyInfo.profilePic}
+                            alt={post.facultyInfo.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <p className='text-md font-semibold text-gray-600'>{post.facultyInfo.name}</p>
                       </div>
                       <Link
-                        href={`/courses/neet/posts/${post.id}`}
+                        href={`/posts/${post.slug}`}
                         className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors duration-200 ml-auto flex items-center gap-1"
                       >
                         Read More
@@ -121,4 +124,4 @@ const OneToOnePPHClasses = () => {
   );
 };
 
-export default OneToOnePPHClasses;
+export default PostSection;

@@ -13,10 +13,10 @@ const Navbar = () => {
 
   const menuItems = [
     { name: 'Exams', href: '/exams' },
-    { name: 'Classes', href: '/classes' },
     { name: 'Courses', href: '/courses' },
     { name: 'Webinars', href: '/webinars' },
-    { name: 'Educators', href: '/educators' }
+    { name: 'Educators', href: '/educators' },
+    { name: 'Posts', href: '/posts' }
   ];
 
   return (
@@ -27,7 +27,7 @@ const Navbar = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center space-x-2 group">
               <Image
-                src={"/logo/logo-blue.png"}
+                src="/logo/logo-blue.png"
                 alt="Logo"
                 width={40}
                 height={40}
@@ -56,13 +56,13 @@ const Navbar = () => {
           <div className="hidden lg:block">
             <div className="ml-4 flex items-center space-x-4">
               <Link
-                href="/join-as-student"
+                href="/student-login"
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50"
               >
                 As Student
               </Link>
               <Link
-                href="/join-as-educator"
+                href="/educator-login"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
               >
                 As Educator

@@ -38,10 +38,10 @@ const JEEAdvanceSection = ({
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="flex flex-row justify-between items-center gap-2 mb-8">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-ellipsis truncate">{title}</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 ">{title}</h2>
                     <Link
                         href={viewMoreLink}
-                        className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
+                        className="w-[6rem] group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
                     >
                         <span className="mr-2">View all</span>
                         <FiArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -54,7 +54,7 @@ const JEEAdvanceSection = ({
                     {/* Navigation Buttons */}
                     <button
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 lg:-translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-white z-20 rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
                         aria-label="Previous slide"
                         style={{ left: '-1rem' }}
                     >
@@ -63,7 +63,7 @@ const JEEAdvanceSection = ({
 
                     <button
                         onClick={nextSlide}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 lg:translate-x-14 z-20 bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-white z-20 rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
                         aria-label="Next slide"
                         style={{ right: '-1rem' }}
                     >

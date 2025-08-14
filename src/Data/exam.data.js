@@ -124,8 +124,6 @@ export const neetExamData = [
     }
   ];
 
-
-
 export const offlineExamData = [
   {
     id: 1,
