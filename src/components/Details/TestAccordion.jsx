@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Link from "next/link";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import {
@@ -11,6 +12,8 @@ import {
 } from "react-icons/fa";
 
 const TestAccordion = ({ testData, isExpanded, onToggle }) => {
+  // console.log("TestAccordion Rendered", testData);
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -128,22 +131,18 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
           </div>
 
           <div className="mt-6 flex gap-4" data-aos="fade-up">
-            {testData.testLink && (
-              <a
-                href={testData.testLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transform transition-transform duration-300 hover:scale-105"
-              >
-                <FaClipboardList className="mr-2" /> Start Test
-              </a>
-            )}
-            <button
-              onClick={() => (window.location.href = testData.testLink || "#")}
+            <Link
+              href="/details/exam/1"
+              className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transform transition-transform duration-300 hover:scale-105"
+            >
+              <FaClipboardList className="mr-2" /> Attend Test
+            </Link>
+            <Link
+              href="/details/exam/1"
               className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 transform transition-transform duration-300 hover:scale-105"
             >
-              <FaCheckCircle className="mr-2" /> Attend Test
-            </button>
+              <FaCheckCircle className="mr-2" /> View Results
+            </Link>
           </div>
         </div>
       )}

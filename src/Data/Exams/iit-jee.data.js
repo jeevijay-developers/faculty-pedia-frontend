@@ -5,36 +5,41 @@ export const iitJeeLatestPosts = [
     title: "Top 10 Tips for JEE Chemistry",
     educatorName: "Dr. Priya Verma",
     postImage: "/images/placeholders/1.svg",
-    description: "Discover the most effective strategies to master JEE Chemistry. Learn how to approach problems and maximize your score.",
+    description:
+      "Discover the most effective strategies to master JEE Chemistry. Learn how to approach problems and maximize your score.",
   },
   {
     id: 2,
     title: "How to Crack JEE Mathematics",
     educatorName: "Prof. Amit Kumar",
     postImage: "/images/placeholders/1.svg",
-    description: "Essential tips and tricks for excelling in JEE Mathematics. Focus on key concepts and time management.",
+    description:
+      "Essential tips and tricks for excelling in JEE Mathematics. Focus on key concepts and time management.",
   },
   {
     id: 3,
     title: "Physics Problem Solving Hacks",
     educatorName: "Dr. Rajiv Mehta",
     postImage: "/images/placeholders/1.svg",
-    description: "Quick hacks and proven methods to solve tough physics problems in JEE exams. Improve your accuracy and speed.",
+    description:
+      "Quick hacks and proven methods to solve tough physics problems in JEE exams. Improve your accuracy and speed.",
   },
   {
     id: 4,
     title: "Effective Study Plans for JEE",
     educatorName: "Dr. Ankur Gupta",
     postImage: "/images/placeholders/1.svg",
-    description: "Create a personalized study plan that fits your schedule and learning style. Tips from top educators.",
+    description:
+      "Create a personalized study plan that fits your schedule and learning style. Tips from top educators.",
   },
   {
     id: 5,
     title: "JEE Preparation Myths Debunked",
     educatorName: "Prof. Neha Sharma",
     postImage: "/images/placeholders/1.svg",
-    description: "Busting common myths about JEE preparation. Understand what really works and what doesn't.",
-  }
+    description:
+      "Busting common myths about JEE preparation. Understand what really works and what doesn't.",
+  },
 ];
 // Sample data for 1-1 Live Course Courses
 export const iitJeeOneToOneCourseCourses = [
@@ -46,7 +51,7 @@ export const iitJeeOneToOneCourseCourses = [
     qualification: "PhD, Chemistry",
     subject: "Chemistry",
     totalHours: 40,
-    fee: 15000
+    fee: 15000,
   },
   {
     id: 2,
@@ -56,7 +61,7 @@ export const iitJeeOneToOneCourseCourses = [
     qualification: "PhD, Mathematics",
     subject: "Mathematics",
     totalHours: 35,
-    fee: 14000
+    fee: 14000,
   },
   {
     id: 3,
@@ -66,7 +71,7 @@ export const iitJeeOneToOneCourseCourses = [
     qualification: "PhD, Physics",
     subject: "Physics",
     totalHours: 38,
-    fee: 14500
+    fee: 14500,
   },
   {
     id: 4,
@@ -76,7 +81,7 @@ export const iitJeeOneToOneCourseCourses = [
     qualification: "PhD, Chemistry",
     subject: "Chemistry",
     totalHours: 42,
-    fee: 15500
+    fee: 15500,
   },
   {
     id: 5,
@@ -86,7 +91,7 @@ export const iitJeeOneToOneCourseCourses = [
     qualification: "PhD, Mathematics",
     subject: "Mathematics",
     totalHours: 42,
-    fee: 15500
+    fee: 15500,
   },
 ];
 // Sample data for Test Series
@@ -100,7 +105,7 @@ export const iitJeeTestSeries = [
     subject: "Chemistry",
     slug: "organic-chemistry-mastery",
     noOfTests: 25,
-    fee: 15000
+    fee: 15000,
   },
   {
     id: 2,
@@ -111,7 +116,7 @@ export const iitJeeTestSeries = [
     slug: "mathematics-complete-series",
     subject: "Mathematics",
     noOfTests: 30,
-    fee: 14000
+    fee: 14000,
   },
   {
     id: 3,
@@ -122,7 +127,7 @@ export const iitJeeTestSeries = [
     slug: "physics-problem-solving",
     subject: "Physics",
     noOfTests: 22,
-    fee: 14500
+    fee: 14500,
   },
   {
     id: 4,
@@ -133,7 +138,7 @@ export const iitJeeTestSeries = [
     slug: "physical-chemistry-practice",
     subject: "Chemistry",
     noOfTests: 18,
-    fee: 13000
+    fee: 13000,
   },
   {
     id: 5,
@@ -144,8 +149,8 @@ export const iitJeeTestSeries = [
     slug: "advanced-calculus-series",
     subject: "Mathematics",
     noOfTests: 20,
-    fee: 13500
-  }
+    fee: 13500,
+  },
 ];
 
 // Sample data for IIT-JEE educators
@@ -157,7 +162,7 @@ export const iitJeeEducators = [
     education: "PhD, Chemistry",
     experience: "12 years",
     subject: "Chemistry",
-    specialization: "Physical Chemistry"
+    specialization: "Physical Chemistry",
   },
   {
     id: 2,
@@ -166,7 +171,7 @@ export const iitJeeEducators = [
     education: "PhD, Mathematics",
     experience: "15 years",
     subject: "Mathematics",
-    specialization: "Calculus & Algebra"
+    specialization: "Calculus & Algebra",
   },
   {
     id: 3,
@@ -175,7 +180,7 @@ export const iitJeeEducators = [
     education: "PhD, Physics",
     experience: "10 years",
     subject: "Physics",
-    specialization: "Mechanics & Electrodynamics"
+    specialization: "Mechanics & Electrodynamics",
   },
   {
     id: 4,
@@ -184,7 +189,7 @@ export const iitJeeEducators = [
     education: "PhD, Chemistry",
     experience: "8 years",
     subject: "Chemistry",
-    specialization: "Organic Chemistry"
+    specialization: "Organic Chemistry",
   },
   {
     id: 5,
@@ -193,7 +198,7 @@ export const iitJeeEducators = [
     education: "PhD, Mathematics",
     experience: "14 years",
     subject: "Mathematics",
-    specialization: "Trigonometry & Geometry"
+    specialization: "Trigonometry & Geometry",
   },
   {
     id: 6,
@@ -202,8 +207,8 @@ export const iitJeeEducators = [
     education: "PhD, Physics",
     experience: "11 years",
     subject: "Physics",
-    specialization: "Thermodynamics & Optics"
-  }
+    specialization: "Thermodynamics & Optics",
+  },
 ];
 
 export const defaultCourses = [
@@ -215,9 +220,10 @@ export const defaultCourses = [
     price: "7999",
     originalPrice: "9999",
     image: "/images/placeholders/1.svg",
-    description: "This is a comprehensive math foundation course designed for JEE preparation with expert guidance.",
-    enrollLink: "/courses/jee-maths",
-    profileLink: "/instructors/meera-sharma"
+    description:
+      "This is a comprehensive math foundation course designed for JEE preparation with expert guidance.",
+    enrollLink: "/details/exam/1",
+    profileLink: "/instructors/meera-sharma",
   },
   {
     id: 2,
@@ -227,9 +233,10 @@ export const defaultCourses = [
     price: "8999",
     originalPrice: "11999",
     image: "/images/placeholders/1.svg",
-    description: "Complete biology preparation for NEET with detailed concepts and practice sessions.",
-    enrollLink: "/courses/neet-biology",
-    profileLink: "/instructors/rajesh-kumar"
+    description:
+      "Complete biology preparation for NEET with detailed concepts and practice sessions.",
+    enrollLink: "/details/exam/1",
+    profileLink: "/instructors/rajesh-kumar",
   },
   {
     id: 3,
@@ -239,9 +246,10 @@ export const defaultCourses = [
     price: "6999",
     originalPrice: "8999",
     image: "/images/placeholders/1.svg",
-    description: "Advanced physics concepts for engineering entrance exams with practical applications.",
-    enrollLink: "/courses/physics-engineering",
-    profileLink: "/instructors/anita-singh"
+    description:
+      "Advanced physics concepts for engineering entrance exams with practical applications.",
+    enrollLink: "/details/exam/1",
+    profileLink: "/instructors/anita-singh",
   },
   {
     id: 4,
@@ -251,9 +259,10 @@ export const defaultCourses = [
     price: "7499",
     originalPrice: "9499",
     image: "/images/placeholders/1.svg",
-    description: "Comprehensive chemistry course covering organic, inorganic, and physical chemistry.",
-    enrollLink: "/courses/chemistry-complete",
-    profileLink: "/instructors/vikram-patel"
+    description:
+      "Comprehensive chemistry course covering organic, inorganic, and physical chemistry.",
+    enrollLink: "/details/exam/1",
+    profileLink: "/instructors/vikram-patel",
   },
   {
     id: 5,
@@ -263,8 +272,9 @@ export const defaultCourses = [
     price: "4999",
     originalPrice: "6999",
     image: "/images/placeholders/1.svg",
-    description: "Complete English preparation for all competitive exams with grammar and comprehension.",
-    enrollLink: "/courses/english-competitive",
-    profileLink: "/instructors/priya-mehta"
-  }
+    description:
+      "Complete English preparation for all competitive exams with grammar and comprehension.",
+    enrollLink: "/details/exam/1",
+    profileLink: "/instructors/priya-mehta",
+  },
 ];

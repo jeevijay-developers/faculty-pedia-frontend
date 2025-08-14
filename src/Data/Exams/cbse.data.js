@@ -6,10 +6,10 @@ export const CBSEData = [
     price: "4999",
     originalPrice: "5999",
     image: "/images/placeholders/1.svg",
-    enrollLink: "/classes/cbse-6-mathematics",
-    detailsLink: "/classes/cbse-6-mathematics/details",
+    enrollLink: "/details/exam/1",
+    detailsLink: "/details/exam/1",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-7-science",
     detailsLink: "/classes/cbse-7-science/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-8-english",
     detailsLink: "/classes/cbse-8-english/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 4,
@@ -45,7 +45,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-9-science",
     detailsLink: "/classes/cbse-9-science/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 5,
@@ -57,7 +57,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-10-mathematics",
     detailsLink: "/classes/cbse-10-mathematics/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 6,
@@ -69,7 +69,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-11-physics",
     detailsLink: "/classes/cbse-11-physics/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 7,
@@ -81,9 +81,8 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-12-chemistry",
     detailsLink: "/classes/cbse-12-chemistry/details",
     duration: "2 hours",
-    startDate: "Available now"
-  }
-  ,
+    startDate: "Available now",
+  },
   {
     id: 8,
     title: "CBSE Class 6th English",
@@ -94,7 +93,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-6-english",
     detailsLink: "/classes/cbse-6-english/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 9,
@@ -106,7 +105,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-7-mathematics",
     detailsLink: "/classes/cbse-7-mathematics/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 10,
@@ -118,7 +117,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-8-science",
     detailsLink: "/classes/cbse-8-science/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 11,
@@ -130,7 +129,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-9-english",
     detailsLink: "/classes/cbse-9-english/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 12,
@@ -142,7 +141,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-10-science",
     detailsLink: "/classes/cbse-10-science/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 13,
@@ -154,7 +153,7 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-11-chemistry",
     detailsLink: "/classes/cbse-11-chemistry/details",
     duration: "2 hours",
-    startDate: "Available now"
+    startDate: "Available now",
   },
   {
     id: 14,
@@ -166,6 +165,6 @@ export const CBSEData = [
     enrollLink: "/classes/cbse-12-mathematics",
     detailsLink: "/classes/cbse-12-mathematics/details",
     duration: "2 hours",
-    startDate: "Available now"
-  }
+    startDate: "Available now",
+  },
 ];
