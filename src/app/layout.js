@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Faculty Pedia - Educational Platform",
-  description: "Comprehensive educational platform for exams, classes, courses, webinars, and educators",
-  
+  description:
+    "Comprehensive educational platform for exams, classes, courses, webinars, and educators",
 };
 
 export default function RootLayout({ children }) {
@@ -27,11 +27,10 @@ export default function RootLayout({ children }) {
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        suppressHydrationWarning={true}
       >
         <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
+        <main className="flex-grow">{children}</main>
         <Footer />
       </body>
     </html>
