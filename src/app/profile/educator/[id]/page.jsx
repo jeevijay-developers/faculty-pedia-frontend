@@ -1,14 +1,23 @@
+"use client";
+import React, { useEffect } from "react";
 import ViewProfile from "@/components/Educator/ViewProfile";
-import React from "react";
+import { dummyEducatorProfile } from "@/Data/profile.data";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
-const page = async ({ params }) => {
-  const { id } = params;
+const Page = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
+
   return (
-    <div>
-      {/* sfsdf */}
-      <ViewProfile userId={id} />
+    <div className="min-h-screen bg-gray-50">
+      <ViewProfile educatorData={dummyEducatorProfile} />
     </div>
   );
 };
 
-export default page;
+export default Page;
