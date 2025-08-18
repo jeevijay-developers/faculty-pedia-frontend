@@ -75,6 +75,17 @@ const FeaturesMenu = () => {
             <p className="text-sm font-normal mt-2 opacity-90">Evaluate yourself with real-time tests and analytics</p>
           </div>
         </div>
+
+        <div className='group font-bold text-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl'
+        >
+          <div className="text-center flex flex-col items-center">
+            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
+              <GrTest />
+            </span>
+            <div className="text-lg mt-2">CBSE Content</div>
+            <p className="text-sm font-normal mt-2 opacity-90">Comprehensive resources and materials for CBSE students</p>
+          </div>
+        </div>
       </div>
     </section>
   )

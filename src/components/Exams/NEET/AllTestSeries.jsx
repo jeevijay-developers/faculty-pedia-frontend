@@ -5,17 +5,27 @@ import Image from 'next/image';
 import { FaBookOpen, FaGraduationCap, FaUser, FaRupeeSign } from 'react-icons/fa';
 import { MdDateRange, MdQuiz } from 'react-icons/md';
 import { BsShieldCheck } from 'react-icons/bs';
-import { getTestSeriesBySubject, getAllSubjects, formatDate, formatCurrency, calculateValidity } from '../../../Data/TestSeries/testseries.data';
+import { getTestSeriesByExamAndSubject, getAllSubjectsByExam, formatDate, formatCurrency, calculateValidity } from '../../../Data/TestSeries/testseries.data';
 
-const AllTestSeries = () => {
-  const [activeTab, setActiveTab] = useState('Physics');
+const AllTestSeries = ({ exam = 'NEET' }) => {
+  const initialSubjects = getAllSubjectsByExam(exam);
+  const [activeTab, setActiveTab] = useState(initialSubjects[0] || 'Physics');
   const [filteredTestSeries, setFilteredTestSeries] = useState([]);
-  const [subjects] = useState(getAllSubjects());
+  const [subjects, setSubjects] = useState(initialSubjects);
 
   useEffect(() => {
-    const filtered = getTestSeriesBySubject(activeTab);
+    // When exam changes, refresh subjects and active tab
+    const subs = getAllSubjectsByExam(exam);
+    setSubjects(subs);
+    if (subs.length && !subs.includes(activeTab)) {
+      setActiveTab(subs[0]);
+    }
+  }, [exam]);
+
+  useEffect(() => {
+    const filtered = getTestSeriesByExamAndSubject(exam, activeTab);
     setFilteredTestSeries(filtered);
-  }, [activeTab]);
+  }, [exam, activeTab]);
 
   const TestSeriesCard = ({ testSeries }) => (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-blue-300 overflow-hidden">

@@ -27,7 +27,7 @@ export const testSeriesData = [
     teacher: {
       _id: "educator_001",
       name: "Ankit Sharma",
-  profileImage: "/images/placeholders/square.svg",
+      profileImage: "/images/placeholders/square.svg",
       qualification: "M.Sc. PhD",
       experience: "8 years experience"
     }
@@ -216,6 +216,89 @@ export const testSeriesData = [
       experience: "7 years experience"
     }
   }
+  ,
+  // IIT-JEE Test Series
+  {
+    _id: "jee_physics_001",
+    title: "mock test series on physics for jee",
+    description: {
+      short: "JEE Physics mock tests with chapter-wise coverage",
+      long: "Comprehensive JEE Physics test series focusing on Mechanics, Electrodynamics, Optics and more, aligned to JEE Main & Advanced patterns."
+    },
+    price: 599,
+    noOfTests: 14,
+    startDate: "2024-09-01T00:00:00.000Z",
+    endDate: "2025-03-01T00:00:00.000Z",
+    image: { public_id: "jee_physics_001_img", url: "/images/placeholders/1.svg" },
+    teacherId: "educator_011",
+    enrolledStudents: [],
+    liveTests: [],
+    isCourseSpecific: false,
+    courseId: null,
+    subject: "Physics",
+    specialization: "IIT-JEE",
+    teacher: {
+      _id: "educator_011",
+      name: "Prof. Karan Mehta",
+      profileImage: "/images/placeholders/square.svg",
+      qualification: "M.Tech (IIT)",
+      experience: "9 years experience"
+    }
+  },
+  {
+    _id: "jee_chemistry_001",
+    title: "complete chemistry test series for jee",
+    description: {
+      short: "JEE Chemistry test series covering Physical, Organic, Inorganic",
+      long: "Extensive JEE Chemistry test series with balanced weightage across Physical, Organic and Inorganic, including previous year patterns."
+    },
+    price: 549,
+    noOfTests: 16,
+    startDate: "2024-09-10T00:00:00.000Z",
+    endDate: "2025-03-10T00:00:00.000Z",
+    image: { public_id: "jee_chemistry_001_img", url: "/images/placeholders/1.svg" },
+    teacherId: "educator_012",
+    enrolledStudents: [],
+    liveTests: [],
+    isCourseSpecific: false,
+    courseId: null,
+    subject: "Chemistry",
+    specialization: "IIT-JEE",
+    teacher: {
+      _id: "educator_012",
+      name: "Dr. Ruchi Arora",
+      profileImage: "/images/placeholders/square.svg",
+      qualification: "Ph.D. Chemistry",
+      experience: "10 years experience"
+    }
+  },
+  {
+    _id: "jee_mathematics_001",
+    title: "advanced mathematics test series for jee",
+    description: {
+      short: "JEE Maths test series focusing on Calculus, Algebra, Coordinate",
+      long: "Rigorous JEE Mathematics test series with chapter-wise and mixed-format tests covering Calculus, Algebra, Trigonometry and Coordinate Geometry."
+    },
+    price: 649,
+    noOfTests: 18,
+    startDate: "2024-09-05T00:00:00.000Z",
+    endDate: "2025-04-05T00:00:00.000Z",
+    image: { public_id: "jee_mathematics_001_img", url: "/images/placeholders/1.svg" },
+    teacherId: "educator_013",
+    enrolledStudents: [],
+    liveTests: [],
+    isCourseSpecific: false,
+    courseId: null,
+    subject: "Mathematics",
+    specialization: "IIT-JEE",
+    teacher: {
+      _id: "educator_013",
+      name: "Prof. Neha Gupta",
+      profileImage: "/images/placeholders/square.svg",
+      qualification: "M.Sc. Mathematics",
+      experience: "8 years experience"
+    }
+  }
 ];
 
 // Helper functions
@@ -250,4 +333,21 @@ export const calculateValidity = (startDate, endDate) => {
   const diffTime = Math.abs(end - start);
   const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
   return `${diffMonths} months`;
+};
+
+// New helpers for exam-specific filtering
+export const getAllSubjectsByExam = (exam) => {
+  return [
+    ...new Set(
+      testSeriesData
+        .filter((t) => t.specialization === exam)
+        .map((t) => t.subject)
+    ),
+  ];
+};
+
+export const getTestSeriesByExamAndSubject = (exam, subject) => {
+  return testSeriesData.filter(
+    (t) => t.specialization === exam && t.subject === subject
+  );
 };
