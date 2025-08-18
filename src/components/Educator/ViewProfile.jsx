@@ -15,7 +15,8 @@ const ViewProfile = ({ userId }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <ProfileHeader
-        name={educator.name}
+        firstName={educator.firstName}
+        lastName={educator.lastName}
         rating={educator.rating}
         reviewCount={educator.reviewCount}
         image={educator.profileImage.url}

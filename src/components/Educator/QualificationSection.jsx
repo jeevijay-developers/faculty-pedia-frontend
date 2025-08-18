@@ -10,6 +10,7 @@ import {
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
+import { formatDate } from "@/utils/dateFormatter";
 
 const QualificationSection = ({ education, experience }) => {
   useEffect(() => {
@@ -43,11 +44,11 @@ const QualificationSection = ({ education, experience }) => {
                       <FaBuilding className="w-4 h-4 mr-2 text-gray-400" />
                       {edu.institute}
                     </p>
-                    <div className="flex items-center mt-3 text-sm text-gray-500">
-                      <FaCalendarAlt className="w-4 h-4 mr-2 text-blue-500" />
-                      <span className="flex-1">
-                        {new Date(edu.startDate).toLocaleDateString()} -{" "}
-                        {new Date(edu.endDate).toLocaleDateString()}
+                    <div className="flex items-center mt-3 text-sm text-gray-500 gap-2">
+                         <FaCalendarAlt />
+                         <span className="flex-1">
+                           {formatDate(edu.startDate)} -{" "}
+                           {formatDate(edu.endDate)}
                       </span>
                     </div>
                   </div>
@@ -94,11 +95,11 @@ const QualificationSection = ({ education, experience }) => {
                       <FaBuilding className="w-4 h-4 mr-2 text-gray-400" />
                       {exp.company}
                     </p>
-                    <div className="flex items-center mt-3 text-sm text-gray-500">
+                    <div className="flex items-center mt-3 text-sm text-gray-500 gap-1">
                       <FaCalendarAlt className="w-4 h-4 mr-2 text-green-500" />
                       <span className="flex-1">
-                        {new Date(exp.startDate).toLocaleDateString()} -{" "}
-                        {new Date(exp.endDate).toLocaleDateString()}
+                        {formatDate(exp.startDate)} -{" "}
+                        {formatDate(exp.endDate)}
                       </span>
                     </div>
                   </div>
