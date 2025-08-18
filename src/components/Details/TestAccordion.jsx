@@ -133,13 +133,13 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
           <div className="mt-6 flex gap-4" data-aos="fade-up">
             <Link
               href="/details/exam/1"
-              className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transform transition-transform duration-300 hover:scale-105"
+              className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transform transition-transform duration-300 hover:scale-102"
             >
               <FaClipboardList className="mr-2" /> Attend Test
             </Link>
             <Link
               href="/details/exam/1"
-              className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 transform transition-transform duration-300 hover:scale-105"
+              className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 transform transition-transform duration-300 hover:scale-102"
             >
               <FaCheckCircle className="mr-2" /> View Results
             </Link>

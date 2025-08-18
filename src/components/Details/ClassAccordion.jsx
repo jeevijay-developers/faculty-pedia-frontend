@@ -113,7 +113,7 @@ const ClassAccordion = ({ classData, isExpanded, onToggle }) => {
                 href={classData.liveClassLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transform transition-transform duration-300 hover:scale-105"
+                className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 transform transition-transform duration-300 hover:scale-102"
               >
                 <FaChalkboardTeacher className="mr-2" /> Join Live Class
               </a>

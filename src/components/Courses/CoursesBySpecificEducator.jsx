@@ -315,7 +315,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
                   </p>
                 </div>
                 
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 transform hover:scale-102 shadow-lg hover:shadow-xl">
                   Pay Now & Enroll
                 </button>
               </div>

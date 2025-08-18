@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { MdLaptop, MdChat, MdMenuBook  } from "react-icons/md";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { GrTest } from "react-icons/gr";
+import Image from 'next/image';
 
 const FeaturesMenu = () => {
 
@@ -25,7 +26,7 @@ const FeaturesMenu = () => {
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
-              <MdLaptop />
+              <Image src={"/features/live-classes.png"} width={40} height={40} alt='Live Classes' />
             </span>
             <div className="text-lg mt-2">Online Classes</div>
             <p className="text-sm font-normal mt-2 opacity-90">Attend interactive classes from anywhere, anytime</p>
@@ -36,7 +37,7 @@ const FeaturesMenu = () => {
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
-              <MdLaptop />
+              <Image src={"/features/1-1-live.png"} width={40} height={40} alt='1-on-1 Live Classes' />
             </span>
             <div className="text-lg mt-2">1-on-1 Live Classes</div>
             <p className="text-sm font-normal mt-2 opacity-90">Personalized sessions for focused learning</p>
@@ -47,7 +48,7 @@ const FeaturesMenu = () => {
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
-              <FaChalkboardTeacher />
+              <Image src={"/features/webinars.png"} width={40} height={40} alt='Webinars' />
             </span>
             <div className="text-lg mt-2">Webinars</div>
             <p className="text-sm font-normal mt-2 opacity-90">Live expert discussions and sessions</p>
@@ -58,7 +59,7 @@ const FeaturesMenu = () => {
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
-              <MdMenuBook />
+              <Image src={"/features/study-material.png"} width={40} height={40} alt='Study Material' />
             </span>
             <div className="text-lg mt-2">Study Material</div>
             <p className="text-sm font-normal mt-2 opacity-90">High-quality notes, PDFs, and resources</p>
@@ -69,7 +70,7 @@ const FeaturesMenu = () => {
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
-              <GrTest />
+              <Image src={"/features/live-test.png"} width={40} height={40} alt='Live Tests' />
             </span>
             <div className="text-lg mt-2">Online Tests</div>
             <p className="text-sm font-normal mt-2 opacity-90">Evaluate yourself with real-time tests and analytics</p>
@@ -80,7 +81,7 @@ const FeaturesMenu = () => {
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
-              <GrTest />
+              <Image src={"/features/CBSE.png"} width={40} height={40} alt='CBSE Content' />
             </span>
             <div className="text-lg mt-2">CBSE Content</div>
             <p className="text-sm font-normal mt-2 opacity-90">Comprehensive resources and materials for CBSE students</p>

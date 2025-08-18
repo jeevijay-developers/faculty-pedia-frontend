@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaStar, FaUsers, FaClock } from "react-icons/fa";
+import { formatDate } from '@/Data/TestSeries/testseries.data';
 
 const CoursesSection = ({ courses }) => {
   return (
@@ -11,7 +12,7 @@ const CoursesSection = ({ courses }) => {
         Courses by this Educator
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {courses.map((course, index) => (
           <CourseCard key={index} course={course} />
         ))}
@@ -33,10 +34,11 @@ const CourseCard = ({ course }) => {
     id,
     title,
     thumbnail,
-    price,
+    fees,
     originalPrice,
-    duration,
-    students,
+    startDate,
+    endDate,
+    seatLimit,
     rating,
   } = course;
 
@@ -45,7 +47,7 @@ const CourseCard = ({ course }) => {
       {/* Course Thumbnail */}
       <div className="relative h-40 w-full">
         <Image
-          src={thumbnail || "/images/placeholders/1.svg"}
+          src={thumbnail || "/images/placeholders/square.svg"}
           alt={title}
           fill
           className="object-cover"
@@ -71,18 +73,21 @@ const CourseCard = ({ course }) => {
 
           <div className="flex items-center text-sm text-gray-600">
             <FaUsers className="mr-1" />
-            <span>{students} students</span>
+            <span>{seatLimit} students</span>
           </div>
         </div>
 
         <div className="flex items-center text-sm text-gray-600 mb-3">
           <FaClock className="mr-1" />
-          <span>{duration}</span>
+          <div className="flex gap-1">
+            <span>{formatDate(startDate)}</span> - 
+            <span>{formatDate(endDate)}</span>
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
           <div>
-            <span className="font-bold text-gray-800">₹{price}</span>
+            <span className="font-bold text-gray-800">₹{fees}</span>
             {originalPrice && (
               <span className="ml-2 text-gray-500 line-through text-sm">
                 ₹{originalPrice}

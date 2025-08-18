@@ -18,7 +18,7 @@ const ViewProfile = ({ userId }) => {
         name={educator.name}
         rating={educator.rating}
         reviewCount={educator.reviewCount}
-        image={educator.image}
+        image={educator.profileImage.url}
         bio={educator.bio}
       />
       {/* assds */}

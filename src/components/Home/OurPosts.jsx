@@ -104,7 +104,7 @@ const PostCard = ({ post }) => {
           src={post.image}
           alt={post.title}
           fill
-          className="object-cover transition-transform duration-300 hover:scale-105"
+          className="object-cover transition-transform duration-300 hover:scale-102"
           onError={(e) => {
             e.target.style.display = 'none';
           }}

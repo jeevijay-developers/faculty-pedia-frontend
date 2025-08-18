@@ -8,7 +8,7 @@ import { MdDateRange, MdQuiz } from 'react-icons/md';
 import { BsShieldCheck } from 'react-icons/bs';
 import { getTestSeriesByExamAndSubject, getAllSubjectsByExam, formatDate, formatCurrency, calculateValidity } from '../../../Data/TestSeries/testseries.data';
 
-const AllTestSeries = ({ exam = 'NEET' }) => {
+const AllTestSeries = ({ exam = 'IIT-JEE' }) => {
   const initialSubjects = getAllSubjectsByExam(exam);
   const [activeTab, setActiveTab] = useState(initialSubjects[0] || 'Physics');
   const [filteredTestSeries, setFilteredTestSeries] = useState([]);

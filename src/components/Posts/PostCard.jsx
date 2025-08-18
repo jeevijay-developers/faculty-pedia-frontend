@@ -51,7 +51,7 @@ const PostCard = ({ post }) => {
           src={thumbnail}
           alt={title}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          className="object-cover group-hover:scale-102 transition-transform duration-300"
         />
         {/* Category Badge */}
         <div className="absolute top-3 left-3">

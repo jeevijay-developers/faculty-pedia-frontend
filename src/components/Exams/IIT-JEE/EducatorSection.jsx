@@ -109,7 +109,7 @@ const EducatorSection = () => {
                   </div>
                   <div className="mt-2">
                     <Link
-                      href={`/educators/${educator.name}`}
+                      href={`/profile/educator/${educator.name}`}
                       className="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center group"
                     >
                       View Profile

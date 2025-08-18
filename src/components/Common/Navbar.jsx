@@ -120,7 +120,7 @@ const Navbar = () => {
               </Link>
               <Link
                 href="/educator-login"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-102 shadow-md hover:shadow-lg"
               >
                Join As Educator
               </Link>
