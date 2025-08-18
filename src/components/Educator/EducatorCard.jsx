@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const EducatorCard = ({ educator }) => {
     const { 
@@ -60,12 +61,17 @@ const EducatorCard = ({ educator }) => {
             {/* Followers and Follow Button */}
             <div className="flex items-center justify-end">
                 <div className="flex space-x-2">
-                    <button className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-                        View Profile
-                    </button>
-                    <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                        View Courses
-                    </button>
+                    
+                    <Link href={`/profile/educator/${educator.id}`}>
+                        <button className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+                            View Profile
+                        </button>
+                    </Link>
+                    <Link href={`/educators/${educator.id}/courses`}>
+                        <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                            View Courses
+                        </button>
+                    </Link>
                 </div>
             </div>
 

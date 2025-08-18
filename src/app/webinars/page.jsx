@@ -25,7 +25,7 @@ export default function WebinarsPage() {
           "Explore a variety of webinars designed to help you learn and grow with expert faculty guidance."
         }
       />
-      <div className="max-w-7xl mx-auto p-4">
+      <div className="max-w-7xl mx-auto p-4 mt-8">
         <h1
           className="text-3xl font-bold text-gray-900 mb-8"
           data-aos="fade-up"

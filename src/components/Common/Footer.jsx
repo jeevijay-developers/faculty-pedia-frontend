@@ -21,13 +21,13 @@ const Footer = () => {
     { name: 'Courses', href: '/courses' },
     { name: 'Webinars', href: '/webinars' },
     { name: 'Educators', href: '/educators' },
+    { name: 'Posts', href: '/posts' },
   ];
 
   const examCategories = [
     { name: 'IIT JEE', href: '/exams/iitjee' },
     { name: 'NEET', href: '/exams/neet' },
     { name: 'CBSE', href: '/exams/cbse' },
-    { name: 'Other Exams', href: '/exams/others' },
   ];
 
   const companyInfo = [

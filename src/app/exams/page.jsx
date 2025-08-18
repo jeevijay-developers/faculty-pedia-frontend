@@ -2,7 +2,6 @@ import IITJEESection from '@/components/Exams/IITJEESection'
 import NEETExamSection from '@/components/Exams/NEETExam'
 import CBSESection from '@/components/Exams/CBSESection'
 import React from 'react'
-import OfflineExamSection from '@/components/Exams/OfflineSections'
 import Banner from '@/components/Common/Banner'
 
 const page = () => {
@@ -16,7 +15,6 @@ const page = () => {
       <IITJEESection />
       <NEETExamSection />
       <CBSESection />
-      <OfflineExamSection />
     </>
   )
 }
