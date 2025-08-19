@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import ViewProfile from "@/components/Educator/ViewProfile";
-import { dummyEducatorProfile } from "@/Data/profile.data";
+import educatorProfile from "@/Data/profile.data";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -15,7 +15,7 @@ const Page = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <ViewProfile educatorData={dummyEducatorProfile} />
+      <ViewProfile educatorData={educatorProfile} />
     </div>
   );
 };
