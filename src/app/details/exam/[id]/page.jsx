@@ -1,7 +1,7 @@
 import React from "react";
 import Banner from "@/components/Common/Banner";
 import ExamDetails from "@/components/Details/ExamDetails";
-import liveTestSeriesExample from "@/Data/Details/testSeries.data";
+import { testSeriesData } from "@/Data/TestSeries/testseries.data";
 // import sampleExam from "@/Data/Details/testSeries.data";
 
 const Page = async ({ params }) => {
@@ -15,7 +15,7 @@ const Page = async ({ params }) => {
           "Comprehensive mock tests designed to enhance your preparation and knowledge."
         }
       />
-      <ExamDetails examData={liveTestSeriesExample} />
+      <ExamDetails examData={testSeriesData} />
     </div>
   );
 };
