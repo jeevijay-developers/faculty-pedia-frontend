@@ -200,12 +200,12 @@ const CourseCard = ({ course }) => {
 
                 {/* Actions */}
                 <div className="space-y-2 mt-auto">
-                    <Link
+                    {/* <Link
                         href={course.enrollLink}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
                     >
                         Enroll Now
-                    </Link>
+                    </Link> */}
                     <div className="flex space-x-2">
                         <Link
                             href={course.enrollLink}

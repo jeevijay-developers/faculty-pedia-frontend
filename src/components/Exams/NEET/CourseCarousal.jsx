@@ -169,13 +169,6 @@ const CourseCard = ({ course }) => {
         </h3>
           <h4 className="text-base font-semibold text-gray-600 mb-1">{course.instructor}</h4>
 
-        {/* Instructor */}
-        <div className="mb-4 flex-grow">
-          <p className="text-sm text-gray-600 line-clamp-2">
-            {course.description}
-          </p>
-        </div>
-
         {/* Duration */}
         <div className="mb-3">
           <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-medium">

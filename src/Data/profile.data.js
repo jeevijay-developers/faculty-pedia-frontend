@@ -47,7 +47,9 @@ const educatorProfile = {
   },
   status: "active",
   rating: 4.7,
+  reviewCount: 120,
   specialization: "IIT-JEE",
+  demoVideoLink: "https://youtube.com/watch?v=demo123",
   courses: [
     {
       _id: "64f2a8f3a27c4a9ab0f27c01",

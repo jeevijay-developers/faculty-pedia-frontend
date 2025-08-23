@@ -19,7 +19,7 @@ const page = () => {
         btnUrl={"/join-as-educator"}
       />
       <EducatorSection />
-      <CourseCarousel title='Online Courses for NEET' viewMoreLink='/courses/neet' />
+      <CourseCarousel title='Online Courses' viewMoreLink='/courses/neet' />
       <OneToOneCourseClasses />
       <OneToOnePPHClasses />
       <UpcomingWebinarSection />

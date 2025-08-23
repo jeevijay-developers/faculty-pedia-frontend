@@ -31,7 +31,7 @@ const EducatorSection = () => {
     <section className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-row justify-between items-center gap-2 mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">Top Educators</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">Educators</h2>
           <Link 
             href={'/educators/neet'}
             className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"

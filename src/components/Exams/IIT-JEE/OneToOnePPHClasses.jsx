@@ -26,7 +26,7 @@ const OneToOnePPHClasses = () => {
     <section className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row justify-between items-center gap-2 mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">1-1 Live Pay Per Hour Classes</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">1-1 Live Pay Per Hour</h2>
           <Link 
             href="/courses/iit-jee/one-to-one-pph"
             className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
@@ -102,9 +102,6 @@ const OneToOnePPHClasses = () => {
                     </div>
                     <div className="mb-2 text-sm text-gray-600">
                       <span className="font-medium">Subject: </span>{course.subject}
-                    </div>
-                    <div className="mb-2 text-sm text-gray-600">
-                      <span className="font-medium">Total Hours: </span>{course.totalHours}
                     </div>
                     <div className="mb-4 text-sm text-gray-600">
                       <span className="font-medium">Fee: </span>₹{course.fee.toLocaleString()}

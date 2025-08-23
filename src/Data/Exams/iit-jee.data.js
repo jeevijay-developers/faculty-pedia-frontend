@@ -50,8 +50,7 @@ export const iitJeeOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Chemistry",
     subject: "Chemistry",
-    totalHours: 40,
-    fee: 15000,
+    fee: 100,
   },
   {
     id: 2,
@@ -60,8 +59,7 @@ export const iitJeeOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Mathematics",
     subject: "Mathematics",
-    totalHours: 35,
-    fee: 14000,
+    fee: 110,
   },
   {
     id: 3,
@@ -70,8 +68,7 @@ export const iitJeeOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Physics",
     subject: "Physics",
-    totalHours: 38,
-    fee: 14500,
+    fee: 130,
   },
   {
     id: 4,
@@ -80,8 +77,7 @@ export const iitJeeOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Chemistry",
     subject: "Chemistry",
-    totalHours: 42,
-    fee: 15500,
+    fee: 150,
   },
   {
     id: 5,
@@ -90,8 +86,7 @@ export const iitJeeOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Mathematics",
     subject: "Mathematics",
-    totalHours: 42,
-    fee: 15500,
+    fee: 150,
   },
 ];
 // Sample data for Test Series

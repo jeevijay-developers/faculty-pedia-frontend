@@ -148,12 +148,12 @@ const ExamCard = ({ exam }) => {
 
         {/* Action Buttons */}
         <div className="flex flex-row gap-2">
-          <Link
+          {/* <Link
             href={exam.enrollLink}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
           >
             Enroll Now
-          </Link>
+          </Link> */}
           <Link
             href={exam.detailsLink}
             className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"

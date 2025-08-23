@@ -51,8 +51,7 @@ export const neetOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Botany & Zoology",
     subject: "Biology",
-    totalHours: 45,
-    fee: 16000,
+    fee: 160,
     enrollLink: "/details/exam/1",
   },
   {
@@ -62,8 +61,7 @@ export const neetOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Organic Chemistry",
     subject: "Chemistry",
-    totalHours: 40,
-    fee: 15000,
+    fee: 150,
     enrollLink: "/details/exam/1",
   },
   {
@@ -73,8 +71,7 @@ export const neetOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Medical Physics",
     subject: "Physics",
-    totalHours: 35,
-    fee: 14000,
+    fee: 140,
     enrollLink: "/details/exam/1",
   },
   {
@@ -84,8 +81,7 @@ export const neetOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "MD, MBBS",
     subject: "Biology",
-    totalHours: 50,
-    fee: 17000,
+    fee: 100,
     enrollLink: "/details/exam/1",
   },
   {
@@ -95,8 +91,7 @@ export const neetOneToOneCourseCourses = [
     postImage: "/images/placeholders/1.svg",
     qualification: "PhD, Physical Chemistry",
     subject: "Chemistry",
-    totalHours: 42,
-    fee: 15500,
+    fee: 150,
     enrollLink: "/details/exam/1",
   },
 ];
@@ -110,7 +105,7 @@ export const neetCourses = [
     image: "/images/placeholders/1.svg",
     description:
       "Comprehensive biology course covering all NEET topics including botany, zoology, and human physiology with detailed explanations.",
-    duration: "6 months",
+    duration: "24 weeks",
     price: "15999",
     originalPrice: "19999",
     enrollLink: "/details/exam/1",
@@ -122,7 +117,7 @@ export const neetCourses = [
     image: "/images/placeholders/1.svg",
     description:
       "Master organic, inorganic, and physical chemistry with advanced problem-solving techniques and exam strategies.",
-    duration: "5 months",
+    duration: "20 weeks",
     price: "14999",
     originalPrice: "18999",
     enrollLink: "/courses/neet/chemistry-masterclass",
@@ -134,7 +129,7 @@ export const neetCourses = [
     image: "/images/placeholders/1.svg",
     description:
       "Complete physics preparation with focus on mechanics, thermodynamics, and modern physics concepts for NEET.",
-    duration: "4 months",
+    duration: "16 weeks",
     price: "12999",
     originalPrice: "16999",
     enrollLink: "/courses/neet/physics-excellence",
@@ -146,7 +141,7 @@ export const neetCourses = [
     image: "/images/placeholders/1.svg",
     description:
       "Strong foundation building course covering all three subjects with basic to advanced level preparation.",
-    duration: "8 months",
+    duration: "32 weeks",
     price: "24999",
     originalPrice: "29999",
     enrollLink: "/courses/neet/foundation-course",
@@ -158,7 +153,7 @@ export const neetCourses = [
     image: "/images/placeholders/1.svg",
     description:
       "Intensive last-minute preparation course with quick revision, important topics, and exam strategies.",
-    duration: "2 months",
+    duration: "8 weeks",
     price: "9999",
     originalPrice: "12999",
     enrollLink: "/courses/neet/crash-course",
@@ -170,7 +165,7 @@ export const neetCourses = [
     image: "/images/placeholders/1.svg",
     description:
       "Specialized biology course focusing on medical entrance requirements with clinical correlations and case studies.",
-    duration: "6 months",
+    duration: "24 weeks",
     price: "17999",
     originalPrice: "21999",
     enrollLink: "/courses/neet/medical-biology",
