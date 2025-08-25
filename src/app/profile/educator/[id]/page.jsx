@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import ViewProfile from "@/components/Educator/ViewProfile";
-import { educatorProfile } from "@/Data/profile.data";
+import { educatorProfile } from "@/Data/Educator/educator-profile.data";
 import AOS from "aos";
 import "aos/dist/aos.css";
 

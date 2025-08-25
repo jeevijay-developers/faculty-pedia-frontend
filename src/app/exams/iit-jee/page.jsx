@@ -1,11 +1,11 @@
 import Banner from '@/components/Common/Banner'
 import CourseCarousel from '@/components/Exams/IIT-JEE/CourseCarousal'
-import EducatorSection from '@/components/Exams/IIT-JEE/EducatorSection'
+import EducatorsCarousel from '@/components/Educator/EducatorsCarousel'
 import OneToOneCourseClasses from '@/components/Exams/IIT-JEE/OneToOneCourseClasses'
 import OneToOnePPHClasses from '@/components/Exams/IIT-JEE/OneToOnePPHClasses'
-import PostSection from '@/components/Exams/IIT-JEE/PostSection'
 import TestSeriesSection from '@/components/Exams/IIT-JEE/TestSeriesSection'
 import UpcomingWebinarSection from '@/components/Exams/IIT-JEE/WebinarSection'
+import PostCarousel from '@/components/Posts/PostsCarousal'
 import React from 'react'
 
 const page = () => {
@@ -19,13 +19,13 @@ const page = () => {
         btnUrl={"/join-as-educator"}
       />
 
-      <EducatorSection />
-      <CourseCarousel title='Online Courses for IIT-JEE' viewMoreLink='/courses/iit-jee'  />
+      <EducatorsCarousel specialization='IIT-JEE' />
+      <CourseCarousel title='Online Courses for IIT-JEE' viewMoreLink='/courses'  />
       <OneToOneCourseClasses />
       <OneToOnePPHClasses />
       <UpcomingWebinarSection />
       <TestSeriesSection />
-      <PostSection />
+      <PostCarousel subject='IIT-JEE' />
     </>
   )
 }

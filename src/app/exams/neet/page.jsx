@@ -1,11 +1,11 @@
 import Banner from '@/components/Common/Banner'
+import EducatorsCarousel from '@/components/Educator/EducatorsCarousel'
 import CourseCarousel from '@/components/Exams/NEET/CourseCarousal'
-import EducatorSection from '@/components/Exams/NEET/EducatorSection'
 import OneToOneCourseClasses from '@/components/Exams/NEET/OneToOneCourseClasses'
 import OneToOnePPHClasses from '@/components/Exams/NEET/OneToOnePPHClasses'
 import TestSeriesSection from '@/components/Exams/NEET/TestSeriesSection'
 import UpcomingWebinarSection from '@/components/Exams/NEET/WebinarSection'
-import PostSection from '@/components/Exams/NEET/PostSection'
+import PostCarousel from '@/components/Posts/PostsCarousal'
 import React from 'react'
 
 const page = () => {
@@ -18,13 +18,13 @@ const page = () => {
         btnTitle={" Join as Educator"}
         btnUrl={"/join-as-educator"}
       />
-      <EducatorSection />
+     <EducatorsCarousel specialization='NEET' />
       <CourseCarousel title='Online Courses' viewMoreLink='/courses/neet' />
       <OneToOneCourseClasses />
       <OneToOnePPHClasses />
       <UpcomingWebinarSection />
       <TestSeriesSection />
-      <PostSection />
+      <PostCarousel subject='NEET' />
     </>
   )
 }

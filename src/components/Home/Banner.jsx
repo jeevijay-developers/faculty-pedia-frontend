@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
-import { banners } from '../../Data/data';
+import { Autoplay, EffectFade } from 'swiper/modules';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
+
 
 const Banner = () => {
 
@@ -79,4 +77,18 @@ const Banner = () => {
   );
 };
 
+export const banners = [
+  {
+    image: "/images/Banner/2.png",
+    title: "Meet your favorite educators",
+    subtitle:
+      "Join live classes and webinars with top educators to enhance your learning experience",
+  },
+  {
+    image: "/images/Banner/3.png",
+    title: "Start teaching online",
+    subtitle:
+      "Become an educator and share your knowledge with students worldwide through our platform",
+  },
+];
 export default Banner;

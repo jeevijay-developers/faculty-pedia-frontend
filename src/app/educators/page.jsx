@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import EducatorCard from '../../components/Educator/EducatorCard';
-import { educatorData, getEducatorsBySpecialization } from '../../Data/educator.data';
+import { getEducatorBySubject } from '../../Data/Educator/educator-profile.data';
 import Banner from '@/components/Common/Banner';
 
 const EducatorsPage = () => {
@@ -10,7 +10,7 @@ const EducatorsPage = () => {
     
     const subjects = ['Physics', 'Chemistry', 'Biology', 'Mathematics'];
     
-    const filteredEducators = getEducatorsBySpecialization(activeTab);
+    const filteredEducators = getEducatorBySubject(activeTab);
 
     return (
         <div className="min-h-screen bg-gray-50">

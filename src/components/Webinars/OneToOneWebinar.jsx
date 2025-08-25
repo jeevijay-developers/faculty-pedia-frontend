@@ -6,7 +6,7 @@ import { Navigation } from 'swiper/modules';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowRight } from 'react-icons/fi';
-import { OneToOneWebinarData } from '@/Data/webinar.data';
+import { OneToOneWebinarData } from '@/Data/Webinar/webinar.data';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 // Import Swiper styles

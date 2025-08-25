@@ -9,7 +9,7 @@ export const coursesData = [
       public_id: "course1_img",
       url: "/images/courses/physics-course-1.jpg"
     },
-    title: "comprehensive physics for iit jee",
+    title: "Comprehensive physics for iit jee",
     description: {
       shortDesc: "Master Physics for IIT JEE with comprehensive problem-solving techniques",
       longDesc: "This course covers all essential topics in Physics, providing in-depth knowledge and problem-solving techniques for IIT JEE aspirants. From mechanics to modern physics, every concept is explained with real-world applications and exam-focused strategies."
@@ -47,7 +47,7 @@ export const coursesData = [
       public_id: "course2_img",
       url: "/images/courses/biology-course-1.jpg"
     },
-    title: "advanced biology for neet",
+    title: "Advanced Biology for NEET",
     description: {
       shortDesc: "Complete Biology preparation for NEET with latest syllabus coverage",
       longDesc: "Comprehensive Biology course designed specifically for NEET aspirants covering Botany, Zoology, and Human Physiology with detailed explanations and practice questions."
@@ -85,7 +85,7 @@ export const coursesData = [
       public_id: "course3_img",
       url: "/images/courses/physics-course-2.jpg"
     },
-    title: "advanced physics for iit jee mains and advanced",
+    title: "Advanced Physics for IIT JEE Mains and Advanced ",
     description: {
       shortDesc: "Advanced Physics concepts for IIT JEE Mains and Advanced preparation",
       longDesc: "Advanced level Physics course targeting IIT JEE Mains and Advanced with focus on problem-solving strategies, time management, and conceptual clarity."
@@ -123,7 +123,7 @@ export const coursesData = [
       public_id: "course4_img",
       url: "/images/courses/math-course-1.jpg"
     },
-    title: "complete mathematics for cbse class 10",
+    title: "Complete Mathematics for CBSE Class 10",
     description: {
       shortDesc: "Complete CBSE Class 10 Mathematics with board exam preparation",
       longDesc: "Comprehensive Mathematics course for CBSE Class 10 students covering all chapters with detailed explanations, practice problems, and board exam strategies."
@@ -161,7 +161,7 @@ export const coursesData = [
       public_id: "course5_img",
       url: "/images/courses/chemistry-course-1.jpg"
     },
-    title: "organic chemistry mastery for neet",
+    title: "Organic Chemistry Mastery for NEET",
     description: {
       shortDesc: "Master Organic Chemistry for NEET with mechanism-based learning",
       longDesc: "Specialized Organic Chemistry course for NEET preparation focusing on reaction mechanisms, name reactions, and problem-solving techniques with extensive practice."

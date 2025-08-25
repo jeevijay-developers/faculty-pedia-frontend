@@ -1,6 +1,6 @@
-const educatorProfile = {
-  firstName: "john",
-  lastName: "doe",
+export const educatorProfile = {
+  firstName: "John",
+  lastName: "Doe",
   password: "SecurePass123", // will be hashed before saving
   mobileNumber: "9876543210",
   email: "johndoe@example.com",
@@ -422,5 +422,252 @@ const educatorProfile = {
     },
   ],
 };
+
+// Array of multiple educators for carousel
+export const educatorsData = [
+  {
+    id: "edu_001",
+    firstName: "john",
+    lastName: "doe",
+    name: "Dr. John Doe",
+    email: "johndoe@example.com",
+    profileImage: {
+      public_id: "educator_placeholder",
+      url: "/images/Banner/1.png",
+    },
+    bio: "Passionate physics educator with over 10 years of experience teaching IIT-JEE aspirants.",
+    qualification: "M.Sc Physics, B.Sc Physics",
+    experience: "10+ years",
+    subject: "Physics",
+    specialization: "IIT-JEE",
+    rating: 4.7,
+    reviewCount: 120,
+    status: "active"
+  },
+  {
+    id: "edu_002",
+    firstName: "priya",
+    lastName: "sharma",
+    name: "Dr. Priya Sharma",
+    email: "priyasharma@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_2",
+      url: "/images/Banner/2.png",
+    },
+    bio: "Experienced chemistry teacher specializing in organic chemistry for competitive exams.",
+    qualification: "Ph.D Chemistry, M.Sc Chemistry",
+    experience: "12+ years",
+    subject: "Chemistry",
+    specialization: "IIT-JEE",
+    rating: 4.8,
+    reviewCount: 95,
+    status: "active"
+  },
+  {
+    id: "edu_003",
+    firstName: "rajesh",
+    lastName: "kumar",
+    name: "Prof. Rajesh Kumar",
+    email: "rajeshkumar@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_3",
+      url: "/images/Banner/3.png",
+    },
+    bio: "Mathematics expert with a passion for teaching advanced calculus and algebra.",
+    qualification: "M.Sc Mathematics, B.Sc Mathematics",
+    experience: "8+ years",
+    subject: "Mathematics",
+    specialization: "IIT-JEE",
+    rating: 4.6,
+    reviewCount: 78,
+    status: "active"
+  },
+  {
+    id: "edu_004",
+    firstName: "anjali",
+    lastName: "verma",
+    name: "Dr. Anjali Verma",
+    email: "anjaliverma@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_4",
+      url: "/images/Banner/4.png",
+    },
+    bio: "Biology teacher with expertise in human physiology and genetics for NEET preparation.",
+    qualification: "Ph.D Biology, M.Sc Botany",
+    experience: "15+ years",
+    subject: "Biology",
+    specialization: "NEET",
+    rating: 4.9,
+    reviewCount: 150,
+    status: "active"
+  },
+  {
+    id: "edu_005",
+    firstName: "suresh",
+    lastName: "nair",
+    name: "Dr. Suresh Nair",
+    email: "sureshnair@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_5",
+      url: "/images/Banner/1.png",
+    },
+    bio: "Physics educator specializing in mechanics and thermodynamics for NEET students.",
+    qualification: "M.Sc Physics, B.Sc Physics",
+    experience: "9+ years",
+    subject: "Physics",
+    specialization: "NEET",
+    rating: 4.5,
+    reviewCount: 88,
+    status: "active"
+  },
+  {
+    id: "edu_006",
+    firstName: "kavitha",
+    lastName: "reddy",
+    name: "Dr. Kavitha Reddy",
+    email: "kavithareddy@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_6",
+      url: "/images/Banner/2.png",
+    },
+    bio: "Chemistry teacher with focus on inorganic and physical chemistry for NEET aspirants.",
+    qualification: "Ph.D Chemistry, M.Sc Chemistry",
+    experience: "11+ years",
+    subject: "Chemistry",
+    specialization: "NEET",
+    rating: 4.7,
+    reviewCount: 102,
+    status: "active"
+  },
+  {
+    id: "edu_007",
+    firstName: "amit",
+    lastName: "singh",
+    name: "Prof. Amit Singh",
+    email: "amitsingh@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_7",
+      url: "/images/Banner/3.png",
+    },
+    bio: "Mathematics teacher specializing in CBSE curriculum for classes 9-12.",
+    qualification: "M.Sc Mathematics, B.Ed",
+    experience: "7+ years",
+    subject: "Mathematics",
+    specialization: "CBSE",
+    rating: 4.4,
+    reviewCount: 65,
+    status: "active"
+  },
+  {
+    id: "edu_008",
+    firstName: "meera",
+    lastName: "joshi",
+    name: "Dr. Meera Joshi",
+    email: "meerajoshi@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_8",
+      url: "/images/Banner/4.png",
+    },
+    bio: "Science teacher with expertise in CBSE physics and chemistry for board exams.",
+    qualification: "M.Sc Physics, B.Sc Chemistry",
+    experience: "6+ years",
+    subject: "Science",
+    specialization: "CBSE",
+    rating: 4.3,
+    reviewCount: 45,
+    status: "active"
+  },
+  {
+    id: "edu_009",
+    firstName: "vikram",
+    lastName: "malhotra",
+    name: "Prof. Vikram Malhotra",
+    email: "vikrammalhotra@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_9",
+      url: "/images/Banner/1.png",
+    },
+    bio: "English and Social Studies teacher for CBSE students with focus on board exam preparation.",
+    qualification: "M.A English, B.Ed",
+    experience: "5+ years",
+    subject: "English & Social Studies",
+    specialization: "CBSE",
+    rating: 4.2,
+    reviewCount: 38,
+    status: "active"
+  },
+  {
+    id: "edu_010",
+    firstName: "neeraj",
+    lastName: "agarwal",
+    name: "Dr. Neeraj Agarwal",
+    email: "neerajagarwal@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_10",
+      url: "/images/Banner/2.png",
+    },
+    bio: "Advanced mathematics and physics teacher for JEE Main and Advanced preparation.",
+    qualification: "Ph.D Mathematics, M.Sc Physics",
+    experience: "14+ years",
+    subject: "Mathematics & Physics",
+    specialization: "IIT-JEE",
+    rating: 4.8,
+    reviewCount: 125,
+    status: "active"
+  },
+  {
+    id: "edu_011",
+    firstName: "deepika",
+    lastName: "paul",
+    name: "Dr. Deepika Paul",
+    email: "deepikapaul@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_11",
+      url: "/images/Banner/3.png",
+    },
+    bio: "Zoology and Botany expert with extensive experience in NEET preparation.",
+    qualification: "Ph.D Zoology, M.Sc Botany",
+    experience: "13+ years",
+    subject: "Biology",
+    specialization: "NEET",
+    rating: 4.6,
+    reviewCount: 89,
+    status: "active"
+  },
+  {
+    id: "edu_012",
+    firstName: "rohit",
+    lastName: "sharma",
+    name: "Dr. Rohit Sharma",
+    email: "rohitsharma@example.com",
+    profileImage: {
+      public_id: "educator_placeholder_12",
+      url: "/images/Banner/4.png",
+    },
+    bio: "Physical chemistry specialist focusing on NEET chemistry preparation.",
+    qualification: "Ph.D Chemistry, M.Sc Physical Chemistry",
+    experience: "10+ years",
+    subject: "Chemistry",
+    specialization: "NEET",
+    rating: 4.4,
+    reviewCount: 76,
+    status: "active"
+  }
+];
+
+// Function to filter educators by specialization
+export const getEducatorsBySpecialization = (specialization) => {
+  if (specialization === 'All') {
+    return educatorsData;
+  }
+  return educatorsData.filter(educator => educator.specialization === specialization);
+};
+
+export const getEducatorBySubject = (subject) => {
+  if(subject === 'All') {
+    return educatorsData;
+  }
+  return educatorsData.filter(educator => educator.subject === subject);
+}
 
 export default educatorProfile;

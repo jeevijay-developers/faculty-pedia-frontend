@@ -27,8 +27,8 @@ const Navbar = () => {
         { name: 'CBSE', href: '/exams/cbse' }
       ]
     },
-    { name: 'Courses', href: '/courses' },
-    { name: 'Webinars', href: '/webinars' },
+    // { name: 'Courses', href: '/courses' },
+    // { name: 'Webinars', href: '/webinars' },
     { name: 'Educators', href: '/educators' },
   ];
 

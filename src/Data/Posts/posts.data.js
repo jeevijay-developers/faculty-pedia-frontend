@@ -1,337 +1,187 @@
+// Example post data for NEET and JEE
 export const postsData = [
   {
     id: 1,
-    title: "Advanced Physics Concepts for JEE Main 2025",
-    description: "Master the most challenging physics concepts with detailed explanations and practical examples. Learn problem-solving techniques that will help you excel in JEE Main.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "IIT-JEE",
-    publishDate: "2024-12-15",
-    readTime: "8 min read",
+    title: "Top 10 Tips for JEE Chemistry",
+    description: "Master JEE Chemistry with these essential tips. Focus on concepts, practice regularly, and avoid common mistakes for a top score.",
     facultyInfo: {
-      name: "Dr. Rajesh Kumar",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "Ph.D. Physics, IIT Delhi",
-      experience: "12 years"
+      name: "Dr. Rakesh Sharma",
+      profilePic: "/images/Banner/1.png"
     },
-    slug: "advanced-physics-concepts-jee-main-2025"
+    category: "IIT-JEE",
+    slug: "top-10-tips-for-jee-chemistry",
+    publishDate: "2025-08-01"
   },
   {
     id: 2,
-    title: "NEET Biology: Plant Physiology Made Easy",
-    description: "Comprehensive guide to plant physiology with diagrams and mnemonics. Essential topics covered for NEET 2025 preparation with previous year questions.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "NEET",
-    publishDate: "2024-12-14",
-    readTime: "6 min read",
+    title: "How to Ace NEET Biology",
+    description: "Learn the best strategies to excel in NEET Biology. Time management, revision, and smart study plans are key.",
     facultyInfo: {
-      name: "Dr. Priya Sharma",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Botany, Ph.D. Plant Sciences",
-      experience: "10 years"
+      name: "Dr. Priya Verma",
+      profilePic: "/images/Banner/2.png"
     },
-    slug: "neet-biology-plant-physiology-made-easy"
+    category: "NEET",
+    slug: "how-to-ace-neet-biology",
+    publishDate: "2025-08-02"
   },
   {
     id: 3,
-    title: "Organic Chemistry Reactions for JEE Advanced",
-    description: "Complete guide to organic chemistry reactions with mechanisms and practice problems. Focus on name reactions and their applications in competitive exams.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "IIT-JEE",
-    publishDate: "2024-12-13",
-    readTime: "10 min read",
+    title: "Physics Problem Solving Hacks",
+    description: "Boost your Physics scores with these problem-solving hacks. Understand the basics and apply shortcuts for quick solutions.",
     facultyInfo: {
-      name: "Prof. Amit Verma",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Chemistry, IIT Bombay",
-      experience: "15 years"
+      name: "Prof. Amit Singh",
+      profilePic: "/images/Banner/3.png"
     },
-    slug: "organic-chemistry-reactions-jee-advanced"
+    category: "IIT-JEE",
+    slug: "physics-problem-solving-hacks",
+    publishDate: "2025-08-03"
   },
   {
     id: 4,
-    title: "CBSE Class 12 Mathematics: Calculus Basics",
-    description: "Step-by-step approach to understanding calculus concepts for CBSE Class 12. Includes derivative and integration formulas with solved examples.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "CBSE",
-    publishDate: "2024-12-12",
-    readTime: "7 min read",
+    title: "Organic Chemistry: Must-Know Reactions",
+    description: "A quick guide to the most important organic reactions for JEE. Memorize mechanisms and practice applications.",
     facultyInfo: {
-      name: "Mrs. Sonal Gupta",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Mathematics",
-      experience: "8 years"
+      name: "Dr. Meena Gupta",
+      profilePic: "/images/Banner/4.png"
     },
-    slug: "cbse-class-12-mathematics-calculus-basics"
+    category: "IIT-JEE",
+    slug: "organic-chemistry-must-know-reactions",
+    publishDate: "2025-08-04"
   },
   {
     id: 5,
-    title: "Human Physiology for NEET: Digestive System",
-    description: "Detailed study of human digestive system with anatomical diagrams. Important for NEET preparation covering all major concepts and disorders.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "NEET",
-    publishDate: "2024-12-11",
-    readTime: "9 min read",
+    title: "NEET Physics: Scoring Topics",
+    description: "Focus on these high-yield topics in NEET Physics to maximize your score. Includes tips for quick revision.",
     facultyInfo: {
-      name: "Dr. Neha Singh",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "MBBS, M.Sc. Physiology",
-      experience: "7 years"
+      name: "Dr. Suresh Kumar",
+      profilePic: "/images/Banner/1.png"
     },
-    slug: "human-physiology-neet-digestive-system"
+    category: "NEET",
+    slug: "neet-physics-scoring-topics",
+    publishDate: "2025-08-05"
   },
   {
     id: 6,
-    title: "JEE Main Mathematics: Coordinate Geometry Tips",
-    description: "Essential coordinate geometry formulas and shortcuts for JEE Main. Practice problems with step-by-step solutions and exam strategies.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "IIT-JEE",
-    publishDate: "2024-12-10",
-    readTime: "12 min read",
+    title: "JEE Maths: Time Management",
+    description: "Learn how to manage your time effectively during JEE Maths paper. Practice with mock tests and set timers.",
     facultyInfo: {
-      name: "Mr. Deepak Jain",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Mathematics, IIT Kanpur",
-      experience: "11 years"
+      name: "Prof. Anjali Rao",
+      profilePic: "/images/Banner/2.png"
     },
-    slug: "jee-main-mathematics-coordinate-geometry-tips"
+    category: "IIT-JEE",
+    slug: "jee-maths-time-management",
+    publishDate: "2025-08-06"
   },
   {
     id: 7,
-    title: "CBSE Physics: Electromagnetic Induction",
-    description: "Complete chapter on electromagnetic induction for CBSE Class 12. Faraday's law, Lenz's law, and applications with numerical problems.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "CBSE",
-    publishDate: "2024-12-09",
-    readTime: "8 min read",
+    title: "Biology Diagrams for NEET",
+    description: "Master important diagrams for NEET Biology. Visual memory helps in quick recall during exams.",
     facultyInfo: {
-      name: "Dr. Ravi Kumar",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "Ph.D. Physics",
-      experience: "14 years"
+      name: "Dr. Kavita Joshi",
+      profilePic: "/images/Banner/3.png"
     },
-    slug: "cbse-physics-electromagnetic-induction"
+    category: "NEET",
+    slug: "biology-diagrams-for-neet",
+    publishDate: "2025-08-07"
   },
   {
     id: 8,
-    title: "NEET Chemistry: Chemical Bonding Concepts",
-    description: "Master chemical bonding for NEET with clear explanations of ionic, covalent, and metallic bonds. Includes molecular orbital theory basics.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "NEET",
-    publishDate: "2024-12-08",
-    readTime: "11 min read",
+    title: "JEE Physics: Error Analysis",
+    description: "Understand error analysis and measurement techniques for JEE Physics. Practice with solved examples.",
     facultyInfo: {
-      name: "Dr. Kavya Reddy",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "Ph.D. Chemistry, IISc",
-      experience: "9 years"
+      name: "Prof. Rajeev Nair",
+      profilePic: "/images/Banner/4.png"
     },
-    slug: "neet-chemistry-chemical-bonding-concepts"
+    category: "IIT-JEE",
+    slug: "jee-physics-error-analysis",
+    publishDate: "2025-08-08"
   },
   {
     id: 9,
-    title: "JEE Advanced Chemistry: Thermodynamics",
-    description: "Complete guide to thermodynamics for JEE Advanced. Laws of thermodynamics, enthalpy, entropy, and Gibbs free energy with numerical problems.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "IIT-JEE",
-    publishDate: "2024-12-07",
-    readTime: "14 min read",
+    title: "NEET Chemistry: Revision Plan",
+    description: "Create an effective revision plan for NEET Chemistry. Cover all chapters and revise regularly.",
     facultyInfo: {
-      name: "Dr. Rohit Verma",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "Ph.D. Chemistry, IIT Kanpur",
-      experience: "13 years"
+      name: "Dr. Sunita Agarwal",
+      profilePic: "/images/Banner/1.png"
     },
-    slug: "jee-advanced-chemistry-thermodynamics"
+    category: "NEET",
+    slug: "neet-chemistry-revision-plan",
+    publishDate: "2025-08-09"
   },
   {
     id: 10,
-    title: "NEET Physics: Optics and Wave Nature of Light",
-    description: "Master optics for NEET with detailed explanations of reflection, refraction, interference, and diffraction. Important formulas and concepts covered.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "NEET",
-    publishDate: "2024-12-06",
-    readTime: "13 min read",
+    title: "JEE Maths: Common Mistakes",
+    description: "Avoid these common mistakes in JEE Maths. Double-check calculations and read questions carefully.",
     facultyInfo: {
-      name: "Prof. Aman Sharma",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Physics, Delhi University",
-      experience: "8 years"
+      name: "Prof. Vikram Patel",
+      profilePic: "/images/Banner/2.png"
     },
-    slug: "neet-physics-optics-wave-nature-light"
+    category: "IIT-JEE",
+    slug: "jee-maths-common-mistakes",
+    publishDate: "2025-08-10"
   },
   {
     id: 11,
-    title: "CBSE Biology: Cell Structure and Function",
-    description: "Comprehensive study of cell biology for CBSE Class 11. Cell organelles, their functions, and cellular processes explained in detail.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "CBSE",
-    publishDate: "2024-12-05",
-    readTime: "9 min read",
+    title: "NEET Biology: Mnemonics",
+    description: "Use mnemonics to remember complex Biology concepts for NEET. Make your own and share with friends.",
     facultyInfo: {
-      name: "Dr. Priya Singh",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Biology, Ph.D. Cell Biology",
-      experience: "11 years"
+      name: "Dr. Neha Singh",
+      profilePic: "/images/Banner/3.png"
     },
-    slug: "cbse-biology-cell-structure-function"
+    category: "NEET",
+    slug: "neet-biology-mnemonics",
+    publishDate: "2025-08-11"
   },
   {
     id: 12,
-    title: "JEE Main Chemistry: Periodic Table Trends",
-    description: "Master periodic trends for JEE Main. Atomic radius, ionization energy, electronegativity, and their variations across periods and groups.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "IIT-JEE",
-    publishDate: "2024-12-04",
-    readTime: "7 min read",
+    title: "JEE Chemistry: Quick Revision",
+    description: "Quick revision tips for JEE Chemistry. Focus on formulas, reactions, and periodic table trends.",
     facultyInfo: {
-      name: "Mrs. Kavya Reddy",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "Ph.D. Chemistry, IISc",
-      experience: "9 years"
+      name: "Dr. Arvind Kumar",
+      profilePic: "/images/Banner/4.png"
     },
-    slug: "jee-main-chemistry-periodic-table-trends"
+    category: "IIT-JEE",
+    slug: "jee-chemistry-quick-revision",
+    publishDate: "2025-08-12"
   },
   {
     id: 13,
-    title: "NEET Botany: Reproduction in Flowering Plants",
-    description: "Detailed study of plant reproduction for NEET. Sexual and asexual reproduction, pollination, fertilization, and seed formation explained.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "NEET",
-    publishDate: "2024-12-03",
-    readTime: "10 min read",
+    title: "NEET Physics: Formula Sheet",
+    description: "Prepare a formula sheet for NEET Physics. Revise daily and keep it handy for last-minute prep.",
     facultyInfo: {
-      name: "Dr. Neha Singh",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "MBBS, M.Sc. Physiology",
-      experience: "7 years"
+      name: "Dr. Shalini Mishra",
+      profilePic: "/images/Banner/1.png"
     },
-    slug: "neet-botany-reproduction-flowering-plants"
+    category: "NEET",
+    slug: "neet-physics-formula-sheet",
+    publishDate: "2025-08-13"
   },
   {
     id: 14,
-    title: "CBSE Chemistry: Acids, Bases and Salts",
-    description: "Complete chapter on acids, bases and salts for CBSE Class 10. pH scale, indicators, neutralization reactions and salt preparation methods.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "CBSE",
-    publishDate: "2024-12-02",
-    readTime: "8 min read",
+    title: "JEE Maths: Practice Sets",
+    description: "Solve practice sets for JEE Maths. Focus on weak areas and improve speed and accuracy.",
     facultyInfo: {
-      name: "Prof. Amit Verma",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Chemistry, IIT Bombay",
-      experience: "15 years"
+      name: "Prof. Manoj Desai",
+      profilePic: "/images/Banner/2.png"
     },
-    slug: "cbse-chemistry-acids-bases-salts"
+    category: "IIT-JEE",
+    slug: "jee-maths-practice-sets",
+    publishDate: "2025-08-14"
   },
   {
     id: 15,
-    title: "JEE Advanced Mathematics: Complex Numbers",
-    description: "Master complex numbers for JEE Advanced. Algebra of complex numbers, De Moivre's theorem, roots of unity, and applications in geometry.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "IIT-JEE",
-    publishDate: "2024-12-01",
-    readTime: "15 min read",
+    title: "NEET Chemistry: Important Chapters",
+    description: "List of important chapters for NEET Chemistry. Prioritize these for better results.",
     facultyInfo: {
-      name: "Mr. Deepak Jain",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Mathematics, IIT Kanpur",
-      experience: "11 years"
+      name: "Dr. Pooja Mehra",
+      profilePic: "/images/Banner/3.png"
     },
-    slug: "jee-advanced-mathematics-complex-numbers"
-  },
-  {
-    id: 16,
-    title: "NEET Zoology: Human Reproduction",
-    description: "Comprehensive guide to human reproduction for NEET. Male and female reproductive systems, gametogenesis, menstrual cycle, and pregnancy.",
-    thumbnail: "/images/placeholders/1.svg",
     category: "NEET",
-    publishDate: "2024-11-30",
-    readTime: "12 min read",
-    facultyInfo: {
-      name: "Dr. Priya Sharma",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Botany, Ph.D. Plant Sciences",
-      experience: "10 years"
-    },
-    slug: "neet-zoology-human-reproduction"
-  },
-  {
-    id: 17,
-    title: "CBSE Physics: Current Electricity",
-    description: "Complete chapter on current electricity for CBSE Class 12. Ohm's law, Kirchhoff's laws, electrical devices, and circuit analysis.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "CBSE",
-    publishDate: "2024-11-29",
-    readTime: "11 min read",
-    facultyInfo: {
-      name: "Dr. Ravi Kumar",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "Ph.D. Physics",
-      experience: "14 years"
-    },
-    slug: "cbse-physics-current-electricity"
-  },
-  {
-    id: 18,
-    title: "JEE Main Physics: Rotational Motion",
-    description: "Master rotational motion for JEE Main. Moment of inertia, angular momentum, torque, and rolling motion with solved examples.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "IIT-JEE",
-    publishDate: "2024-11-28",
-    readTime: "13 min read",
-    facultyInfo: {
-      name: "Dr. Rajesh Kumar",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "Ph.D. Physics, IIT Delhi",
-      experience: "12 years"
-    },
-    slug: "jee-main-physics-rotational-motion"
-  },
-  {
-    id: 19,
-    title: "NEET Chemistry: Coordination Compounds",
-    description: "Complete guide to coordination compounds for NEET. Nomenclature, isomerism, bonding theories, and applications in biological systems.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "NEET",
-    publishDate: "2024-11-27",
-    readTime: "10 min read",
-    facultyInfo: {
-      name: "Dr. Kavya Reddy",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "Ph.D. Chemistry, IISc",
-      experience: "9 years"
-    },
-    slug: "neet-chemistry-coordination-compounds"
-  },
-  {
-    id: 20,
-    title: "CBSE Mathematics: Trigonometry Applications",
-    description: "Advanced trigonometry applications for CBSE Class 11. Heights and distances, trigonometric identities, and equation solving techniques.",
-    thumbnail: "/images/placeholders/1.svg",
-    category: "CBSE",
-    publishDate: "2024-11-26",
-    readTime: "9 min read",
-    facultyInfo: {
-      name: "Mrs. Sonal Gupta",
-      profilePic: "/images/placeholders/1.svg",
-      qualification: "M.Sc. Mathematics",
-      experience: "8 years"
-    },
-    slug: "cbse-mathematics-trigonometry-applications"
+    slug: "neet-chemistry-important-chapters",
+    publishDate: "2025-08-15"
   }
 ];
 
 export const getPostsByCategory = (category) => {
-  if (category === "All Posts") {
-    return postsData;
-  }
   return postsData.filter(post => post.category === category);
-};
-
-export const getPostById = (id) => {
-  return postsData.find(post => post.id === parseInt(id));
-};
-
-export const getPostBySlug = (slug) => {
-  return postsData.find(post => post.slug === slug);
 };

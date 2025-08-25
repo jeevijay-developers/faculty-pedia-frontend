@@ -4,17 +4,13 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaRegCalendarAlt } from 'react-icons/fa';
-import { BiTime } from 'react-icons/bi';
 
 const PostCard = ({ post }) => {
   const {
-    id,
     title,
     description,
-    thumbnail,
     category,
     publishDate,
-    readTime,
     facultyInfo,
     slug
   } = post;
@@ -45,22 +41,6 @@ const PostCard = ({ post }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col group">
-      {/* Thumbnail Image */}
-      <div className="relative h-48 w-full overflow-hidden">
-        <Image
-          src={thumbnail}
-          alt={title}
-          fill
-          className="object-cover group-hover:scale-102 transition-transform duration-300"
-        />
-        {/* Category Badge */}
-        <div className="absolute top-3 left-3">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(category)}`}>
-            {category}
-          </span>
-        </div>
-      </div>
-
       {/* Content */}
       <div className="p-5 flex flex-col flex-grow">
         {/* Title */}
@@ -81,8 +61,9 @@ const PostCard = ({ post }) => {
               <span>{formatDate(publishDate)}</span>
             </div>
             <div className="flex items-center space-x-1">
-              <BiTime className="h-4 w-4" />
-              <span>{readTime}</span>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(category)}`}>
+          {category}
+        </span>
             </div>
           </div>
         </div>
@@ -101,9 +82,6 @@ const PostCard = ({ post }) => {
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-gray-900">
                 {facultyInfo.name}
-              </span>
-              <span className="text-xs text-gray-500">
-                {facultyInfo.experience} experience
               </span>
             </div>
           </div>

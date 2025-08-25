@@ -5,12 +5,19 @@ import Banner from '../Common/Banner';
 import PostCard from './PostCard';
 import { postsData, getPostsByCategory } from '../../Data/Posts/posts.data';
 
-const PostsSection = () => {
+const AllPostsSection = () => {
   const [selectedCategory, setSelectedCategory] = useState('All Posts');
   const [displayedPosts, setDisplayedPosts] = useState(9);
   
-  const categories = ['All Posts', 'NEET', 'IIT-JEE', 'CBSE'];
-  const allFilteredPosts = getPostsByCategory(selectedCategory);
+  const categories = ['All Posts', 'NEET', 'IIT-JEE'];
+  let allFilteredPosts = [];
+  if (selectedCategory === 'All Posts') {
+    allFilteredPosts = postsData;
+  } else if (selectedCategory === 'IIT-JEE') {
+    allFilteredPosts = getPostsByCategory('IIT-JEE');
+  } else {
+    allFilteredPosts = getPostsByCategory(selectedCategory);
+  }
   const postsToShow = allFilteredPosts.slice(0, displayedPosts);
   const hasMorePosts = displayedPosts < allFilteredPosts.length;
 
@@ -114,4 +121,4 @@ const PostsSection = () => {
   );
 };
 
-export default PostsSection;
+export default AllPostsSection;

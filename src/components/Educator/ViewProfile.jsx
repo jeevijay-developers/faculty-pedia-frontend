@@ -1,5 +1,4 @@
 import React from "react";
-import CoursesSection from "./CoursesSection";
 import ReviewSection from "./ReviewSection";
 import QualificationSection from "./QualificationSection";
 import ProfileHeader from "./ProfileHeader";
@@ -8,7 +7,7 @@ import TestSeriesSection from "./TestSeriesSection";
 import BiographySection from "./BiographySection";
 import WorkExperienceSection from "./WorkExperienceSection";
 import EnhancedCoursesSection from "./EnhancedCoursesSection";
-import educatorProfile from "@/Data/profile.data";
+import educatorProfile from "@/Data/Educator/educator-profile.data";
 const ViewProfile = ({ userId }) => {
   // educatorData uses numeric id, so ensure userId is a number
   const educator = educatorProfile;

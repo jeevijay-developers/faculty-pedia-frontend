@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import Link from "next/link";
 import Image from "next/image";
-import { defaultCourses } from "@/Data/data";
+import { defaultCourses } from "@/Data/Exams/iit-jee.data";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 
 // Import Swiper styles

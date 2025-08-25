@@ -1,8 +1,8 @@
 import React from 'react';
-import PostsSection from '../../components/Posts/PostsSection';
+import AllPostsSection from '../../components/Posts/AllPostsSection';
 
 const PostsPage = () => {
-  return <PostsSection />;
+  return <AllPostsSection />;
 };
 
 export default PostsPage;
