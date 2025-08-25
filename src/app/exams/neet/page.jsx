@@ -1,7 +1,7 @@
+import OneToOneLiveClassesCarousel from '@/components/Classes/OneToOneLiveClassesCarousel'
 import Banner from '@/components/Common/Banner'
+import CourseCarousel from '@/components/Courses/CourseCarousal'
 import EducatorsCarousel from '@/components/Educator/EducatorsCarousel'
-import CourseCarousel from '@/components/Exams/NEET/CourseCarousal'
-import OneToOneCourseClasses from '@/components/Exams/NEET/OneToOneCourseClasses'
 import OneToOnePPHClasses from '@/components/Exams/NEET/OneToOnePPHClasses'
 import TestSeriesSection from '@/components/Exams/NEET/TestSeriesSection'
 import UpcomingWebinarSection from '@/components/Exams/NEET/WebinarSection'
@@ -19,8 +19,8 @@ const page = () => {
         btnUrl={"/join-as-educator"}
       />
      <EducatorsCarousel specialization='NEET' />
-      <CourseCarousel title='Online Courses' viewMoreLink='/courses/neet' />
-      <OneToOneCourseClasses />
+      <CourseCarousel title='Online Courses for NEET' viewMoreLink='/courses' specialization='NEET' />
+      <OneToOneLiveClassesCarousel specialization='NEET' />
       <OneToOnePPHClasses />
       <UpcomingWebinarSection />
       <TestSeriesSection />

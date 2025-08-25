@@ -1,12 +1,12 @@
 import Banner from '@/components/Common/Banner'
-import CourseCarousel from '@/components/Exams/IIT-JEE/CourseCarousal'
+import CourseCarousel from '@/components/Courses/CourseCarousal'
 import EducatorsCarousel from '@/components/Educator/EducatorsCarousel'
-import OneToOneCourseClasses from '@/components/Exams/IIT-JEE/OneToOneCourseClasses'
 import OneToOnePPHClasses from '@/components/Exams/IIT-JEE/OneToOnePPHClasses'
 import TestSeriesSection from '@/components/Exams/IIT-JEE/TestSeriesSection'
 import UpcomingWebinarSection from '@/components/Exams/IIT-JEE/WebinarSection'
 import PostCarousel from '@/components/Posts/PostsCarousal'
 import React from 'react'
+import OneToOneLiveClassesCarousel from '@/components/Classes/OneToOneLiveClassesCarousel'
 
 const page = () => {
   return (
@@ -21,7 +21,7 @@ const page = () => {
 
       <EducatorsCarousel specialization='IIT-JEE' />
       <CourseCarousel title='Online Courses for IIT-JEE' viewMoreLink='/courses' specialization='IIT-JEE' />
-      <OneToOneCourseClasses />
+      <OneToOneLiveClassesCarousel specialization='IIT-JEE' />
       <OneToOnePPHClasses />
       <UpcomingWebinarSection />
       <TestSeriesSection />

@@ -26,7 +26,7 @@ const FeaturesMenu = () => {
         >
           <div className="text-center flex flex-col items-center">
             <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
-              <Image src={"/features/live-classes.png"} width={40} height={40} alt='Live Classes' />
+              <Image src={"/features/live-course.png"} width={40} height={40} alt='Live Classes' />
             </span>
             <div className="text-lg mt-2">Online Classes</div>
             <p className="text-sm font-normal mt-2 opacity-90">Attend interactive classes from anywhere, anytime</p>
