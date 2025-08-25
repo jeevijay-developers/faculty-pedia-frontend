@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FaCalendarAlt, FaClock, FaBook } from "react-icons/fa";
+import { FaCalendarAlt, FaBook } from "react-icons/fa";
 import TestAccordion from "./TestAccordion";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -22,7 +22,7 @@ const ExamDetails = ({ examData }) => {
         {/* Left Column - Main Info */}
         <div className="md:col-span-2 space-y-6">
           <h1 className="text-3xl font-bold capitalize">{examData.title}</h1>
-          <p className="text-gray-600">{examData.description.long}</p>
+          <p className="text-gray-600">{examData.description}</p>
 
           <div className="grid grid-cols-3 gap-4 bg-white p-6 rounded-lg shadow-sm">
             <div className="flex items-center space-x-2">

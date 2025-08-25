@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { coursesData } from '@/Data/Courses/courses.data';
 import Banner from '@/components/Common/Banner';
+import { defaultCourses } from '@/Data/Courses/courses.data';
 import CourseCard from '@/components/Courses/CourseCard';
 
 export const getCoursesBySubject = (subject) => {
-  return coursesData.filter(course => course.subject === subject);
+  return defaultCourses.filter(course => course.subject === subject);
 }
 
 const CoursesPage = () => {

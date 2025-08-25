@@ -1,227 +1,223 @@
-// Sample course data based on LiveCourse schema
-export const coursesData = [
+import { educatorsData } from '../Educator/educator-profile.data.js';
+
+export const defaultCourses = [
   {
-    _id: "course1",
-    specialization: "IIT-JEE",
-    courseClass: "11",
-    educatorId: "educator1",
-    image: {
-      public_id: "course1_img",
-      url: "/images/courses/physics-course-1.jpg"
-    },
-    title: "Comprehensive physics for iit jee",
-    description: {
-      shortDesc: "Master Physics for IIT JEE with comprehensive problem-solving techniques",
-      longDesc: "This course covers all essential topics in Physics, providing in-depth knowledge and problem-solving techniques for IIT JEE aspirants. From mechanics to modern physics, every concept is explained with real-world applications and exam-focused strategies."
-    },
-    courseType: "OTA",
-    startDate: "2024-06-01T00:00:00.000Z",
-    endDate: "2024-12-31T00:00:00.000Z",
-    seatLimit: 50,
-    classDuration: 2,
-    fees: 20000,
-    videos: {
-      intro: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      descriptionVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ"
-    },
-    subject: "Physics",
-    classesPerWeek: 5,
-    totalWeeks: 30,
-    totalHours: 150,
-    validity: "1 Year",
-    educator: {
-      _id: "educator1",
-      name: "Dr. Rahul Sharma",
-      qualification: "M.Sc. in Physics",
-      experience: "10 years teaching experience",
-      profileImage: "/images/educators/dr-rahul-sharma.jpg",
-      specializations: ["IIT-JEE", "Physics"]
-    }
-  },
-  {
-    _id: "course2",
-    specialization: "NEET",
-    courseClass: "12",
-    educatorId: "educator2",
-    image: {
-      public_id: "course2_img",
-      url: "/images/courses/biology-course-1.jpg"
-    },
-    title: "Advanced Biology for NEET",
-    description: {
-      shortDesc: "Complete Biology preparation for NEET with latest syllabus coverage",
-      longDesc: "Comprehensive Biology course designed specifically for NEET aspirants covering Botany, Zoology, and Human Physiology with detailed explanations and practice questions."
-    },
-    courseType: "OTA",
-    startDate: "2024-07-01T00:00:00.000Z",
-    endDate: "2025-01-31T00:00:00.000Z",
-    seatLimit: 40,
-    classDuration: 2.5,
-    fees: 25000,
-    videos: {
-      intro: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      descriptionVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ"
-    },
-    subject: "Biology",
-    classesPerWeek: 4,
-    totalWeeks: 28,
-    totalHours: 140,
-    validity: "18 Months",
-    educator: {
-      _id: "educator2",
-      name: "Dr. Priya Patel",
-      qualification: "Ph.D. in Biology",
-      experience: "12 years teaching experience",
-      profileImage: "/images/educators/dr-priya-patel.jpg",
-      specializations: ["NEET", "Biology"]
-    }
-  },
-  {
-    _id: "course3",
-    specialization: "IIT-JEE",
-    courseClass: "12",
-    educatorId: "educator1",
-    image: {
-      public_id: "course3_img",
-      url: "/images/courses/physics-course-2.jpg"
-    },
-    title: "Advanced Physics for IIT JEE Mains and Advanced ",
-    description: {
-      shortDesc: "Advanced Physics concepts for IIT JEE Mains and Advanced preparation",
-      longDesc: "Advanced level Physics course targeting IIT JEE Mains and Advanced with focus on problem-solving strategies, time management, and conceptual clarity."
-    },
-    courseType: "OTO",
-    startDate: "2024-08-01T00:00:00.000Z",
-    endDate: "2025-02-28T00:00:00.000Z",
-    seatLimit: 10,
-    classDuration: 3,
-    fees: 35000,
-    videos: {
-      intro: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      descriptionVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ"
-    },
-    subject: "Physics",
-    classesPerWeek: 3,
-    totalWeeks: 26,
-    totalHours: 120,
-    validity: "2 Years",
-    educator: {
-      _id: "educator1",
-      name: "Dr. Rahul Sharma",
-      qualification: "M.Sc. in Physics",
-      experience: "10 years teaching experience",
-      profileImage: "/images/educators/dr-rahul-sharma.jpg",
-      specializations: ["IIT-JEE", "Physics"]
-    }
-  },
-  {
-    _id: "course4",
-    specialization: "CBSE",
-    courseClass: "10",
-    educatorId: "educator3",
-    image: {
-      public_id: "course4_img",
-      url: "/images/courses/math-course-1.jpg"
-    },
-    title: "Complete Mathematics for CBSE Class 10",
-    description: {
-      shortDesc: "Complete CBSE Class 10 Mathematics with board exam preparation",
-      longDesc: "Comprehensive Mathematics course for CBSE Class 10 students covering all chapters with detailed explanations, practice problems, and board exam strategies."
-    },
-    courseType: "OTA",
-    startDate: "2024-04-01T00:00:00.000Z",
-    endDate: "2025-03-31T00:00:00.000Z",
-    seatLimit: 60,
-    classDuration: 1.5,
-    fees: 15000,
-    videos: {
-      intro: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      descriptionVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ"
-    },
+    id: 1,
+    title: "JEE Maths Foundation Course",
+    instructor: "Meera Sharma",
+    educatorId: "edu_003", // Rajesh Kumar - Mathematics IIT-JEE
+    duration: "24 weeks",
+    startDate: "8 Aug 2025",
+    price: "7999",
+    originalPrice: "9999",
+    image: "/images/placeholders/1.svg",
     subject: "Mathematics",
-    classesPerWeek: 4,
-    totalWeeks: 40,
-    totalHours: 120,
-    validity: "1 Year",
-    educator: {
-      _id: "educator3",
-      name: "Prof. Anjali Singh",
-      qualification: "M.Sc. in Mathematics",
-      experience: "8 years teaching experience",
-      profileImage: "/images/educators/prof-anjali-singh.jpg",
-      specializations: ["CBSE", "Mathematics"]
-    }
+    specialization: "IIT-JEE",
   },
   {
-    _id: "course5",
+    id: 2,
+    title: "NEET Biology Masterclass",
+    instructor: "Dr. Rajesh Kumar",
+    educatorId: "edu_004", // Anjali Verma - Biology NEET
+    duration: "32 weeks",
+    startDate: "15 Aug 2025",
+    price: "8999",
+    originalPrice: "11999",
+    image: "/images/placeholders/1.svg",
+    subject: "Biology",
     specialization: "NEET",
-    courseClass: "11",
-    educatorId: "educator4",
-    image: {
-      public_id: "course5_img",
-      url: "/images/courses/chemistry-course-1.jpg"
-    },
-    title: "Organic Chemistry Mastery for NEET",
-    description: {
-      shortDesc: "Master Organic Chemistry for NEET with mechanism-based learning",
-      longDesc: "Specialized Organic Chemistry course for NEET preparation focusing on reaction mechanisms, name reactions, and problem-solving techniques with extensive practice."
-    },
-    courseType: "OTA",
-    startDate: "2024-05-15T00:00:00.000Z",
-    endDate: "2024-11-15T00:00:00.000Z",
-    seatLimit: 35,
-    classDuration: 2,
-    fees: 18000,
-    videos: {
-      intro: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      descriptionVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ"
-    },
+  },
+  {
+    id: 3,
+    title: "Physics for Engineering",
+    instructor: "Prof. Anita Singh",
+    educatorId: "edu_001", // John Doe - Physics IIT-JEE
+    duration: "20 weeks",
+    startDate: "1 Sep 2025",
+    price: "6999",
+    originalPrice: "8999",
+    image: "/images/placeholders/1.svg",
+    subject: "Physics",
+    specialization: "IIT-JEE",
+  },
+  {
+    id: 4,
+    title: "Chemistry Complete Package",
+    instructor: "Dr. Vikram Patel",
+    educatorId: "edu_006", // Kavitha Reddy - Chemistry NEET
+    duration: "28 weeks",
+    startDate: "20 Aug 2025",
+    price: "7499",
+    originalPrice: "9499",
+    image: "/images/placeholders/1.svg",
     subject: "Chemistry",
-    classesPerWeek: 5,
-    totalWeeks: 24,
-    totalHours: 120,
-    validity: "15 Months",
-    educator: {
-      _id: "educator4",
-      name: "Dr. Vikram Mehta",
-      qualification: "Ph.D. in Organic Chemistry",
-      experience: "15 years teaching experience",
-      profileImage: "/images/educators/dr-vikram-mehta.jpg",
-      specializations: ["NEET", "Chemistry"]
-    }
-  }
+    specialization: "NEET",
+  },
+  {
+    id: 5,
+    title: "English for Competitive Exams",
+    instructor: "Ms. Priya Mehta",
+    educatorId: "edu_009", // Vikram Malhotra - English & Social Studies CBSE
+    duration: "16 weeks",
+    startDate: "10 Sep 2025",
+    price: "4999",
+    originalPrice: "6999",
+    image: "/images/placeholders/1.svg",
+    description: "Complete English preparation for all competitive exams with grammar and comprehension.",
+    subject: "English",
+    specialization: "CBSE",
+  },
+  {
+    id: 6,
+    title: "Advanced Organic Chemistry for JEE",
+    instructor: "Dr. Priya Sharma",
+    educatorId: "edu_002", // Priya Sharma - Chemistry IIT-JEE
+    duration: "22 weeks",
+    startDate: "5 Sep 2025",
+    price: "8499",
+    originalPrice: "10999",
+    image: "/images/placeholders/1.svg",
+    description: "Master organic chemistry with advanced reaction mechanisms and problem-solving techniques for JEE Main and Advanced.",
+    subject: "Chemistry",
+    specialization: "IIT-JEE",
+  },
+  {
+    id: 7,
+    title: "NEET Physics Crash Course",
+    instructor: "Dr. Suresh Nair",
+    educatorId: "edu_005", // Suresh Nair - Physics NEET
+    duration: "18 weeks",
+    startDate: "12 Sep 2025",
+    price: "6999",
+    originalPrice: "8499",
+    image: "/images/placeholders/1.svg",
+    description: "Intensive physics preparation for NEET with focus on mechanics, thermodynamics, and modern physics.",
+    subject: "Physics",
+    specialization: "NEET",
+  },
+  {
+    id: 8,
+    title: "CBSE Class 12 Mathematics",
+    instructor: "Prof. Amit Singh",
+    educatorId: "edu_007", // Amit Singh - Mathematics CBSE
+    duration: "30 weeks",
+    startDate: "1 Aug 2025",
+    price: "5999",
+    originalPrice: "7999",
+    image: "/images/placeholders/1.svg",
+    description: "Complete CBSE Class 12 Mathematics syllabus with calculus, algebra, and probability for board exam excellence.",
+    subject: "Mathematics",
+    specialization: "CBSE",
+  },
+  {
+    id: 9,
+    title: "NEET Chemistry Foundation",
+    instructor: "Dr. Rohit Sharma",
+    educatorId: "edu_012", // Rohit Sharma - Chemistry NEET
+    duration: "26 weeks",
+    startDate: "18 Aug 2025",
+    price: "7999",
+    originalPrice: "9999",
+    image: "/images/placeholders/1.svg",
+    description: "Comprehensive chemistry foundation for NEET covering physical, inorganic, and organic chemistry concepts.",
+    subject: "Chemistry",
+    specialization: "NEET",
+  },
+  {
+    id: 10,
+    title: "JEE Advanced Mathematics Masterclass",
+    instructor: "Dr. Neeraj Agarwal",
+    educatorId: "edu_010", // Neeraj Agarwal - Mathematics & Physics IIT-JEE
+    duration: "25 weeks",
+    startDate: "22 Aug 2025",
+    price: "9999",
+    originalPrice: "12999",
+    image: "/images/placeholders/1.svg",
+    description: "Advanced mathematics for JEE with calculus, coordinate geometry, and complex problem-solving strategies.",
+    subject: "Mathematics",
+    specialization: "IIT-JEE",
+  },
+  {
+    id: 11,
+    title: "CBSE Science for Class 10",
+    instructor: "Dr. Meera Joshi",
+    educatorId: "edu_008", // Meera Joshi - Science CBSE
+    duration: "20 weeks",
+    startDate: "28 Aug 2025",
+    price: "4499",
+    originalPrice: "5999",
+    image: "/images/placeholders/1.svg",
+    description: "Complete Class 10 CBSE Science covering physics, chemistry, and biology for board exam success.",
+    subject: "Science",
+    specialization: "CBSE",
+  },
+  {
+    id: 12,
+    title: "NEET Botany and Zoology Complete",
+    instructor: "Dr. Deepika Paul",
+    educatorId: "edu_011", // Deepika Paul - Biology NEET
+    duration: "28 weeks",
+    startDate: "3 Sep 2025",
+    price: "8999",
+    originalPrice: "11499",
+    image: "/images/placeholders/1.svg",
+    description: "Comprehensive botany and zoology course for NEET with detailed diagrams and extensive practice questions.",
+    subject: "Biology",
+    specialization: "NEET",
+  },
+  {
+    id: 13,
+    title: "JEE Physics Problem Solving Workshop",
+    instructor: "Dr. John Doe",
+    educatorId: "edu_001", // John Doe - Physics IIT-JEE
+    duration: "15 weeks",
+    startDate: "15 Sep 2025",
+    price: "5999",
+    originalPrice: "7499",
+    image: "/images/placeholders/1.svg",
+    description: "Intensive problem-solving workshop for JEE physics with challenging numerical and conceptual questions.",
+    subject: "Physics",
+    specialization: "IIT-JEE",
+  },
 ];
 
-// Helper functions
-export const getCoursesByEducatorId = (educatorId) => {
-  return coursesData.filter(course => course.educatorId === educatorId);
+// Utility function to get educator details by ID
+export const getEducatorById = (educatorId) => {
+  return educatorsData.find(educator => educator.id === educatorId);
 };
 
-export const getCourseById = (courseId) => {
-  return coursesData.find(course => course._id === courseId);
+// Utility function to get course with educator details
+export const getCourseWithEducator = (courseId) => {
+  const course = defaultCourses.find(course => course.id === courseId);
+  if (!course) return null;
+  
+  const educator = getEducatorById(course.educatorId);
+  return {
+    ...course,
+    educatorDetails: educator
+  };
 };
 
+// Utility function to get all courses with educator details
+export const getCoursesWithEducators = () => {
+  return defaultCourses.map(course => ({
+    ...course,
+    educatorDetails: getEducatorById(course.educatorId)
+  }));
+};
+
+// Filter courses by subject
+export const getCoursesBySubject = (subject) => {
+  if (subject === 'All') {
+    return getCoursesWithEducators();
+  }
+  return getCoursesWithEducators().filter(course => course.subject === subject);
+};
+
+// Filter courses by specialization
 export const getCoursesBySpecialization = (specialization) => {
-  return coursesData.filter(course => course.specialization === specialization);
-};
-
-export const getCoursesByClass = (courseClass) => {
-  return coursesData.filter(course => course.courseClass === courseClass);
-};
-
-export const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
-
-export const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    maximumFractionDigits: 0
-  }).format(amount);
+  if (specialization === 'All') {
+    return getCoursesWithEducators();
+  }
+  return getCoursesWithEducators().filter(course => course.specialization === specialization);
 };

@@ -20,7 +20,7 @@ const page = () => {
       />
 
       <EducatorsCarousel specialization='IIT-JEE' />
-      <CourseCarousel title='Online Courses for IIT-JEE' viewMoreLink='/courses'  />
+      <CourseCarousel title='Online Courses for IIT-JEE' viewMoreLink='/courses' specialization='IIT-JEE' />
       <OneToOneCourseClasses />
       <OneToOnePPHClasses />
       <UpcomingWebinarSection />

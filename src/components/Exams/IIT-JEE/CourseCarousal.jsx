@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import Link from "next/link";
-import Image from "next/image";
-import { defaultCourses } from "@/Data/Exams/iit-jee.data";
+import { getCoursesBySpecialization } from "@/Data/Courses/courses.data";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
+import CourseCard from "@/components/Courses/CourseCard";
 
 // Import Swiper styles
 import "swiper/css";
@@ -16,7 +16,7 @@ import "swiper/css/navigation";
 const CourseCarousel = ({
   title = "Our Top Courses",
   viewMoreLink = "/courses",
-  courses = [],
+  specialization = "All", // New prop for filtering by specialization
   autoplay = true,
 }) => {
   const [swiperRef, setSwiperRef] = useState(null);
@@ -29,8 +29,8 @@ const CourseCarousel = ({
     if (swiperRef) swiperRef.slideNext();
   };
 
-  const coursesToRender = courses.length > 0 ? courses : defaultCourses;
-  // console.log('Courses to render:', coursesToRender);
+  // Get courses based on specialization
+  const coursesToRender = getCoursesBySpecialization(specialization);
 
   return (
     <section className="py-16 bg-gray-50">
@@ -117,8 +117,17 @@ const CourseCarousel = ({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
+                  className="h-full"
                 >
-                  <CourseCard course={course} />
+                  <CourseCard 
+                    course={{
+                      ...course,
+                      educator: course.educatorDetails,
+                      totalWeeks: course.duration.replace(' weeks', ''),
+                      startDate: course.startDate,
+                      _id: course.id
+                    }} 
+                  />
                 </motion.div>
               </SwiperSlide>
             ))}
@@ -126,92 +135,6 @@ const CourseCarousel = ({
         </div>
       </div>
     </section>
-  );
-};
-
-// Course Card Component
-const CourseCard = ({ course }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-      {/* Course Image */}
-      <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
-        <Image
-          src={course.image}
-          alt={course.title}
-          fill
-          className="object-cover"
-          onError={(e) => {
-            e.target.style.display = "none";
-          }}
-        />
-        {/* Fallback gradient if image fails */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-          <div className="text-white text-center">
-            <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-2">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <p className="text-xs opacity-80">Course</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Course Content */}
-      <div className="p-5 flex flex-col flex-grow">
-        {/* Course Title */}
-        <h3 className="text-lg font-bold text-gray-800 mb-1 leading-tight overflow-hidden">
-          {course.title}
-        </h3>
-        <h4 className="text-base font-semibold text-gray-600 mb-1">
-          {course.instructor}
-        </h4>
-
-        {/* Instructor */}
-        <div className="mb-4 flex-grow">
-          <p className="text-sm text-gray-600 line-clamp-2">
-            {course.description}
-          </p>
-        </div>
-
-        {/* Duration */}
-        <div className="mb-3">
-          <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-medium">
-            {course.duration}
-          </span>
-        </div>
-
-        {/* Price */}
-        <div className="mb-4">
-          <div className="flex items-baseline space-x-2">
-            <span className="text-xl font-bold text-gray-800">
-              ₹{course.price}
-            </span>
-            {course.originalPrice && (
-              <span className="text-sm text-gray-500 line-through">
-                ₹{course.originalPrice}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-2 mt-auto">
-          <Link
-            href={`${course.enrollLink}`}
-            className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center"
-          >
-            View Details
-          </Link>
-                    {/* <Link
-            href={course.enrollLink}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center"
-          >
-            Enroll Now
-          </Link> */}
-        </div>
-      </div>
-    </div>
   );
 };
 
