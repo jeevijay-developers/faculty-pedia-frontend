@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaClock, FaUsers, FaRupeeSign, FaArrowRight } from "react-icons/fa";
+import { FaClock, FaUsers, FaRupeeSign } from "react-icons/fa";
 
 const WebinarCard = ({ webinar }) => {
   return (
@@ -41,19 +41,12 @@ const WebinarCard = ({ webinar }) => {
           </div>
         </div>
 
-        <div className="flex gap-3">
-          <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium">
-            Enroll Now
-          </button>
-
           <Link
             href={`/webinars/${webinar.id}`}
-            className="flex items-center justify-center px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-300"
+            className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
           >
-            <span className="mr-2">Details</span>
-            <FaArrowRight className="w-4 h-4" />
+            <span className="mr-2">View Details</span>
           </Link>
-        </div>
       </div>
     </div>
   );

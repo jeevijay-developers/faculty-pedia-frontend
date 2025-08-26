@@ -44,7 +44,7 @@ const PostCard = ({ post }) => {
       {/* Content */}
       <div className="p-5 flex flex-col flex-grow">
         {/* Title */}
-        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors line">
           {title}
         </h3>
 

@@ -5,7 +5,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiArrowRight } from 'react-icons/fi';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { getTestsBySpecialization } from '@/Data/Tests/test.data';
 
@@ -40,10 +39,9 @@ const TestSeriesCarousel = ({
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{title}</h2>
                     <Link
                         href={viewMoreLink}
-                        className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
+                        className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
                     >
-                        <span className="mr-2">View All</span>
-                        <FiArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
+                        View More
                     </Link>
                 </div>
 
@@ -117,7 +115,7 @@ const TestSeriesCarousel = ({
 };
 
 // Test Series Card Component
-const TestSeriesCard = ({ testSeries, specialization }) => {
+export const TestSeriesCard = ({ testSeries }) => {
     return (
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
             {/* Educator Photo */}
