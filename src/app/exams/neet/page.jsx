@@ -1,12 +1,12 @@
-import OneToOneLiveClassesCarousel from '@/components/Classes/OneToOneLiveClassesCarousel'
+import OneToOneLiveClassesCarousel from '@/components/OneToOne/OneToOneLiveClassesCarousel'
 import Banner from '@/components/Common/Banner'
 import CourseCarousel from '@/components/Courses/CourseCarousal'
 import EducatorsCarousel from '@/components/Educator/EducatorsCarousel'
-import OneToOnePPHClasses from '@/components/Exams/NEET/OneToOnePPHClasses'
-import TestSeriesSection from '@/components/Exams/NEET/TestSeriesSection'
-import UpcomingWebinarSection from '@/components/Exams/NEET/WebinarSection'
+import OneToOnePPHCarousel from '@/components/OneToOne/OneToOnePPHCarousel'
 import PostCarousel from '@/components/Posts/PostsCarousal'
 import React from 'react'
+import UpcomingWebinarCarousel from '@/components/Webinars/UpcomingWebinarCarousel'
+import TestSeriesCarousel from '@/components/Exams/IIT-JEE/TestSeriesCarousel'
 
 const page = () => {
   return (
@@ -18,12 +18,12 @@ const page = () => {
         btnTitle={" Join as Educator"}
         btnUrl={"/join-as-educator"}
       />
-     <EducatorsCarousel specialization='NEET' />
+      <EducatorsCarousel specialization='NEET' />
       <CourseCarousel title='Online Courses for NEET' viewMoreLink='/courses' specialization='NEET' />
       <OneToOneLiveClassesCarousel specialization='NEET' />
-      <OneToOnePPHClasses />
-      <UpcomingWebinarSection />
-      <TestSeriesSection />
+      <OneToOnePPHCarousel specialization='NEET' />
+      <UpcomingWebinarCarousel specialization='NEET' />
+      <TestSeriesCarousel specialization='NEET' />
       <PostCarousel subject='NEET' />
     </>
   )

@@ -97,20 +97,6 @@ export const defaultCourses = [
   },
   {
     id: 8,
-    title: "CBSE Class 12 Mathematics",
-    instructor: "Prof. Amit Singh",
-    educatorId: "edu_007", // Amit Singh - Mathematics CBSE
-    duration: "30 weeks",
-    startDate: "1 Aug 2025",
-    price: "5999",
-    originalPrice: "7999",
-    image: "/images/placeholders/1.svg",
-    description: "Complete CBSE Class 12 Mathematics syllabus with calculus, algebra, and probability for board exam excellence.",
-    subject: "Mathematics",
-    specialization: "CBSE",
-  },
-  {
-    id: 9,
     title: "NEET Chemistry Foundation",
     instructor: "Dr. Rohit Sharma",
     educatorId: "edu_012", // Rohit Sharma - Chemistry NEET
@@ -124,7 +110,7 @@ export const defaultCourses = [
     specialization: "NEET",
   },
   {
-    id: 10,
+    id: 9,
     title: "JEE Advanced Mathematics Masterclass",
     instructor: "Dr. Neeraj Agarwal",
     educatorId: "edu_010", // Neeraj Agarwal - Mathematics & Physics IIT-JEE

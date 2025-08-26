@@ -3,7 +3,7 @@ import React from "react";
 import sampleCourse from "@/Data/Details/livecourse.data";
 import Banner from "@/components/Common/Banner";
 const Page = async ({ params }) => {
-  const { id } = params;
+  const { id } = params.id;
   return (
     <div>
       <Banner

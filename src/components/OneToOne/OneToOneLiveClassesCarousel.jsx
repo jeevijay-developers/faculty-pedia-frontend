@@ -6,14 +6,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import { getClassesBySpecialization } from "@/Data/Classes/1To1Live-course.data";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
-import OneToOneLiveClassesCard from './OneToOneLiveClassesCard';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
+import OneToOneLiveClassesCard from './OneToOneLiveClassesCard';
 
 const OneToOneLiveClassesCarousel = ({
-  title = "1-1 Live Courses",
-  viewMoreLink = "/1-1-live-course",
+  title = "1-1 Live Classes",
+  viewMoreLink = "/1-1-live-class",
   specialization = "All", // New prop for filtering by specialization
   autoplay = true,
 }) => {

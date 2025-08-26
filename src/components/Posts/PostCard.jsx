@@ -62,8 +62,8 @@ const PostCard = ({ post }) => {
             </div>
             <div className="flex items-center space-x-1">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(category)}`}>
-          {category}
-        </span>
+                {category}
+              </span>
             </div>
           </div>
         </div>

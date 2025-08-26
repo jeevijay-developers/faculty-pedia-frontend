@@ -110,7 +110,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
         {/* Action Button */}
         <div className="mt-auto">
           <Link
-            href={`/1-1-live-course/${id}`}
+            href={`/1-1-live-class/${id}`}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
           >
             Book Session

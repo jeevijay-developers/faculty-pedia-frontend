@@ -7,15 +7,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowRight } from 'react-icons/fi';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
-import { iitJeeTestSeries } from '@/Data/Exams/iit-jee.data';
+import { getTestsBySpecialization } from '@/Data/Tests/test.data';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const TestSeriesSection = () => {
+const TestSeriesCarousel = ({
+    title = 'Online Test Series',
+    specialization = 'All', // IIT-JEE | NEET | CBSE | All
+    viewMoreLink = '/test-series',
+    autoplay = true,
+}) => {
     const [swiperRef, setSwiperRef] = useState(null);
+
+    const testsToRender = getTestsBySpecialization(specialization);
 
     const prevSlide = () => {
         if (swiperRef) swiperRef.slidePrev();
@@ -30,9 +37,9 @@ const TestSeriesSection = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Online Test Series</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{title}</h2>
                     <Link
-                        href="/exams/iit-jee/test-series"
+                        href={viewMoreLink}
                         className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
                     >
                         <span className="mr-2">View All</span>
@@ -65,12 +72,14 @@ const TestSeriesSection = () => {
                         onSwiper={setSwiperRef}
                         spaceBetween={24}
                         slidesPerView={1}
-                        autoplay={{
-                            delay: 3000,
-                            disableOnInteraction: false,
-                            pauseOnMouseEnter: true
-                        }}
-                        loop={iitJeeTestSeries.length > 3}
+                        autoplay={
+                            autoplay && testsToRender.length > 3 ? {
+                                delay: 3000,
+                                disableOnInteraction: false,
+                                pauseOnMouseEnter: true
+                            } : false
+                        }
+                        loop={testsToRender.length > 3}
                         className="test-series-carousel pb-12"
                         breakpoints={{
                             640: {
@@ -87,11 +96,19 @@ const TestSeriesSection = () => {
                             },
                         }}
                     >
-                        {iitJeeTestSeries.map((testSeries) => (
-                            <SwiperSlide key={testSeries.id}>
-                                <TestSeriesCard testSeries={testSeries} />
+                        {testsToRender.length > 0 ? (
+                            testsToRender.map((testSeries) => (
+                                <SwiperSlide key={testSeries.id}>
+                                    <TestSeriesCard testSeries={testSeries} specialization={specialization} />
+                                </SwiperSlide>
+                            ))
+                        ) : (
+                            <SwiperSlide>
+                                <div className="bg-white rounded-lg border border-gray-200 p-10 text-center w-full">
+                                    <p className="text-gray-500 text-lg">No test series available for {specialization}</p>
+                                </div>
                             </SwiperSlide>
-                        ))}
+                        )}
                     </Swiper>
                 </div>
             </div>
@@ -100,7 +117,7 @@ const TestSeriesSection = () => {
 };
 
 // Test Series Card Component
-const TestSeriesCard = ({ testSeries }) => {
+const TestSeriesCard = ({ testSeries, specialization }) => {
     return (
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
             {/* Educator Photo */}
@@ -111,6 +128,9 @@ const TestSeriesCard = ({ testSeries }) => {
                     fill
                     className="object-cover"
                 />
+                <div className="absolute top-3 left-3">
+                    <span className="bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded-md">{testSeries.specialization}</span>
+                </div>
             </div>
 
             {/* Card Content */}
@@ -130,23 +150,17 @@ const TestSeriesCard = ({ testSeries }) => {
                 <div className="mb-2 text-sm text-gray-600">
                     <span className="font-medium">Number of Tests: </span>{testSeries.noOfTests}
                 </div>
-                <div className="mb-4 text-sm text-gray-600">
-                    <span className="font-medium">Fee: </span>₹{testSeries.fee.toLocaleString()}
+                <div className="mb-4 text-xl font-bold text-black">
+                    ₹{testSeries.fee.toLocaleString()}
                 </div>
 
                 {/* Action Button */}
                 <div className="flex flex-row gap-2">
                     <Link
-                        href={`/exams/iit-jee/test-series/${testSeries.slug}`}
-                        className="w-full text-gray-700 border border-gray-300 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+                        href={`/test-series/${testSeries.slug}`}
+                        className="w-full text-white border bg-blue-600 border-gray-300 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
                     >
                         View details
-                    </Link>
-                    <Link
-                        href={`/exams/iit-jee/test-series/${testSeries.id}`}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
-                    >
-                        Grab the series
                     </Link>
                 </div>
             </div>
@@ -154,4 +168,4 @@ const TestSeriesCard = ({ testSeries }) => {
     );
 };
 
-export default TestSeriesSection;
+export default TestSeriesCarousel;
