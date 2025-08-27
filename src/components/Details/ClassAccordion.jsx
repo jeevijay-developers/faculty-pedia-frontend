@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import {
@@ -10,12 +10,34 @@ import {
 } from "react-icons/fa";
 
 const ClassAccordion = ({ classData, isExpanded, onToggle }) => {
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
       once: true,
     });
+    setIsClient(true);
   }, []);
+
+  // Safe date formatting function
+  const formatDate = (dateString) => {
+    if (!isClient) {
+      // Return a placeholder or empty string during SSR
+      return '';
+    }
+    
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  };
 
   return (
     <div 
@@ -45,7 +67,7 @@ const ClassAccordion = ({ classData, isExpanded, onToggle }) => {
           <div className="text-right hidden md:block">
             <p className="text-sm text-gray-600 flex items-center justify-end">
               <FaCalendarAlt className="mr-2" />
-              {new Date(classData.date).toLocaleDateString()}
+              {formatDate(classData.date)}
             </p>
             <p className="text-sm text-gray-600 flex items-center justify-end">
               <FaClock className="mr-2" />
@@ -78,7 +100,7 @@ const ClassAccordion = ({ classData, isExpanded, onToggle }) => {
                 <FaCalendarAlt className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium">Date</p>
-                  <p>{new Date(classData.date).toLocaleDateString()}</p>
+                  <p>{formatDate(classData.date)}</p>
                 </div>
               </div>
               <div className="flex items-center text-gray-700">

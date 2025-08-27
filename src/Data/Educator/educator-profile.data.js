@@ -1,428 +1,3 @@
-export const educatorProfile = {
-  firstName: "John",
-  lastName: "Doe",
-  password: "SecurePass123", // will be hashed before saving
-  mobileNumber: "9876543210",
-  email: "johndoe@example.com",
-  profileImage: {
-    public_id: "educator_placeholder",
-    url: "/images/placeholders/1.svg",
-  },
-  bio: "Passionate physics educator with over 10 years of experience teaching IIT-JEE aspirants.",
-  workExperience: [
-    {
-      title: "SENIOR TEACHER",
-      company: "Bright Minds Academy",
-      startDate: "2015-06-01",
-      endDate: "2020-05-31",
-    },
-    {
-      title: "LECTURER",
-      company: "City Science College",
-      startDate: "2010-06-01",
-      endDate: "2015-05-31",
-    },
-  ],
-  introVideoLink: "https://youtube.com/watch?v=example123",
-  qualification: [
-    {
-      title: "MSC PHYSICS",
-      institute: "National University",
-      startDate: "2008-07-01",
-      endDate: "2010-06-30",
-    },
-    {
-      title: "BSC PHYSICS",
-      institute: "City University",
-      startDate: "2005-07-01",
-      endDate: "2008-06-30",
-    },
-  ],
-  socials: {
-    instagram: "https://instagram.com/johndoe",
-    facebook: "https://facebook.com/johndoe",
-    twitter: "https://twitter.com/johndoe",
-    linkedin: "https://linkedin.com/in/johndoe",
-    youtube: "https://youtube.com/johndoe",
-  },
-  status: "active",
-  rating: 4.7,
-  reviewCount: 120,
-  specialization: "IIT-JEE",
-  demoVideoLink: "https://youtube.com/watch?v=demo123",
-  courses: [
-    {
-      _id: "64f2a8f3a27c4a9ab0f27c01",
-      specialization: "IIT-JEE",
-      courseClass: "11",
-      educatorId: "64f2a8f3a27c4a9ab0f27e01",
-      purchases: [
-        { studentId: "64f2a8f3a27c4a9ab0f27s01" },
-        { studentId: "64f2a8f3a27c4a9ab0f27s02" },
-      ],
-      image: {
-        public_id: "course_1",
-        url: "/images/placeholders/1.svg",
-      },
-      title: "physics crash course",
-      description: {
-        shortDesc: "Quick revision course for JEE physics.",
-        longDesc:
-          "This course covers essential topics in mechanics, electricity, and magnetism for IIT-JEE aspirants, with concise explanations and problem-solving practice.",
-      },
-      courseType: "OTA",
-      startDate: "2025-08-20",
-      endDate: "2025-09-20",
-      seatLimit: 50,
-      classDuration: 2,
-      fees: 4999,
-      videos: {
-        intro: "https://youtube.com/watch?v=example1",
-        descriptionVideo: "https://youtube.com/watch?v=exampledesc1",
-      },
-      classes: ["64f2a8f3a27c4a9ab0f27cl01"],
-      tests: ["64f2a8f3a27c4a9ab0f27t01"],
-    },
-    {
-      _id: "64f2a8f3a27c4a9ab0f27c02",
-      specialization: "NEET",
-      courseClass: "12",
-      educatorId: "64f2a8f3a27c4a9ab0f27e01",
-      purchases: [],
-      image: {
-        public_id: "course_2",
-        url: "/images/placeholders/1.svg",
-      },
-      title: "biology fundamentals",
-      description: {
-        shortDesc: "Core biology concepts for NEET.",
-        longDesc:
-          "Detailed lessons on human physiology, plant biology, and genetics tailored for NEET preparation.",
-      },
-      courseType: "OTA",
-      startDate: "2025-09-01",
-      endDate: "2025-11-01",
-      seatLimit: 100,
-      classDuration: 1.5,
-      fees: 5999,
-      videos: {
-        intro: "https://youtube.com/watch?v=example2",
-        descriptionVideo: "https://youtube.com/watch?v=exampledesc2",
-      },
-      classes: ["64f2a8f3a27c4a9ab0f27cl02"],
-      tests: ["64f2a8f3a27c4a9ab0f27t02"],
-    },
-    {
-      _id: "64f2a8f3a27c4a9ab0f27c03",
-      specialization: "CBSE",
-      courseClass: "10",
-      educatorId: "64f2a8f3a27c4a9ab0f27e01",
-      purchases: [],
-      image: {
-        public_id: "course_3",
-        url: "/images/placeholders/1.svg",
-      },
-      title: "maths board exam prep",
-      description: {
-        shortDesc: "Focused course for Class 10 CBSE mathematics.",
-        longDesc:
-          "Comprehensive coverage of algebra, geometry, trigonometry, and statistics with solved examples.",
-      },
-      courseType: "OTA",
-      startDate: "2025-08-25",
-      endDate: "2025-10-25",
-      seatLimit: 40,
-      classDuration: 1,
-      fees: 2999,
-      videos: {
-        intro: "https://youtube.com/watch?v=example3",
-        descriptionVideo: "https://youtube.com/watch?v=exampledesc3",
-      },
-      classes: ["64f2a8f3a27c4a9ab0f27cl03"],
-      tests: ["64f2a8f3a27c4a9ab0f27t03"],
-    },
-    {
-      _id: "64f2a8f3a27c4a9ab0f27c04",
-      specialization: "IIT-JEE",
-      courseClass: "12",
-      educatorId: "64f2a8f3a27c4a9ab0f27e01",
-      purchases: [],
-      image: {
-        public_id: "course_4",
-        url: "/images/placeholders/1.svg",
-      },
-      title: "organic chemistry booster",
-      description: {
-        shortDesc: "Organic chemistry essentials for JEE.",
-        longDesc:
-          "In-depth exploration of reaction mechanisms, functional groups, and problem-solving strategies.",
-      },
-      courseType: "OTA",
-      startDate: "2025-08-15",
-      endDate: "2025-09-30",
-      seatLimit: 60,
-      classDuration: 2,
-      fees: 4499,
-      videos: {
-        intro: "https://youtube.com/watch?v=example4",
-        descriptionVideo: "https://youtube.com/watch?v=exampledesc4",
-      },
-      classes: ["64f2a8f3a27c4a9ab0f27cl04"],
-      tests: ["64f2a8f3a27c4a9ab0f27t04"],
-    },
-    {
-      _id: "64f2a8f3a27c4a9ab0f27c05",
-      specialization: "NEET",
-      courseClass: "11",
-      educatorId: "64f2a8f3a27c4a9ab0f27e01",
-      purchases: [],
-      image: {
-        public_id: "course_5",
-        url: "/images/placeholders/1.svg",
-      },
-      title: "physics for medical aspirants",
-      description: {
-        shortDesc: "Targeted physics course for NEET.",
-        longDesc:
-          "Simplified explanations of mechanics, optics, and modern physics for NEET students.",
-      },
-      courseType: "OTA",
-      startDate: "2025-09-05",
-      endDate: "2025-11-15",
-      seatLimit: 70,
-      classDuration: 1.5,
-      fees: 5299,
-      videos: {
-        intro: "https://youtube.com/watch?v=example5",
-        descriptionVideo: "https://youtube.com/watch?v=exampledesc5",
-      },
-      classes: ["64f2a8f3a27c4a9ab0f27cl05"],
-      tests: ["64f2a8f3a27c4a9ab0f27t05"],
-    },
-  ],
-  webinars: [
-    {
-      title: "iit-jee crash course 2025",
-      description: {
-        short: "A fast-paced crash course for IIT-JEE aspirants.",
-        long: "This intensive webinar covers all the crucial topics and problem-solving techniques for IIT-JEE 2025 in a concise format.",
-      },
-      price: 499,
-      webinarType: "OTA",
-      time: "18:00",
-      date: "2025-08-20T00:00:00.000Z",
-      seatLimit: 200,
-      duration: 120,
-      fees: 499,
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0001",
-      enrolledStudents: [],
-      webinarLink: "https://zoom.us/j/123456789",
-      assetsLinks: [
-        { name: "PPT", link: "https://example.com/iitjee-ppt" },
-        { name: "VIDEO", link: "https://example.com/iitjee-video" },
-      ],
-    },
-    {
-      title: "neet biology masterclass",
-      description: {
-        short: "Deep dive into NEET Biology with key tips.",
-        long: "In this masterclass, we focus on high-yield NEET Biology concepts, mnemonics, and memory tricks to maximize your score.",
-      },
-      price: 399,
-      webinarType: "OTO",
-      time: "17:00",
-      date: "2025-08-22T00:00:00.000Z",
-      seatLimit: 150,
-      duration: 90,
-      fees: 399,
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0002",
-      enrolledStudents: [],
-      webinarLink: "https://zoom.us/j/987654321",
-      assetsLinks: [
-        { name: "PDF", link: "https://example.com/neet-bio-notes" },
-      ],
-    },
-    {
-      title: "cbse class 10 maths revision",
-      description: {
-        short: "Quick revision for Class 10 CBSE Maths.",
-        long: "This webinar will go through important formulas, theorems, and problem-solving strategies for the upcoming CBSE Class 10 board exams.",
-      },
-      price: 299,
-      webinarType: "OTA",
-      time: "16:00",
-      date: "2025-08-25T00:00:00.000Z",
-      seatLimit: 300,
-      duration: 60,
-      fees: 299,
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0003",
-      enrolledStudents: [],
-      webinarLink: "https://zoom.us/j/1122334455",
-      assetsLinks: [
-        { name: "PPT", link: "https://example.com/cbse10-ppt" },
-        { name: "PDF", link: "https://example.com/cbse10-formulas" },
-      ],
-    },
-    {
-      title: "organic chemistry tricks",
-      description: {
-        short: "Learn shortcuts for Organic Chemistry.",
-        long: "A focused session on reaction mechanisms, named reactions, and smart tricks to solve Organic Chemistry questions quickly.",
-      },
-      price: 450,
-      webinarType: "OTO",
-      time: "19:00",
-      date: "2025-08-27T00:00:00.000Z",
-      seatLimit: 100,
-      duration: 75,
-      fees: 450,
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0004",
-      enrolledStudents: [],
-      webinarLink: "https://zoom.us/j/5566778899",
-      assetsLinks: [
-        { name: "VIDEO", link: "https://example.com/organic-video" },
-      ],
-    },
-    {
-      title: "physics numericals challenge",
-      description: {
-        short: "Test your skills with Physics numericals.",
-        long: "Join this interactive session where we'll solve challenging Physics numericals for competitive exams like IIT-JEE and NEET.",
-      },
-      price: 350,
-      webinarType: "OTA",
-      time: "15:00",
-      date: "2025-08-30T00:00:00.000Z",
-      seatLimit: 180,
-      duration: 80,
-      fees: 350,
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0005",
-      enrolledStudents: [],
-      webinarLink: "https://zoom.us/j/6677889900",
-      assetsLinks: [{ name: "PDF", link: "https://example.com/physics-notes" }],
-    },
-  ],
-  testSeries: [
-    {
-      title: "iit-jee physics booster series",
-      description: {
-        short: "10 test series for IIT-JEE Physics preparation.",
-        long: "A comprehensive physics test series designed to strengthen concepts and improve speed for IIT-JEE aspirants.",
-      },
-      price: 999,
-      noOfTests: 10,
-      startDate: "2025-09-01T00:00:00.000Z",
-      endDate: "2025-09-30T00:00:00.000Z",
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0001",
-      enrolledStudents: [],
-      liveTests: [],
-      isCourseSpecific: false,
-    },
-    {
-      title: "neet biology test marathon",
-      description: {
-        short: "15 full-length NEET biology tests.",
-        long: "Designed to mimic the NEET exam pattern, this biology-focused test series will help students ace their preparation.",
-      },
-      price: 1200,
-      noOfTests: 15,
-      startDate: "2025-09-05T00:00:00.000Z",
-      endDate: "2025-10-05T00:00:00.000Z",
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0002",
-      enrolledStudents: [],
-      liveTests: [],
-      isCourseSpecific: true,
-      courseId: "64fbc123456789abcdef1001",
-    },
-    {
-      title: "cbse class 10 maths challenge",
-      description: {
-        short: "A set of 8 CBSE Class 10 Maths tests.",
-        long: "Includes chapter-wise and full syllabus mock tests to help Class 10 students prepare for board exams.",
-      },
-      price: 799,
-      noOfTests: 8,
-      startDate: "2025-09-10T00:00:00.000Z",
-      endDate: "2025-09-25T00:00:00.000Z",
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0003",
-      enrolledStudents: [],
-      liveTests: [],
-      isCourseSpecific: false,
-    },
-    {
-      title: "organic chemistry reaction series",
-      description: {
-        short: "5 mock tests on organic chemistry reactions.",
-        long: "Focuses entirely on reaction mechanisms, named reactions, and problem-solving in organic chemistry.",
-      },
-      price: 650,
-      noOfTests: 5,
-      startDate: "2025-09-15T00:00:00.000Z",
-      endDate: "2025-09-29T00:00:00.000Z",
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0004",
-      enrolledStudents: [],
-      liveTests: [],
-      isCourseSpecific: true,
-      courseId: "64fbc123456789abcdef1002",
-    },
-    {
-      title: "physics & maths combo series",
-      description: {
-        short: "Combined physics and maths test series for competitive exams.",
-        long: "A balanced test series covering both physics and mathematics with equal weightage and exam-like difficulty.",
-      },
-      price: 1400,
-      noOfTests: 12,
-      startDate: "2025-09-20T00:00:00.000Z",
-      endDate: "2025-10-20T00:00:00.000Z",
-      image: {
-        public_id: "placeholder1",
-        url: "/images/placeholders/1.svg",
-      },
-      teacherId: "64fbc123456789abcdef0005",
-      enrolledStudents: [],
-      liveTests: [],
-      isCourseSpecific: false,
-    },
-  ],
-};
-
 // Array of multiple educators for carousel
 export const educatorsData = [
   {
@@ -431,18 +6,103 @@ export const educatorsData = [
     lastName: "doe",
     name: "Dr. John Doe",
     email: "johndoe@example.com",
+    password: "hashedPassword123", // In real app, this would be hashed
+    mobileNumber: "+91-9876543210",
     profileImage: {
       public_id: "educator_placeholder",
       url: "/images/Banner/1.png",
     },
     bio: "Passionate physics educator with over 10 years of experience teaching IIT-JEE aspirants.",
-    qualification: "M.Sc Physics, B.Sc Physics",
-    experience: "10+ years",
-    subject: "Physics",
-    specialization: "IIT-JEE",
+    workExperience: [
+      {
+        title: "SENIOR PHYSICS TEACHER",
+        company: "Resonance Institute",
+        startDate: "2020-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "PHYSICS FACULTY",
+        company: "Allen Career Institute",
+        startDate: "2018-01-01",
+        endDate: "2020-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "M.SC PHYSICS",
+        institute: "Delhi University",
+        startDate: "2016-01-01",
+        endDate: "2018-01-01"
+      },
+      {
+        title: "B.SC PHYSICS",
+        institute: "Delhi University",
+        startDate: "2013-01-01",
+        endDate: "2016-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/johndoe_physics",
+      facebook: "https://facebook.com/johndoe.physics",
+      twitter: "https://twitter.com/johndoe_physics",
+      linkedin: "https://linkedin.com/in/johndoe-physics",
+      youtube: "https://youtube.com/johndoe_physics"
+    },
     rating: 4.7,
     reviewCount: 120,
-    status: "active"
+    status: "active",
+    specialization: "IIT-JEE",
+    courses: [
+      {
+        id: 3,
+        title: "Physics for Engineering",
+        duration: "20 weeks",
+        startDate: "1 Sep 2025",
+        price: "6999",
+        originalPrice: "8999",
+        image: "/images/placeholders/1.svg",
+        subject: "Physics",
+        specialization: "IIT-JEE",
+      },
+      {
+        id: 13,
+        title: "JEE Physics Problem Solving Workshop",
+        duration: "15 weeks",
+        startDate: "15 Sep 2025",
+        price: "5999",
+        originalPrice: "7499",
+        image: "/images/placeholders/1.svg",
+        subject: "Physics",
+        specialization: "IIT-JEE",
+      }
+    ],
+    webinars: [
+      {
+        id: 3,
+        title: "Physics for JEE: Mechanics and Thermodynamics",
+        price: "11,599",
+        originalPrice: "14,599",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Physics", "JEE"],
+      }
+    ],
+    testSeries: [
+      {
+        id: "ts_001",
+        title: "JEE Physics Test Series",
+        price: 2999,
+        numberOfTests: 25,
+        subject: "Physics",
+        specialization: "IIT-JEE"
+      }
+    ],
+    followers: ["student_001", "student_002", "student_003"],
+    yearsExperience: 10,
+    class: "XI, XII, JEE",
+    courseFees: 18000,
+    totalHours: 120,
+    validity: "12 months"
   },
   {
     id: "edu_002",
@@ -450,18 +110,100 @@ export const educatorsData = [
     lastName: "sharma",
     name: "Dr. Priya Sharma",
     email: "priyasharma@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543211",
     profileImage: {
       public_id: "educator_placeholder_2",
       url: "/images/Banner/2.png",
     },
     bio: "Experienced chemistry teacher specializing in organic chemistry for competitive exams.",
-    qualification: "Ph.D Chemistry, M.Sc Chemistry",
-    experience: "12+ years",
-    subject: "Chemistry",
-    specialization: "IIT-JEE",
+    workExperience: [
+      {
+        title: "HEAD OF CHEMISTRY DEPARTMENT",
+        company: "FIITJEE",
+        startDate: "2019-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "CHEMISTRY LECTURER",
+        company: "Narayana College",
+        startDate: "2016-01-01",
+        endDate: "2019-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "PH.D CHEMISTRY",
+        institute: "IIT Delhi",
+        startDate: "2014-01-01",
+        endDate: "2018-01-01"
+      },
+      {
+        title: "M.SC CHEMISTRY",
+        institute: "Delhi University",
+        startDate: "2012-01-01",
+        endDate: "2014-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/priya_chemistry",
+      facebook: "https://facebook.com/priya.sharma.chem",
+      twitter: "https://twitter.com/priya_chem",
+      linkedin: "https://linkedin.com/in/priya-sharma-chemistry",
+      youtube: "https://youtube.com/priya_chemistry"
+    },
     rating: 4.8,
     reviewCount: 95,
-    status: "active"
+    status: "active",
+    specialization: "IIT-JEE",
+    courses: [
+      {
+        id: 6,
+        title: "Advanced Organic Chemistry for JEE",
+        duration: "22 weeks",
+        startDate: "5 Sep 2025",
+        price: "8499",
+        originalPrice: "10999",
+        image: "/images/placeholders/1.svg",
+        subject: "Chemistry",
+        specialization: "IIT-JEE",
+      }
+    ],
+    webinars: [
+      {
+        id: 2,
+        title: "Complete Organic Chemistry for NEET",
+        price: "10,999",
+        originalPrice: "13,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Chemistry", "NEET"],
+      },
+      {
+        id: 5,
+        title: "Advanced Problem Solving in Physical Chemistry",
+        price: "13,599",
+        originalPrice: "16,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Chemistry", "JEE Advanced"],
+      }
+    ],
+    testSeries: [
+      {
+        id: "ts_002",
+        title: "JEE Chemistry Complete Series",
+        price: 3499,
+        numberOfTests: 30,
+        subject: "Chemistry",
+        specialization: "IIT-JEE"
+      }
+    ],
+    followers: ["student_004", "student_005", "student_006"],
+    yearsExperience: 12,
+    class: "XI, XII, JEE",
+    courseFees: 17500,
+    totalHours: 110,
+    validity: "12 months"
   },
   {
     id: "edu_003",
@@ -469,18 +211,251 @@ export const educatorsData = [
     lastName: "kumar",
     name: "Prof. Rajesh Kumar",
     email: "rajeshkumar@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543212",
     profileImage: {
       public_id: "educator_placeholder_3",
       url: "/images/Banner/3.png",
     },
     bio: "Mathematics expert with a passion for teaching advanced calculus and algebra.",
-    qualification: "M.Sc Mathematics, B.Sc Mathematics",
-    experience: "8+ years",
-    subject: "Mathematics",
-    specialization: "IIT-JEE",
+    workExperience: [
+      {
+        title: "MATHEMATICS FACULTY",
+        company: "Aakash Institute",
+        startDate: "2020-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "MATHEMATICS TEACHER",
+        company: "Brilliant Tutorials",
+        startDate: "2018-01-01",
+        endDate: "2020-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "M.SC MATHEMATICS",
+        institute: "IIT Bombay",
+        startDate: "2016-01-01",
+        endDate: "2018-01-01"
+      },
+      {
+        title: "B.SC MATHEMATICS",
+        institute: "Mumbai University",
+        startDate: "2013-01-01",
+        endDate: "2016-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/rajesh_maths",
+      facebook: "https://facebook.com/rajesh.kumar.math",
+      twitter: "https://twitter.com/rajesh_math",
+      linkedin: "https://linkedin.com/in/rajesh-kumar-mathematics",
+      youtube: "https://youtube.com/rajesh_mathematics"
+    },
     rating: 4.6,
     reviewCount: 78,
-    status: "active"
+    status: "active",
+    specialization: "IIT-JEE",
+    courses: [
+      {
+        id: 1,
+        title: "JEE Maths Foundation Course",
+        duration: "24 weeks",
+        startDate: "8 Aug 2025",
+        price: "7999",
+        originalPrice: "9999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "IIT-JEE",
+      },
+      {
+        id: 9,
+        title: "JEE Advanced Mathematics Masterclass",
+        duration: "25 weeks",
+        startDate: "22 Aug 2025",
+        price: "9999",
+        originalPrice: "12999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "IIT-JEE",
+      }, 
+      {
+        id: 10,
+        title: "JEE Advanced Mathematics Masterclass",
+        duration: "25 weeks",
+        startDate: "22 Aug 2025",
+        price: "9999",
+        originalPrice: "12999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "IIT-JEE",
+      }, 
+      {
+        id: 10,
+        title: "JEE Advanced Mathematics Masterclass",
+        duration: "25 weeks",
+        startDate: "22 Aug 2025",
+        price: "9999",
+        originalPrice: "12999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "IIT-JEE",
+      }, 
+      {
+        id: 11,
+        title: "JEE Advanced Mathematics Masterclass",
+        duration: "25 weeks",
+        startDate: "22 Aug 2025",
+        price: "9999",
+        originalPrice: "12999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "IIT-JEE",
+      }, 
+      {
+        id: 12,
+        title: "JEE Advanced Mathematics Masterclass",
+        duration: "25 weeks",
+        startDate: "22 Aug 2025",
+        price: "9999",
+        originalPrice: "12999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "IIT-JEE",
+      }, 
+      {
+        id: 13,
+        title: "JEE Advanced Mathematics Masterclass",
+        duration: "25 weeks",
+        startDate: "22 Aug 2025",
+        price: "9999",
+        originalPrice: "12999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "IIT-JEE",
+      }, 
+    ],
+    webinars: [
+      {
+        id: 1,
+        title: "Mastering Complex Integration for JEE Advanced",
+        price: "12,999",
+        originalPrice: "15,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Mathematics", "JEE Advanced"],
+      }, 
+      {
+        id: 2,
+        title: "Mastering Complex Integration for JEE Advanced",
+        price: "12,999",
+        originalPrice: "15,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Mathematics", "JEE Advanced"],
+      }, 
+      {
+        id: 3,
+        title: "Mastering Complex Integration for JEE Advanced",
+        price: "12,999",
+        originalPrice: "15,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Mathematics", "JEE Advanced"],
+      }, 
+      {
+        id: 4,
+        title: "Mastering Complex Integration for JEE Advanced",
+        price: "12,999",
+        originalPrice: "15,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Mathematics", "JEE Advanced"],
+      }, 
+      {
+        id: 5,
+        title: "Mastering Complex Integration for JEE Advanced",
+        price: "12,999",
+        originalPrice: "15,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Mathematics", "JEE Advanced"],
+      }, 
+      {
+        id: 6,
+        title: "Mastering Complex Integration for JEE Advanced",
+        price: "12,999",
+        originalPrice: "15,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Mathematics", "JEE Advanced"],
+      }, 
+      {
+        id: 7,
+        title: "Mastering Complex Integration for JEE Advanced",
+        price: "12,999",
+        originalPrice: "15,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Mathematics", "JEE Advanced"],
+      }, 
+    ],
+    testSeries: [
+      {
+        id: "ts_003",
+        title: "JEE Mathematics Complete Test Series",
+        price: 3999,
+        numberOfTests: 35,
+        subject: "Mathematics",
+        specialization: "IIT-JEE"
+      },
+      {
+        id: "ts_010",
+        title: "JEE Mathematics Complete Test Series",
+        price: 3999,
+        numberOfTests: 35,
+        subject: "Mathematics",
+        specialization: "IIT-JEE"
+      },
+      {
+        id: "ts_011",
+        title: "JEE Mathematics Complete Test Series",
+        price: 3999,
+        numberOfTests: 35,
+        subject: "Mathematics",
+        specialization: "IIT-JEE"
+      },
+      {
+        id: "ts_012",
+        title: "JEE Mathematics Complete Test Series",
+        price: 3999,
+        numberOfTests: 35,
+        subject: "Mathematics",
+        specialization: "IIT-JEE"
+      },
+      {
+        id: "ts_013",
+        title: "JEE Mathematics Complete Test Series",
+        price: 3999,
+        numberOfTests: 35,
+        subject: "Mathematics",
+        specialization: "IIT-JEE"
+      },
+      {
+        id: "ts_014",
+        title: "JEE Mathematics Complete Test Series",
+        price: 3999,
+        numberOfTests: 35,
+        subject: "Mathematics",
+        specialization: "IIT-JEE"
+      },
+      {
+        id: "ts_015",
+        title: "JEE Mathematics Complete Test Series",
+        price: 3999,
+        numberOfTests: 35,
+        subject: "Mathematics",
+        specialization: "IIT-JEE"
+      },
+    ],
+    followers: ["student_007", "student_008"],
+    yearsExperience: 8,
+    class: "XI, XII, Dropper",
   },
   {
     id: "edu_004",
@@ -488,18 +463,111 @@ export const educatorsData = [
     lastName: "verma",
     name: "Dr. Anjali Verma",
     email: "anjaliverma@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543213",
     profileImage: {
       public_id: "educator_placeholder_4",
       url: "/images/Banner/4.png",
     },
     bio: "Biology teacher with expertise in human physiology and genetics for NEET preparation.",
-    qualification: "Ph.D Biology, M.Sc Botany",
-    experience: "15+ years",
-    subject: "Biology",
-    specialization: "NEET",
+    workExperience: [
+      {
+        title: "SENIOR BIOLOGY FACULTY",
+        company: "Allen Career Institute",
+        startDate: "2018-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "BIOLOGY LECTURER",
+        company: "Career Point",
+        startDate: "2015-01-01",
+        endDate: "2018-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "PH.D BIOLOGY",
+        institute: "AIIMS Delhi",
+        startDate: "2013-01-01",
+        endDate: "2017-01-01"
+      },
+      {
+        title: "M.SC BOTANY",
+        institute: "Delhi University",
+        startDate: "2011-01-01",
+        endDate: "2013-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/anjali_biology",
+      facebook: "https://facebook.com/anjali.verma.bio",
+      twitter: "https://twitter.com/anjali_bio",
+      linkedin: "https://linkedin.com/in/anjali-verma-biology",
+      youtube: "https://youtube.com/anjali_biology"
+    },
     rating: 4.9,
     reviewCount: 150,
-    status: "active"
+    status: "active",
+    specialization: "NEET",
+    courses: [
+      {
+        id: 2,
+        title: "NEET Biology Masterclass",
+        duration: "32 weeks",
+        startDate: "15 Aug 2025",
+        price: "8999",
+        originalPrice: "11999",
+        image: "/images/placeholders/1.svg",
+        subject: "Biology",
+        specialization: "NEET",
+      },
+      {
+        id: 12,
+        title: "NEET Botany and Zoology Complete",
+        duration: "28 weeks",
+        startDate: "3 Sep 2025",
+        price: "8999",
+        originalPrice: "11499",
+        image: "/images/placeholders/1.svg",
+        subject: "Biology",
+        specialization: "NEET",
+      }
+    ],
+    webinars: [
+      {
+        id: 4,
+        title: "Biology Masterclass for Medical Entrances",
+        price: "9,999",
+        originalPrice: "12,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Biology", "NEET"],
+      },
+      {
+        id: 2,
+        title: "Cracking NEET 2026: Biology Revision Marathon",
+        price: "6,499",
+        originalPrice: "8,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Biology", "NEET"],
+      }
+    ],
+    testSeries: [
+      {
+        id: "ts_004",
+        title: "NEET Biology Complete Test Series",
+        price: 2999,
+        numberOfTests: 40,
+        subject: "Biology",
+        specialization: "NEET"
+      }
+    ],
+    followers: ["student_009", "student_010", "student_011", "student_012"],
+    yearsExperience: 15,
+    class: "XI, XII, NEET",
+    courseFees: 18500,
+    totalHours: 130,
+    validity: "12 months"
   },
   {
     id: "edu_005",
@@ -507,18 +575,83 @@ export const educatorsData = [
     lastName: "nair",
     name: "Dr. Suresh Nair",
     email: "sureshnair@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543214",
     profileImage: {
       public_id: "educator_placeholder_5",
       url: "/images/Banner/1.png",
     },
     bio: "Physics educator specializing in mechanics and thermodynamics for NEET students.",
-    qualification: "M.Sc Physics, B.Sc Physics",
-    experience: "9+ years",
-    subject: "Physics",
-    specialization: "NEET",
+    workExperience: [
+      {
+        title: "PHYSICS FACULTY",
+        company: "Resonance Institute",
+        startDate: "2019-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "PHYSICS TEACHER",
+        company: "Vidyamandir Classes",
+        startDate: "2017-01-01",
+        endDate: "2019-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "M.SC PHYSICS",
+        institute: "Kerala University",
+        startDate: "2015-01-01",
+        endDate: "2017-01-01"
+      },
+      {
+        title: "B.SC PHYSICS",
+        institute: "Kerala University",
+        startDate: "2012-01-01",
+        endDate: "2015-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/suresh_physics",
+      facebook: "https://facebook.com/suresh.nair.physics",
+      twitter: "https://twitter.com/suresh_physics",
+      linkedin: "https://linkedin.com/in/suresh-nair-physics",
+      youtube: "https://youtube.com/suresh_physics"
+    },
     rating: 4.5,
     reviewCount: 88,
-    status: "active"
+    status: "active",
+    specialization: "NEET",
+    courses: [
+      {
+        id: 7,
+        title: "NEET Physics Crash Course",
+        duration: "18 weeks",
+        startDate: "12 Sep 2025",
+        price: "6999",
+        originalPrice: "8499",
+        image: "/images/placeholders/1.svg",
+        subject: "Physics",
+        specialization: "NEET",
+      }
+    ],
+    webinars: [],
+    testSeries: [
+      {
+        id: "ts_005",
+        title: "NEET Physics Test Series",
+        price: 2499,
+        numberOfTests: 20,
+        subject: "Physics",
+        specialization: "NEET"
+      }
+    ],
+    followers: ["student_013", "student_014"],
+    yearsExperience: 9,
+    class: "XI, XII, NEET",
+    courseFees: 16000,
+    totalHours: 90,
+    validity: "12 months"
   },
   {
     id: "edu_006",
@@ -526,18 +659,103 @@ export const educatorsData = [
     lastName: "reddy",
     name: "Dr. Kavitha Reddy",
     email: "kavithareddy@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543215",
     profileImage: {
       public_id: "educator_placeholder_6",
       url: "/images/Banner/2.png",
     },
     bio: "Chemistry teacher with focus on inorganic and physical chemistry for NEET aspirants.",
-    qualification: "Ph.D Chemistry, M.Sc Chemistry",
-    experience: "11+ years",
-    subject: "Chemistry",
-    specialization: "NEET",
+    workExperience: [
+      {
+        title: "CHEMISTRY HEAD",
+        company: "Narayana Group",
+        startDate: "2018-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "CHEMISTRY LECTURER",
+        company: "Sri Chaitanya",
+        startDate: "2015-01-01",
+        endDate: "2018-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "PH.D CHEMISTRY",
+        institute: "University of Hyderabad",
+        startDate: "2013-01-01",
+        endDate: "2017-01-01"
+      },
+      {
+        title: "M.SC CHEMISTRY",
+        institute: "Osmania University",
+        startDate: "2011-01-01",
+        endDate: "2013-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/kavitha_chemistry",
+      facebook: "https://facebook.com/kavitha.reddy.chem",
+      twitter: "https://twitter.com/kavitha_chem",
+      linkedin: "https://linkedin.com/in/kavitha-reddy-chemistry",
+      youtube: "https://youtube.com/kavitha_chemistry"
+    },
     rating: 4.7,
     reviewCount: 102,
-    status: "active"
+    status: "active",
+    specialization: "NEET",
+    courses: [
+      {
+        id: 4,
+        title: "Chemistry Complete Package",
+        duration: "28 weeks",
+        startDate: "20 Aug 2025",
+        price: "7499",
+        originalPrice: "9499",
+        image: "/images/placeholders/1.svg",
+        subject: "Chemistry",
+        specialization: "NEET",
+      },
+      {
+        id: 8,
+        title: "NEET Chemistry Foundation",
+        duration: "26 weeks",
+        startDate: "18 Aug 2025",
+        price: "7999",
+        originalPrice: "9999",
+        image: "/images/placeholders/1.svg",
+        subject: "Chemistry",
+        specialization: "NEET",
+      }
+    ],
+    webinars: [
+      {
+        id: 4,
+        title: "CBSE 12th Chemistry: Last-Minute Tips",
+        price: "5,999",
+        originalPrice: "7,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Chemistry", "CBSE"],
+      }
+    ],
+    testSeries: [
+      {
+        id: "ts_006",
+        title: "NEET Chemistry Complete Series",
+        price: 2999,
+        numberOfTests: 25,
+        subject: "Chemistry",
+        specialization: "NEET"
+      }
+    ],
+    followers: ["student_015", "student_016", "student_017"],
+    yearsExperience: 11,
+    class: "XI, XII, NEET",
+    courseFees: 16500,
+    totalHours: 95,
+    validity: "12 months"
   },
   {
     id: "edu_007",
@@ -545,18 +763,83 @@ export const educatorsData = [
     lastName: "singh",
     name: "Prof. Amit Singh",
     email: "amitsingh@example.com",
+    mobileNumber: "+91-9876543216",
     profileImage: {
       public_id: "educator_placeholder_7",
       url: "/images/Banner/3.png",
     },
     bio: "Mathematics teacher specializing in CBSE curriculum for classes 9-12.",
-    qualification: "M.Sc Mathematics, B.Ed",
-    experience: "7+ years",
-    subject: "Mathematics",
-    specialization: "CBSE",
+    workExperience: [
+      {
+        title: "MATHEMATICS TEACHER",
+        company: "Delhi Public School",
+        startDate: "2020-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "MATHEMATICS TUTOR",
+        company: "BYJU'S",
+        startDate: "2018-01-01",
+        endDate: "2020-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "M.SC MATHEMATICS",
+        institute: "Jamia Millia Islamia",
+        startDate: "2016-01-01",
+        endDate: "2018-01-01"
+      },
+      {
+        title: "B.ED",
+        institute: "IGNOU",
+        startDate: "2015-01-01",
+        endDate: "2016-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/amit_mathematics",
+      facebook: "https://facebook.com/amit.singh.math",
+      twitter: "https://twitter.com/amit_math",
+      linkedin: "https://linkedin.com/in/amit-singh-mathematics",
+      youtube: "https://youtube.com/amit_mathematics"
+    },
     rating: 4.4,
     reviewCount: 65,
-    status: "active"
+    status: "active",
+    specialization: "CBSE",
+    password: "hashedPassword123",
+    courses: [
+      {
+        id: 11,
+        title: "CBSE Mathematics for Class 11-12",
+        duration: "20 weeks",
+        startDate: "28 Aug 2025",
+        price: "4499",
+        originalPrice: "5999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "CBSE",
+      }
+    ],
+    webinars: [],
+    testSeries: [
+      {
+        id: "ts_007",
+        title: "CBSE Mathematics Test Series",
+        price: 1999,
+        numberOfTests: 15,
+        subject: "Mathematics",
+        specialization: "CBSE"
+      }
+    ],
+    followers: ["student_018", "student_019"],
+    yearsExperience: 7,
+    class: "IX, X, XI, XII",
+    courseFees: 14000,
+    totalHours: 80,
+    validity: "10 months"
   },
   {
     id: "edu_008",
@@ -564,18 +847,83 @@ export const educatorsData = [
     lastName: "joshi",
     name: "Dr. Meera Joshi",
     email: "meerajoshi@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543217",
     profileImage: {
       public_id: "educator_placeholder_8",
       url: "/images/Banner/4.png",
     },
     bio: "Science teacher with expertise in CBSE physics and chemistry for board exams.",
-    qualification: "M.Sc Physics, B.Sc Chemistry",
-    experience: "6+ years",
-    subject: "Science",
-    specialization: "CBSE",
+    workExperience: [
+      {
+        title: "SCIENCE TEACHER",
+        company: "Kendriya Vidyalaya",
+        startDate: "2021-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "PHYSICS TUTOR",
+        company: "Vedantu",
+        startDate: "2019-01-01",
+        endDate: "2021-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "M.SC PHYSICS",
+        institute: "Pune University",
+        startDate: "2017-01-01",
+        endDate: "2019-01-01"
+      },
+      {
+        title: "B.SC CHEMISTRY",
+        institute: "Pune University",
+        startDate: "2014-01-01",
+        endDate: "2017-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/meera_science",
+      facebook: "https://facebook.com/meera.joshi.science",
+      twitter: "https://twitter.com/meera_science",
+      linkedin: "https://linkedin.com/in/meera-joshi-science",
+      youtube: "https://youtube.com/meera_science"
+    },
     rating: 4.3,
     reviewCount: 45,
-    status: "active"
+    status: "active",
+    specialization: "CBSE",
+    courses: [
+      {
+        id: 11,
+        title: "CBSE Science for Class 10",
+        duration: "20 weeks",
+        startDate: "28 Aug 2025",
+        price: "4499",
+        originalPrice: "5999",
+        image: "/images/placeholders/1.svg",
+        subject: "Science",
+        specialization: "CBSE",
+      }
+    ],
+    webinars: [],
+    testSeries: [
+      {
+        id: "ts_008",
+        title: "CBSE Science Test Series",
+        price: 1999,
+        numberOfTests: 12,
+        subject: "Science",
+        specialization: "CBSE"
+      }
+    ],
+    followers: ["student_020", "student_021"],
+    yearsExperience: 6,
+    class: "IX, X, XI, XII",
+    courseFees: 13500,
+    totalHours: 75,
+    validity: "10 months"
   },
   {
     id: "edu_009",
@@ -583,18 +931,93 @@ export const educatorsData = [
     lastName: "malhotra",
     name: "Prof. Vikram Malhotra",
     email: "vikrammalhotra@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543218",
     profileImage: {
       public_id: "educator_placeholder_9",
       url: "/images/Banner/1.png",
     },
     bio: "English and Social Studies teacher for CBSE students with focus on board exam preparation.",
-    qualification: "M.A English, B.Ed",
-    experience: "5+ years",
-    subject: "English & Social Studies",
-    specialization: "CBSE",
+    workExperience: [
+      {
+        title: "ENGLISH TEACHER",
+        company: "Ryan International School",
+        startDate: "2022-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "SOCIAL STUDIES TEACHER",
+        company: "DAV Public School",
+        startDate: "2020-01-01",
+        endDate: "2022-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "M.A ENGLISH",
+        institute: "University of Delhi",
+        startDate: "2018-01-01",
+        endDate: "2020-01-01"
+      },
+      {
+        title: "B.ED",
+        institute: "IGNOU",
+        startDate: "2017-01-01",
+        endDate: "2018-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/vikram_english",
+      facebook: "https://facebook.com/vikram.malhotra.english",
+      twitter: "https://twitter.com/vikram_english",
+      linkedin: "https://linkedin.com/in/vikram-malhotra-english",
+      youtube: "https://youtube.com/vikram_english"
+    },
     rating: 4.2,
     reviewCount: 38,
-    status: "active"
+    status: "active",
+    specialization: "CBSE",
+    password: "hashedPassword123",
+    courses: [
+      {
+        id: 5,
+        title: "English for Competitive Exams",
+        duration: "16 weeks",
+        startDate: "10 Sep 2025",
+        price: "4999",
+        originalPrice: "6999",
+        image: "/images/placeholders/1.svg",
+        subject: "English",
+        specialization: "CBSE",
+      }
+    ],
+    webinars: [
+      {
+        id: 5,
+        title: "Effective Study Habits for Toppers",
+        price: "4,499",
+        originalPrice: "6,499",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Study Skills", "Motivation"],
+      }
+    ],
+    testSeries: [
+      {
+        id: "ts_009",
+        title: "CBSE English Test Series",
+        price: 1499,
+        numberOfTests: 10,
+        subject: "English",
+        specialization: "CBSE"
+      }
+    ],
+    followers: ["student_022"],
+    yearsExperience: 5,
+    class: "IX, X, XI, XII",
+    courseFees: 13000,
+    totalHours: 70,
+    validity: "10 months"
   },
   {
     id: "edu_010",
@@ -602,18 +1025,93 @@ export const educatorsData = [
     lastName: "agarwal",
     name: "Dr. Neeraj Agarwal",
     email: "neerajagarwal@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543219",
     profileImage: {
       public_id: "educator_placeholder_10",
       url: "/images/Banner/2.png",
     },
     bio: "Advanced mathematics and physics teacher for JEE Main and Advanced preparation.",
-    qualification: "Ph.D Mathematics, M.Sc Physics",
-    experience: "14+ years",
-    subject: "Mathematics & Physics",
-    specialization: "IIT-JEE",
+    workExperience: [
+      {
+        title: "SENIOR FACULTY",
+        company: "FIITJEE",
+        startDate: "2017-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "PHYSICS LECTURER",
+        company: "Motion IIT-JEE",
+        startDate: "2014-01-01",
+        endDate: "2017-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "PH.D MATHEMATICS",
+        institute: "IIT Kanpur",
+        startDate: "2012-01-01",
+        endDate: "2016-01-01"
+      },
+      {
+        title: "M.SC PHYSICS",
+        institute: "IIT Delhi",
+        startDate: "2010-01-01",
+        endDate: "2012-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/neeraj_mathphysics",
+      facebook: "https://facebook.com/neeraj.agarwal.jee",
+      twitter: "https://twitter.com/neeraj_jee",
+      linkedin: "https://linkedin.com/in/neeraj-agarwal-jee",
+      youtube: "https://youtube.com/neeraj_mathphysics"
+    },
     rating: 4.8,
     reviewCount: 125,
-    status: "active"
+    status: "active",
+    specialization: "IIT-JEE",
+    password: "hashedPassword123",
+    courses: [
+      {
+        id: 9,
+        title: "JEE Advanced Mathematics Masterclass",
+        duration: "25 weeks",
+        startDate: "22 Aug 2025",
+        price: "9999",
+        originalPrice: "12999",
+        image: "/images/placeholders/1.svg",
+        subject: "Mathematics",
+        specialization: "IIT-JEE",
+      }
+    ],
+    webinars: [
+      {
+        id: 1,
+        title: "Mastering Complex Integration for JEE Advanced",
+        price: "12,999",
+        originalPrice: "15,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Mathematics", "JEE Advanced"],
+      }
+    ],
+    testSeries: [
+      {
+        id: "ts_010",
+        title: "JEE Advanced Mathematics & Physics Series",
+        price: 4999,
+        numberOfTests: 50,
+        subject: "Mathematics & Physics",
+        specialization: "IIT-JEE"
+      }
+    ],
+    followers: ["student_023", "student_024", "student_025", "student_026", "student_027"],
+    yearsExperience: 14,
+    class: "XI, XII, JEE",
+    courseFees: 20000,
+    totalHours: 140,
+    validity: "12 months"
   },
   {
     id: "edu_011",
@@ -621,18 +1119,93 @@ export const educatorsData = [
     lastName: "paul",
     name: "Dr. Deepika Paul",
     email: "deepikapaul@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543220",
     profileImage: {
       public_id: "educator_placeholder_11",
       url: "/images/Banner/3.png",
     },
     bio: "Zoology and Botany expert with extensive experience in NEET preparation.",
-    qualification: "Ph.D Zoology, M.Sc Botany",
-    experience: "13+ years",
-    subject: "Biology",
-    specialization: "NEET",
+    workExperience: [
+      {
+        title: "BIOLOGY DEPARTMENT HEAD",
+        company: "Allen Career Institute",
+        startDate: "2016-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "BIOLOGY LECTURER",
+        company: "Akash Institute",
+        startDate: "2013-01-01",
+        endDate: "2016-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "PH.D ZOOLOGY",
+        institute: "University of Calcutta",
+        startDate: "2011-01-01",
+        endDate: "2015-01-01"
+      },
+      {
+        title: "M.SC BOTANY",
+        institute: "University of Calcutta",
+        startDate: "2009-01-01",
+        endDate: "2011-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/deepika_biology",
+      facebook: "https://facebook.com/deepika.paul.bio",
+      twitter: "https://twitter.com/deepika_bio",
+      linkedin: "https://linkedin.com/in/deepika-paul-biology",
+      youtube: "https://youtube.com/deepika_biology"
+    },
     rating: 4.6,
     reviewCount: 89,
-    status: "active"
+    status: "active",
+    specialization: "NEET",
+    password: "hashedPassword123",
+    courses: [
+      {
+        id: 12,
+        title: "NEET Botany and Zoology Complete",
+        duration: "28 weeks",
+        startDate: "3 Sep 2025",
+        price: "8999",
+        originalPrice: "11499",
+        image: "/images/placeholders/1.svg",
+        subject: "Biology",
+        specialization: "NEET",
+      }
+    ],
+    webinars: [
+      {
+        id: 4,
+        title: "Biology Masterclass for Medical Entrances",
+        price: "9,999",
+        originalPrice: "12,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Biology", "NEET"],
+      }
+    ],
+    testSeries: [
+      {
+        id: "ts_011",
+        title: "NEET Biology Advanced Test Series",
+        price: 3499,
+        numberOfTests: 45,
+        subject: "Biology",
+        specialization: "NEET"
+      }
+    ],
+    followers: ["student_028", "student_029", "student_030"],
+    yearsExperience: 13,
+    class: "XI, XII, NEET",
+    courseFees: 17500,
+    totalHours: 110,
+    validity: "12 months"
   },
   {
     id: "edu_012",
@@ -640,18 +1213,93 @@ export const educatorsData = [
     lastName: "sharma",
     name: "Dr. Rohit Sharma",
     email: "rohitsharma@example.com",
+    password: "hashedPassword123",
+    mobileNumber: "+91-9876543221",
     profileImage: {
       public_id: "educator_placeholder_12",
       url: "/images/Banner/4.png",
     },
     bio: "Physical chemistry specialist focusing on NEET chemistry preparation.",
-    qualification: "Ph.D Chemistry, M.Sc Physical Chemistry",
-    experience: "10+ years",
-    subject: "Chemistry",
-    specialization: "NEET",
+    workExperience: [
+      {
+        title: "CHEMISTRY FACULTY",
+        company: "Resonance Institute",
+        startDate: "2019-01-01",
+        endDate: "2024-01-01"
+      },
+      {
+        title: "CHEMISTRY TEACHER",
+        company: "Career Point",
+        startDate: "2016-01-01",
+        endDate: "2019-01-01"
+      }
+    ],
+    introVideoLink: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    qualification: [
+      {
+        title: "PH.D CHEMISTRY",
+        institute: "IIT Roorkee",
+        startDate: "2014-01-01",
+        endDate: "2018-01-01"
+      },
+      {
+        title: "M.SC PHYSICAL CHEMISTRY",
+        institute: "University of Delhi",
+        startDate: "2012-01-01",
+        endDate: "2014-01-01"
+      }
+    ],
+    socials: {
+      instagram: "https://instagram.com/rohit_chemistry",
+      facebook: "https://facebook.com/rohit.sharma.chem",
+      twitter: "https://twitter.com/rohit_chem",
+      linkedin: "https://linkedin.com/in/rohit-sharma-chemistry",
+      youtube: "https://youtube.com/rohit_chemistry"
+    },
     rating: 4.4,
     reviewCount: 76,
-    status: "active"
+    status: "active",
+    specialization: "NEET",
+    password: "hashedPassword123",
+    courses: [
+      {
+        id: 8,
+        title: "NEET Chemistry Foundation",
+        duration: "26 weeks",
+        startDate: "18 Aug 2025",
+        price: "7999",
+        originalPrice: "9999",
+        image: "/images/placeholders/1.svg",
+        subject: "Chemistry",
+        specialization: "NEET",
+      }
+    ],
+    webinars: [
+      {
+        id: 5,
+        title: "Advanced Problem Solving in Physical Chemistry",
+        price: "13,599",
+        originalPrice: "16,999",
+        image: "/images/placeholders/1.svg",
+        subjects: ["Chemistry", "JEE Advanced"],
+      }
+    ],
+    testSeries: [
+      {
+        id: "ts_012",
+        title: "NEET Physical Chemistry Test Series",
+        price: 2999,
+        numberOfTests: 30,
+        subject: "Chemistry",
+        specialization: "NEET"
+      }
+    ],
+    followers: ["student_031", "student_032"],
+    yearsExperience: 10,
+    class: "XI, XII, NEET",
+    courseFees: 16000,
+    totalHours: 90,
+    validity: "12 months"
   }
 ];
 
@@ -670,4 +1318,7 @@ export const getEducatorBySubject = (subject) => {
   return educatorsData.filter(educator => educator.subject === subject);
 }
 
-export default educatorProfile;
+// Function to get educator by ID
+export const getEducatorById = (id) => {
+  return educatorsData.find(educator => educator.id === id);
+};

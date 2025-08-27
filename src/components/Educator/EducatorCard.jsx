@@ -15,6 +15,7 @@ const EducatorCard = ({ educator }) => {
         profileImage, 
         qualification, 
         experience,
+        yearsExperience,
         bio,
         specialization,
         subject,
@@ -69,14 +70,14 @@ const EducatorCard = ({ educator }) => {
                     <div className="flex justify-between items-start">
                         <span className="text-sm font-medium text-gray-700 w-24 flex-shrink-0">Education:</span>
                         <span className="text-sm text-gray-600 text-right flex-1 pl-2 line-clamp-1">
-                            {qualification}
+                            {qualification?.[0]?.title || 'Not specified'}
                         </span>
                     </div>
                     
                     <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-700 w-24 flex-shrink-0">Experience:</span>
                         <span className="text-sm text-gray-600 text-right flex-1 pl-2">
-                            {experience}
+                            {experience || `${educator.yearsExperience}+ years`}
                         </span>
                     </div>
                     

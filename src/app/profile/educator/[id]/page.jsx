@@ -1,11 +1,14 @@
 "use client";
 import React, { useEffect } from "react";
 import ViewProfile from "@/components/Educator/ViewProfile";
-import { educatorProfile } from "@/Data/Educator/educator-profile.data";
+import { getEducatorById } from "@/Data/Educator/educator-profile.data";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { notFound } from 'next/navigation';
 
-const Page = () => {
+const Page = ({ params }) => {
+  const resolvedParams = React.use(params);
+  
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -13,9 +16,15 @@ const Page = () => {
     });
   }, []);
 
+  const educator = getEducatorById(resolvedParams.id);
+  
+  if (!educator) {
+    notFound();
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <ViewProfile educatorData={educatorProfile} />
+      <ViewProfile educatorData={educator} />
     </div>
   );
 };
