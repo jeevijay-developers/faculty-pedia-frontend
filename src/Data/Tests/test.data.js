@@ -10,6 +10,18 @@ export const testData = [
     noOfTests: 25,
     fee: 15000,
     specialization: "IIT-JEE",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "12 years",
+    startingDate: "15 August 2024",
+    validity: "12 months",
+    syllabus: [
+      "Organic Chemistry Fundamentals",
+      "Reaction Mechanisms",
+      "Stereochemistry",
+      "Named Reactions",
+      "Previous Year JEE Questions"
+    ]
   },
   {
     id: 2,
@@ -22,6 +34,18 @@ export const testData = [
     noOfTests: 30,
     fee: 14000,
     specialization: "IIT-JEE",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "15 years",
+    startingDate: "20 August 2024",
+    validity: "15 months",
+    syllabus: [
+      "Calculus and Limits",
+      "Algebra and Trigonometry",
+      "Coordinate Geometry",
+      "Probability and Statistics",
+      "JEE Problem Solving Techniques"
+    ]
   },
   {
     id: 3,
@@ -34,6 +58,18 @@ export const testData = [
     noOfTests: 22,
     fee: 14500,
     specialization: "IIT-JEE",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "10 years",
+    startingDate: "25 August 2024",
+    validity: "12 months",
+    syllabus: [
+      "Mechanics and Motion",
+      "Thermodynamics",
+      "Electromagnetism",
+      "Optics and Waves",
+      "Modern Physics Concepts"
+    ]
   },
   {
     id: 4,
@@ -46,6 +82,18 @@ export const testData = [
     noOfTests: 18,
     fee: 13000,
     specialization: "NEET",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "8 years",
+    startingDate: "1 September 2024",
+    validity: "10 months",
+    syllabus: [
+      "Chemical Thermodynamics",
+      "Chemical Kinetics",
+      "Electrochemistry",
+      "Surface Chemistry",
+      "NEET Specific Problems"
+    ]
   },
   {
     id: 5,
@@ -58,6 +106,18 @@ export const testData = [
     noOfTests: 20,
     fee: 13500,
     specialization: "IIT-JEE",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "14 years",
+    startingDate: "5 September 2024",
+    validity: "12 months",
+    syllabus: [
+      "Differential Calculus",
+      "Integral Calculus",
+      "Multivariable Calculus",
+      "Differential Equations",
+      "Advanced Problem Solving"
+    ]
   },
   {
     id: 6,
@@ -70,6 +130,18 @@ export const testData = [
     noOfTests: 28,
     fee: 14200,
     specialization: "NEET",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "11 years",
+    startingDate: "10 September 2024",
+    validity: "14 months",
+    syllabus: [
+      "Cell Biology and Genetics",
+      "Human Physiology",
+      "Plant Biology",
+      "Ecology and Environment",
+      "NEET Biology Strategies"
+    ]
   },
   {
     id: 7,
@@ -82,6 +154,18 @@ export const testData = [
     noOfTests: 15,
     fee: 9000,
     specialization: "CBSE",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "9 years",
+    startingDate: "15 September 2024",
+    validity: "8 months",
+    syllabus: [
+      "Light - Reflection and Refraction",
+      "Life Processes",
+      "Control and Coordination",
+      "Acids, Bases and Salts",
+      "CBSE Board Exam Preparation"
+    ]
   },
   {
     id: 8,
@@ -94,6 +178,18 @@ export const testData = [
     noOfTests: 24,
     fee: 14800,
     specialization: "IIT-JEE",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "7 years",
+    startingDate: "20 September 2024",
+    validity: "12 months",
+    syllabus: [
+      "Kinematics and Motion",
+      "Laws of Motion",
+      "Work, Energy and Power",
+      "Rotational Motion",
+      "JEE Mechanics Problem Solving"
+    ]
   },
   {
     id: 9,
@@ -106,6 +202,18 @@ export const testData = [
     noOfTests: 18,
     fee: 12000,
     specialization: "NEET",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "13 years",
+    startingDate: "25 September 2024",
+    validity: "10 months",
+    syllabus: [
+      "Animal Kingdom Classification",
+      "Human Anatomy and Physiology",
+      "Reproduction and Development",
+      "Evolution and Genetics",
+      "NEET Zoology Mastery"
+    ]
   },
   {
     id: 10,
@@ -118,6 +226,18 @@ export const testData = [
     noOfTests: 12,
     fee: 8500,
     specialization: "CBSE",
+    aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    workExperience: "16 years",
+    startingDate: "30 September 2024",
+    validity: "6 months",
+    syllabus: [
+      "Poetry Analysis and Appreciation",
+      "Prose and Short Stories",
+      "Drama and Play Analysis",
+      "Writing Skills Development",
+      "CBSE English Board Preparation"
+    ]
   },
 ];
 
