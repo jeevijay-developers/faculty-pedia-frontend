@@ -127,7 +127,7 @@ const CourseDetails = ({ course }) => {
                 {/* Description Video */}
                 {course.videos?.descriptionVideo && (
                   <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Course Description Video</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Demo Video</h3>
                     <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
                       <iframe
                         src={getYouTubeEmbedUrl(course.videos.descriptionVideo)}
@@ -267,9 +267,6 @@ const CourseDetails = ({ course }) => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button className="bg-blue-600 text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg">
                 Enroll Now - ₹{course.price || course.fees}
-              </button>
-              <button className="border border-blue-600 text-blue-600 py-4 px-8 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
-                Download Syllabus
               </button>
             </div>
           </div>

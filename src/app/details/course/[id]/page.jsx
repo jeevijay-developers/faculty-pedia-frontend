@@ -11,13 +11,6 @@ const Page = async ({ params }) => {
   
   return (
     <div>
-      <Banner
-        url={course.image?.url || "/images/placeholders/1.svg"}
-        title={course.title || "Welcome to Our Courses"}
-        subtitle={
-          course.description?.shortDesc || "Explore a variety of Courses designed to help you learn and grow with expert faculty guidance."
-        }
-      />
       <CourseDetails course={course} />
     </div>
   );
