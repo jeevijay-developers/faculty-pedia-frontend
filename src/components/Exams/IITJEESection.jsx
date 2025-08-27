@@ -15,7 +15,7 @@ import 'swiper/css/pagination';
 
 const IITJEESection = () => {
   const [swiperRef, setSwiperRef] = useState(null);
-  
+
   // Sample exam data - in a real app, this would likely come from props or an API
   const prevSlide = () => {
     if (swiperRef) swiperRef.slidePrev();
@@ -31,7 +31,7 @@ const IITJEESection = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">IIT JEE Exams</h2>
-          <Link 
+          <Link
             href="/exams/iit-jee"
             className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
           >
@@ -155,10 +155,10 @@ const ExamCard = ({ exam }) => {
             Enroll Now
           </Link> */}
           <Link
-            href={exam.detailsLink}
-            className="w-full border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+            href={`/details/exam/${exam.id}`}
+            className="w-full text-white border bg-blue-600 border-gray-300 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
           >
-            View Details
+            View details
           </Link>
         </div>
       </div>

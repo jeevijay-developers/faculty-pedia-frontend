@@ -1,8 +1,8 @@
 import IITJEESection from '@/components/Exams/IITJEESection'
-import NEETExamSection from '@/components/Exams/NEETExam'
 import CBSESection from '@/components/Exams/CBSESection'
 import React from 'react'
 import Banner from '@/components/Common/Banner'
+import NEETExamSection from '@/components/Exams/NEETExamSection'
 
 const page = () => {
   return (
