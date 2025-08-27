@@ -20,6 +20,17 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
       once: true,
     });
   }, []);
+
+    // Format the starting date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      day: 'numeric', 
+      month: 'short', 
+      year: 'numeric' 
+    });
+  };
+
   return (
     <div
       data-aos="fade-up"
@@ -54,7 +65,7 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
           <div className="text-right hidden md:block">
             <p className="text-sm text-gray-600 flex items-center justify-end">
               <FaCalendarAlt className="mr-2" />
-              {new Date(testData.startDate).toLocaleDateString()}
+              {formatDate(testData.startDate)}
             </p>
             <p className="text-sm text-gray-600 flex items-center justify-end">
               <FaClock className="mr-2" />
@@ -94,7 +105,7 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
                 <FaCalendarAlt className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium">Test Date</p>
-                  <p>{new Date(testData.startDate).toLocaleDateString()}</p>
+                  <p>{formatDate(testData.startDate)}</p>
                 </div>
               </div>
               <div className="flex items-center text-gray-700">
