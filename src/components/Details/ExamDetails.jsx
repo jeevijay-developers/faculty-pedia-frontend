@@ -16,6 +16,16 @@ const ExamDetails = ({ examData }) => {
   }, []);
   // console.log(examData);
 
+    // Format the starting date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      day: 'numeric', 
+      month: 'short', 
+      year: 'numeric' 
+    });
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div data-aos="fade-up" className="grid md:grid-cols-3 gap-8">
@@ -34,13 +44,13 @@ const ExamDetails = ({ examData }) => {
             <div className="flex items-center space-x-2">
               <FaCalendarAlt className="text-blue-500" />
               <span className="text-gray-700">
-                Starts {new Date(examData.startDate).toLocaleDateString()}
+                Starts: {formatDate(examData.startDate)}
               </span>
             </div>
             <div className="flex items-center space-x-2">
               <FaCalendarAlt className="text-blue-500" />
               <span className="text-gray-700">
-                Ends {new Date(examData.endDate).toLocaleDateString()}
+                Ends: {formatDate(examData.endDate)}
               </span>
             </div>
           </div>
