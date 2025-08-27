@@ -7,7 +7,7 @@ export const educatorsData = [
     name: "Dr. John Doe",
     email: "johndoe@example.com",
     password: "hashedPassword123", // In real app, this would be hashed
-    mobileNumber: "+91-9876543210",
+    mobileNumber: "9876543210",
     profileImage: {
       public_id: "educator_placeholder",
       url: "/images/Banner/1.png",
@@ -112,7 +112,7 @@ export const educatorsData = [
     name: "Dr. Priya Sharma",
     email: "priyasharma@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543211",
+    mobileNumber: "9876543211",
     profileImage: {
       public_id: "educator_placeholder_2",
       url: "/images/Banner/2.png",
@@ -214,7 +214,7 @@ export const educatorsData = [
     name: "Prof. Rajesh Kumar",
     email: "rajeshkumar@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543212",
+    mobileNumber: "9876543212",
     profileImage: {
       public_id: "educator_placeholder_3",
       url: "/images/Banner/3.png",
@@ -467,7 +467,7 @@ export const educatorsData = [
     name: "Dr. Anjali Verma",
     email: "anjaliverma@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543213",
+    mobileNumber: "9876543213",
     profileImage: {
       public_id: "educator_placeholder_4",
       url: "/images/Banner/4.png",
@@ -580,7 +580,7 @@ export const educatorsData = [
     name: "Dr. Suresh Nair",
     email: "sureshnair@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543214",
+    mobileNumber: "9876543214",
     profileImage: {
       public_id: "educator_placeholder_5",
       url: "/images/Banner/1.png",
@@ -665,7 +665,7 @@ export const educatorsData = [
     name: "Dr. Kavitha Reddy",
     email: "kavithareddy@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543215",
+    mobileNumber: "9876543215",
     profileImage: {
       public_id: "educator_placeholder_6",
       url: "/images/Banner/2.png",
@@ -769,7 +769,7 @@ export const educatorsData = [
     lastName: "singh",
     name: "Prof. Amit Singh",
     email: "amitsingh@example.com",
-    mobileNumber: "+91-9876543216",
+    mobileNumber: "9876543216",
     profileImage: {
       public_id: "educator_placeholder_7",
       url: "/images/Banner/3.png",
@@ -855,7 +855,7 @@ export const educatorsData = [
     name: "Dr. Meera Joshi",
     email: "meerajoshi@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543217",
+    mobileNumber: "9876543217",
     profileImage: {
       public_id: "educator_placeholder_8",
       url: "/images/Banner/4.png",
@@ -940,7 +940,7 @@ export const educatorsData = [
     name: "Prof. Vikram Malhotra",
     email: "vikrammalhotra@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543218",
+    mobileNumber: "9876543218",
     profileImage: {
       public_id: "educator_placeholder_9",
       url: "/images/Banner/1.png",
@@ -1035,7 +1035,7 @@ export const educatorsData = [
     name: "Dr. Neeraj Agarwal",
     email: "neerajagarwal@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543219",
+    mobileNumber: "9876543219",
     profileImage: {
       public_id: "educator_placeholder_10",
       url: "/images/Banner/2.png",
@@ -1130,7 +1130,7 @@ export const educatorsData = [
     name: "Dr. Deepika Paul",
     email: "deepikapaul@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543220",
+    mobileNumber: "9876543220",
     profileImage: {
       public_id: "educator_placeholder_11",
       url: "/images/Banner/3.png",
@@ -1225,7 +1225,7 @@ export const educatorsData = [
     name: "Dr. Rohit Sharma",
     email: "rohitsharma@example.com",
     password: "hashedPassword123",
-    mobileNumber: "+91-9876543221",
+    mobileNumber: "9876543221",
     profileImage: {
       public_id: "educator_placeholder_12",
       url: "/images/Banner/4.png",
