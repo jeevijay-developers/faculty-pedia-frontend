@@ -22,7 +22,9 @@ const ExamDetails = ({ examData }) => {
         {/* Left Column - Main Info */}
         <div className="md:col-span-2 space-y-6">
           <h1 className="text-3xl font-bold capitalize">{examData.title}</h1>
-          <p className="text-gray-600">{examData.description}</p>
+          <p className="text-gray-600">
+            {examData.description?.long || examData.description?.short || examData.description || "No description available"}
+          </p>
 
           <div className="grid grid-cols-3 gap-4 bg-white p-6 rounded-lg shadow-sm">
             <div className="flex items-center space-x-2">
@@ -65,7 +67,7 @@ const ExamDetails = ({ examData }) => {
       <div className="mt-12 space-y-6">
         <h2 className="text-2xl font-bold mb-6">Available Tests</h2>
         <div className="space-y-4">
-          {examData.liveTests.map((test, index) => (
+          {examData?.liveTests?.map((test, index) => (
             <TestAccordion
               key={index}
               testData={test}

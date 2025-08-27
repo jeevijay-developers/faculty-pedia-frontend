@@ -10,6 +10,7 @@ export const testData = [
     noOfTests: 25,
     fee: 15000,
     specialization: "IIT-JEE",
+    class: 12,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "12 years",
@@ -34,6 +35,7 @@ export const testData = [
     noOfTests: 30,
     fee: 14000,
     specialization: "IIT-JEE",
+    class: 11,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "15 years",
@@ -58,6 +60,7 @@ export const testData = [
     noOfTests: 22,
     fee: 14500,
     specialization: "IIT-JEE",
+    class: 12,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "10 years",
@@ -82,6 +85,7 @@ export const testData = [
     noOfTests: 18,
     fee: 13000,
     specialization: "NEET",
+    class: 11,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "8 years",
@@ -106,6 +110,7 @@ export const testData = [
     noOfTests: 20,
     fee: 13500,
     specialization: "IIT-JEE",
+    class: 12,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "14 years",
@@ -130,6 +135,7 @@ export const testData = [
     noOfTests: 28,
     fee: 14200,
     specialization: "NEET",
+    class: 12,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "11 years",
@@ -154,6 +160,7 @@ export const testData = [
     noOfTests: 15,
     fee: 9000,
     specialization: "CBSE",
+    class: 10,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "9 years",
@@ -178,6 +185,7 @@ export const testData = [
     noOfTests: 24,
     fee: 14800,
     specialization: "IIT-JEE",
+    class: 11,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "7 years",
@@ -202,6 +210,7 @@ export const testData = [
     noOfTests: 18,
     fee: 12000,
     specialization: "NEET",
+    class: 11,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "13 years",
@@ -226,6 +235,7 @@ export const testData = [
     noOfTests: 12,
     fee: 8500,
     specialization: "CBSE",
+    class: 9,
     aboutVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     introVideo: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     workExperience: "16 years",
@@ -251,6 +261,12 @@ export const getTestsBySpecialization = (specialization = 'All') => {
 export const getTestsBySubject = (subject = 'All') => {
   if (subject === 'All') return testData;
   return testData.filter(t => t.subject === subject);
+};
+
+// Utility: get tests by class (6, 7, 8, 9, 10, 11, 12, All)
+export const getTestsByClass = (classNumber = 'All') => {
+  if (classNumber === 'All') return testData;
+  return testData.filter(t => t.class === classNumber);
 };
 
 // Utility: get single test by slug
