@@ -53,7 +53,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
     >
       <div className="flex items-center space-x-3">
         <Image
-          src={course.image.url}
+          src={course.image?.url || "/images/placeholders/1.svg"}
           alt={course.title}
           width={60}
           height={60}
@@ -125,7 +125,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
               <div className="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
                 <div className="flex-shrink-0">
                   <Image
-                    src={selectedCourse.educator.profileImage}
+                    src={selectedCourse.educator.profileImage?.url || "/images/placeholders/square.svg"}
                     alt={selectedCourse.educator.name}
                     width={120}
                     height={120}

@@ -4,7 +4,8 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IoStarSharp } from 'react-icons/io5';
-import { FaBook } from "react-icons/fa";
+import { FaBook, FaUser } from "react-icons/fa";
+
 
 const EducatorCard = ({ educator }) => {
     const { 
@@ -16,9 +17,10 @@ const EducatorCard = ({ educator }) => {
         qualification, 
         experience,
         yearsExperience,
+        followers,
         bio,
         specialization,
-        subject,
+        specializedSubject,
         rating,
         reviewCount,
         status
@@ -51,7 +53,11 @@ const EducatorCard = ({ educator }) => {
                         
                         <p className="text-blue-600 font-medium text-sm mb-2 flex items-center">
                             <FaBook className='mr-1' />
-                            {subject}
+                            {specializedSubject}
+                        </p>
+                        <p className="text-black/70 font-medium text-sm mb-2 flex items-center">
+                            <FaUser className='mr-2 w-3 h-3' />
+                            Followers: {followers.length}
                         </p>
                     </div>
                 </div>

@@ -21,8 +21,8 @@ const CourseCard = ({ course }) => {
       {/* Course Image */}
       <div className="relative h-48 bg-gray-200 overflow-hidden">
         <Image
-          src={course.image || "/images/placeholders/1.svg"}
-          alt={course.title}
+          src={course?.image?.url || course?.image || "/images/placeholders/1.svg"}
+          alt={course?.title || "Course"}
           fill
           className="object-cover"
           onError={(e) => {
@@ -32,7 +32,7 @@ const CourseCard = ({ course }) => {
         {/* Specialization Badge */}
         <div className="absolute top-3 left-3">
           <span className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium">
-            {course.specialization}
+            {course?.specialization}
           </span>
         </div>
       </div>
@@ -118,9 +118,9 @@ const CourseCard = ({ course }) => {
           <div className="flex items-center space-x-2">
             <div className="flex items-baseline space-x-2">
               <span className="text-2xl font-bold text-gray-900">
-                ₹{course.price}
+                ₹{course.price || course.fees}
               </span>
-              {course.originalPrice && course.originalPrice !== course.price && (
+              {course.originalPrice && course.originalPrice !== (course.price || course.fees) && (
                 <span className="text-lg text-gray-500 line-through">
                   ₹{course.originalPrice}
                 </span>

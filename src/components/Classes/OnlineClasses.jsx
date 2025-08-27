@@ -131,9 +131,9 @@ const CourseCard = ({ course }) => {
         <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
             {/* Course Image */}
             <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
-                {course.image ? (
+                {course.image?.url || course.image ? (
                     <Image
-                        src={course.image}
+                        src={course.image?.url || course.image || "/images/placeholders/1.svg"}
                         alt={course.title}
                         fill
                         className="object-cover"

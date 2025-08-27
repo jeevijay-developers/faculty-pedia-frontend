@@ -53,6 +53,7 @@ export const educatorsData = [
     reviewCount: 120,
     status: "active",
     specialization: "IIT-JEE",
+    specializedSubject: "Physics",
     courses: [
       {
         id: 3,
@@ -157,6 +158,7 @@ export const educatorsData = [
     reviewCount: 95,
     status: "active",
     specialization: "IIT-JEE",
+    specializedSubject: "Chemistry",
     courses: [
       {
         id: 6,
@@ -258,6 +260,7 @@ export const educatorsData = [
     reviewCount: 78,
     status: "active",
     specialization: "IIT-JEE",
+    specializedSubject: "Mathematics",
     courses: [
       {
         id: 1,
@@ -510,6 +513,7 @@ export const educatorsData = [
     reviewCount: 150,
     status: "active",
     specialization: "NEET",
+    specializedSubject: "Biology",
     courses: [
       {
         id: 2,
@@ -622,6 +626,7 @@ export const educatorsData = [
     reviewCount: 88,
     status: "active",
     specialization: "NEET",
+    specializedSubject: "Physics",
     courses: [
       {
         id: 7,
@@ -706,6 +711,7 @@ export const educatorsData = [
     reviewCount: 102,
     status: "active",
     specialization: "NEET",
+    specializedSubject: "Chemistry",
     courses: [
       {
         id: 4,
@@ -809,6 +815,7 @@ export const educatorsData = [
     reviewCount: 65,
     status: "active",
     specialization: "CBSE",
+    specializedSubject: "Mathematics",
     password: "hashedPassword123",
     courses: [
       {
@@ -894,6 +901,7 @@ export const educatorsData = [
     reviewCount: 45,
     status: "active",
     specialization: "CBSE",
+    specializedSubject: "Physics",
     courses: [
       {
         id: 11,
@@ -978,6 +986,7 @@ export const educatorsData = [
     reviewCount: 38,
     status: "active",
     specialization: "CBSE",
+    specializedSubject: "English",
     password: "hashedPassword123",
     courses: [
       {
@@ -1072,6 +1081,7 @@ export const educatorsData = [
     reviewCount: 125,
     status: "active",
     specialization: "IIT-JEE",
+    specializedSubject: "Mathematics",
     password: "hashedPassword123",
     courses: [
       {
@@ -1166,6 +1176,7 @@ export const educatorsData = [
     reviewCount: 89,
     status: "active",
     specialization: "NEET",
+    specializedSubject: "Biology",
     password: "hashedPassword123",
     courses: [
       {
@@ -1260,6 +1271,7 @@ export const educatorsData = [
     reviewCount: 76,
     status: "active",
     specialization: "NEET",
+    specializedSubject: "Chemistry",
     password: "hashedPassword123",
     courses: [
       {
@@ -1311,11 +1323,11 @@ export const getEducatorsBySpecialization = (specialization) => {
   return educatorsData.filter(educator => educator.specialization === specialization);
 };
 
-export const getEducatorBySubject = (subject) => {
-  if(subject === 'All') {
+export const getEducatorBySubject = (specializedSubject) => {
+  if(specializedSubject === 'All') {
     return educatorsData;
   }
-  return educatorsData.filter(educator => educator.subject === subject);
+  return educatorsData.filter(educator => educator.specializedSubject === specializedSubject);
 }
 
 // Function to get educator by ID

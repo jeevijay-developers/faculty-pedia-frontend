@@ -1,7 +1,6 @@
 import CourseDetails from "@/components/Details/CourseDetails";
 import React from "react";
 import { defaultCourses } from "@/Data/Courses/courses.data";
-import Banner from "@/components/Common/Banner";
 
 const Page = async ({ params }) => {
   const { id } = await params;
