@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -12,6 +12,8 @@ import CourseCard from "@/components/Courses/CourseCard";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import Loading from "../Common/Loading";
+import { fetchIITJEEOnlineCourses } from "../server/exams/iit-jee/routes";
 
 const CourseCarousel = ({
   title = "Our Top Courses",
@@ -30,7 +32,32 @@ const CourseCarousel = ({
   };
 
   // Get courses based on specialization
-  const coursesToRender = getCoursesBySpecialization(specialization);
+  // const coursesToRender = getCoursesBySpecialization(specialization);
+  const [coursesToRender, setCoursesToRender] = useState(
+    getCoursesBySpecialization(specialization)
+  );
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchOnlineCourse = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchIITJEEOnlineCourses({
+          specialization: "IIT-JEE",
+        });
+        console.log(data.courses);
+        setCoursesToRender([...data.courses]);
+      } catch (error) {
+        console.error("Failed to fetch educators:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOnlineCourse();
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <section className="py-16 bg-gray-50">
@@ -119,14 +146,14 @@ const CourseCarousel = ({
                   transition={{ duration: 0.5, delay: idx * 0.08 }}
                   className="h-full"
                 >
-                  <CourseCard 
+                  <CourseCard
                     course={{
                       ...course,
-                      educator: course.educatorDetails,
-                      totalWeeks: course.duration.replace(' weeks', ''),
+                      educator: course.educatorId,
+                      totalWeeks: course.classDuration,
                       startDate: course.startDate,
-                      _id: course.id
-                    }} 
+                      _id: course._id,
+                    }}
                   />
                 </motion.div>
               </SwiperSlide>

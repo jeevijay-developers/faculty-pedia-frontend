@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -12,12 +12,17 @@ import EducatorCard from "./EducatorCard";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { fetchIITJEEEducators } from "../server/exams/iit-jee/routes";
+import Loading from "../Common/Loading";
 
-const EducatorsCarousel = ({ specialization = 'All' }) => {
+const EducatorsCarousel = ({ specialization = "All" }) => {
   const [swiperRef, setSwiperRef] = useState(null);
-  
+
   // Filter educators based on specialization prop
-  const filteredEducators = getEducatorsBySpecialization(specialization);
+  const [filteredEducators, setFilteredEducators] = useState(
+    getEducatorsBySpecialization(specialization)
+  );
+  const [loading, setLoading] = useState(true);
 
   const prevSlide = () => {
     if (swiperRef) swiperRef.slidePrev();
@@ -26,13 +31,33 @@ const EducatorsCarousel = ({ specialization = 'All' }) => {
   const nextSlide = () => {
     if (swiperRef) swiperRef.slideNext();
   };
+  useEffect(() => {
+    const fetchEducators = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchIITJEEEducators({ specialization: "IIT-JEE" });
+        setFilteredEducators([...data.educators]);
+      } catch (error) {
+        console.error("Failed to fetch educators:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEducators();
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <section className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row justify-between items-center gap-2 mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">
-            {specialization === 'All' ? 'Top Educators' : `${specialization} Educators`}
+            {specialization === "All"
+              ? "Top Educators"
+              : `${specialization} Educators`}
           </h2>
           <Link
             href={"/educators"}

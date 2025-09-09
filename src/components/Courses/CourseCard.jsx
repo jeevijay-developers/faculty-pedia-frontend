@@ -1,18 +1,18 @@
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { MdSchool, MdAccessTime, MdCalendarToday } from 'react-icons/md';
-import { IoStarSharp } from 'react-icons/io5';
-import { FaBook } from 'react-icons/fa';
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { MdSchool, MdAccessTime, MdCalendarToday } from "react-icons/md";
+import { IoStarSharp } from "react-icons/io5";
+import { FaBook } from "react-icons/fa";
 
 const CourseCard = ({ course }) => {
   // Format the starting date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      day: 'numeric', 
-      month: 'short', 
-      year: 'numeric' 
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     });
   };
 
@@ -21,7 +21,9 @@ const CourseCard = ({ course }) => {
       {/* Course Image */}
       <div className="relative h-48 bg-gray-200 overflow-hidden">
         <Image
-          src={course?.image?.url || course?.image || "/images/placeholders/1.svg"}
+          src={
+            course?.image?.url || course?.image || "/images/placeholders/1.svg"
+          }
           alt={course?.title || "Course"}
           fill
           className="object-cover"
@@ -46,7 +48,7 @@ const CourseCard = ({ course }) => {
         {/* Subject and Specialization */}
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center text-sm text-gray-600">
-            <FaBook className='mr-1 text-blue-700' />
+            <FaBook className="mr-1 text-blue-700" />
             <span>{course.subject}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
@@ -85,15 +87,18 @@ const CourseCard = ({ course }) => {
           <div className="border-t border-gray-100 pt-4 mb-4">
             <div className="flex items-center space-x-3">
               <div className="flex-shrink-0">
-                <img 
-                  src={course.educator.profileImage?.url || '/images/placeholders/square.svg'}
-                  alt={course.educator.name}
+                <img
+                  src={
+                    course.educator.profileImage?.url ||
+                    "/images/placeholders/square.svg"
+                  }
+                  alt={`${course.educator.firstName} ${course.educator.lastName}`}
                   className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                 />
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-semibold text-gray-900 truncate">
-                  {course.educator.name}
+                  {`${course.educator.firstName} ${course.educator.lastName}`}
                 </h4>
                 <div className="flex items-center space-x-2 mt-1">
                   <span className="text-xs text-gray-500">
@@ -120,18 +125,19 @@ const CourseCard = ({ course }) => {
               <span className="text-2xl font-bold text-gray-900">
                 ₹{course.price || course.fees}
               </span>
-              {course.originalPrice && course.originalPrice !== (course.price || course.fees) && (
-                <span className="text-lg text-gray-500 line-through">
-                  ₹{course.originalPrice}
-                </span>
-              )}
+              {course.originalPrice &&
+                course.originalPrice !== (course.price || course.fees) && (
+                  <span className="text-lg text-gray-500 line-through">
+                    ₹{course.originalPrice}
+                  </span>
+                )}
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex gap-2 mt-auto">
-          <Link 
+          <Link
             href={`/details/course/${course._id || course.id}`}
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-md transition-colors duration-200 font-medium text-sm text-center"
           >

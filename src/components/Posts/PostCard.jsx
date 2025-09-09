@@ -1,41 +1,34 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaRegCalendarAlt } from 'react-icons/fa';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { FaRegCalendarAlt } from "react-icons/fa";
 
 const PostCard = ({ post }) => {
-  const {
-    title,
-    description,
-    category,
-    publishDate,
-    facultyInfo,
-    slug
-  } = post;
+  const { title, description, category, publishDate, facultyInfo, slug } = post;
 
   // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   // Get category color
   const getCategoryColor = (category) => {
     switch (category) {
-      case 'NEET':
-        return 'bg-green-100 text-green-800';
-      case 'IIT-JEE':
-        return 'bg-blue-100 text-blue-800';
-      case 'CBSE':
-        return 'bg-purple-100 text-purple-800';
+      case "NEET":
+        return "bg-green-100 text-green-800";
+      case "IIT-JEE":
+        return "bg-blue-100 text-blue-800";
+      case "CBSE":
+        return "bg-purple-100 text-purple-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -50,7 +43,7 @@ const PostCard = ({ post }) => {
 
         {/* Description */}
         <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">
-          {description}
+          {post?.content?.short || "No description available."}
         </p>
 
         {/* Meta Info */}
@@ -58,10 +51,14 @@ const PostCard = ({ post }) => {
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-1">
               <FaRegCalendarAlt className="h-4 w-4" />
-              <span>{formatDate(publishDate)}</span>
+              <span>{formatDate(post.createdAt)}</span>
             </div>
             <div className="flex items-center space-x-1">
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(category)}`}>
+              <span
+                className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(
+                  category
+                )}`}
+              >
                 {category}
               </span>
             </div>
@@ -73,15 +70,15 @@ const PostCard = ({ post }) => {
           <div className="flex items-center space-x-3">
             <div className="relative h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
               <Image
-                src={facultyInfo.profilePic}
-                alt={facultyInfo.name}
+                src={post.author?.image?.url || "/images/placeholders/1.svg"}
+                alt={post.author?.firstName || "Faculty Name"}
                 fill
                 className="object-cover"
               />
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-gray-900">
-                {facultyInfo.name}
+                {post.author?.firstName || "Faculty Name"}
               </span>
             </div>
           </div>

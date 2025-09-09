@@ -1,14 +1,15 @@
-import Banner from '@/components/Common/Banner'
-import CourseCarousel from '@/components/Courses/CourseCarousal'
-import EducatorsCarousel from '@/components/Educator/EducatorsCarousel'
-import PostCarousel from '@/components/Posts/PostsCarousal'
-import React from 'react'
-import OneToOneLiveClassesCarousel from '@/components/OneToOne/OneToOneLiveClassesCarousel'
-import OneToOnePPHCarousel from '@/components/OneToOne/OneToOnePPHCarousel'
-import UpcomingWebinarCarousel from '@/components/Webinars/UpcomingWebinarCarousel'
-import TestSeriesCarousel from '@/components/Exams/IIT-JEE/TestSeriesCarousel'
+import Banner from "@/components/Common/Banner";
+import CourseCarousel from "@/components/Courses/CourseCarousal";
+import EducatorsCarousel from "@/components/Educator/EducatorsCarousel";
+import PostCarousel from "@/components/Posts/PostsCarousal";
+import React from "react";
+import OneToOneLiveClassesCarousel from "@/components/OneToOne/OneToOneLiveClassesCarousel";
+import OneToOnePPHCarousel from "@/components/OneToOne/OneToOnePPHCarousel";
+import UpcomingWebinarCarousel from "@/components/Webinars/UpcomingWebinarCarousel";
+import TestSeriesCarousel from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
+// import { fetchIITJEEEducators } from "@/components/server/exams/iit-jee/routes";
 
-const page = () => {
+const page = async () => {
   return (
     <>
       <Banner
@@ -19,15 +20,19 @@ const page = () => {
         btnUrl={"/join-as-educator"}
       />
 
-      <EducatorsCarousel specialization='IIT-JEE' />
-      <CourseCarousel title='Online Courses for IIT-JEE' viewMoreLink='/courses' specialization='IIT-JEE' />
-      <OneToOneLiveClassesCarousel specialization='IIT-JEE' />
-      <OneToOnePPHCarousel specialization='IIT-JEE' />
-      <UpcomingWebinarCarousel specialization='IIT-JEE' />
-      <TestSeriesCarousel specialization='IIT-JEE' />
-      <PostCarousel subject='IIT-JEE' />
+      <EducatorsCarousel specialization="IIT-JEE" />
+      <CourseCarousel
+        title="Online Courses for IIT-JEE"
+        viewMoreLink="/courses"
+        specialization="IIT-JEE"
+      />
+      <OneToOneLiveClassesCarousel specialization="IIT-JEE" />
+      <OneToOnePPHCarousel specialization="IIT-JEE" />
+      <UpcomingWebinarCarousel specialization="IIT-JEE" />
+      <TestSeriesCarousel specialization="IIT-JEE" />
+      <PostCarousel subject="IIT-JEE" />
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;
