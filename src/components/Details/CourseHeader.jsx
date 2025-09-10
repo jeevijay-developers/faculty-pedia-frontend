@@ -1,18 +1,36 @@
 import React from "react";
-import { FaStar, FaUsers, FaClock, FaCalendarAlt, FaChair, FaGraduationCap, FaRupeeSign } from "react-icons/fa";
+import {
+  FaStar,
+  FaUsers,
+  FaClock,
+  FaCalendarAlt,
+  FaChair,
+  FaGraduationCap,
+  FaRupeeSign,
+} from "react-icons/fa";
 
 const CourseHeader = ({ course }) => {
   const formatDate = (dateString) => {
     try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+      return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       });
     } catch (error) {
-      return 'Invalid Date';
+      return "Invalid Date";
     }
   };
+
+  function calculateWeeksDifference(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const diffMs = end - start; // difference in milliseconds
+    const weeks = diffMs / (1000 * 60 * 60 * 24 * 7); // convert to weeks
+
+    return Math.round(weeks); // rounded to nearest whole week
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -27,7 +45,7 @@ const CourseHeader = ({ course }) => {
               className="w-full h-64 lg:h-48 object-cover rounded-lg border-2 border-white/20"
             />
           </div>
-          
+
           {/* Course Info */}
           <div className="lg:col-span-2">
             <div className="flex flex-wrap gap-2 mb-3">
@@ -38,33 +56,45 @@ const CourseHeader = ({ course }) => {
                 Class {course.courseClass}
               </span>
               <span className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
-                {course.courseType === 'OTA' ? 'One to All' : 'One to One'}
+                {course.courseType === "OTA" ? "One to All" : "One to One"}
               </span>
             </div>
-            
+
             <h1 className="text-3xl font-bold mb-3">{course.title}</h1>
-            <p className="text-black/90 text-lg mb-4">{course.description?.shortDesc}</p>
-            
+            <p className="text-black/90 text-lg mb-4">
+              {course.description?.shortDesc}
+            </p>
+
             {/* Instructor Info */}
             <div className="flex items-center space-x-2 mb-4">
               <div className="text-sm">
                 <span className="text-black/80">Instructor: </span>
-                <span className="font-semibold">{course.instructor}</span>
+                <span className="font-semibold">{`${
+                  course.educatorId?.firstName || "FirstName"
+                } ${course.educatorId?.lastName || "LastName"}`}</span>
               </div>
             </div>
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold">{course.duration}</div>
+                <div className="text-2xl font-bold">
+                  {calculateWeeksDifference(course.startDate, course.endDate)}{" "}
+                  Weeks
+                  {/* {course.classDuration} Hours */}
+                </div>
                 <div className="text-black/80 text-sm">Duration</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold">{course.classes?.length || 0}</div>
+                <div className="text-2xl font-bold">
+                  {course.courseClass || "0"}
+                </div>
                 <div className="text-black/80 text-sm">Classes</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold">{course.classDuration}h</div>
+                <div className="text-2xl font-bold">
+                  {course.classDuration}h
+                </div>
                 <div className="text-black/80 text-sm">Per Class</div>
               </div>
               <div className="text-center">
@@ -83,11 +113,17 @@ const CourseHeader = ({ course }) => {
           <div className="bg-green-50 rounded-lg p-4 border border-green-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaRupeeSign className="w-5 h-5 text-green-600" />
-              <span className="text-sm font-medium text-green-700">Course Fee</span>
+              <span className="text-sm font-medium text-green-700">
+                Course Fee
+              </span>
             </div>
-            <div className="text-2xl font-bold text-green-800">₹{course.fees?.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-green-800">
+              ₹{course.fees?.toLocaleString()}
+            </div>
             {course.originalPrice && course.originalPrice !== course.price && (
-              <div className="text-sm text-gray-500 line-through">₹{course.originalPrice}</div>
+              <div className="text-sm text-gray-500 line-through">
+                ₹{course.originalPrice}
+              </div>
             )}
           </div>
 
@@ -95,7 +131,9 @@ const CourseHeader = ({ course }) => {
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaCalendarAlt className="w-5 h-5 text-blue-600" />
-              <span className="text-sm font-medium text-blue-700">Timeline</span>
+              <span className="text-sm font-medium text-blue-700">
+                Timeline
+              </span>
             </div>
             <div className="text-sm text-blue-800">
               <div>Start: {formatDate(course.startDate)}</div>
@@ -107,7 +145,9 @@ const CourseHeader = ({ course }) => {
           <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaUsers className="w-5 h-5 text-purple-600" />
-              <span className="text-sm font-medium text-purple-700">Enrollment</span>
+              <span className="text-sm font-medium text-purple-700">
+                Enrollment
+              </span>
             </div>
             <div className="text-2xl font-bold text-purple-800">
               {course.purchases?.length || 0}/{course.seatLimit}
@@ -119,10 +159,16 @@ const CourseHeader = ({ course }) => {
           <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaGraduationCap className="w-5 h-5 text-orange-600" />
-              <span className="text-sm font-medium text-orange-700">Subject</span>
+              <span className="text-sm font-medium text-orange-700">
+                Subject
+              </span>
             </div>
-            <div className="text-lg font-bold text-orange-800">{course.subject}</div>
-            <div className="text-sm text-orange-600">{course.specialization}</div>
+            <div className="text-lg font-bold text-orange-800">
+              {course.subject}
+            </div>
+            <div className="text-sm text-orange-600">
+              {course.specialization}
+            </div>
           </div>
         </div>
       </div>

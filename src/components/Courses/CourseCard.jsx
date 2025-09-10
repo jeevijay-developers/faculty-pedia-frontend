@@ -27,9 +27,9 @@ const CourseCard = ({ course }) => {
           alt={course?.title || "Course"}
           fill
           className="object-cover"
-          onError={(e) => {
-            e.target.src = "/images/placeholders/1.svg";
-          }}
+          // onError={(e) => {
+          //   e.target.src = "/images/placeholders/1.svg";
+          // }}
         />
         {/* Specialization Badge */}
         <div className="absolute top-3 left-3">

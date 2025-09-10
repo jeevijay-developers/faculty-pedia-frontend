@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaCalendarAlt,
   FaClock,
@@ -12,27 +12,51 @@ import {
 import Link from "next/link";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { getWebinarById } from "../server/webinars.routes";
+import Loading from "../Common/Loading";
 
-const WebinarDetails = ({ webinarData }) => {
-  console.log("WebinarDetails Rendered", webinarData);
+const WebinarDetails = ({ id }) => {
+  // console.log("WebinarDetails Rendered", webinarData);
+  // console.log(id);
 
-  // Check if webinarData exists
-  if (!webinarData) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="text-center">
-          <p className="text-gray-500">No webinar data available</p>
-        </div>
-      </div>
-    );
-  }
-
+  const [webinarData, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     AOS.init({
       duration: 1000,
       once: true,
     });
   }, []);
+  useEffect(() => {
+    const fetchWebinars = async () => {
+      setLoading(true);
+      try {
+        const DATA = await getWebinarById(id);
+        // console.log(DATA);
+        setData(DATA);
+      } catch (error) {
+        console.error("Failed to fetch educators:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWebinars();
+  }, [id]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  // Check if webinarData exists
+  // if (!webinarData) {
+  //   return (
+  //     <div className="max-w-7xl mx-auto px-4 py-8">
+  //       <div className="text-center">
+  //         <p className="text-gray-500">No webinar data available</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {

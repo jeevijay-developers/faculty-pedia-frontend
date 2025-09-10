@@ -4,7 +4,7 @@ import WebinarDetails from "@/components/Webinars/WebinarDetails";
 import webinarDetails from "@/Data/Webinar/webinardetails.data";
 
 const Page = async ({ params }) => {
-  const { id } = params;
+  const { id } = await params;
 
   return (
     <div>
@@ -15,7 +15,7 @@ const Page = async ({ params }) => {
           "Join our expert-led webinars to enhance your knowledge and skills with interactive learning experiences."
         }
       />
-      <WebinarDetails webinarData={webinarDetails} />
+      <WebinarDetails id={id} />
     </div>
   );
 };

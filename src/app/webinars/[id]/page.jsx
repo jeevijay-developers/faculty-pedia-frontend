@@ -1,10 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import WebinarDetails from "@/components/Details/WebinarDetails";
+import Loading from "@/components/Common/Loading";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import sampleWebinars from "@/Data/Details/webinars.data";
+import { getWebinarById } from "@/components/server/webinars.routes";
 import Banner from "@/components/Common/Banner";
+import Link from "next/link";
 
 export default function WebinarDetailsPage({ params }) {
   const id = React.use(params).id;
@@ -17,68 +19,129 @@ export default function WebinarDetailsPage({ params }) {
       duration: 1000,
       once: true,
     });
+  }, []);
 
-    // Simulate API call with the sample data
-    const fetchWebinar = () => {
-      try {
-        // console.log("Fetching webinar details for ID:", id);
+  // Fetch webinar details
+  const fetchWebinarDetails = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      console.log("Fetching webinar details for ID:", id);
 
-        // const found = sampleWebinars.find((w) => w.id === id);
-        const found = sampleWebinars.find((w) => w.id == id);
+      const response = await getWebinarById(id);
+      console.log("API Response:", response);
 
-        if (!found) {
-          setError("Webinar not found");
-        } else {
-          setWebinar(found);
-        }
-      } catch (err) {
-        setError("Error loading webinar");
-      } finally {
-        setIsLoading(false);
+      // Handle different response structures
+      const webinarData = response.webinar || response.data || response;
+
+      if (!webinarData) {
+        throw new Error("Webinar not found");
       }
-    };
 
-    fetchWebinar();
+      setWebinar(webinarData);
+    } catch (err) {
+      console.error("Error fetching webinar:", err);
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to load webinar details";
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchWebinarDetails();
+    }
   }, [id]);
 
+  // Retry function
+  const handleRetry = () => {
+    fetchWebinarDetails();
+  };
+
+  // Loading state
   if (isLoading) {
     return (
-      <div>
-        <div className="max-w-7xl mx-auto p-4 min-h-screen flex items-center justify-center">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-gray-600 font-medium">
-              Loading webinar details...
-            </p>
+      <div className="min-h-screen bg-gray-50">
+        <Banner
+          url={"/images/placeholders/1.svg"}
+          title={"Webinar Details"}
+          subtitle={"Loading webinar information..."}
+        />
+        <Loading
+          variant="spinner"
+          message="Loading webinar details..."
+          className="min-h-[400px]"
+          spinnerSize={72}
+        />
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Banner
+          url={"/images/placeholders/1.svg"}
+          title={"Webinar Details"}
+          subtitle={"Unable to load webinar information"}
+        />
+        <div className="max-w-4xl mx-auto p-4 mt-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="text-red-500 text-6xl mb-6">⚠️</div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Failed to Load Webinar
+            </h1>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">{error}</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handleRetry}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium"
+              >
+                Try Again
+              </button>
+              <Link
+                href="/webinars"
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-300 font-medium"
+              >
+                Back to Webinars
+              </Link>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  // Success state
+  if (!webinar) {
     return (
-      <div>
+      <div className="min-h-screen bg-gray-50">
         <Banner
           url={"/images/placeholders/1.svg"}
-          title={"Welcome to Our Webinars"}
-          subtitle={
-            "Explore a variety of webinars designed to help you learn and grow with expert faculty guidance."
-          }
+          title={"Webinar Not Found"}
+          subtitle={"The webinar you're looking for doesn't exist"}
         />
-        <div className="max-w-7xl mx-auto p-4 min-h-screen flex items-center justify-center">
-          <div className="bg-white rounded-xl shadow-lg p-8 text-center max-w-md w-full">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">{error}</h1>
-            <p className="text-gray-600 mb-6">
-              The webinar you're looking for could not be found or there was an
-              error loading it.
+        <div className="max-w-4xl mx-auto p-4 mt-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+            <div className="text-gray-400 text-6xl mb-6">🔍</div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Webinar Not Found
+            </h1>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              The webinar with ID "{id}" could not be found. It may have been
+              removed or the link is incorrect.
             </p>
-            <a
+            <Link
               href="/webinars"
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium"
             >
-              Back to Webinars
-            </a>
+              Browse All Webinars
+            </Link>
           </div>
         </div>
       </div>
