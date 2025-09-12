@@ -35,9 +35,9 @@ const StudentLoginPage = () => {
       setIsRedirecting(true);
 
       // Use Next.js router for navigation instead of window.location
-      setTimeout(() => {
-        router.push("/exams");
-      }, 500);
+      // setTimeout(() => {
+      //   router.push("/exams");
+      // }, 500);
 
       return response;
     } catch (error) {
