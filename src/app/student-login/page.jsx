@@ -1,38 +1,49 @@
-'use client';
+"use client";
 
-import Login from '@/components/Login-Signup/Login';
+import { loginStudent } from "@/components/server/auth/auth.routes";
+import { setAuthToken } from "@/utils/auth";
+import Login from "@/components/Login-Signup/Login";
 
 const page = () => {
   const handleStudentLogin = async (formData, userType) => {
     try {
-      // Your student login API call here
-      const response = await fetch('/api/auth/student-login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          rememberMe: formData.rememberMe,
-          userType: userType
-        }),
+      console.log("Attempting student login with:", {
+        email: formData.email,
+        userType,
       });
 
-      if (!response.ok) {
-        throw new Error('Invalid credentials');
+      // Call the loginStudent API
+      const response = await loginStudent({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log("Login successful:", response);
+
+      // Store token using auth utility
+      if (response.TOKEN) {
+        setAuthToken(response.TOKEN);
+        console.log("Token stored successfully");
       }
 
-      const data = await response.json();
-      
-      // Store token in localStorage or cookies
-      localStorage.setItem('studentToken', data.token);
-      
-      // Redirect to student dashboard
-      window.location.href = '/student/dashboard';
-      
+      // Show success message before redirect
+      setTimeout(() => {
+        // Redirect to student dashboard or appropriate page
+        window.location.href = "/exams";
+      }, 500);
+
+      return response;
     } catch (error) {
-      throw new Error(error.message || 'Login failed');
+      console.error("Login error:", error);
+
+      // Handle API errors
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      } else if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("Login failed. Please check your credentials.");
+      }
     }
   };
 
