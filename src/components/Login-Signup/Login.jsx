@@ -90,6 +90,7 @@ const Login = ({
         console.log("Login successful:", response);
 
         // Store token using auth utility
+        alert("Login successful! Redirecting...", response.TOKEN);
         if (response.TOKEN) {
           setAuthToken(response.TOKEN);
           console.log("Token stored successfully");
