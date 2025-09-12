@@ -80,35 +80,34 @@ const Login = ({
           email: formData.email,
           userType,
         });
+        console.log("API Base URL:", process.env.NEXT_PUBLIC_BASE_URL);
 
-        // Call the loginStudent API
-        const response = await loginStudent({
-          email: formData.email,
-          password: formData.password,
-        });
+        try {
+          // Call the loginStudent API
+          const response = await loginStudent({
+            email: formData.email,
+            password: formData.password,
+          });
 
-        console.log("Login successful:", response);
+          console.log("Login successful:", response);
 
-        // Store token using auth utility
-        alert("Login successful! Redirecting...", response.TOKEN);
-        if (response.TOKEN) {
-          setAuthToken(response.TOKEN);
-          console.log("Token stored successfully");
+          // Store token using auth utility
+          if (response.TOKEN) {
+            setAuthToken(response.TOKEN);
+            console.log("Token stored successfully");
+          }
+
+          console.log("Redirecting to:", redirectAfterLogin);
+
+          // Use window.location for more reliable deployment redirect
+          setTimeout(() => {
+            window.location.href = redirectAfterLogin;
+          }, 100);
+        } catch (loginError) {
+          console.error("Login API error:", loginError);
+          console.error("Error details:", loginError.response?.data);
+          throw loginError;
         }
-
-        console.log("Redirecting to:", redirectAfterLogin);
-        router.push(redirectAfterLogin);
-
-        // Immediate redirect with fallback
-        // try {
-        //   router.push(redirectAfterLogin);
-        // } catch (redirectError) {
-        //   console.error(
-        //     "Router redirect failed, using window.location:",
-        //     redirectError
-        //   );
-        //   window.location.href = redirectAfterLogin;
-        // }
       } else {
         // Default behavior for other user types
         console.log("Login attempt:", { ...formData, userType });

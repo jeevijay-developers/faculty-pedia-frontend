@@ -13,9 +13,15 @@ API_CLIENT.interceptors.request.use(
     if (typeof window !== "undefined") {
       // Check if in browser
       const TOKEN = localStorage.getItem("faculty-pedia-auth-token");
-      if (TOKEN) {
+
+      // Don't require auth for login/signup routes
+      const isAuthRoute =
+        config.url?.includes("/login") || config.url?.includes("/signup");
+
+      if (TOKEN && !isAuthRoute) {
         config.headers.Authorization = `Bearer ${TOKEN}`;
-      } else {
+      } else if (!TOKEN && !isAuthRoute) {
+        // Only redirect if not on an auth route and no token
         window.location.href = "/student-login";
       }
     }
