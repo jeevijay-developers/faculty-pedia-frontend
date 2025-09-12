@@ -42,7 +42,7 @@ const CourseCarousel = ({
       setLoading(true);
       try {
         const data = await fetchIITJEEOnlineCourses({
-          specialization: "IIT-JEE",
+          specialization: specialization,
         });
         console.log(data.courses);
         setCoursesToRender([...data.courses]);

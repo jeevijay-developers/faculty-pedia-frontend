@@ -26,7 +26,7 @@ const PostCarousel = ({ subject = "All" }) => {
       setLoading(true);
       try {
         const DATA = await fetchIITJEEBlogs({
-          specialization: "IIT-JEE",
+          specialization: specialization,
         });
         console.log(DATA);
         setData([...DATA.blogs]);

@@ -35,7 +35,9 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
     const fetchEducators = async () => {
       setLoading(true);
       try {
-        const data = await fetchIITJEEEducators({ specialization: "IIT-JEE" });
+        const data = await fetchIITJEEEducators({
+          specialization: specialization,
+        });
         setFilteredEducators([...data.educators]);
       } catch (error) {
         console.error("Failed to fetch educators:", error);

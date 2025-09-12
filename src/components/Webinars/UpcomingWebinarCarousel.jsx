@@ -45,7 +45,9 @@ const UpcomingWebinarCarousel = ({
     const fetchWebinars = async () => {
       setLoading(true);
       try {
-        const DATA = await fetchIITJEEWebinars({ specialization: "IIT-JEE" });
+        const DATA = await fetchIITJEEWebinars({
+          specialization: specialization,
+        });
         console.log(DATA);
         setData([...DATA.webinars]);
       } catch (error) {

@@ -37,9 +37,9 @@ const TestSeriesCarousel = ({
       setLoading(true);
       try {
         const DATA = await fetchIITJEETestSeries({
-          specialization: "IIT-JEE",
+          specialization: specialization,
         });
-        console.log(DATA);
+        console.log(specialization, DATA);
         setData([...DATA.testSeries]);
       } catch (error) {
         console.error("Failed to fetch educators:", error);
@@ -186,7 +186,7 @@ export const TestSeriesCard = ({ testSeries }) => {
         <div className="mb-2 text-sm text-gray-600">
           <span className="font-medium">Qualification: </span>
           <span className="text-sm text-gray-800 font-medium truncate ml-2">
-            {testSeries.educatorId.qualification &&
+            {testSeries.educatorId?.qualification &&
               testSeries.educatorId.qualification.map((q) => {
                 return (
                   <span className="text-sm text-gray-800 font-medium truncate ml-2">
