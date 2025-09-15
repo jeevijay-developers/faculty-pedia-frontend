@@ -96,6 +96,10 @@ const Login = ({
             setAuthToken(response.TOKEN);
             console.log("Token stored successfully");
           }
+          localStorage.setItem(
+            "faculty-pedia-student-data",
+            JSON.stringify(response.user)
+          );
 
           console.log("Redirecting to:", redirectAfterLogin);
 
