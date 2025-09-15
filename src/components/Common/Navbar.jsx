@@ -50,6 +50,8 @@ const Navbar = () => {
             </Link>
           </div>
 
+          {/* random */}
+
           {/* Desktop Menu - Middle */}
           <div className="hidden lg:block">
             <div className="ml-10 flex items-baseline space-x-8">
