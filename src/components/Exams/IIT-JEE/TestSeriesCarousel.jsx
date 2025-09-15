@@ -187,9 +187,9 @@ export const TestSeriesCard = ({ testSeries }) => {
           <span className="font-medium">Qualification: </span>
           <span className="text-sm text-gray-800 font-medium truncate ml-2">
             {testSeries.educatorId?.qualification &&
-              testSeries.educatorId.qualification.map((q) => {
+              testSeries.educatorId.qualification.map((q, i) => {
                 return (
-                  <span className="text-sm text-gray-800 font-medium truncate ml-2">
+                  <span className="text-sm text-gray-800 font-medium truncate ml-2" key={i}>
                     {q.title}
                   </span>
                 );

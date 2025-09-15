@@ -47,9 +47,9 @@ const UpcomingWebinarCard = ({ item }) => {
             </div>
             <span className="text-sm text-gray-800 font-medium truncate ml-2">
               {item.educatorId.qualification &&
-                item.educatorId.qualification.map((q) => {
+                item.educatorId.qualification.map((q, i) => {
                   return (
-                    <span className="text-sm text-gray-800 font-medium truncate ml-2">
+                    <span className="text-sm text-gray-800 font-medium truncate ml-2" key={i}>
                       {q.title}
                     </span>
                   );

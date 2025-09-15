@@ -13,7 +13,7 @@ import "swiper/css/navigation";
 import { fetchIITJEEBlogs } from "../server/exams/iit-jee/routes";
 import Loading from "../Common/Loading";
 
-const PostCarousel = ({ subject = "All" }) => {
+const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
   const [swiperRef, setSwiperRef] = useState(null);
 
   // Get posts based on subject prop
@@ -26,7 +26,7 @@ const PostCarousel = ({ subject = "All" }) => {
       setLoading(true);
       try {
         const DATA = await fetchIITJEEBlogs({
-          specialization: specialization,
+          specialization,
         });
         console.log(DATA);
         setData([...DATA.blogs]);
@@ -37,7 +37,7 @@ const PostCarousel = ({ subject = "All" }) => {
       }
     };
     fetchBlogs();
-  }, []);
+  }, [specialization]);
 
   if (loading) {
     return <Loading />;

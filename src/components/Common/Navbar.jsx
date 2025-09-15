@@ -1,13 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User } from "@heroui/react";
+import { Activity, User as UserIcon, BookOpen, BarChart2, Settings as SettingsIcon, HelpCircle, LogOut } from "lucide-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const [isExamDropdownOpen, setIsExamDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Check if user is logged in by checking localStorage for token
+    const checkAuthStatus = () => {
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('faculty-pedia-student-data');
+        if (token) {
+          try {
+            const parsedData = JSON.parse(token);
+            setUserData(parsedData);
+            setIsLoggedIn(true);
+          } catch (error) {
+            console.error('Error parsing user data:', error);
+            localStorage.removeItem('faculty-pedia-student-data');
+          }
+        }
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('faculty-pedia-student-data');
+    setIsLoggedIn(false);
+    setUserData(null);
+    // Optionally redirect to home page
+    window.location.href = '/';
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -16,7 +48,7 @@ const Navbar = () => {
   const toggleExamDropdown = () => {
     setIsExamDropdownOpen(!isExamDropdownOpen);
   };
-
+  const hoverExamDropdown = "hover:bg-blue-200 transition-colors duration-200 rounded-md p-2";
   const menuItems = [
     {
       name: "Exams",
@@ -69,9 +101,8 @@ const Navbar = () => {
                       >
                         <span>{item.name}</span>
                         <svg
-                          className={`w-4 h-4 transition-transform duration-200 ${
-                            isExamDropdownOpen ? "rotate-180" : ""
-                          }`}
+                          className={`w-4 h-4 transition-transform duration-200 ${isExamDropdownOpen ? "rotate-180" : ""
+                            }`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -88,11 +119,10 @@ const Navbar = () => {
 
                       {/* Dropdown Menu */}
                       <div
-                        className={`absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-300 transform origin-top ${
-                          isExamDropdownOpen
+                        className={`absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-300 transform origin-top ${isExamDropdownOpen
                             ? "opacity-100 scale-100 visible"
                             : "opacity-0 scale-95 invisible"
-                        }`}
+                          }`}
                       >
                         <div className="py-2">
                           {item.subMenus.map((subItem) => (
@@ -121,21 +151,74 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Desktop Auth Buttons - Right */}
+          {/* Desktop Auth Buttons/Profile - Right */}
           <div className="hidden lg:block">
             <div className="ml-4 flex items-center space-x-4">
-              <Link
-                href="/student-login"
-                className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50"
-              >
-                Join As Student
-              </Link>
-              <Link
-                href="/educator-login"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-102 shadow-md hover:shadow-lg"
-              >
-                Join As Educator
-              </Link>
+              {isLoggedIn && userData ? (
+                <Dropdown placement="bottom-end">
+                  <DropdownTrigger>
+                    <Avatar
+                      as="button"
+                      avatarProps={{
+                        isBordered: true,
+                        src: userData.profileImage.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" + userData.email,
+                      }}
+                      className="border-2 border-gray-300 rounded-full"
+                    />
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Profile Actions" variant="flat" className="w-52 shadow-lg rounded-lg bg-white p-2">
+                    <DropdownItem
+                      key="dashboard"
+                      className={`${hoverExamDropdown}`}
+                    >
+                      <Link href="/dashboard" className="flex items-center"><Activity className="size-4 mr-2" />Dashboard</Link>
+                    </DropdownItem>
+                    <DropdownItem key="profile_settings" className={`${hoverExamDropdown}`}>
+                      <Link href="/profile" className="flex items-center">
+                        <UserIcon className="size-4 mr-2" /> My Profile
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="my_courses" className={`${hoverExamDropdown}`}>
+                      <Link href="/my-courses" className="flex items-center">
+                        <BookOpen className="size-4 mr-2" /> My Courses
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="test_results" className={`${hoverExamDropdown}`}>
+                      <Link href="/test-results" className="flex items-center">
+                        <BarChart2 className="size-4 mr-2" /> Test Results
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="settings" className={`${hoverExamDropdown}`}>
+                      <Link href="/settings" className="flex items-center">
+                        <SettingsIcon className="size-4 mr-2" /> Settings
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="help" className={`${hoverExamDropdown}`}>
+                      <Link href="/help" className="flex items-center">
+                        <HelpCircle className="size-4 mr-2" /> Help & Support
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem className="hover:bg-red-200 transition-colors duration-200 rounded-md" key="logout" color="danger" onClick={handleLogout}>
+                      <span className="flex items-center"><LogOut className="size-4 mr-2" /> Log Out</span>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              ) : (
+                <>
+                  <Link
+                    href="/join-as-student"
+                    className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+                  >
+                    Join As Student
+                  </Link>
+                  <Link
+                    href="/join-as-educator"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-102 shadow-md hover:shadow-lg"
+                  >
+                    Join As Educator
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
@@ -187,11 +270,10 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       <div
-        className={`lg:hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen
+        className={`lg:hidden transition-all duration-300 ease-in-out ${isMenuOpen
             ? "max-h-96 opacity-100"
             : "max-h-0 opacity-0 overflow-hidden"
-        }`}
+          }`}
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 border-t border-gray-200">
           {menuItems.map((item) => (
@@ -211,9 +293,8 @@ const Navbar = () => {
                       className="text-gray-700 hover:text-blue-600 hover:bg-white px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                     >
                       <svg
-                        className={`w-4 h-4 transition-transform duration-200 ${
-                          isExamDropdownOpen ? "rotate-180" : ""
-                        }`}
+                        className={`w-4 h-4 transition-transform duration-200 ${isExamDropdownOpen ? "rotate-180" : ""
+                          }`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -230,11 +311,10 @@ const Navbar = () => {
 
                   {/* Mobile Dropdown Submenu */}
                   <div
-                    className={`transition-all duration-300 ease-in-out ${
-                      isExamDropdownOpen
+                    className={`transition-all duration-300 ease-in-out ${isExamDropdownOpen
                         ? "max-h-40 opacity-100"
                         : "max-h-0 opacity-0 overflow-hidden"
-                    }`}
+                      }`}
                   >
                     <div className="pl-6 py-2 space-y-1">
                       {item.subMenus.map((subItem) => (
@@ -265,20 +345,75 @@ const Navbar = () => {
             </div>
           ))}
           <div className="border-t border-gray-200 pt-3 mt-3">
-            <Link
-              href="/login"
-              className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Login
-            </Link>
-            <Link
-              href="/signup"
-              className="bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200 mx-3 mt-2 text-center"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Sign Up
-            </Link>
+            {isLoggedIn && userData ? (
+              <div className="px-3">
+                <div className="flex items-center space-x-3 pb-3">
+                  <Avatar
+                    isBordered
+                    src={userData.profileImage || "https://i.pravatar.cc/150?u=" + userData.email}
+                    size="sm"
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{userData.name || "User"}</p>
+                    <p className="text-xs text-gray-500">{userData.email}</p>
+                  </div>
+                </div>
+                <Link
+                  href="/dashboard"
+                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="flex items-center"><Activity className="size-4 mr-2" /> Dashboard</span>
+                </Link>
+                <Link
+                  href="/profile"
+                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="flex items-center"><UserIcon className="size-4 mr-2" /> My Profile</span>
+                </Link>
+                <Link
+                  href="/my-courses"
+                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="flex items-center"><BookOpen className="size-4 mr-2" /> My Courses</span>
+                </Link>
+                <Link
+                  href="/settings"
+                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <span className="flex items-center"><SettingsIcon className="size-4 mr-2" /> Settings</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                >
+                  <span className="flex items-center"><LogOut className="size-4 mr-2" /> Log Out</span>
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/join-as-student"
+                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Join As Student
+                </Link>
+                <Link
+                  href="/join-as-educator"
+                  className="bg-blue-600 hover:bg-blue-700 text-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200 mx-3 mt-2 text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Join As Educator
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
