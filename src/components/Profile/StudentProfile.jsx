@@ -11,7 +11,6 @@ import {
   FiBookOpen,
   FiAward,
   FiUsers,
-  FiCalendar,
   FiTrendingUp,
   FiTarget,
   FiStar,
@@ -29,7 +28,7 @@ const StudentProfile = ({
 
   // Debug: Log the studentData to see what's being passed
   console.log("StudentProfile received data:", studentData);
-  
+
   // Handle refresh
   const handleRefresh = async () => {
     if (onRefresh) {
@@ -555,11 +554,6 @@ const StudentProfile = ({
                   <h1 className="text-3xl font-bold text-gray-900">
                     {name}
                   </h1>
-                  {isOwnProfile && (
-                    <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full">
-                      Your Profile
-                    </span>
-                  )}
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-8 text-gray-600">
                   <div className="flex items-center">

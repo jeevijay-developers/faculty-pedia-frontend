@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, toast } from "@heroui/react";
-import { Activity, User as UserIcon, BookOpen, BarChart2, Settings as SettingsIcon, HelpCircle, LogOut } from "lucide-react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@heroui/react";
+import { User as UserIcon, BookOpen, BarChart2, Settings as SettingsIcon, HelpCircle, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { confirmAlert } from "../CustomAlert";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -53,9 +54,10 @@ const Navbar = () => {
       localStorage.removeItem('faculty-pedia-auth-token');
       setIsLoggedIn(false);
       setUserData(null);
+      toast.success('Logged out successfully');
       // Optionally redirect to home page
       router.push('/');
-      toast.success('Logged out successfully');
+
     }
   };
 
@@ -191,7 +193,7 @@ const Navbar = () => {
                       </Link>
                     </DropdownItem>
                     <DropdownItem key="my_courses" className={`${hoverExamDropdown}`}>
-                      <Link href="/my-courses" className="flex items-center">
+                      <Link href={`/courses/student/${userData._id}`} className="flex items-center">
                         <BookOpen className="size-4 mr-2" /> My Courses
                       </Link>
                     </DropdownItem>
