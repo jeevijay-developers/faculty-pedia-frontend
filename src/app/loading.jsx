@@ -1,61 +1,69 @@
 "use client";
 import React from "react";
 
-// Loading UI for IIT-JEE exams route
-// Accessible, skeleton-based, no hydration pitfalls (pure CSS / static)
+// Professional loading UI for Faculty Pedia educational platform
 const Loading = () => {
-  const skeletonItems = Array.from({ length: 6 });
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-start gap-10 bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-800 px-5 py-16 text-slate-100"
+      className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4"
       role="status"
       aria-live="polite"
     >
-      {/* Spinner + Heading */}
-      <div className="flex flex-col items-center gap-4">
-        <div className="relative">
-          <div className="w-16 h-16 rounded-full border-4 border-indigo-500/30 border-t-indigo-400 animate-spin" />
-          <div className="absolute inset-0 w-16 h-16 rounded-full animate-ping bg-indigo-500/10" />
-        </div>
-        <h1 className="text-xl font-semibold tracking-tight">
-          Preparing IIT-JEE Resources
-        </h1>
-        <p className="text-sm text-slate-400">Loading content… Please wait.</p>
-      </div>
-
-      {/* Skeleton Grid */}
-      <div className="grid w-full max-w-6xl gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {skeletonItems.map((_, idx) => (
-          <div
-            key={idx}
-            className="relative flex flex-col overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm ring-1 ring-white/10 p-4 gap-4 shadow-md"
-          >
-            <div className="h-32 rounded-xl bg-gradient-to-br from-slate-700/40 to-slate-600/20" />
-            <div className="h-4 w-3/4 rounded bg-slate-600/40" />
-            <div className="h-3 w-1/2 rounded bg-slate-600/30" />
-            <div className="mt-auto flex gap-3">
-              <div className="h-9 flex-1 rounded-lg bg-slate-700/40" />
-              <div className="h-9 w-12 rounded-lg bg-slate-700/30" />
-            </div>
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-            </div>
+      {/* Main Loading Content */}
+      <div className="flex flex-col items-center space-y-8 max-w-md text-center">
+        {/* Logo/Brand Area */}
+        <div className="flex flex-col items-center space-y-4">
+          {/* Professional Logo Placeholder */}
+          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
+            <svg 
+              className="w-8 h-8 text-white" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" 
+              />
+            </svg>
           </div>
-        ))}
+          
+          {/* Brand Name */}
+          <h1 className="text-2xl font-bold text-gray-900">Faculty Pedia</h1>
+          <p className="text-sm text-gray-600 font-medium">Educational Excellence Platform</p>
+        </div>
+
+        {/* Loading Spinner */}
+        <div className="relative">
+          {/* Main spinner */}
+          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+          
+          {/* Subtle pulse ring */}
+          <div className="absolute inset-0 w-12 h-12 border-2 border-blue-200 rounded-full animate-ping opacity-20"></div>
+        </div>
+
+        {/* Loading Message */}
+        <div className="space-y-2">
+          <p className="text-lg font-semibold text-gray-900">Loading...</p>
+          <p className="text-sm text-gray-600">Preparing your learning experience</p>
+        </div>
+
+        {/* Loading Progress Dots */}
+        <div className="flex space-x-2">
+          <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+          <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+          <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+        </div>
       </div>
 
-      <p className="text-xs text-slate-500 tracking-wide">
-        Fast optimized loading • IIT-JEE Module
-      </p>
-
-      {/* Local keyframes for shimmer */}
-      <style jsx>{`
-        @keyframes shimmer {
-          100% {
-            transform: translateX(100%);
-          }
-        }
-      `}</style>
+      {/* Footer */}
+      <div className="absolute bottom-8 text-center">
+        <p className="text-xs text-gray-500">
+          Empowering Education • Building Futures
+        </p>
+      </div>
     </div>
   );
 };

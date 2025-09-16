@@ -3,14 +3,17 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User } from "@heroui/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, toast } from "@heroui/react";
 import { Activity, User as UserIcon, BookOpen, BarChart2, Settings as SettingsIcon, HelpCircle, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { confirmAlert } from "../CustomAlert";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExamDropdownOpen, setIsExamDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Check if user is logged in by checking localStorage for token
@@ -20,7 +23,10 @@ const Navbar = () => {
         if (token) {
           try {
             const parsedData = JSON.parse(token);
-            setUserData(parsedData);
+            console.log('Navbar userData:', parsedData);
+            console.log('Navbar profileImage:', parsedData?.profileImage);
+            console.log('Navbar profileImage.url:', parsedData?.profileImage?.url);
+            setUserData(parsedData);          
             setIsLoggedIn(true);
           } catch (error) {
             console.error('Error parsing user data:', error);
@@ -33,12 +39,24 @@ const Navbar = () => {
     checkAuthStatus();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('faculty-pedia-student-data');
-    setIsLoggedIn(false);
-    setUserData(null);
-    // Optionally redirect to home page
-    window.location.href = '/';
+  const handleLogout = async () => {
+    const confirmed = await confirmAlert({
+      title: 'Delete Student',
+      message: 'Are you sure you want to logout ?',
+      type: 'error',
+      confirmText: 'Yes, Logout',
+      cancelText: 'Cancel'
+    });
+
+    if (confirmed) {
+      localStorage.removeItem('faculty-pedia-student-data');
+      localStorage.removeItem('faculty-pedia-auth-token');
+      setIsLoggedIn(false);
+      setUserData(null);
+      // Optionally redirect to home page
+      router.push('/');
+      toast.success('Logged out successfully');
+    }
   };
 
   const toggleMenu = () => {
@@ -159,22 +177,16 @@ const Navbar = () => {
                   <DropdownTrigger>
                     <Avatar
                       as="button"
-                      avatarProps={{
-                        isBordered: true,
-                        src: userData.profileImage.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" + userData.email,
-                      }}
-                      className="border-2 border-gray-300 rounded-full"
-                    />
+                      isBordered={true}
+                      style={{ opacity: 1 }}
+                      src={userData.profileImage?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                      className=" border-2 border-gray-300 rounded-full transition-transform hover:scale-105"
+
+/>
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Profile Actions" variant="flat" className="w-52 shadow-lg rounded-lg bg-white p-2">
-                    <DropdownItem
-                      key="dashboard"
-                      className={`${hoverExamDropdown}`}
-                    >
-                      <Link href="/dashboard" className="flex items-center"><Activity className="size-4 mr-2" />Dashboard</Link>
-                    </DropdownItem>
                     <DropdownItem key="profile_settings" className={`${hoverExamDropdown}`}>
-                      <Link href="/profile" className="flex items-center">
+                      <Link href={`/profile/${userData.role}/${userData._id}`} className="flex items-center">
                         <UserIcon className="size-4 mr-2" /> My Profile
                       </Link>
                     </DropdownItem>
@@ -349,22 +361,16 @@ const Navbar = () => {
               <div className="px-3">
                 <div className="flex items-center space-x-3 pb-3">
                   <Avatar
-                    isBordered
-                    src={userData.profileImage || "https://i.pravatar.cc/150?u=" + userData.email}
+                    isBordered={true}
+                    src={userData?.profileImage?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                     size="sm"
+                    onError={() => console.log('Mobile Avatar image failed to load:', userData?.profileImage?.url)}
                   />
                   <div>
                     <p className="text-sm font-medium text-gray-900">{userData.name || "User"}</p>
                     <p className="text-xs text-gray-500">{userData.email}</p>
                   </div>
                 </div>
-                <Link
-                  href="/dashboard"
-                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span className="flex items-center"><Activity className="size-4 mr-2" /> Dashboard</span>
-                </Link>
                 <Link
                   href="/profile"
                   className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"

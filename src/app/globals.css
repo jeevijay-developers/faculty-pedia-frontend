@@ -158,3 +158,8 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+img{
+  object-fit: cover;
+  opacity: 1;
+}

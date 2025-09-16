@@ -1,7 +1,9 @@
 'use client';
 import Login from '@/components/Login-Signup/Login';
-
+import { useRouter } from 'next/navigation';
 const page = () => {
+  const router = useRouter();
+
   const handleEducatorLogin = async (formData, userType) => {
     try {
       // Your educator login API call here
@@ -28,7 +30,7 @@ const page = () => {
       localStorage.setItem('educatorToken', data.token);
       
       // Redirect to educator dashboard
-      window.location.href = '/educator/dashboard';
+      router.push('/educator/dashboard');
       
     } catch (error) {
       throw new Error(error.message || 'Login failed');
