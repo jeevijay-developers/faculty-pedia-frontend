@@ -8,7 +8,7 @@ export const getUserData = () => {
   try {
     if (typeof window === "undefined") return null; // Server-side check
 
-    const userData = localStorage.getItem("user_data");
+    const userData = localStorage.getItem("faculty-pedia-student-data");
     if (userData) {
       return JSON.parse(userData);
     }

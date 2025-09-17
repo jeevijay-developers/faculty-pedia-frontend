@@ -13,10 +13,15 @@ API_CLIENT.interceptors.request.use(
     if (typeof window !== "undefined") {
       // Check if in browser
       const TOKEN = localStorage.getItem("faculty-pedia-auth-token");
+      const DATA = localStorage.getItem("faculty-pedia-student-data");
 
       // Don't require auth for login/signup routes
       const isAuthRoute =
         config.url?.includes("/login") || config.url?.includes("/signup");
+
+      if (!DATA || !JSON.parse(DATA)) {
+        window.location.href = "/student-login";
+      }
 
       if (TOKEN && !isAuthRoute) {
         config.headers.Authorization = `Bearer ${TOKEN}`;
