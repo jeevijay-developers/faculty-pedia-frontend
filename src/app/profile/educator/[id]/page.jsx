@@ -18,8 +18,6 @@ const Page = ({ params }) => {
     });
   }, []);
 
-  console.log(resolvedParams.id);
-
   // const educator = getEducatorById(resolvedParams.id);
 
   const [educatorData, setEducatorData] = useState(null);

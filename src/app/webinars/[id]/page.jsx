@@ -26,10 +26,8 @@ export default function WebinarDetailsPage({ params }) {
     try {
       setIsLoading(true);
       setError(null);
-      console.log("Fetching webinar details for ID:", id);
 
       const response = await getWebinarById(id);
-      console.log("API Response:", response);
 
       // Handle different response structures
       const webinarData = response.webinar || response.data || response;

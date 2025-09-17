@@ -17,7 +17,6 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import Link from "next/link";
 
 const ViewProfile = ({ educatorData }) => {
-  console.log(educatorData);
 
   // State for managing visible items
   const [visibleCourses, setVisibleCourses] = useState(6);

@@ -164,7 +164,7 @@ const LiveTestPage = ({ testData }) => {
               
               <button
                 onClick={handleTestSubmit}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 text-sm"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm"
               >
                 <FiLogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Submit Test</span>

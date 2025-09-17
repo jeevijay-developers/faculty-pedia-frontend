@@ -57,11 +57,7 @@ const StudentProfilePage = () => {
         setLoading(true);
         setError(null);
 
-        console.log("Fetching profile for student ID:", studentId);
-
         const profileData = await getCompleteStudentProfile(studentId);
-        console.log("Student profile data:", profileData);
-
         setStudentData(profileData);
         setIsOwnProfile(false);
       } catch (err) {

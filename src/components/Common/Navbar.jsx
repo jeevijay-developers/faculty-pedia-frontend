@@ -24,10 +24,7 @@ const Navbar = () => {
         if (token) {
           try {
             const parsedData = JSON.parse(token);
-            console.log('Navbar userData:', parsedData);
-            console.log('Navbar profileImage:', parsedData?.profileImage);
-            console.log('Navbar profileImage.url:', parsedData?.profileImage?.url);
-            setUserData(parsedData);          
+            setUserData(parsedData);
             setIsLoggedIn(true);
           } catch (error) {
             console.error('Error parsing user data:', error);
@@ -68,7 +65,7 @@ const Navbar = () => {
   const toggleExamDropdown = () => {
     setIsExamDropdownOpen(!isExamDropdownOpen);
   };
-  const hoverExamDropdown = "hover:bg-blue-200 transition-colors duration-200 rounded-md p-2";
+  const hoverExamDropdown = "hover:bg-gray-200 transition-colors duration-200 rounded-md p-2";
   const menuItems = [
     {
       name: "Exams",
@@ -140,8 +137,8 @@ const Navbar = () => {
                       {/* Dropdown Menu */}
                       <div
                         className={`absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-300 transform origin-top ${isExamDropdownOpen
-                            ? "opacity-100 scale-100 visible"
-                            : "opacity-0 scale-95 invisible"
+                          ? "opacity-100 scale-100 visible"
+                          : "opacity-0 scale-95 invisible"
                           }`}
                       >
                         <div className="py-2">
@@ -184,27 +181,12 @@ const Navbar = () => {
                       src={userData.profileImage?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                       className=" border-2 border-gray-300 rounded-full transition-transform hover:scale-105"
 
-/>
+                    />
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Profile Actions" variant="flat" className="w-52 shadow-lg rounded-lg bg-white p-2">
                     <DropdownItem key="profile_settings" className={`${hoverExamDropdown}`}>
                       <Link href={`/profile/${userData.role}/${userData._id}`} className="flex items-center">
                         <UserIcon className="size-4 mr-2" /> My Profile
-                      </Link>
-                    </DropdownItem>
-                    <DropdownItem key="my_courses" className={`${hoverExamDropdown}`}>
-                      <Link href={`/courses/student/${userData._id}`} className="flex items-center">
-                        <BookOpen className="size-4 mr-2" /> My Courses
-                      </Link>
-                    </DropdownItem>
-                    <DropdownItem key="test_results" className={`${hoverExamDropdown}`}>
-                      <Link href="/test-results" className="flex items-center">
-                        <BarChart2 className="size-4 mr-2" /> Test Results
-                      </Link>
-                    </DropdownItem>
-                    <DropdownItem key="settings" className={`${hoverExamDropdown}`}>
-                      <Link href="/settings" className="flex items-center">
-                        <SettingsIcon className="size-4 mr-2" /> Settings
                       </Link>
                     </DropdownItem>
                     <DropdownItem key="help" className={`${hoverExamDropdown}`}>
@@ -285,8 +267,8 @@ const Navbar = () => {
       {/* Mobile menu */}
       <div
         className={`lg:hidden transition-all duration-300 ease-in-out ${isMenuOpen
-            ? "max-h-96 opacity-100"
-            : "max-h-0 opacity-0 overflow-hidden"
+          ? "max-h-96 opacity-100"
+          : "max-h-0 opacity-0 overflow-hidden"
           }`}
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 border-t border-gray-200">
@@ -326,8 +308,8 @@ const Navbar = () => {
                   {/* Mobile Dropdown Submenu */}
                   <div
                     className={`transition-all duration-300 ease-in-out ${isExamDropdownOpen
-                        ? "max-h-40 opacity-100"
-                        : "max-h-0 opacity-0 overflow-hidden"
+                      ? "max-h-40 opacity-100"
+                      : "max-h-0 opacity-0 overflow-hidden"
                       }`}
                   >
                     <div className="pl-6 py-2 space-y-1">

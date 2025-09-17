@@ -39,7 +39,6 @@ const CourseDetails = ({ id }) => {
     const embedUrl = videoId
       ? `https://www.youtube.com/embed/${videoId}`
       : null;
-    console.log("Converting URL:", url, "to:", embedUrl); // Debug log
     return embedUrl;
   };
 
@@ -50,7 +49,6 @@ const CourseDetails = ({ id }) => {
     const fetchEducators = async () => {
       try {
         const data = await getCourseById(id);
-        console.log(data);
         setCourse(data);
         // setFilteredEducators([...data.educators]);
       } catch (error) {
