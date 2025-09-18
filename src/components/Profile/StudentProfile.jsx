@@ -28,11 +28,14 @@ const StudentProfile = ({
   studentData,
   loading = false,
   error = null,
-  onRefresh,
   isOwnProfile = false,
+  onProfileUpdate, // Optional callback for parent component
 }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  // State to force re-render after profile update
+  const [profileUpdateTrigger, setProfileUpdateTrigger] = useState(0);
 
   // Normalize student object early (prevents TDZ when referenced inside hooks)
   const student = studentData?.student || studentData;
@@ -80,9 +83,12 @@ const StudentProfile = ({
         );
       }
       
-      // Trigger refresh to get updated data
-      if (onRefresh) {
-        await onRefresh();
+      // Trigger re-render to show updated data
+      setProfileUpdateTrigger(prev => prev + 1);
+      
+      // Call parent callback if provided
+      if (onProfileUpdate) {
+        await onProfileUpdate(result);
       }
       
       return result;
@@ -1019,30 +1025,6 @@ const StudentProfile = ({
                   Edit Profile
                 </button>
               )}
-              {onRefresh && (
-                <button
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium"
-                >
-                  <svg
-                    className={`w-4 h-4 mr-2 ${
-                      refreshing ? "animate-spin" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                  {refreshing ? "Refreshing..." : "Refresh"}
-                </button>
-              )}
             </div>
           </div>
         </div>
@@ -1077,6 +1059,14 @@ const StudentProfile = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">{renderTabContent()}</div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        studentData={student}
+        onSave={handleProfileSave}
+      />
     </div>
   );
 };
