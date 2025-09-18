@@ -43,7 +43,7 @@ const StudentProfile = ({
     name,
     email,
     mobileNumber,
-    profileImage,
+    image,
     courses = [],
     followingEducators = [],
     tests = [], // expected to include testSeriesId | seriesId
@@ -339,7 +339,7 @@ const StudentProfile = ({
     name,
     email,
     mobileNumber,
-    profileImage,
+    image,
     coursesLength: courses.length,
     followingEducatorsLength: followingEducators.length,
     testsLength: tests.length,
@@ -964,10 +964,10 @@ const StudentProfile = ({
             <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
               {/* Profile Image */}
               <div className="flex-shrink-0">
-                {profileImage?.url ? (
+                {image?.url ? (
                   <div className="w-28 h-28 relative">
                     <Image
-                      src={profileImage.url}
+                      src={image.url}
                       alt={name}
                       fill
                       className="object-cover rounded-full border-4 border-white shadow-xl ring-4 ring-blue-100"
