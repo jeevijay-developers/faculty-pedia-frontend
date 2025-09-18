@@ -178,7 +178,7 @@ const Navbar = () => {
                       as="button"
                       isBordered={true}
                       style={{ opacity: 1 }}
-                      src={userData.profileImage?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                      src={userData.image?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                       className=" border-2 border-gray-300 rounded-full transition-transform hover:scale-105"
 
                     />
@@ -346,9 +346,9 @@ const Navbar = () => {
                 <div className="flex items-center space-x-3 pb-3">
                   <Avatar
                     isBordered={true}
-                    src={userData?.profileImage?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                    src={userData?.image?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                     size="sm"
-                    onError={() => console.log('Mobile Avatar image failed to load:', userData?.profileImage?.url)}
+                    onError={() => console.log('Mobile Avatar image failed to load:', userData?.image?.url)}
                   />
                   <div>
                     <p className="text-sm font-medium text-gray-900">{userData.name || "User"}</p>

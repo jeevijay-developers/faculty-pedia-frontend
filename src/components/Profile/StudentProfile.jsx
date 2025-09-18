@@ -21,16 +21,21 @@ import {
 import { getCoursesByIds } from "../server/course.routes";
 import { getTestSeriesById } from "../server/test-series.route"; // Individual test series helper
 import { getResultById } from "../server/result.routes"; // Individual result helper
+import { updateStudentProfile } from "../server/student/student.routes"; // For profile updates
+import EditProfileModal from "./EditProfileModal";
 
 const StudentProfile = ({
   studentData,
   loading = false,
   error = null,
-  onRefresh,
   isOwnProfile = false,
+  onProfileUpdate, // Optional callback for parent component
 }) => {
   const [activeTab, setActiveTab] = useState("overview");
-  const [refreshing, setRefreshing] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+  // State to force re-render after profile update
+  const [profileUpdateTrigger, setProfileUpdateTrigger] = useState(0);
 
   // Normalize student object early (prevents TDZ when referenced inside hooks)
   const student = studentData?.student || studentData;
@@ -38,7 +43,7 @@ const StudentProfile = ({
     name,
     email,
     mobileNumber,
-    profileImage,
+    image,
     courses = [],
     followingEducators = [],
     tests = [], // expected to include testSeriesId | seriesId
@@ -60,15 +65,36 @@ const StudentProfile = ({
   const [resultsLoading, setResultsLoading] = useState(false);
   const [resultsError, setResultsError] = useState(null);
 
-  // Debug: Log the studentData to see what's being passed
-  console.log("StudentProfile received data:", studentData);
+  // Handle profile save
+  const handleProfileSave = async (formData) => {
+    try {
+      const studentId = student?._id;
+      if (!studentId) {
+        throw new Error("Student ID not found");
+      }
 
-  // Handle refresh
-  const handleRefresh = async () => {
-    if (onRefresh) {
-      setRefreshing(true);
-      await onRefresh();
-      setRefreshing(false);
+      const result = await updateStudentProfile(studentId, formData);
+      
+      // Update localStorage with new student data (same as login)
+      if (result && result.student) {
+        localStorage.setItem(
+          "faculty-pedia-student-data",
+          JSON.stringify(result.student)
+        );
+      }
+      
+      // Trigger re-render to show updated data
+      setProfileUpdateTrigger(prev => prev + 1);
+      
+      // Call parent callback if provided
+      if (onProfileUpdate) {
+        await onProfileUpdate(result);
+      }
+      
+      return result;
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      throw error;
     }
   };
 
@@ -287,15 +313,6 @@ const StudentProfile = ({
             Error Loading Profile
           </h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          {onRefresh && (
-            <button
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-            >
-              {refreshing ? "Retrying..." : "Try Again"}
-            </button>
-          )}
         </div>
       </div>
     );
@@ -322,7 +339,7 @@ const StudentProfile = ({
     name,
     email,
     mobileNumber,
-    profileImage,
+    image,
     coursesLength: courses.length,
     followingEducatorsLength: followingEducators.length,
     testsLength: tests.length,
@@ -947,10 +964,10 @@ const StudentProfile = ({
             <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
               {/* Profile Image */}
               <div className="flex-shrink-0">
-                {profileImage?.url ? (
+                {image?.url ? (
                   <div className="w-28 h-28 relative">
                     <Image
-                      src={profileImage.url}
+                      src={image.url}
                       alt={name}
                       fill
                       className="object-cover rounded-full border-4 border-white shadow-xl ring-4 ring-blue-100"
@@ -988,8 +1005,8 @@ const StudentProfile = ({
             {/* Actions */}
             <div className="flex items-center space-x-4">
               {isOwnProfile && (
-                <Link
-                  href="/profile/edit"
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
                   className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
                 >
                   <svg
@@ -1006,30 +1023,6 @@ const StudentProfile = ({
                     />
                   </svg>
                   Edit Profile
-                </Link>
-              )}
-              {onRefresh && (
-                <button
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium"
-                >
-                  <svg
-                    className={`w-4 h-4 mr-2 ${
-                      refreshing ? "animate-spin" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                  {refreshing ? "Refreshing..." : "Refresh"}
                 </button>
               )}
             </div>
@@ -1066,6 +1059,14 @@ const StudentProfile = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">{renderTabContent()}</div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        studentData={student}
+        onSave={handleProfileSave}
+      />
     </div>
   );
 };
