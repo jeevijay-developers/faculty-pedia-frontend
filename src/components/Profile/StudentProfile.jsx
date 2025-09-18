@@ -17,6 +17,8 @@ import {
 import { getCoursesByIds } from "../server/course.routes";
 import { getTestSeriesById } from "../server/test-series.route"; // Individual test series helper
 import { getResultById } from "../server/result.routes"; // Individual result helper
+import { updateStudentProfile } from "../server/student/student.routes"; // For profile updates
+import EditProfileModal from "./EditProfileModal";
 
 const StudentProfile = ({
   studentData,
@@ -26,7 +28,7 @@ const StudentProfile = ({
   isOwnProfile = false,
 }) => {
   const [activeTab, setActiveTab] = useState("overview");
-  const [refreshing, setRefreshing] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Normalize student object early (prevents TDZ when referenced inside hooks)
   const student = studentData?.student || studentData;
@@ -56,15 +58,33 @@ const StudentProfile = ({
   const [resultsLoading, setResultsLoading] = useState(false);
   const [resultsError, setResultsError] = useState(null);
 
-  // Debug: Log the studentData to see what's being passed
-  console.log("StudentProfile received data:", studentData);
+  // Handle profile save
+  const handleProfileSave = async (formData) => {
+    try {
+      const studentId = student?._id;
+      if (!studentId) {
+        throw new Error("Student ID not found");
+      }
 
-  // Handle refresh
-  const handleRefresh = async () => {
-    if (onRefresh) {
-      setRefreshing(true);
-      await onRefresh();
-      setRefreshing(false);
+      const result = await updateStudentProfile(studentId, formData);
+      
+      // Update localStorage with new student data (same as login)
+      if (result && result.student) {
+        localStorage.setItem(
+          "faculty-pedia-student-data",
+          JSON.stringify(result.student)
+        );
+      }
+      
+      // Trigger refresh to get updated data
+      if (onRefresh) {
+        await onRefresh();
+      }
+      
+      return result;
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      throw error;
     }
   };
 
@@ -258,15 +278,6 @@ const StudentProfile = ({
             Error Loading Profile
           </h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          {onRefresh && (
-            <button
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-            >
-              {refreshing ? "Retrying..." : "Try Again"}
-            </button>
-          )}
         </div>
       </div>
     );
@@ -826,36 +837,14 @@ const StudentProfile = ({
             {/* Actions */}
             <div className="flex items-center space-x-4">
               {isOwnProfile && (
-                <Link
-                  href="/profile/edit"
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
                   className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                   Edit Profile
-                </Link>
-              )}
-              {onRefresh && (
-                <button
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium"
-                >
-                  <svg
-                    className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                  {refreshing ? "Refreshing..." : "Refresh"}
                 </button>
               )}
             </div>
@@ -894,6 +883,14 @@ const StudentProfile = ({
           {renderTabContent()}
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        studentData={student}
+        onSave={handleProfileSave}
+      />
     </div>
   );
 };

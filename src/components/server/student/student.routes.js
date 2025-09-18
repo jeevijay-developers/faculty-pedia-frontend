@@ -106,8 +106,13 @@ export const getCompleteStudentProfile = async (studentId) => {
 export const updateStudentProfile = async (studentId, profileData) => {
   try {
     const response = await API_CLIENT.put(
-      `/api/students/${studentId}`,
-      profileData
+      `/api/students/email-name-mobile/${studentId}`,
+      profileData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
     );
     return response.data;
   } catch (error) {
