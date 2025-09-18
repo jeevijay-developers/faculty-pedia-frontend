@@ -26,13 +26,14 @@ const WebinarsTab = ({ studentId }) => {
         setError(null);
 
         const data = await getUpcomingWebinars(studentId);
+        console.log(data);
 
         if (!mounted) return;
 
         // Handle different response structures
-        const webinarsList = Array.isArray(data)
-          ? data
-          : data.webinars || data.data || [];
+        const webinarsList = Array.isArray(data.upcomingWebinars)
+          ? data.upcomingWebinars
+          : [];
         setWebinars(webinarsList);
       } catch (err) {
         console.error("Failed to load webinars:", err);
@@ -239,26 +240,16 @@ const WebinarsTab = ({ studentId }) => {
                 )}
               </div>
 
-              {/* Action Button */}
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                {webinar.webinarLink ? (
-                  <a
-                    href={webinar.webinarLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    <FiExternalLink className="w-4 h-4 mr-2" />
-                    Join Webinar
-                  </a>
-                ) : (
-                  <button
-                    disabled
-                    className="w-full px-4 py-2 bg-gray-100 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
-                  >
-                    Link Not Available
-                  </button>
-                )}
+              {/* Action Buttons */}
+              <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
+                <button
+                  onClick={() => {
+                    window.location.href = `/student-webinars/${webinar._id}`;
+                  }}
+                  className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  View Details
+                </button>
               </div>
             </div>
           </div>

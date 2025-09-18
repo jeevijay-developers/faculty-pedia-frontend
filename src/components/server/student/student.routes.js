@@ -178,11 +178,39 @@ export const getUpcomingWebinars = async (studentId) => {
 export const getUpcomingTestSeries = async (studentId) => {
   try {
     const response = await API_CLIENT.get(
-      `/api/students/${studentId}/upcoming-test-series`
+      `/api/students/${studentId}/test-series`
     );
     return response.data;
   } catch (error) {
     console.error("Error fetching upcoming test series:", error);
+    throw error;
+  }
+};
+
+// Get webinar details by ID
+export const getWebinarById = async (webinarId) => {
+  try {
+    const response = await API_CLIENT.get(
+      `/api/webinars/webinar-by-id/${webinarId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching webinar details:", error);
+    throw error;
+  }
+};
+
+// Verify webinar attendance eligibility
+export const verifyWebinarAttendance = async (webinarId, studentId) => {
+  try {
+    // Since the backend route is GET but expects body data, we'll use POST with the body
+    const response = await API_CLIENT.post(
+      `/api/webinars/attend-webinar/${webinarId}`,
+      { studentId: studentId }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying webinar attendance:", error);
     throw error;
   }
 };
