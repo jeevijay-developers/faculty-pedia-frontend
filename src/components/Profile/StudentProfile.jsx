@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProfileSkeleton from "./ProfileSkeleton";
+import WebinarsTab from "./WebinarsTab";
+import TestSeriesTab from "./TestSeriesTab";
 import {
   FiUser,
   FiMail,
@@ -13,6 +15,8 @@ import {
   FiUsers,
   FiTarget,
   FiStar,
+  FiCalendar,
+  FiFileText,
 } from "react-icons/fi";
 import { getCoursesByIds } from "../server/course.routes";
 import { getTestSeriesById } from "../server/test-series.route"; // Individual test series helper
@@ -71,7 +75,9 @@ const StudentProfile = ({
   useEffect(() => {
     // If courses are strings/ObjectIds (not populated objects), fetch them.
     // Otherwise just mirror them into resolvedCourses.
-    const needFetch = Array.isArray(courses) && courses.some(c => typeof c === 'string' || (c && !c.title));
+    const needFetch =
+      Array.isArray(courses) &&
+      courses.some((c) => typeof c === "string" || (c && !c.title));
     if (!needFetch) {
       setResolvedCourses(Array.isArray(courses) ? courses : []);
       return;
@@ -81,52 +87,60 @@ const StudentProfile = ({
       try {
         setCoursesLoading(true);
         setCoursesError(null);
-        const ids = courses.map(c => typeof c === 'string' ? c : c._id).filter(Boolean);
+        const ids = courses
+          .map((c) => (typeof c === "string" ? c : c._id))
+          .filter(Boolean);
         const fetched = await getCoursesByIds(ids);
         if (!isCancelled) {
           setResolvedCourses(fetched);
         }
       } catch (err) {
-        if (!isCancelled) setCoursesError('Failed to load course details');
+        if (!isCancelled) setCoursesError("Failed to load course details");
       } finally {
         if (!isCancelled) setCoursesLoading(false);
       }
     })();
-    return () => { isCancelled = true; };
+    return () => {
+      isCancelled = true;
+    };
   }, [JSON.stringify(courses)]);
 
   // Helper: resolve a series object from map by id, gracefully handling absent IDs.
   const getSeries = (id) => {
     // If id is already a populated object with title, return it directly
-    if (id && typeof id === 'object' && id.title) {
+    if (id && typeof id === "object" && id.title) {
       return id;
     }
-    
+
     // Handle both string IDs and object references
-    const seriesId = typeof id === 'string' ? id : id?._id || id;
-    return (seriesId && resolvedSeriesMap[seriesId]) ? resolvedSeriesMap[seriesId] : null;
+    const seriesId = typeof id === "string" ? id : id?._id || id;
+    return seriesId && resolvedSeriesMap[seriesId]
+      ? resolvedSeriesMap[seriesId]
+      : null;
   };
 
   // Helper: get series ID from test object
   const getSeriesId = (test) => {
-    const seriesId = typeof test?.testSeriesId === 'string' 
-      ? test.testSeriesId 
-      : test?.testSeriesId?._id || test?.testSeriesId;
+    const seriesId =
+      typeof test?.testSeriesId === "string"
+        ? test.testSeriesId
+        : test?.testSeriesId?._id || test?.testSeriesId;
     return seriesId;
   };
 
   // Helper: resolve a result object from map by id, gracefully handling absent IDs.
   const getResult = (id) => {
     // Handle both string IDs and object references
-    const resultId = typeof id === 'string' ? id : id?._id || id;
-    return (resultId && resolvedResultsMap[resultId]) ? resolvedResultsMap[resultId] : null;
+    const resultId = typeof id === "string" ? id : id?._id || id;
+    return resultId && resolvedResultsMap[resultId]
+      ? resolvedResultsMap[resultId]
+      : null;
   };
 
   // Helper: get result ID from result object or string
   const getResultId = (result) => {
-    const resultId = typeof result === 'string' 
-      ? result 
-      : result?._id || result?.id;
+    const resultId =
+      typeof result === "string" ? result : result?._id || result?.id;
     return resultId;
   };
 
@@ -137,26 +151,26 @@ const StudentProfile = ({
       try {
         setSeriesLoading(true);
         setSeriesError(null);
-        
+
         // Extract testSeriesId from tests array - each test has { testSeriesId: mongoDbId, ... }
         const seriesIds = new Set();
-        tests.forEach(test => {
-          const seriesId = typeof test?.testSeriesId === 'string' 
-            ? test.testSeriesId 
-            : test?.testSeriesId?._id || test?.testSeriesId;
+        tests.forEach((test) => {
+          const seriesId =
+            typeof test?.testSeriesId === "string"
+              ? test.testSeriesId
+              : test?.testSeriesId?._id || test?.testSeriesId;
           if (seriesId && !resolvedSeriesMap[seriesId]) {
             seriesIds.add(seriesId);
           }
         });
-        
+
         // Also check results array for any additional series references
-        results.forEach(result => {
+        results.forEach((result) => {
           // Handle both populated objects and IDs
           const seriesRef = result?.seriesId || result?.testSeriesId;
-          const seriesId = typeof seriesRef === 'string' 
-            ? seriesRef 
-            : seriesRef?._id;
-          
+          const seriesId =
+            typeof seriesRef === "string" ? seriesRef : seriesRef?._id;
+
           if (seriesId && !resolvedSeriesMap[seriesId]) {
             seriesIds.add(seriesId);
           }
@@ -168,31 +182,40 @@ const StudentProfile = ({
         }
 
         // Fetch each series individually using getTestSeriesById
-        const fetchedPairs = await Promise.all(Array.from(seriesIds).map(async seriesId => {
-          try {
-            const data = await getTestSeriesById(seriesId);
-            const seriesObj = data?.testSeries || data?.data || data;
-            return [seriesObj?._id || seriesId, seriesObj];
-          } catch (e) {
-            console.warn(`Failed to fetch test series ${seriesId}:`, e);
-            return [seriesId, { _id: seriesId, title: 'Series unavailable', error: true }];
-          }
-        }));
-        
+        const fetchedPairs = await Promise.all(
+          Array.from(seriesIds).map(async (seriesId) => {
+            try {
+              const data = await getTestSeriesById(seriesId);
+              const seriesObj = data?.testSeries || data?.data || data;
+              return [seriesObj?._id || seriesId, seriesObj];
+            } catch (e) {
+              console.warn(`Failed to fetch test series ${seriesId}:`, e);
+              return [
+                seriesId,
+                { _id: seriesId, title: "Series unavailable", error: true },
+              ];
+            }
+          })
+        );
+
         if (!cancelled) {
-          setResolvedSeriesMap(prev => {
+          setResolvedSeriesMap((prev) => {
             const next = { ...prev };
-            fetchedPairs.forEach(([id, obj]) => { if (id) next[id] = obj; });
+            fetchedPairs.forEach(([id, obj]) => {
+              if (id) next[id] = obj;
+            });
             return next;
           });
         }
       } catch (e) {
-        if (!cancelled) setSeriesError('Failed to resolve test series');
+        if (!cancelled) setSeriesError("Failed to resolve test series");
       } finally {
         if (!cancelled) setSeriesLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [JSON.stringify(tests), JSON.stringify(results)]);
 
   // Resolve result details by fetching each result ID from results array individually.
@@ -202,10 +225,10 @@ const StudentProfile = ({
       try {
         setResultsLoading(true);
         setResultsError(null);
-        
+
         // Extract result IDs from results array - each result can be string ID or object with _id
         const resultIds = new Set();
-        results.forEach(result => {
+        results.forEach((result) => {
           const resultId = getResultId(result);
           if (resultId && !resolvedResultsMap[resultId]) {
             resultIds.add(resultId);
@@ -218,31 +241,37 @@ const StudentProfile = ({
         }
 
         // Fetch each result individually using getResultById
-        const fetchedPairs = await Promise.all(Array.from(resultIds).map(async resultId => {
-          try {
-            const data = await getResultById(resultId);
-            const resultObj = data?.result || data?.data || data;
-            return [resultObj?._id || resultId, resultObj];
-          } catch (e) {
-            console.warn(`Failed to fetch result ${resultId}:`, e);
-            return [resultId, { _id: resultId, error: true }];
-          }
-        }));
-        
+        const fetchedPairs = await Promise.all(
+          Array.from(resultIds).map(async (resultId) => {
+            try {
+              const data = await getResultById(resultId);
+              const resultObj = data?.result || data?.data || data;
+              return [resultObj?._id || resultId, resultObj];
+            } catch (e) {
+              console.warn(`Failed to fetch result ${resultId}:`, e);
+              return [resultId, { _id: resultId, error: true }];
+            }
+          })
+        );
+
         if (!cancelled) {
-          setResolvedResultsMap(prev => {
+          setResolvedResultsMap((prev) => {
             const next = { ...prev };
-            fetchedPairs.forEach(([id, obj]) => { if (id) next[id] = obj; });
+            fetchedPairs.forEach(([id, obj]) => {
+              if (id) next[id] = obj;
+            });
             return next;
           });
         }
       } catch (e) {
-        if (!cancelled) setResultsError('Failed to resolve test results');
+        if (!cancelled) setResultsError("Failed to resolve test results");
       } finally {
         if (!cancelled) setResultsLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [JSON.stringify(results)]);
 
   if (loading) {
@@ -309,6 +338,8 @@ const StudentProfile = ({
     { id: "overview", label: "Overview", icon: FiUser },
     { id: "courses", label: "Courses", icon: FiBookOpen },
     { id: "results", label: "Test Results", icon: FiAward },
+    { id: "webinars", label: "Webinars", icon: FiCalendar },
+    { id: "testseries", label: "Test Series", icon: FiFileText },
     { id: "educators", label: "Following", icon: FiUsers },
   ];
 
@@ -336,7 +367,9 @@ const StudentProfile = ({
               <FiTarget className="w-6 h-6 text-green-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 mb-1">Tests Taken</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">
+                Tests Taken
+              </p>
               <p className="text-2xl font-bold text-gray-900">{totalResults}</p>
             </div>
           </div>
@@ -348,7 +381,9 @@ const StudentProfile = ({
               <FiUsers className="w-6 h-6 text-purple-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600 mb-1">Following</p>
+              <p className="text-sm font-medium text-gray-600 mb-1">
+                Following
+              </p>
               <p className="text-2xl font-bold text-gray-900">
                 {followingEducators.length}
               </p>
@@ -379,7 +414,7 @@ const StudentProfile = ({
               {tests.slice(0, 5).map((test, index) => {
                 const seriesId = getSeriesId(test);
                 const series = getSeries(seriesId);
-                
+
                 return (
                   <div
                     key={test._id || index}
@@ -391,27 +426,48 @@ const StudentProfile = ({
                       </div>
                       <div className="ml-4">
                         {(() => {
-                          const title = series?.title || `Test Series #${seriesId || "N/A"}`;
+                          const title =
+                            series?.title ||
+                            `Test Series #${seriesId || "N/A"}`;
                           const slug = series?.slug;
                           return slug ? (
-                            <Link href={`/live-test/series/${slug}`} className="text-sm font-semibold text-blue-600 hover:underline" title={title}>
+                            <Link
+                              href={`/live-test/series/${slug}`}
+                              className="text-sm font-semibold text-blue-600 hover:underline"
+                              title={title}
+                            >
                               {title}
                             </Link>
                           ) : (
-                            <p className="text-sm font-semibold text-gray-900" title={title}>{title}</p>
+                            <p
+                              className="text-sm font-semibold text-gray-900"
+                              title={title}
+                            >
+                              {title}
+                            </p>
                           );
                         })()}
                         {series && (
                           <div className="mt-1 flex items-center gap-2">
-                            {series.subject && <span className="inline-block px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 text-[10px] font-medium uppercase tracking-wide">{series.subject}</span>}
-                            {series.specialization && <span className="inline-block px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-medium uppercase tracking-wide">{series.specialization}</span>}
+                            {series.subject && (
+                              <span className="inline-block px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 text-[10px] font-medium uppercase tracking-wide">
+                                {series.subject}
+                              </span>
+                            )}
+                            {series.specialization && (
+                              <span className="inline-block px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-medium uppercase tracking-wide">
+                                {series.specialization}
+                              </span>
+                            )}
                           </div>
                         )}
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-semibold text-gray-900 mb-1">
-                        {series?.noOfTests ? `${series.noOfTests} Tests` : "Test Series"}
+                        {series?.noOfTests
+                          ? `${series.noOfTests} Tests`
+                          : "Test Series"}
                       </p>
                       <div className="flex items-center space-x-2 text-xs">
                         {series?.price && (
@@ -420,11 +476,15 @@ const StudentProfile = ({
                           </span>
                         )}
                         {test.status && (
-                          <span className={`px-2 py-1 rounded-full text-[10px] font-medium ${
-                            test.status === 'completed' ? 'bg-green-100 text-green-700' :
-                            test.status === 'in-progress' ? 'bg-blue-100 text-blue-700' :
-                            'bg-gray-100 text-gray-700'
-                          }`}>
+                          <span
+                            className={`px-2 py-1 rounded-full text-[10px] font-medium ${
+                              test.status === "completed"
+                                ? "bg-green-100 text-green-700"
+                                : test.status === "in-progress"
+                                ? "bg-blue-100 text-blue-700"
+                                : "bg-gray-100 text-gray-700"
+                            }`}
+                          >
                             {test.status}
                           </span>
                         )}
@@ -440,7 +500,9 @@ const StudentProfile = ({
                 <FiAward className="w-8 h-8 text-gray-400" />
               </div>
               <p className="text-gray-500 font-medium">No tests enrolled yet</p>
-              <p className="text-sm text-gray-400 mt-1">Enroll in test series to see them here</p>
+              <p className="text-sm text-gray-400 mt-1">
+                Enroll in test series to see them here
+              </p>
             </div>
           )}
         </div>
@@ -454,7 +516,11 @@ const StudentProfile = ({
         <h3 className="text-xl font-semibold text-gray-900">
           Enrolled Courses
         </h3>
-        {coursesLoading && <span className="text-xs text-gray-500 animate-pulse">Loading...</span>}
+        {coursesLoading && (
+          <span className="text-xs text-gray-500 animate-pulse">
+            Loading...
+          </span>
+        )}
       </div>
       <div className="p-6">
         {coursesError && (
@@ -480,7 +546,10 @@ const StudentProfile = ({
                   </div>
                 )}
                 <div className="space-y-3">
-                  <h4 className="font-semibold text-gray-900 text-lg leading-tight truncate" title={course?.title}>
+                  <h4
+                    className="font-semibold text-gray-900 text-lg leading-tight truncate"
+                    title={course?.title}
+                  >
                     {course?.title || "Course Title"}
                   </h4>
                   <div className="flex items-center flex-wrap gap-2 text-sm">
@@ -506,8 +575,18 @@ const StudentProfile = ({
                       className="mt-4 inline-flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium group"
                     >
                       View Details
-                      <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <svg
+                        className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
                       </svg>
                     </Link>
                   )}
@@ -521,10 +600,14 @@ const StudentProfile = ({
               <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                 <FiBookOpen className="w-10 h-10 text-gray-400" />
               </div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">No courses enrolled yet</h4>
-              <p className="text-gray-500 mb-6">Explore and enroll in courses to start learning</p>
-              <Link 
-                href="/courses" 
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                No courses enrolled yet
+              </h4>
+              <p className="text-gray-500 mb-6">
+                Explore and enroll in courses to start learning
+              </p>
+              <Link
+                href="/courses"
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Browse Courses
@@ -535,7 +618,10 @@ const StudentProfile = ({
         {coursesLoading && resolvedCourses.length === 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="border border-gray-200 rounded-xl p-5 animate-pulse space-y-4">
+              <div
+                key={i}
+                className="border border-gray-200 rounded-xl p-5 animate-pulse space-y-4"
+              >
                 <div className="w-full h-40 bg-gray-200 rounded-lg" />
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
                 <div className="h-3 bg-gray-200 rounded w-1/2" />
@@ -556,8 +642,16 @@ const StudentProfile = ({
       <div className="p-6 border-b border-gray-100 flex items-center justify-between">
         <h3 className="text-xl font-semibold text-gray-900">Test Results</h3>
         <div className="flex items-center gap-4">
-          {seriesLoading && <span className="text-xs text-gray-500 animate-pulse">Loading series...</span>}
-          {resultsLoading && <span className="text-xs text-gray-500 animate-pulse">Loading results...</span>}
+          {seriesLoading && (
+            <span className="text-xs text-gray-500 animate-pulse">
+              Loading series...
+            </span>
+          )}
+          {resultsLoading && (
+            <span className="text-xs text-gray-500 animate-pulse">
+              Loading results...
+            </span>
+          )}
         </div>
       </div>
       {(seriesError || resultsError) && (
@@ -597,15 +691,31 @@ const StudentProfile = ({
                   // Get the enriched result data
                   const resultId = getResultId(result);
                   const resolvedResult = getResult(resultId) || result;
-                  const percentage = resolvedResult.totalScore ? 
-                    ((resolvedResult.obtainedScore / resolvedResult.totalScore) * 100).toFixed(1) : 0;
-                  const performanceColor = percentage >= 80 ? 'text-green-600' : 
-                                         percentage >= 60 ? 'text-yellow-600' : 'text-red-600';
-                  const performanceBg = percentage >= 80 ? 'bg-green-100' : 
-                                      percentage >= 60 ? 'bg-yellow-100' : 'bg-red-100';
-                  
+                  const percentage = resolvedResult.totalScore
+                    ? (
+                        (resolvedResult.obtainedScore /
+                          resolvedResult.totalScore) *
+                        100
+                      ).toFixed(1)
+                    : 0;
+                  const performanceColor =
+                    percentage >= 80
+                      ? "text-green-600"
+                      : percentage >= 60
+                      ? "text-yellow-600"
+                      : "text-red-600";
+                  const performanceBg =
+                    percentage >= 80
+                      ? "bg-green-100"
+                      : percentage >= 60
+                      ? "bg-yellow-100"
+                      : "bg-red-100";
+
                   return (
-                    <tr key={index} className="hover:bg-gray-50 transition-colors">
+                    <tr
+                      key={index}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="p-2 bg-blue-100 rounded-lg mr-3">
@@ -613,18 +723,41 @@ const StudentProfile = ({
                           </div>
                           <div>
                             <p className="text-sm font-semibold text-gray-900">
-                              {resolvedResult.testId?.title || resolvedResult.testTitle || `Test #${resolvedResult.testId?._id || resolvedResult.testId || index + 1}`}
+                              {resolvedResult.testId?.title ||
+                                resolvedResult.testTitle ||
+                                `Test #${
+                                  resolvedResult.testId?._id ||
+                                  resolvedResult.testId ||
+                                  index + 1
+                                }`}
                             </p>
                             {(() => {
                               const series = getSeries(resolvedResult.seriesId);
-                              const title = series?.title || resolvedResult.seriesId?.title || `Series #${resolvedResult.seriesId?._id || resolvedResult.seriesId || "N/A"}`;
-                              const slug = series?.slug || resolvedResult.seriesId?.slug;
+                              const title =
+                                series?.title ||
+                                resolvedResult.seriesId?.title ||
+                                `Series #${
+                                  resolvedResult.seriesId?._id ||
+                                  resolvedResult.seriesId ||
+                                  "N/A"
+                                }`;
+                              const slug =
+                                series?.slug || resolvedResult.seriesId?.slug;
                               return slug ? (
-                                <Link href={`/live-test/series/${slug}`} className="text-xs text-blue-600 hover:underline" title={title}>
+                                <Link
+                                  href={`/live-test/series/${slug}`}
+                                  className="text-xs text-blue-600 hover:underline"
+                                  title={title}
+                                >
                                   {title}
                                 </Link>
                               ) : (
-                                <p className="text-xs text-gray-500" title={title}>{title}</p>
+                                <p
+                                  className="text-xs text-gray-500"
+                                  title={title}
+                                >
+                                  {title}
+                                </p>
                               );
                             })()}
                             {(() => {
@@ -632,8 +765,16 @@ const StudentProfile = ({
                               if (!series) return null;
                               return (
                                 <div className="mt-1 flex flex-wrap gap-1">
-                                  {series.subject && <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px] font-medium">{series.subject}</span>}
-                                  {series.specialization && <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 text-[10px] font-medium">{series.specialization}</span>}
+                                  {series.subject && (
+                                    <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px] font-medium">
+                                      {series.subject}
+                                    </span>
+                                  )}
+                                  {series.specialization && (
+                                    <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 text-[10px] font-medium">
+                                      {series.specialization}
+                                    </span>
+                                  )}
                                 </div>
                               );
                             })()}
@@ -642,7 +783,8 @@ const StudentProfile = ({
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-bold text-gray-900">
-                          {resolvedResult.obtainedScore || 0}/{resolvedResult.totalScore || 0}
+                          {resolvedResult.obtainedScore || 0}/
+                          {resolvedResult.totalScore || 0}
                         </div>
                         <div className="text-xs text-gray-500">
                           {percentage}% scored
@@ -659,15 +801,25 @@ const StudentProfile = ({
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(resolvedResult.createdAt || resolvedResult.date || Date.now()).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric'
+                        {new Date(
+                          resolvedResult.createdAt ||
+                            resolvedResult.date ||
+                            Date.now()
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
                         })}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${performanceBg} ${performanceColor}`}>
-                          {percentage >= 80 ? 'Excellent' : percentage >= 60 ? 'Good' : 'Needs Improvement'}
+                        <span
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${performanceBg} ${performanceColor}`}
+                        >
+                          {percentage >= 80
+                            ? "Excellent"
+                            : percentage >= 60
+                            ? "Good"
+                            : "Needs Improvement"}
                         </span>
                       </td>
                     </tr>
@@ -681,10 +833,14 @@ const StudentProfile = ({
             <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
               <FiAward className="w-10 h-10 text-gray-400" />
             </div>
-            <h4 className="text-lg font-semibold text-gray-900 mb-2">No test results available</h4>
-            <p className="text-gray-500 mb-6">Take your first test to see detailed results and analytics</p>
-            <Link 
-              href="/live-test" 
+            <h4 className="text-lg font-semibold text-gray-900 mb-2">
+              No test results available
+            </h4>
+            <p className="text-gray-500 mb-6">
+              Take your first test to see detailed results and analytics
+            </p>
+            <Link
+              href="/live-test"
               className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Take a Test
@@ -694,6 +850,10 @@ const StudentProfile = ({
       </div>
     </div>
   );
+
+  const renderWebinars = () => <WebinarsTab studentId={student?._id} />;
+
+  const renderTestSeries = () => <TestSeriesTab studentId={student?._id} />;
 
   const renderEducators = () => (
     <div className="bg-white rounded-lg shadow-sm border">
@@ -767,6 +927,10 @@ const StudentProfile = ({
         return renderCourses();
       case "results":
         return renderResults();
+      case "webinars":
+        return renderWebinars();
+      case "testseries":
+        return renderTestSeries();
       case "educators":
         return renderEducators();
       default:
@@ -802,9 +966,7 @@ const StudentProfile = ({
               {/* Profile Info */}
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-3">
-                  <h1 className="text-3xl font-bold text-gray-900">
-                    {name}
-                  </h1>
+                  <h1 className="text-3xl font-bold text-gray-900">{name}</h1>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-8 text-gray-600">
                   <div className="flex items-center">
@@ -830,8 +992,18 @@ const StudentProfile = ({
                   href="/profile/edit"
                   className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
                   </svg>
                   Edit Profile
                 </Link>
@@ -843,7 +1015,9 @@ const StudentProfile = ({
                   className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium"
                 >
                   <svg
-                    className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
+                    className={`w-4 h-4 mr-2 ${
+                      refreshing ? "animate-spin" : ""
+                    }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -890,9 +1064,7 @@ const StudentProfile = ({
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          {renderTabContent()}
-        </div>
+        <div className="mb-8">{renderTabContent()}</div>
       </div>
     </div>
   );
