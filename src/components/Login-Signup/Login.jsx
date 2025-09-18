@@ -8,6 +8,7 @@ import { LuLoaderCircle } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { loginStudent } from "@/components/server/auth/auth.routes";
 import { setAuthToken } from "@/utils/auth";
+import DebugInfo from "@/components/Common/DebugInfo";
 
 const Login = ({
   userType = "Student",
@@ -80,7 +81,11 @@ const Login = ({
           email: formData.email,
           userType,
         });
+
+        // Log environment info for debugging
+        console.log("Environment:", process.env.NODE_ENV);
         console.log("API Base URL:", process.env.NEXT_PUBLIC_BASE_URL);
+        console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
 
         try {
           // Call the loginStudent API
@@ -103,13 +108,26 @@ const Login = ({
 
           console.log("Redirecting to:", redirectAfterLogin);
 
-          // Use window.location for more reliable deployment redirect
-          setTimeout(() => {
-            window.location.href = redirectAfterLogin;
-          }, 100);
+          // Use router.push for better Next.js navigation in deployment
+          if (typeof window !== "undefined") {
+            // Clear any existing auth errors
+            setErrors({});
+
+            // Use Next.js router for navigation
+            router.push(redirectAfterLogin);
+          }
         } catch (loginError) {
           console.error("Login API error:", loginError);
-          console.error("Error details:", loginError.response?.data);
+          console.error("Error details:", {
+            status: loginError.response?.status,
+            data: loginError.response?.data,
+            message: loginError.message,
+            config: {
+              url: loginError.config?.url,
+              baseURL: loginError.config?.baseURL,
+              method: loginError.config?.method,
+            },
+          });
           throw loginError;
         }
       } else {
@@ -122,12 +140,29 @@ const Login = ({
     } catch (error) {
       console.error("Login error:", error);
 
-      // Handle API errors
+      // Handle different types of errors
       let errorMessage = "Login failed. Please try again.";
-      if (error.response?.data?.message) {
+
+      if (error.code === "NETWORK_ERROR" || !navigator.onLine) {
+        errorMessage = "Network error. Please check your internet connection.";
+      } else if (error.response?.status === 404) {
+        errorMessage = "API endpoint not found. Please contact support.";
+      } else if (error.response?.status === 500) {
+        errorMessage = "Server error. Please try again later.";
+      } else if (error.response?.status === 401) {
+        errorMessage = "Invalid email or password.";
+      } else if (error.response?.status === 403) {
+        errorMessage = "Account access denied. Please contact support.";
+      } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
-      } else if (error.message) {
+      } else if (error.message && error.message !== "Network Error") {
         errorMessage = error.message;
+      } else if (
+        error.name === "TypeError" &&
+        error.message.includes("fetch")
+      ) {
+        errorMessage =
+          "Connection failed. Please check if the server is running.";
       }
 
       setErrors({ submit: errorMessage });
@@ -289,6 +324,9 @@ const Login = ({
           </div>
         </div>
       </div>
+
+      {/* Debug Component - Only show in development or when needed */}
+      {process.env.NODE_ENV === "development" && <DebugInfo />}
     </div>
   );
 };
