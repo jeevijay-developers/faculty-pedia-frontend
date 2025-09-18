@@ -165,3 +165,29 @@ export const enrollInCourse = async (studentId, courseId) => {
     throw error;
   }
 };
+
+// Get student's upcoming webinars
+export const getUpcomingWebinars = async (studentId) => {
+  try {
+    const response = await API_CLIENT.get(
+      `/api/students/${studentId}/upcoming-webinars`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching upcoming webinars:", error);
+    throw error;
+  }
+};
+
+// Get student's upcoming test series
+export const getUpcomingTestSeries = async (studentId) => {
+  try {
+    const response = await API_CLIENT.get(
+      `/api/students/${studentId}/upcoming-test-series`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching upcoming test series:", error);
+    throw error;
+  }
+};

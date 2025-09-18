@@ -1,8 +1,29 @@
 "use client";
 import axios from "axios";
 
+// Get base URL with fallbacks for deployment
+const getBaseURL = () => {
+  // Production URL (replace with your actual backend URL)
+  const PRODUCTION_URL =
+    process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL;
+
+  // Development URL
+  const DEVELOPMENT_URL = "http://localhost:5000";
+
+  // Check if we're in production
+  const isProduction = process.env.NODE_ENV === "production";
+
+  // Return appropriate URL
+  if (isProduction && PRODUCTION_URL) {
+    return PRODUCTION_URL;
+  }
+
+  return DEVELOPMENT_URL;
+};
+
 const API_CLIENT = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL: getBaseURL(),
+  timeout: 10000, // 10 second timeout for deployment
   withCredentials: true,
 });
 
@@ -17,17 +38,25 @@ API_CLIENT.interceptors.request.use(
 
       // Don't require auth for login/signup routes
       const isAuthRoute =
-        config.url?.includes("/login") || config.url?.includes("/signup");
+        config.url?.includes("/login") ||
+        config.url?.includes("/signup") ||
+        config.url?.includes("/forgot-password");
 
-      if (!DATA || !JSON.parse(DATA)) {
-        window.location.href = "/student-login";
-      }
-
+      // Only add auth token if we have one and it's not an auth route
       if (TOKEN && !isAuthRoute) {
         config.headers.Authorization = `Bearer ${TOKEN}`;
-      } else if (!TOKEN && !isAuthRoute) {
-        // Only redirect if not on an auth route and no token
+      }
+
+      // Don't redirect on auth routes or if we're already on login page
+      const currentPath = window.location.pathname;
+      const isOnLoginPage =
+        currentPath.includes("/login") || currentPath.includes("/signup");
+
+      // Only redirect if not on auth route, not already on login page, and no token
+      if (!TOKEN && !isAuthRoute && !isOnLoginPage) {
+        console.log("No token found, redirecting to login");
         window.location.href = "/student-login";
+        return Promise.reject(new Error("No authentication token"));
       }
     }
     return config;
@@ -38,11 +67,20 @@ API_CLIENT.interceptors.request.use(
 API_CLIENT.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log(typeof window !== "undefined");
-    console.log(error.response?.status);
+    console.log("API Error:", error.response?.status, error.message);
 
-    if (typeof window !== "undefined" && error.response?.status === 401) {
-      window.location.href = "/student-login";
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname;
+      const isOnLoginPage =
+        currentPath.includes("/login") || currentPath.includes("/signup");
+
+      // Only redirect on 401 if we're not already on a login page
+      if (error.response?.status === 401 && !isOnLoginPage) {
+        console.log("401 Unauthorized, redirecting to login");
+        localStorage.removeItem("faculty-pedia-auth-token");
+        localStorage.removeItem("faculty-pedia-student-data");
+        window.location.href = "/student-login";
+      }
     }
     return Promise.reject(error);
   }
