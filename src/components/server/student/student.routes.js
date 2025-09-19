@@ -232,3 +232,16 @@ export const getTestSeriesForStudent = async (studentId, seriesId) => {
     throw error;
   }
 };
+
+// Get course details for student (verify enrollment)
+export const getCourseForStudent = async (studentId, courseId) => {
+  try {
+    const response = await API_CLIENT.get(
+      `/api/course/student-course/${studentId}/course/${courseId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching course for student:", error);
+    throw error;
+  }
+};

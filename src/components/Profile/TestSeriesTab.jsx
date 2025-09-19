@@ -243,9 +243,7 @@ const TestSeriesTab = ({ studentId }) => {
 
                   <div className="flex items-center">
                     <FiUsers className="w-4 h-4 mr-2" />
-                    <span>
-                      {series.enrolledStudents?.length || 0} Enrolled
-                    </span>
+                    <span>{series.enrolledStudents?.length || 0} Enrolled</span>
                   </div>
                 </div>
 
@@ -261,18 +259,19 @@ const TestSeriesTab = ({ studentId }) => {
                   </button>
 
                   {isSeriesActive(series.startDate, series.endDate) ? (
-                    <button
-                      onClick={() => {
-                        if (series.slug) {
-                          window.location.href = `/test-series/${series.slug}`;
-                        } else {
-                          window.location.href = `/test-series/${series._id}`;
-                        }
-                      }}
-                      className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                      Start Tests
-                    </button>
+                    // <button
+                    //   onClick={() => {
+                    //     if (series.slug) {
+                    //       window.location.href = `/test-series/${series.slug}`;
+                    //     } else {
+                    //       window.location.href = `/test-series/${series._id}`;
+                    //     }
+                    //   }}
+                    //   className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+                    // >
+                    //   Start Tests
+                    // </button>
+                    <></>
                   ) : statusInfo.status === "upcoming" ? (
                     <button
                       disabled
