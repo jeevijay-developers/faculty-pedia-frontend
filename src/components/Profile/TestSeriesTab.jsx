@@ -7,8 +7,8 @@ import {
   FiCalendar,
   FiFileText,
   FiUsers,
-  FiDollarSign,
   FiPlay,
+  FiClock,
 } from "react-icons/fi";
 import Image from "next/image";
 
@@ -173,7 +173,7 @@ const TestSeriesTab = ({ studentId }) => {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-full bg-gradient-to-br from-purple-100 to-pink-100">
+                  <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-100 to-purple-100">
                     <div className="text-gray-500 text-center">
                       <FiFileText className="w-12 h-12 mx-auto mb-2" />
                       <span className="text-sm">Test Series</span>
@@ -184,7 +184,7 @@ const TestSeriesTab = ({ studentId }) => {
                 {/* Status Badge */}
                 <div className="absolute top-3 left-3">
                   <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
                       statusInfo.color === "green"
                         ? "bg-green-100 text-green-800"
                         : statusInfo.color === "blue"
@@ -213,7 +213,7 @@ const TestSeriesTab = ({ studentId }) => {
                 <p className="text-sm text-gray-600 mb-4 line-clamp-3">
                   {series.description?.short ||
                     series.description?.long ||
-                    "No description available"}
+                    "Comprehensive test series to boost your preparation"}
                 </p>
 
                 {/* Details */}
@@ -227,11 +227,6 @@ const TestSeriesTab = ({ studentId }) => {
                   </div>
 
                   <div className="flex items-center">
-                    <FiFileText className="w-4 h-4 mr-2" />
-                    <span>{series.noOfTests} Tests</span>
-                  </div>
-
-                  <div className="flex items-center">
                     <span className="font-medium mr-2">Subject:</span>
                     <span className="capitalize">{series.subject}</span>
                   </div>
@@ -241,29 +236,33 @@ const TestSeriesTab = ({ studentId }) => {
                     <span>{series.specialization}</span>
                   </div>
 
-                  {series.enrolledStudents && (
-                    <div className="flex items-center">
-                      <FiUsers className="w-4 h-4 mr-2" />
-                      <span>{series.enrolledStudents.length} Enrolled</span>
-                    </div>
-                  )}
+                  <div className="flex items-center">
+                    <FiFileText className="w-4 h-4 mr-2" />
+                    <span>{series.noOfTests} Tests</span>
+                  </div>
 
-                  {series.liveTests && (
-                    <div className="flex items-center">
-                      <FiPlay className="w-4 h-4 mr-2" />
-                      <span>
-                        {series.liveTests.length} Live Tests Available
-                      </span>
-                    </div>
-                  )}
+                  <div className="flex items-center">
+                    <FiUsers className="w-4 h-4 mr-2" />
+                    <span>
+                      {series.enrolledStudents?.length || 0} Enrolled
+                    </span>
+                  </div>
                 </div>
 
-                {/* Action Button */}
-                <div className="mt-4 pt-4 border-t border-gray-100">
+                {/* Action Buttons */}
+                <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
+                  <button
+                    onClick={() => {
+                      window.location.href = `/student-test-series/${series._id}`;
+                    }}
+                    className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    View Details
+                  </button>
+
                   {isSeriesActive(series.startDate, series.endDate) ? (
                     <button
                       onClick={() => {
-                        // Navigate to test series page
                         if (series.slug) {
                           window.location.href = `/test-series/${series.slug}`;
                         } else {
@@ -277,14 +276,13 @@ const TestSeriesTab = ({ studentId }) => {
                   ) : statusInfo.status === "upcoming" ? (
                     <button
                       disabled
-                      className="w-full px-4 py-2 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg cursor-not-allowed"
+                      className="w-full px-4 py-2 bg-gray-100 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
                     >
                       Starts on {formatDate(series.startDate)}
                     </button>
                   ) : (
                     <button
                       onClick={() => {
-                        // Navigate to results or review page
                         if (series.slug) {
                           window.location.href = `/test-series/${series.slug}/results`;
                         } else {

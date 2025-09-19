@@ -110,7 +110,7 @@ export const updateStudentProfile = async (studentId, profileData) => {
       profileData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -216,6 +216,19 @@ export const verifyWebinarAttendance = async (webinarId, studentId) => {
     return response.data;
   } catch (error) {
     console.error("Error verifying webinar attendance:", error);
+    throw error;
+  }
+};
+
+// Verify enrollment and fetch test series for student
+export const getTestSeriesForStudent = async (studentId, seriesId) => {
+  try {
+    const response = await API_CLIENT.get(
+      `/api/test-series/verify-and-get/${studentId}/${seriesId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching test series for student:", error);
     throw error;
   }
 };
