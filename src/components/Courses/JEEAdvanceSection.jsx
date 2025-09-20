@@ -31,7 +31,6 @@ const JEEAdvanceSection = ({
     };
 
     const coursesToRender = courses.length > 0 ? courses : jeeAdvanceCourseData;
-    // console.log('Courses to render:', coursesToRender);
 
     return (
         <section className="py-16 bg-gray-50">

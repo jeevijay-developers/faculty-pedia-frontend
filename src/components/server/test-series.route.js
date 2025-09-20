@@ -14,9 +14,7 @@ export const getTestSeriesById = async (id) => {
 // Fetch all test series (optionally could accept query params later)
 export const getTestSeries = async () => {
   try {
-    const response = await API_CLIENT.get(`/api/test-series`);
-    console.log(response.data);
-    
+    const response = await API_CLIENT.get(`/api/test-series`);    
     return response.data; // Expecting array or wrapped object { testSeries: [...] }
   } catch (error) {
     console.error("Error fetching test series:", error);

@@ -2,20 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { LuLoaderCircle } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { loginStudent } from "@/components/server/auth/auth.routes";
+import { loginUser } from "@/components/server/auth/auth.routes";
 import { setAuthToken } from "@/utils/auth";
 import DebugInfo from "@/components/Common/DebugInfo";
 
 const Login = ({
-  userType = "Student",
+  title = "Welcome",
   onSubmit = null,
-  forgotPasswordLink = "/forgot-password/student",
-  signupLink = "/join-as-student",
-  redirectAfterLogin = "/exams",
+  forgotPasswordLink = "/forgot-password",
+  signupLink = "/signup",
+  onLoginSuccess = null, // Callback for handling successful login with user role
 }) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -73,49 +72,48 @@ const Login = ({
 
     try {
       if (onSubmit) {
-        // Use the provided onSubmit function (for educator login or custom logic)
-        await onSubmit(formData, userType);
-      } else if (userType === "Student") {
-        // Default student login logic
-        console.log("Attempting student login with:", {
+        // Use the provided onSubmit function for custom logic
+        await onSubmit(formData);
+      } else {
+        // Default generic login logic
+        console.log("Attempting login with:", {
           email: formData.email,
-          userType,
         });
 
-        // Log environment info for debugging
-        console.log("Environment:", process.env.NODE_ENV);
-        console.log("API Base URL:", process.env.NEXT_PUBLIC_BASE_URL);
-        console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
-
         try {
-          // Call the loginStudent API
-          const response = await loginStudent({
-            email: formData.email,
-            password: formData.password,
-          });
-
-          console.log("Login successful:", response);
-
+          // Call the generic loginUser API
+          const response = await loginUser(formData.email, formData.password);
           // Store token using auth utility
           if (response.TOKEN) {
             setAuthToken(response.TOKEN);
             console.log("Token stored successfully");
           }
-          localStorage.setItem(
-            "faculty-pedia-student-data",
-            JSON.stringify(response.user)
-          );
 
-          console.log("Redirecting to:", redirectAfterLogin);
-
-          // Use router.push for better Next.js navigation in deployment
-          if (typeof window !== "undefined") {
-            // Clear any existing auth errors
-            setErrors({});
-
-            // Use Next.js router for navigation
-            router.push(redirectAfterLogin);
+          // Store user data based on user type
+          if (response.userType === "student") {
+            localStorage.setItem(
+              "faculty-pedia-student-data",
+              JSON.stringify(response.userData)
+            );
+          } else if (response.userType === "educator") {
+            localStorage.setItem(
+              "faculty-pedia-educator-data",
+              JSON.stringify(response.userData)
+            );
           }
+
+          // Store user role for easy access
+          localStorage.setItem("user-role", response.userType);
+
+          // Call success callback with user data and role
+          if (onLoginSuccess) {
+            await onLoginSuccess(response.userData, response.userType);
+          } else {
+            // Default redirect based on user type
+            const defaultRedirect = response.userType === "student" ? "/exams" : "/educator/dashboard";
+            router.push(defaultRedirect);
+          }
+          
         } catch (loginError) {
           console.error("Login API error:", loginError);
           console.error("Error details:", {
@@ -130,12 +128,6 @@ const Login = ({
           });
           throw loginError;
         }
-      } else {
-        // Default behavior for other user types
-        console.log("Login attempt:", { ...formData, userType });
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        router.push(redirectAfterLogin);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -150,6 +142,8 @@ const Login = ({
       } else if (error.response?.status === 500) {
         errorMessage = "Server error. Please try again later.";
       } else if (error.response?.status === 401) {
+        errorMessage = "Invalid email or password.";
+      } else if (error.response?.status === 400) {
         errorMessage = "Invalid email or password.";
       } else if (error.response?.status === 403) {
         errorMessage = "Account access denied. Please contact support.";
@@ -179,7 +173,7 @@ const Login = ({
             <div className="sm:mx-auto sm:w-full sm:max-w-md mb-3">
               {/* Header */}
               <h2 className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
-                Welcome, {userType}
+                {title}
               </h2>
               <p className="text-center text-sm text-gray-600">
                 Please enter your credentials to log in.
@@ -316,7 +310,7 @@ const Login = ({
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="px-2 bg-white text-gray-500">
-                    Secure login for {userType.toLowerCase()}s
+                    Secure login portal
                   </span>
                 </div>
               </div>

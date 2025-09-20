@@ -237,16 +237,12 @@ const EducatorSignup = () => {
         socials: formData.socials,
       };
 
-      console.log("Educator registration data:", submitData);
-
       // Call the API
       const response = await signupAsEducator(submitData);
-      
-      console.log("Registration successful:", response);
-      
+            
       // Handle success - redirect to educator login
       alert("Registration successful! Please login to continue.");
-      router.push("/educator-login");
+      router.push("/login");
       
     } catch (error) {
       console.error("Registration error:", error);
@@ -1009,7 +1005,7 @@ const EducatorSignup = () => {
             <p className="text-gray-600">
               Already have an account?{" "}
               <Link
-                href="/educator-login"
+                href="/login"
                 className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
               >
                 Sign in here

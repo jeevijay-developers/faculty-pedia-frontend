@@ -16,7 +16,6 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 const PostDetails = ({ postData }) => {
-  console.log("PostDetails Rendered", postData);
   const [isClient, setIsClient] = useState(false);
 
   // Check if postData exists

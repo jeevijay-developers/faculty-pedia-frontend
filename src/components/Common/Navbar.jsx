@@ -348,7 +348,6 @@ const Navbar = () => {
                     isBordered={true}
                     src={userData?.image?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                     size="sm"
-                    onError={() => console.log('Mobile Avatar image failed to load:', userData?.image?.url)}
                   />
                   <div>
                     <p className="text-sm font-medium text-gray-900">{userData.name || "User"}</p>

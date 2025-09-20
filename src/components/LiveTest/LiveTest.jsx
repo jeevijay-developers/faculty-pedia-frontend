@@ -275,8 +275,6 @@ const LiveTest = ({ testId }) => {
         ...results,
       };
 
-      console.log("Submitting test results:", submissionData);
-
       const response = await submitTestResult(submissionData);
 
       toast.success("Test submitted successfully! 🎉", {
@@ -288,8 +286,6 @@ const LiveTest = ({ testId }) => {
           border: "1px solid #BBF7D0",
         },
       });
-
-      console.log("Test submission response:", response);
 
       setTimeout(() => {
         window.location.href = "/test-results";

@@ -16,9 +16,6 @@ import { getWebinarById } from "../server/webinars.routes";
 import Loading from "../Common/Loading";
 
 const WebinarDetails = ({ id }) => {
-  // console.log("WebinarDetails Rendered", webinarData);
-  // console.log(id);
-
   const [webinarData, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -32,7 +29,6 @@ const WebinarDetails = ({ id }) => {
       setLoading(true);
       try {
         const DATA = await getWebinarById(id);
-        // console.log(DATA);
         setData(DATA);
       } catch (error) {
         console.error("Failed to fetch educators:", error);

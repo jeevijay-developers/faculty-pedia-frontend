@@ -4,7 +4,6 @@ import ViewProfile from "@/components/Educator/ViewProfile";
 import { getEducatorById } from "@/Data/Educator/educator-profile.data";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { notFound } from "next/navigation";
 import Loading from "@/components/Common/Loading";
 import { getEducatorProfile } from "@/components/server/educators.routes";
 
@@ -29,7 +28,6 @@ const Page = ({ params }) => {
       try {
         const data = await getEducatorProfile(resolvedParams.id);
         // setFilteredEducators([...data.educators]);
-        // console.log(data);
         setEducatorData(data.educator);
       } catch (error) {
         console.error("Error fetching educators:", error);

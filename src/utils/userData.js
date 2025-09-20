@@ -26,9 +26,7 @@ export const getUserData = () => {
 export const setUserData = (userData) => {
   try {
     if (typeof window === "undefined") return; // Server-side check
-
     localStorage.setItem("user_data", JSON.stringify(userData));
-    console.log("User data stored successfully");
   } catch (error) {
     console.error("Error storing user data to localStorage:", error);
   }
@@ -57,20 +55,12 @@ export const isUserLoggedIn = () => {
  */
 export const clearUserData = () => {
   try {
-    if (typeof window === "undefined") return; // Server-side check
-
+    if (typeof window === "undefined") return;
     localStorage.removeItem("user_data");
-    console.log("User data cleared from localStorage");
   } catch (error) {
     console.error("Error clearing user data from localStorage:", error);
   }
 };
-
-/**
- * Get specific user property from localStorage
- * @param {string} property - Property name to get
- * @returns {*} Property value or null if not found
- */
 export const getUserProperty = (property) => {
   const userData = getUserData();
   return userData?.[property] || null;

@@ -44,7 +44,6 @@ const CourseCarousel = ({
         const data = await fetchIITJEEOnlineCourses({
           specialization: specialization,
         });
-        console.log(data.courses);
         setCoursesToRender([...data.courses]);
       } catch (error) {
         console.error("Failed to fetch educators:", error);

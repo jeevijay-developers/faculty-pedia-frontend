@@ -140,14 +140,6 @@ const EducatorForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      console.log("Form submitted:", formData);
-      alert("Form submitted successfully! Check console for data.");
-    }
-  };
-
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white">
       <div className="mb-8 text-center">

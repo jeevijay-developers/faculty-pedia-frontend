@@ -25,8 +25,6 @@ const CoursesPage = () => {
     const fetchOneToOneCourseBySubject = async () => {
       try {
         const data = await getCourseBySubjectOneToOne(activeTab.toLowerCase());
-        // console.log(data);
-
         setCourse([...data.courses]);
       } catch (error) {
         console.error("Error fetching educators:", error);

@@ -68,9 +68,6 @@ const QualificationSection = ({ education, experience }) => {
     }
   };
 
-  // const QualificationSection = ({ education, experience }) => {
-  // console.log(education, experience);
-
   const renderExperience = () => {
     if (experience && experience.length >= 0) {
       return (

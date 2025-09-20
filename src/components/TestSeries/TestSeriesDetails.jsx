@@ -14,7 +14,6 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 const TestSeriesDetails = ({ testSeriesData }) => {
-  console.log("TestSeriesDetails Rendered", testSeriesData);
   const [activeTab, setActiveTab] = useState("description");
   const [isClient, setIsClient] = useState(false);
 

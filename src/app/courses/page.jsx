@@ -27,8 +27,6 @@ const CoursesPage = () => {
         const data = await getCourseBySubject({
           subject: activeTab.toLowerCase(),
         });
-        // console.log(data);
-
         setCourse([...data.courses]);
       } catch (error) {
         console.error("Error fetching educators:", error);

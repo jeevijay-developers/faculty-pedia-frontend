@@ -39,7 +39,6 @@ const TestSeriesCarousel = ({
         const DATA = await fetchIITJEETestSeries({
           specialization: specialization,
         });
-        console.log(specialization, DATA);
         setData([...DATA.testSeries]);
       } catch (error) {
         console.error("Failed to fetch educators:", error);

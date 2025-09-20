@@ -24,7 +24,6 @@ const OneToOneLiveClassesCard = ({ classData }) => {
     duration,
     description,
   } = classData;
-  // console.log(classData);
 
   function calculateWeeksDifference(startDate, endDate) {
     const start = new Date(startDate);
@@ -106,13 +105,11 @@ const OneToOneLiveClassesCard = ({ classData }) => {
               <span className="font-medium">Duration:</span>
             </div>
             <span className="text-sm text-gray-800 font-medium">
-              {/* {console.log(classData.duration || 0)} */}
-              {/* {String(classData.duration || 0)} */}
               {calculateWeeksDifference(
                 classData.startDate,
                 classData.endDate
               ) || 0}{" "}
-              weeks {/* {String(duration) || "N/A"} */}
+              weeks
             </span>
           </div>
         </div>

@@ -14,7 +14,6 @@ const ExamDetails = ({ examData }) => {
       once: true,
     });
   }, []);
-  // console.log(examData);
 
     // Format the starting date
   const formatDate = (dateString) => {

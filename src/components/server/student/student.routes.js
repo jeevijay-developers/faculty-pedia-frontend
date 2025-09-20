@@ -64,12 +64,6 @@ export const getCompleteStudentProfile = async (studentId) => {
       getStudentFollowingEducators(studentId),
     ]);
 
-    console.log(
-      profileResponse,
-      coursesResponse,
-      resultsResponse,
-      educatorsResponse
-    );
     // Extract data from successful responses
     const profile =
       profileResponse.status === "fulfilled" ? profileResponse.value : null;

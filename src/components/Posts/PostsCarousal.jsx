@@ -28,7 +28,6 @@ const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
         const DATA = await fetchIITJEEBlogs({
           specialization,
         });
-        console.log(DATA);
         setData([...DATA.blogs]);
       } catch (error) {
         console.error("Failed to fetch educators:", error);

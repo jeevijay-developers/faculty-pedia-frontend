@@ -33,9 +33,7 @@ const WebinarDetails = ({ webinar }) => {
       <Banner
         url={"/images/placeholders/1.svg"}
         title={"Webinar Details"}
-        subtitle={`Learn ${
-          subject.charAt(0).toUpperCase() + subject.slice(1)
-        } with expert guidance`}
+        subtitle={`Learn with expert guidance`}
       />
       <div className="max-w-7xl mx-auto p-4 space-y-8">
         {/* Header Section */}

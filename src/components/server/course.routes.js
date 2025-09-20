@@ -2,7 +2,7 @@ import API_CLIENT from "./config";
 
 export const getCourseById = async (id) => {
   try {
-    const response = await API_CLIENT.get(`/api/course/${id}`);
+    const response = await API_CLIENT.get(`/api/course/by-id/${id}`);    
     return response.data;
   } catch (error) {
     console.error("Error fetching course by ID:", error);

@@ -48,7 +48,6 @@ const UpcomingWebinarCarousel = ({
         const DATA = await fetchIITJEEWebinars({
           specialization: specialization,
         });
-        console.log(DATA);
         setData([...DATA.webinars]);
       } catch (error) {
         console.error("Failed to fetch educators:", error);

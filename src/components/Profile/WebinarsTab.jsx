@@ -26,8 +26,6 @@ const WebinarsTab = ({ studentId }) => {
         setError(null);
 
         const data = await getUpcomingWebinars(studentId);
-        console.log(data);
-
         if (!mounted) return;
 
         // Handle different response structures
