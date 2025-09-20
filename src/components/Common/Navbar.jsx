@@ -95,6 +95,8 @@ const Navbar = () => {
                 width={40}
                 height={40}
                 className="rounded-lg"
+                style={{ height: "auto" }}
+                priority
               />
             </Link>
           </div>

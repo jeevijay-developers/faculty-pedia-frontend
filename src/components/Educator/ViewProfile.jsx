@@ -19,7 +19,7 @@ import { getWebinarById } from "@/components/server/webinars.routes";
 import { getCourseById } from "@/components/server/course.routes";
 
 const ViewProfile = ({ educatorData }) => {
-
+    
   // State for managing visible items
   const [visibleCourses, setVisibleCourses] = useState(6);
   const [visibleWebinars, setVisibleWebinars] = useState(6);
@@ -122,16 +122,12 @@ const ViewProfile = ({ educatorData }) => {
               <div className="flex justify-center lg:justify-start mb-6">
                 <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-blue-600">
                   <Image
-                    src={
-                      educatorData.image?.url || "/images/placeholders/1.svg"
-                    }
-                    // onError={(e) => {
-                    //   const TARGET = e.target;
-                    //   TARGET.src = "/images/placeholders/1.svg";
-                    // }}
+                    src={educatorData.image?.url || "/images/placeholders/1.svg"}
                     alt={`${educatorData.firstName} ${educatorData.lastName}`}
                     fill
+                    sizes="(100vw)"
                     className="object-cover"
+                    priority
                   />
                 </div>
               </div>

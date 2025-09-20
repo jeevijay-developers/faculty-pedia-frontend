@@ -4,15 +4,15 @@ import Link from "next/link";
 import { FaUser, FaClock } from "react-icons/fa";
 import { MdSchool, MdCalendarToday } from "react-icons/md";
 
-const UpcomingWebinarCard = ({ item }) => {
-
+const UpcomingWebinarCard = ({ item }) => {  
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100">
       <div className="relative h-40 bg-gray-100">
         <Image
-          src={item.image || item.educatorPhoto || "/images/placeholders/1.svg"}
+          src={item.image || "/images/placeholders/1.svg"}
           alt={item.title || "Webinar"}
           fill
+          defaultValue={"/images/placeholders/1.svg"}
           className="object-cover"
         />
         {item.specialization && (
