@@ -29,7 +29,6 @@ const API_CLIENT = axios.create({
 
 API_CLIENT.interceptors.request.use(
   (config) => {
-    console.log("Request made to: ", config.url);
 
     if (typeof window !== "undefined") {
       // Check if in browser
