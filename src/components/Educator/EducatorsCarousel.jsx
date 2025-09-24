@@ -116,7 +116,7 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
                 slidesPerView: 3,
               },
             }}
-            className="educator-swiper"
+            className="educator-swiper my-4"
           >
             {filteredEducators.map((educator) => (
               <SwiperSlide key={educator.id}>

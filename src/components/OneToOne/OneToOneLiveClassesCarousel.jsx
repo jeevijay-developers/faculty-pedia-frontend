@@ -42,6 +42,8 @@ const OneToOneLiveClassesCarousel = ({
       try {
         const data = await fetchOneToOneCourses();
         setCoursesToRender([...data.courses]);
+        console.log("Fetched 1-1 Classes:", data.courses);
+        
       } catch (error) {
         console.error("Failed to fetch educators:", error);
       } finally {

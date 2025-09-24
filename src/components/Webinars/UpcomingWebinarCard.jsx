@@ -9,7 +9,7 @@ const UpcomingWebinarCard = ({ item }) => {
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100">
       <div className="relative h-40 bg-gray-100">
         <Image
-          src={item.image || "/images/placeholders/1.svg"}
+          src={item.image?.url || "/images/placeholders/1.svg"}
           alt={item.title || "Webinar"}
           fill
           defaultValue={"/images/placeholders/1.svg"}
