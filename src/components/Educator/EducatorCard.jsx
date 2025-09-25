@@ -24,7 +24,6 @@ const EducatorCard = ({ educator }) => {
     reviewCount,
     status,
   } = educator;
-  console.log("Educator Data:", educator);
   
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100 h-full flex flex-col">
