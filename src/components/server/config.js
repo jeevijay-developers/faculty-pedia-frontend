@@ -29,34 +29,17 @@ const API_CLIENT = axios.create({
 
 API_CLIENT.interceptors.request.use(
   (config) => {
-
     if (typeof window !== "undefined") {
       // Check if in browser
       const TOKEN = localStorage.getItem("faculty-pedia-auth-token");
-      const DATA = localStorage.getItem("faculty-pedia-student-data");
 
-      // Don't require auth for login/signup routes
-      const isAuthRoute =
-        config.url?.includes("/login") ||
-        config.url?.includes("/signup") ||
-        config.url?.includes("/forgot-password");
-
-      // Only add auth token if we have one and it's not an auth route
-      if (TOKEN && !isAuthRoute) {
+      // Always add auth token if we have one (for optional auth endpoints)
+      if (TOKEN) {
         config.headers.Authorization = `Bearer ${TOKEN}`;
       }
-
-      // Don't redirect on auth routes or if we're already on login page
-      const currentPath = window.location.pathname;
-      const isOnLoginPage =
-        currentPath.includes("/login") || currentPath.includes("/signup");
-
-      // Only redirect if not on auth route, not already on login page, and no token
-      if (!TOKEN && !isAuthRoute && !isOnLoginPage) {
-        console.log("No token found, redirecting to login");
-        window.location.href = "/student-login";
-        return Promise.reject(new Error("No authentication token"));
-      }
+      
+      // Note: We no longer redirect to login here since browsing should be allowed without auth
+      // Authentication requirements are now handled per-endpoint by the backend
     }
     return config;
   },
@@ -73,12 +56,22 @@ API_CLIENT.interceptors.response.use(
       const isOnLoginPage =
         currentPath.includes("/login") || currentPath.includes("/signup");
 
-      // Only redirect on 401 if we're not already on a login page
-      if (error.response?.status === 401 && !isOnLoginPage) {
-        console.log("401 Unauthorized, redirecting to login");
+      // Only redirect on 401 if:
+      // 1. We're not already on a login page, AND
+      // 2. This is NOT an enrollment-specific auth error (those are handled by EnrollButton)
+      // 3. This is a critical auth failure (like token expired during an authenticated session)
+      const isEnrollmentAuth = error.response?.data?.requiresAuth;
+      const isCriticalAuthFailure = error.response?.status === 401 && 
+        localStorage.getItem("faculty-pedia-auth-token") && // Had a token
+        !isEnrollmentAuth; // Not an enrollment action
+
+      if (isCriticalAuthFailure && !isOnLoginPage) {
+        console.log("Critical auth failure - token expired or invalid, redirecting to login");
         localStorage.removeItem("faculty-pedia-auth-token");
         localStorage.removeItem("faculty-pedia-student-data");
-        window.location.href = "/student-login";
+        localStorage.removeItem("faculty-pedia-educator-data");
+        localStorage.removeItem("user-role");
+        window.location.href = "/login?message=Session expired. Please login again.";
       }
     }
     return Promise.reject(error);

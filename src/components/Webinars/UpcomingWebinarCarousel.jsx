@@ -10,6 +10,7 @@ import {
 } from "react-icons/md";
 import UpcomingWebinarCard from "./UpcomingWebinarCard";
 import { upcomingWebinarSpecializedData } from "@/Data/Webinar/webinar.data";
+import CarouselFallback from "../Common/CarouselFallback";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -60,6 +61,10 @@ const UpcomingWebinarCarousel = ({
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (data.length === 0) {
+    return <CarouselFallback type="webinars" title={title} />;
   }
 
   const prevSlide = () => {

@@ -65,7 +65,7 @@ export const getUserFromToken = () => {
  * Logout user by removing token and redirecting
  * @param {string} redirectTo - URL to redirect after logout
  */
-export const logout = (redirectTo = "/student-login") => {
+export const logout = (redirectTo = "/login") => {
   removeAuthToken();
   if (typeof window !== "undefined") {
     window.location.href = redirectTo;

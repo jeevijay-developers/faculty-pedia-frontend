@@ -109,9 +109,18 @@ const Login = ({
           if (onLoginSuccess) {
             await onLoginSuccess(response.userData, response.userType);
           } else {
-            // Default redirect based on user type
-            const defaultRedirect = response.userType === "student" ? "/exams" : "/educator/dashboard";
-            router.push(defaultRedirect);
+            // Check for redirect URL from query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get("redirect");
+            
+            if (redirectUrl) {
+              // Redirect to the originally requested page
+              router.push(decodeURIComponent(redirectUrl));
+            } else {
+              // Default redirect based on user type
+              const defaultRedirect = response.userType === "student" ? "/exams" : "/educator/dashboard";
+              router.push(defaultRedirect);
+            }
           }
           
         } catch (loginError) {

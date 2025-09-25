@@ -12,6 +12,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { fetchIITJEEBlogs } from "../server/exams/iit-jee/routes";
 import Loading from "../Common/Loading";
+import CarouselFallback from "../Common/CarouselFallback";
 
 const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
   const [swiperRef, setSwiperRef] = useState(null);
@@ -40,6 +41,15 @@ const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (filteredPosts.length === 0) {
+    return (
+      <CarouselFallback 
+        type="posts" 
+        title={subject === "All" ? "Latest Posts" : `${subject} Posts`} 
+      />
+    );
   }
 
   const prevSlide = () => {

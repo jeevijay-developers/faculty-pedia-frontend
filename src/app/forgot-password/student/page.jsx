@@ -23,7 +23,7 @@ const ForgotPasswordPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full">
         <Link
-          href="/student-login"
+          href="/login"
           className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6"
         >
           <FiArrowLeft className="mr-2" />

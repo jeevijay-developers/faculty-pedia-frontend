@@ -12,6 +12,7 @@ import "swiper/css/navigation";
 import OneToOneLiveClassesCard from "./OneToOneLiveClassesCard";
 import Loading from "../Common/Loading";
 import { fetchOneToOneCourses } from "../server/exams/iit-jee/routes";
+import CarouselFallback from "../Common/CarouselFallback";
 
 const OneToOneLiveClassesCarousel = ({
   title = "1-1 Live Classes",
@@ -55,6 +56,19 @@ const OneToOneLiveClassesCarousel = ({
 
   if (loading) {
     return <Loading />;
+  }
+
+  // Show fallback if no classes found
+  if (!classesToRender || classesToRender.length === 0) {
+    return (
+      <CarouselFallback
+        type="live-classes"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        actionText="Explore Live Classes"
+      />
+    );
   }
 
   return (

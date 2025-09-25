@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import EnrollButton from "../Common/EnrollButton";
 
 const TestSeriesDetails = ({ testSeriesData }) => {
   const [activeTab, setActiveTab] = useState("description");
@@ -321,9 +322,13 @@ const TestSeriesDetails = ({ testSeriesData }) => {
               </div>
 
               <div className="space-y-3">
-                <button className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:cursor-pointer">
-                  🎯 Enroll Now
-                </button>
+                <EnrollButton
+                  type="testseries"
+                  itemId={testSeriesData._id || testSeriesData.id}
+                  price={testSeriesData.price}
+                  title="🎯 Enroll Now"
+                  className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:cursor-pointer"
+                />
                 {/* <button className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300">
                   📋 View Sample Test
                 </button> */}

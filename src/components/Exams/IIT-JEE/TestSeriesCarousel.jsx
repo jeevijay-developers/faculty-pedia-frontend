@@ -17,6 +17,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { fetchIITJEETestSeries } from "@/components/server/exams/iit-jee/routes";
 import Loading from "@/components/Common/Loading";
+import CarouselFallback from "@/components/Common/CarouselFallback";
 
 const TestSeriesCarousel = ({
   title = "Online Test Series",
@@ -51,6 +52,10 @@ const TestSeriesCarousel = ({
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (testsToRender.length === 0) {
+    return <CarouselFallback type="test-series" title={title} />;
   }
 
   const prevSlide = () => {

@@ -13,6 +13,7 @@
  import 'swiper/css';
  import 'swiper/css/navigation';
 import OneToOnePPHCard from './OneToOnePPHCard';
+import CarouselFallback from '../Common/CarouselFallback';
 
  /**
   * Props:
@@ -48,6 +49,19 @@ import OneToOnePPHCard from './OneToOnePPHCard';
    const nextSlide = () => {
      if (swiperRef) swiperRef.slideNext();
    };
+
+   // Show fallback if no PPH classes found
+   if (!data || data.length === 0) {
+     return (
+       <CarouselFallback
+         type="pph"
+         specialization={specialization}
+         title={title}
+         viewMoreLink={viewMoreLink}
+         actionText="Explore PPH Classes"
+       />
+     );
+   }
 
    return (
      <section className="py-12 bg-gray-50">

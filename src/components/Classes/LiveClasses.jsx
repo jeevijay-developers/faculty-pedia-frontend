@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { defaultLiveClasses } from '@/Data/class.data';
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import { FiUser, FiClock, FiArrowRight } from 'react-icons/fi';
+import EnrollButton from '../Common/EnrollButton';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -208,12 +209,13 @@ const CourseCard = ({ course }) => {
                         >
                             View Details
                         </Link>
-                        <Link
-                            href={course.enrollLink}
-                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
-                        >
-                            Enroll Now
-                        </Link>
+                        <EnrollButton
+                            type="course"
+                            itemId={course.id}
+                            price={course.fee}
+                            title="Enroll Now"
+                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center"
+                        />
                     </div>
                 </div>
             </div>
