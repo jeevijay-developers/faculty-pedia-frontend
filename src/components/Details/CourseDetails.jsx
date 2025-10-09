@@ -49,6 +49,8 @@ const CourseDetails = ({ id }) => {
     setLoading(true);
     const fetchEducators = async () => {
       try {
+        // console.log("Fetching course with ID:", id);
+        
         const data = await getCourseById(id);
         setCourse(data);
         // setFilteredEducators([...data.educators]);
