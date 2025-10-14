@@ -160,6 +160,8 @@ const TestSeriesCarousel = ({
 
 // Test Series Card Component
 export const TestSeriesCard = ({ testSeries }) => {
+  console.log("Test series: ", testSeries);
+  
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
       {/* Educator Photo */}
@@ -189,15 +191,12 @@ export const TestSeriesCard = ({ testSeries }) => {
         </h4>
         <div className="mb-2 text-sm text-gray-600">
           <span className="font-medium">Qualification: </span>
-          <span className="text-sm text-gray-800 font-medium truncate ml-2">
-            {testSeries.educatorId?.qualification &&
-              testSeries.educatorId.qualification.map((q, i) => {
-                return (
-                  <span className="text-sm text-gray-800 font-medium truncate ml-2" key={i}>
-                    {q.title}
-                  </span>
-                );
-              })}
+          <span className="text-sm text-gray-800 font-medium truncate">
+            {testSeries.qualification && (
+              <span className="text-sm text-gray-800 font-medium truncate">
+                {testSeries.qualification}
+              </span>
+            )}
           </span>
         </div>
         <div className="mb-2 text-sm text-gray-600">
@@ -209,13 +208,13 @@ export const TestSeriesCard = ({ testSeries }) => {
           {testSeries.noOfTests}
         </div>
         <div className="mb-4 text-xl font-bold text-black">
-          ₹{testSeries.price}
+          ₹{testSeries.fee}
         </div>
 
         {/* Action Button */}
         <div className="flex flex-row gap-2">
           <Link
-            href={`/test-series/${testSeries._id}`}
+            href={`/details/test-series/${testSeries.id}`}
             className="w-full text-white border bg-blue-600 border-gray-300 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
           >
             View details

@@ -17,6 +17,7 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import Link from "next/link";
 import { getWebinarById } from "@/components/server/webinars.routes";
 import { getCourseById } from "@/components/server/course.routes";
+import { getTestSeriesById } from "@/components/server/test-series.route";
 
 const ViewProfile = ({ educatorData }) => {
     
@@ -25,6 +26,8 @@ const ViewProfile = ({ educatorData }) => {
   const [visibleWebinars, setVisibleWebinars] = useState(6);
   const [visibleTestSeries, setVisibleTestSeries] = useState(6);
 
+  console.log("Educator data: ", educatorData);
+  
   // State for webinar details
   const [webinarDetails, setWebinarDetails] = useState([]);
   const [loadingWebinars, setLoadingWebinars] = useState(false);
@@ -32,6 +35,10 @@ const ViewProfile = ({ educatorData }) => {
   // State for course details
   const [courseDetails, setCourseDetails] = useState([]);
   const [loadingCourses, setLoadingCourses] = useState(false);
+
+  // State for test series details
+  const [testSeriesDetails, setTestSeriesDetails] = useState([]);
+  const [loadingTestSeries, setLoadingTestSeries] = useState(false);
 
   // State for follow functionality
   const [isFollowing, setIsFollowing] = useState(false);
@@ -85,6 +92,29 @@ const ViewProfile = ({ educatorData }) => {
 
     fetchCourseDetails();
   }, [educatorData?.courses]);
+
+  // Fetch test series details when component mounts or educatorData changes
+  useEffect(() => {
+    const fetchTestSeriesDetails = async () => {
+      if (educatorData?.testSeries && educatorData.testSeries.length > 0) {
+        setLoadingTestSeries(true);
+        try {
+          const testSeriesPromises = educatorData.testSeries.map(testSeriesId => 
+            getTestSeriesById(testSeriesId)
+          );
+          const testSeriesList = await Promise.all(testSeriesPromises);
+          setTestSeriesDetails(testSeriesList.filter(testSeries => testSeries)); // Filter out any null/undefined results
+        } catch (error) {
+          console.error("Error fetching test series details:", error);
+          setTestSeriesDetails([]);
+        } finally {
+          setLoadingTestSeries(false);
+        }
+      }
+    };
+
+    fetchTestSeriesDetails();
+  }, [educatorData?.testSeries]);
 
   if (!educatorData) return null;  // Functions to load more items
   const loadMoreCourses = () => {
@@ -310,10 +340,36 @@ const ViewProfile = ({ educatorData }) => {
                   </h3>
                   <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
                     <iframe
-                      src={educatorData.introVideoLink}
+                      src={(() => {
+                        if (!educatorData.introVideoLink) return "";
+                        
+                        const url = educatorData.introVideoLink;
+                        
+                        // Extract video ID from various YouTube URL formats
+                        let videoId = null;
+                        
+                        // Format: https://www.youtube.com/watch?v=VIDEO_ID
+                        if (url.includes("youtube.com/watch?v=")) {
+                          videoId = url.split("watch?v=")[1]?.split("&")[0];
+                        }
+                        // Format: https://youtu.be/VIDEO_ID
+                        else if (url.includes("youtu.be/")) {
+                          videoId = url.split("youtu.be/")[1]?.split("?")[0];
+                        }
+                        // Format: https://www.youtube.com/embed/VIDEO_ID (already correct)
+                        else if (url.includes("youtube.com/embed/")) {
+                          return url;
+                        }
+                        
+                        // Convert to embed URL
+                        return videoId 
+                          ? `https://www.youtube.com/embed/${videoId}`
+                          : url; // Fallback to original if can't parse
+                      })()}
                       title="Introduction Video"
                       className="w-full h-full"
                       frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
                   </div>
@@ -561,32 +617,43 @@ const ViewProfile = ({ educatorData }) => {
         )}
 
         {/* Test Series Section */}
-        {educatorData.testSeries && educatorData.testSeries.length > 0 && (
+        {testSeriesDetails && testSeriesDetails.length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Available Test Series
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {educatorData.testSeries
-                .slice(0, visibleTestSeries)
-                .map((testSeries, index) => (
-                  <TestSeriesCard
-                    key={index}
-                    testSeries={{
-                      ...testSeries,
-                      id: testSeries.id || `ts_${index}`,
-                      educatorName: educatorData.name,
-                      educatorPhoto: educatorData?.image?.url || "/placeholder.svg",
-                      qualification:
-                        educatorData.qualification?.[0]?.title || "N/A",
-                      noOfTests: testSeries.numberOfTests,
-                      fee: testSeries.price,
-                      slug: testSeries.id || `test-series-${index}`,
-                    }}
-                  />
-                ))}
-            </div>
-            {visibleTestSeries < educatorData.testSeries.length && (
+            {loadingTestSeries ? (
+              <div className="flex justify-center items-center py-8">
+                <div className="text-gray-500">Loading test series...</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {testSeriesDetails
+                  .slice(0, visibleTestSeries)
+                  .map((testSeries, index) => (
+                    <TestSeriesCard
+                      key={testSeries._id || index}
+                      testSeries={{
+                        id: testSeries._id,
+                        title: testSeries.title,
+                        educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
+                        educatorPhoto: educatorData.image?.url || "/images/placeholders/1.svg",
+                        qualification: educatorData.qualification?.[0]?.title || "N/A",
+                        subject: testSeries.subject,
+                        specialization: testSeries.specialization,
+                        noOfTests: testSeries.noOfTests,
+                        fee: testSeries.price,
+                        slug: testSeries._id || `test-series-${index}`,
+                        description: testSeries.description,
+                        validity: testSeries.validity,
+                        startDate: testSeries.startDate,
+                        endDate: testSeries.endDate,
+                      }}
+                    />
+                  ))}
+              </div>
+            )}
+            {visibleTestSeries < testSeriesDetails.length && (
               <div className="flex justify-center mt-6">
                 <button
                   onClick={loadMoreTestSeries}
@@ -597,7 +664,7 @@ const ViewProfile = ({ educatorData }) => {
                     (
                     {Math.min(
                       3,
-                      educatorData.testSeries.length - visibleTestSeries
+                      testSeriesDetails.length - visibleTestSeries
                     )}{" "}
                     more)
                   </span>
@@ -627,7 +694,7 @@ const ViewProfile = ({ educatorData }) => {
             </div>
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-3xl font-bold text-purple-600 mb-2">
-                {educatorData.testSeries?.length || 0}
+                {testSeriesDetails?.length || 0}
               </div>
               <div className="text-sm text-gray-600">Test Series</div>
             </div>
