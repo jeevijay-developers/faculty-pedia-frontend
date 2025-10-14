@@ -38,6 +38,7 @@ const EducatorsPage = () => {
   if (loading) {
     return <Loading />;
   }
+console.log("Filtered Educator: ", filteredEducators);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -70,10 +71,11 @@ const EducatorsPage = () => {
 
         {/* Educators Grid */}
         <div className="mx-[2rem] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredEducators.length > 0 ? (
-            filteredEducators.map((educator, i) => (
-              <EducatorCard key={i} educator={educator} />
-            ))
+          {filteredEducators && filteredEducators.length > 0 ? (
+            filteredEducators.map((educator, i) => {
+              console.log(`Rendering educator ${i}:`, educator._id, educator.firstName, educator.subject);
+              return <EducatorCard key={educator._id || i} educator={educator} />;
+            })
           ) : (
             <div className="col-span-full text-center py-12">
               <p className="text-gray-500 text-lg">

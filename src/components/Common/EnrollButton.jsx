@@ -5,6 +5,18 @@ import { useRouter } from "next/navigation";
 import { isAuthenticated, getAuthToken } from "@/utils/auth";
 import { toast } from "react-hot-toast";
 
+// Get base URL for API calls
+const getBaseURL = () => {
+  const PRODUCTION_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL;
+  const DEVELOPMENT_URL = "http://localhost:5000";
+  const isProduction = process.env.NODE_ENV === "production";
+  
+  if (isProduction && PRODUCTION_URL) {
+    return PRODUCTION_URL;
+  }
+  return DEVELOPMENT_URL;
+};
+
 /**
  * Authentication-aware enrollment button component
  * Allows browsing without authentication but requires login for enrollment
@@ -28,10 +40,10 @@ const EnrollButton = ({
     if (enrollmentEndpoint) return enrollmentEndpoint;
     
     const endpoints = {
-      course: "/api/subscribe-course",
-      testseries: "/api/subscribe-testseries", 
-      webinar: "/api/subscribe-webinar",
-      liveclass: "/api/subscribe-liveclass"
+      course: "/api/subscribe/subscribe-course",
+      testseries: "/api/subscribe/subscribe-testseries", 
+      webinar: "/api/subscribe/subscribe-webinar",
+      liveclass: "/api/subscribe/subscribe-liveclass"
     };
     
     return endpoints[type];
@@ -74,6 +86,7 @@ const EnrollButton = ({
     try {
       const token = getAuthToken();
       const endpoint = getEnrollmentEndpoint();
+      const baseURL = getBaseURL();
       
       if (!endpoint) {
         throw new Error("Invalid enrollment type");
@@ -101,11 +114,20 @@ const EnrollButton = ({
           throw new Error("Invalid enrollment type");
       }
 
-      const response = await fetch(endpoint, {
+      console.log("Enrollment Request:", {
+        url: `${baseURL}${endpoint}`,
+        body: requestBody,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token ? "Bearer [REDACTED]" : "None"
+        }
+      });
+
+      const response = await fetch(`${baseURL}${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          ...(token && { "Authorization": `Bearer ${token}` }),
         },
         body: JSON.stringify(requestBody),
       });

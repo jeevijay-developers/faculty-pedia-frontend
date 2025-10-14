@@ -22,7 +22,7 @@ const EducatorForm = () => {
     lastName: "",
     mobileNumber: "",
     email: "",
-    profileImage: { public_id: "", url: "" },
+    image: { public_id: "", url: "" },
     bio: "",
     workExperience: [{ title: "", company: "", startDate: "", endDate: "" }],
     introVideoLink: "",
@@ -47,8 +47,8 @@ const EducatorForm = () => {
       const previewUrl = URL.createObjectURL(file);
       setFormData((prev) => ({
         ...prev,
-        profileImage: {
-          ...prev.profileImage,
+        image: {
+          ...prev.image,
           file: file,
           url: previewUrl,
         },
@@ -243,9 +243,9 @@ const EducatorForm = () => {
             </label>
             <div className="flex items-center space-x-4">
               <div className="flex-shrink-0">
-                {formData.profileImage.url ? (
+                {formData.image.url ? (
                   <img
-                    src={formData.profileImage.url}
+                    src={formData.image.url}
                     alt="Profile preview"
                     className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
                   />

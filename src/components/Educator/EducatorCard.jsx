@@ -56,7 +56,7 @@ const EducatorCard = ({ educator }) => {
             </p>
             <p className="text-black/70 font-medium text-sm mb-2 flex items-center">
               <FaUser className="mr-2 w-3 h-3" />
-              Followers: {followers.length}
+              Followers: {followers?.length || 0}
             </p>
           </div>
         </div>
@@ -86,7 +86,7 @@ const EducatorCard = ({ educator }) => {
               Experience:
             </span>
             <span className="text-sm text-gray-600 text-right flex-1 pl-2">
-              {experience || `${educator.yearsExperience}+ years`}
+              {experience || `${yearsExperience || 0}+ years`}
             </span>
           </div>
 
@@ -97,10 +97,10 @@ const EducatorCard = ({ educator }) => {
             <div className="flex items-center space-x-1  pl-2">
               <IoStarSharp className="text-yellow-500 w-4 h-4" />
               <span className="text-sm font-medium text-gray-900">
-                {rating}
+                {rating || "N/A"}
               </span>
               <span className="text-xs text-gray-500">
-                ({reviewCount} reviews)
+                ({reviewCount || 0} reviews)
               </span>
             </div>
           </div>

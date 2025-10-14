@@ -5,6 +5,8 @@ import { FaUser, FaClock } from "react-icons/fa";
 import { MdSchool, MdCalendarToday } from "react-icons/md";
 
 const UpcomingWebinarCard = ({ item }) => {  
+  console.log("item: ", item);
+  
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100">
       <div className="relative h-40 bg-gray-100">
@@ -126,7 +128,7 @@ const UpcomingWebinarCard = ({ item }) => {
           </div>
         </div>
         <Link
-          href={item.detailsLink || `/webinars/${item.id}`}
+          href={`/details/webinar/${item.id}`}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
         >
           View Details

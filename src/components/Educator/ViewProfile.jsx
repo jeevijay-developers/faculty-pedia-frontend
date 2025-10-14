@@ -528,7 +528,7 @@ const ViewProfile = ({ educatorData }) => {
                           day: 'numeric'
                         }),
                         fee: webinar.fees?.toString() || "0",
-                        detailsLink: `/webinars/${webinar.slug || webinar._id}`,
+                        detailsLink: `/webinars/${webinar._id}`,
                         image: webinar.image?.url || "/images/placeholders/1.svg",
                         seatLimit: webinar.seatLimit,
                         enrolledCount: webinar.enrolledStudents?.length || 0,
@@ -576,7 +576,7 @@ const ViewProfile = ({ educatorData }) => {
                       ...testSeries,
                       id: testSeries.id || `ts_${index}`,
                       educatorName: educatorData.name,
-                      educatorPhoto: educatorData.profileImage.url,
+                      educatorPhoto: educatorData?.image?.url || "/placeholder.svg",
                       qualification:
                         educatorData.qualification?.[0]?.title || "N/A",
                       noOfTests: testSeries.numberOfTests,
