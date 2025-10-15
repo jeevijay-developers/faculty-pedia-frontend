@@ -127,7 +127,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
       submitData.append('mobileNumber', formData.mobileNumber.trim());
       
       if (formData.profileImage && typeof formData.profileImage !== 'string') {
-        submitData.append('profileImage', formData.profileImage);
+        submitData.append('image', formData.profileImage);
       }
 
       const result = await onSave(submitData);
