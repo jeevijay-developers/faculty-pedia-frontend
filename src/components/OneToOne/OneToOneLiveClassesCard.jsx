@@ -3,12 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  MdSubject,
-  MdAccessTime,
-  MdAttachMoney,
-  MdSchool,
-} from "react-icons/md";
 import { IoPersonSharp } from "react-icons/io5";
 import { FaBook, FaClock } from "react-icons/fa";
 
@@ -22,9 +16,9 @@ const OneToOneLiveClassesCard = ({ classData }) => {
     subject,
     specialization,
     duration,
+    _id,
     description,
   } = classData;
-  // console.log(classData);
 
   function calculateWeeksDifference(startDate, endDate) {
     const start = new Date(startDate);
@@ -106,13 +100,11 @@ const OneToOneLiveClassesCard = ({ classData }) => {
               <span className="font-medium">Duration:</span>
             </div>
             <span className="text-sm text-gray-800 font-medium">
-              {/* {console.log(classData.duration || 0)} */}
-              {/* {String(classData.duration || 0)} */}
               {calculateWeeksDifference(
                 classData.startDate,
                 classData.endDate
               ) || 0}{" "}
-              weeks {/* {String(duration) || "N/A"} */}
+              weeks
             </span>
           </div>
         </div>
@@ -131,7 +123,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
         {/* Action Button */}
         <div className="mt-auto">
           <Link
-            href={`/1-1-live-class/${id}`}
+            href={`/1-1-live-class/${_id}`}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
           >
             Book Session

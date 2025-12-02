@@ -14,6 +14,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { fetchIITJEEEducators } from "../server/exams/iit-jee/routes";
 import Loading from "../Common/Loading";
+import CarouselFallback from "../Common/CarouselFallback";
 
 const EducatorsCarousel = ({ specialization = "All" }) => {
   const [swiperRef, setSwiperRef] = useState(null);
@@ -50,6 +51,18 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
 
   if (loading) {
     return <Loading />;
+  }
+
+  // Show fallback if no educators found
+  if (!filteredEducators || filteredEducators.length === 0) {
+    return (
+      <CarouselFallback
+        type="educators"
+        specialization={specialization}
+        viewMoreLink="/educators"
+        actionText="Browse Educators"
+      />
+    );
   }
 
   return (
@@ -116,7 +129,7 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
                 slidesPerView: 3,
               },
             }}
-            className="educator-swiper"
+            className="educator-swiper my-4"
           >
             {filteredEducators.map((educator) => (
               <SwiperSlide key={educator.id}>

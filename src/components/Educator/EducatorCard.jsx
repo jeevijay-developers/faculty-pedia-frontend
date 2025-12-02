@@ -19,12 +19,12 @@ const EducatorCard = ({ educator }) => {
     followers,
     bio,
     specialization,
-    specializedSubject,
+    subject,
     rating,
     reviewCount,
     status,
   } = educator;
-
+  
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100 h-full flex flex-col">
       {/* Header Section */}
@@ -52,11 +52,11 @@ const EducatorCard = ({ educator }) => {
 
             <p className="text-blue-600 font-medium text-sm mb-2 flex items-center">
               <FaBook className="mr-1" />
-              {specializedSubject}
+              {subject || "Not specified"}
             </p>
             <p className="text-black/70 font-medium text-sm mb-2 flex items-center">
               <FaUser className="mr-2 w-3 h-3" />
-              Followers: {followers.length}
+              Followers: {followers?.length || 0}
             </p>
           </div>
         </div>
@@ -66,7 +66,7 @@ const EducatorCard = ({ educator }) => {
       <div className="px-6 py-2 flex-1">
         {/* Bio Section */}
         <div className="mb-4">
-          <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+          <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
             {bio}
           </p>
         </div>
@@ -86,7 +86,7 @@ const EducatorCard = ({ educator }) => {
               Experience:
             </span>
             <span className="text-sm text-gray-600 text-right flex-1 pl-2">
-              {experience || `${educator.yearsExperience}+ years`}
+              {experience || `${yearsExperience || 0}+ years`}
             </span>
           </div>
 
@@ -97,10 +97,10 @@ const EducatorCard = ({ educator }) => {
             <div className="flex items-center space-x-1  pl-2">
               <IoStarSharp className="text-yellow-500 w-4 h-4" />
               <span className="text-sm font-medium text-gray-900">
-                {rating}
+                {rating || "N/A"}
               </span>
               <span className="text-xs text-gray-500">
-                ({reviewCount} reviews)
+                ({reviewCount || 0} reviews)
               </span>
             </div>
           </div>

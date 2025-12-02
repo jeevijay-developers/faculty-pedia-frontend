@@ -12,7 +12,6 @@ import {
 } from "react-icons/fa";
 
 const TestAccordion = ({ testData, isExpanded, onToggle }) => {
-  // console.log("TestAccordion Rendered", testData);
 
   useEffect(() => {
     AOS.init({

@@ -12,6 +12,7 @@ import "swiper/css/navigation";
 import OneToOneLiveClassesCard from "./OneToOneLiveClassesCard";
 import Loading from "../Common/Loading";
 import { fetchOneToOneCourses } from "../server/exams/iit-jee/routes";
+import CarouselFallback from "../Common/CarouselFallback";
 
 const OneToOneLiveClassesCarousel = ({
   title = "1-1 Live Classes",
@@ -41,8 +42,9 @@ const OneToOneLiveClassesCarousel = ({
       setLoading(true);
       try {
         const data = await fetchOneToOneCourses();
-        console.log(data);
         setCoursesToRender([...data.courses]);
+        console.log("Fetched 1-1 Classes:", data.courses);
+        
       } catch (error) {
         console.error("Failed to fetch educators:", error);
       } finally {
@@ -54,6 +56,19 @@ const OneToOneLiveClassesCarousel = ({
 
   if (loading) {
     return <Loading />;
+  }
+
+  // Show fallback if no classes found
+  if (!classesToRender || classesToRender.length === 0) {
+    return (
+      <CarouselFallback
+        type="live-classes"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        actionText="Explore Live Classes"
+      />
+    );
   }
 
   return (

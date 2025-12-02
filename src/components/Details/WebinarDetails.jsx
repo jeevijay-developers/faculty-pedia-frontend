@@ -10,6 +10,7 @@ import {
   FaGraduationCap,
 } from "react-icons/fa";
 import Banner from "../Common/Banner";
+import EnrollButton from "../Common/EnrollButton";
 
 const WebinarDetails = ({ webinar }) => {
   // Handle different response formats and provide fallbacks
@@ -33,9 +34,7 @@ const WebinarDetails = ({ webinar }) => {
       <Banner
         url={"/images/placeholders/1.svg"}
         title={"Webinar Details"}
-        subtitle={`Learn ${
-          subject.charAt(0).toUpperCase() + subject.slice(1)
-        } with expert guidance`}
+        subtitle={`Learn with expert guidance`}
       />
       <div className="max-w-7xl mx-auto p-4 space-y-8">
         {/* Header Section */}
@@ -265,13 +264,12 @@ const WebinarDetails = ({ webinar }) => {
           data-aos="fade-up"
           data-aos-delay="200"
         >
-          <button
+          <EnrollButton
+            type="webinar"
+            itemId={webinar._id || webinar.id}
+            price={fees}
             className="bg-blue-600 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300 font-medium"
-            onClick={() => window.open(webinar.enrollmentLink || "#", "_blank")}
-            disabled={!webinar.enrollmentLink}
-          >
-            Enroll Now for ₹{fees}
-          </button>
+          />
           <button
             className="bg-green-600 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-green-700 transition-colors duration-300 font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
             onClick={() => window.open(webinar.webinarLink || "#", "_blank")}

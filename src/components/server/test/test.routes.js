@@ -17,8 +17,6 @@ export const getLiveTestById = async (testId) => {
 
 // Submit test results
 export const submitTestResult = async (resultData) => {
-  console.log("Submitting result data:", resultData);
-
   try {
     const response = await API_CLIENT.post(
       "/api/results/submit-test",

@@ -10,6 +10,7 @@ import {
 } from "react-icons/md";
 import UpcomingWebinarCard from "./UpcomingWebinarCard";
 import { upcomingWebinarSpecializedData } from "@/Data/Webinar/webinar.data";
+import CarouselFallback from "../Common/CarouselFallback";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -48,7 +49,6 @@ const UpcomingWebinarCarousel = ({
         const DATA = await fetchIITJEEWebinars({
           specialization: specialization,
         });
-        console.log(DATA);
         setData([...DATA.webinars]);
       } catch (error) {
         console.error("Failed to fetch educators:", error);
@@ -61,6 +61,10 @@ const UpcomingWebinarCarousel = ({
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (data.length === 0) {
+    return <CarouselFallback type="webinars" title={title} />;
   }
 
   const prevSlide = () => {

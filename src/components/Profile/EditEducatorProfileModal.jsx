@@ -4,15 +4,18 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { FiX, FiUser, FiMail, FiPhone, FiCamera, FiCheckCircle, FiSave, FiLoader } from 'react-icons/fi';
 
-const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
-  // Handle both profileImage and image fields for compatibility
-  const initialImage = studentData?.profileImage || studentData?.image;
+const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => {
+  // Handle both image and profileImage fields for compatibility
+  const initialImage = educatorData?.image || educatorData?.profileImage;
   
   const [formData, setFormData] = useState({
-    name: studentData?.name || "",
-    email: studentData?.email || "",
-    mobileNumber: studentData?.mobileNumber || "",
-    profileImage: initialImage || null,
+    firstName: educatorData?.firstName || "",
+    lastName: educatorData?.lastName || "",
+    email: educatorData?.email || "",
+    mobileNumber: educatorData?.mobileNumber || "",
+    bio: educatorData?.bio || "",
+    introVideoLink: educatorData?.introVideoLink || "",
+    image: initialImage || null,
   });
   
   const [loading, setLoading] = useState(false);
@@ -63,7 +66,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
 
       setFormData(prev => ({
         ...prev,
-        profileImage: file
+        image: file
       }));
 
       // Create preview
@@ -87,10 +90,16 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = "Name must be at least 2 characters long";
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    } else if (formData.firstName.trim().length < 2) {
+      newErrors.firstName = "First name must be at least 2 characters long";
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    } else if (formData.lastName.trim().length < 2) {
+      newErrors.lastName = "Last name must be at least 2 characters long";
     }
 
     if (!formData.email.trim()) {
@@ -103,6 +112,12 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
       newErrors.mobileNumber = "Mobile number is required";
     } else if (!/^[6-9]\d{9}$/.test(formData.mobileNumber)) {
       newErrors.mobileNumber = "Please enter a valid 10-digit mobile number";
+    }
+
+    if (!formData.bio.trim()) {
+      newErrors.bio = "Bio is required";
+    } else if (formData.bio.trim().length < 10) {
+      newErrors.bio = "Bio must be at least 10 characters long";
     }
 
     setErrors(newErrors);
@@ -122,21 +137,26 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
     try {
       // Prepare form data for API
       const submitData = new FormData();
-      submitData.append('name', formData.name.trim());
+      submitData.append('firstName', formData.firstName.trim());
+      submitData.append('lastName', formData.lastName.trim());
       submitData.append('email', formData.email.trim());
       submitData.append('mobileNumber', formData.mobileNumber.trim());
+      submitData.append('bio', formData.bio.trim());
+      if (formData.introVideoLink) {
+        submitData.append('introVideoLink', formData.introVideoLink.trim());
+      }
       
-      if (formData.profileImage && typeof formData.profileImage !== 'string') {
-        submitData.append('image', formData.profileImage);
+      if (formData.image && typeof formData.image !== 'string') {
+        submitData.append('image', formData.image);
       }
 
       const result = await onSave(submitData);
       
-      // Update localStorage with new student data (same as login)
-      if (result && result.student) {
+      // Update localStorage with new educator data (same as login)
+      if (result && result.educator) {
         localStorage.setItem(
-          "faculty-pedia-student-data",
-          JSON.stringify(result.student)
+          "faculty-pedia-educator-data",
+          JSON.stringify(result.educator)
         );
       }
       
@@ -171,13 +191,16 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
 
   // Reset form when modal opens/closes
   const handleClose = () => {
-    const initialImage = studentData?.profileImage || studentData?.image;
+    const initialImage = educatorData?.image || educatorData?.profileImage;
     
     setFormData({
-      name: studentData?.name || "",
-      email: studentData?.email || "",
-      mobileNumber: studentData?.mobileNumber || "",
-      profileImage: initialImage || null,
+      firstName: educatorData?.firstName || "",
+      lastName: educatorData?.lastName || "",
+      email: educatorData?.email || "",
+      mobileNumber: educatorData?.mobileNumber || "",
+      bio: educatorData?.bio || "",
+      introVideoLink: educatorData?.introVideoLink || "",
+      image: initialImage || null,
     });
     setImagePreview(initialImage?.url || null);
     setErrors({});
@@ -228,9 +251,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
   if (!isOpen) return null;
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto"
-    >
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
       <div 
         ref={modalRef}
         className="bg-white rounded-2xl shadow-xl w-full max-w-md my-8 max-h-[calc(100vh-2rem)] flex flex-col"
@@ -273,7 +294,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600">
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-400 to-green-600">
                       <FiUser className="w-8 h-8 text-white" />
                     </div>
                   )}
@@ -281,7 +302,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-0 right-0 p-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                  className="absolute bottom-0 right-0 p-2 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-colors"
                   disabled={loading}
                 >
                   <FiCamera className="w-3 h-3" />
@@ -299,25 +320,47 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
               )}
             </div>
 
-            {/* Name Field */}
+            {/* First Name Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <FiUser className="w-4 h-4 inline mr-2" />
-                Name
+                First Name
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                  errors.name ? 'border-red-500 bg-red-50' : ''
+                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                  errors.firstName ? 'border-red-500 bg-red-50' : ''
                 }`}
-                placeholder="Enter your full name"
+                placeholder="Enter your first name"
                 disabled={loading}
               />
-              {errors.name && (
-                <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+              {errors.firstName && (
+                <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+              )}
+            </div>
+
+            {/* Last Name Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <FiUser className="w-4 h-4 inline mr-2" />
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                  errors.lastName ? 'border-red-500 bg-red-50' : ''
+                }`}
+                placeholder="Enter your last name"
+                disabled={loading}
+              />
+              {errors.lastName && (
+                <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
               )}
             </div>
 
@@ -332,7 +375,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
                   errors.email ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your email address"
@@ -354,7 +397,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 name="mobileNumber"
                 value={formData.mobileNumber}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
                   errors.mobileNumber ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your mobile number"
@@ -362,6 +405,48 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
               />
               {errors.mobileNumber && (
                 <p className="text-red-500 text-xs mt-1">{errors.mobileNumber}</p>
+              )}
+            </div>
+
+            {/* Bio Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Bio
+              </label>
+              <textarea
+                name="bio"
+                value={formData.bio}
+                onChange={handleChange}
+                rows={3}
+                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                  errors.bio ? 'border-red-500 bg-red-50' : ''
+                }`}
+                placeholder="Tell us about yourself..."
+                disabled={loading}
+              />
+              {errors.bio && (
+                <p className="text-red-500 text-xs mt-1">{errors.bio}</p>
+              )}
+            </div>
+
+            {/* Intro Video Link Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Intro Video Link (Optional)
+              </label>
+              <input
+                type="url"
+                name="introVideoLink"
+                value={formData.introVideoLink}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                  errors.introVideoLink ? 'border-red-500 bg-red-50' : ''
+                }`}
+                placeholder="https://youtube.com/watch?v=..."
+                disabled={loading}
+              />
+              {errors.introVideoLink && (
+                <p className="text-red-500 text-xs mt-1">{errors.introVideoLink}</p>
               )}
             </div>
 
@@ -385,7 +470,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center"
+                className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center justify-center"
               >
                 {loading ? (
                   <>
@@ -407,4 +492,4 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
   );
 };
 
-export default EditProfileModal;
+export default EditEducatorProfileModal;

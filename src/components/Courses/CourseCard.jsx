@@ -74,10 +74,10 @@ const CourseCard = ({ course }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center text-sm text-gray-600">
               <MdAccessTime className="w-4 h-4 mr-2 text-purple-700" />
-              <span className="font-medium">Duration:</span>
+              <span className="font-medium">Total Seats:</span>
             </div>
             <span className="text-sm text-gray-800 font-medium">
-              {course.duration || `${course.totalWeeks} weeks`}
+              {course.seatLimit}
             </span>
           </div>
         </div>
@@ -89,29 +89,29 @@ const CourseCard = ({ course }) => {
               <div className="flex-shrink-0">
                 <img
                   src={
-                    course.educator.profileImage?.url ||
+                    course.image?.url ||
                     "/images/placeholders/square.svg"
                   }
-                  alt={`${course.educator.firstName} ${course.educator.lastName}`}
+                  alt={`${course.educatorId.firstName} ${course.educatorId.lastName}`}
                   className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                 />
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-semibold text-gray-900 truncate">
-                  {`${course.educator.firstName} ${course.educator.lastName}`}
+                  {`${course.educatorId.firstName} ${course.educatorId.lastName}`}
                 </h4>
                 <div className="flex items-center space-x-2 mt-1">
                   <span className="text-xs text-gray-500">
-                    {course.educator.subject}
+                    {course.subject}
                   </span>
-                  {course.educator.rating && (
+                  {/* {course.educator.rating && (
                     <div className="flex items-center space-x-1">
                       <IoStarSharp className="w-3 h-3 text-yellow-500" />
                       <span className="text-xs text-gray-600">
                         {course.educator.rating}
                       </span>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>

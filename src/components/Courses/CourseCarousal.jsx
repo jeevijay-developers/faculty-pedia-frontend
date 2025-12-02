@@ -14,6 +14,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import Loading from "../Common/Loading";
 import { fetchIITJEEOnlineCourses } from "../server/exams/iit-jee/routes";
+import CarouselFallback from "../Common/CarouselFallback";
 
 const CourseCarousel = ({
   title = "Our Top Courses",
@@ -44,7 +45,6 @@ const CourseCarousel = ({
         const data = await fetchIITJEEOnlineCourses({
           specialization: specialization,
         });
-        console.log(data.courses);
         setCoursesToRender([...data.courses]);
       } catch (error) {
         console.error("Failed to fetch educators:", error);
@@ -57,6 +57,19 @@ const CourseCarousel = ({
 
   if (loading) {
     return <Loading />;
+  }
+
+  // Show fallback if no courses found
+  if (!coursesToRender || coursesToRender.length === 0) {
+    return (
+      <CarouselFallback
+        type="courses"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        actionText="Browse Courses"
+      />
+    );
   }
 
   return (

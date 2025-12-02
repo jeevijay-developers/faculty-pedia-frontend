@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { IoStarSharp, IoCallSharp, IoMailSharp } from "react-icons/io5";
 import {
@@ -15,13 +15,30 @@ import UpcomingWebinarCard from "@/components/Webinars/UpcomingWebinarCard";
 import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
 import { IoLogoWhatsapp } from "react-icons/io";
 import Link from "next/link";
+import { getWebinarById } from "@/components/server/webinars.routes";
+import { getCourseById } from "@/components/server/course.routes";
+import { getTestSeriesById } from "@/components/server/test-series.route";
 
 const ViewProfile = ({ educatorData }) => {
-
+    
   // State for managing visible items
   const [visibleCourses, setVisibleCourses] = useState(6);
   const [visibleWebinars, setVisibleWebinars] = useState(6);
   const [visibleTestSeries, setVisibleTestSeries] = useState(6);
+
+  console.log("Educator data: ", educatorData);
+  
+  // State for webinar details
+  const [webinarDetails, setWebinarDetails] = useState([]);
+  const [loadingWebinars, setLoadingWebinars] = useState(false);
+
+  // State for course details
+  const [courseDetails, setCourseDetails] = useState([]);
+  const [loadingCourses, setLoadingCourses] = useState(false);
+
+  // State for test series details
+  const [testSeriesDetails, setTestSeriesDetails] = useState([]);
+  const [loadingTestSeries, setLoadingTestSeries] = useState(false);
 
   // State for follow functionality
   const [isFollowing, setIsFollowing] = useState(false);
@@ -29,9 +46,77 @@ const ViewProfile = ({ educatorData }) => {
     educatorData?.followers?.length || 0
   );
 
-  if (!educatorData) return null;
+  // Fetch webinar details when component mounts or educatorData changes
+  useEffect(() => {
+    const fetchWebinarDetails = async () => {
+      if (educatorData?.webinars && educatorData.webinars.length > 0) {
+        setLoadingWebinars(true);
+        try {
+          const webinarPromises = educatorData.webinars.map(webinarId => 
+            getWebinarById(webinarId)
+          );
+          const webinars = await Promise.all(webinarPromises);
+          setWebinarDetails(webinars.filter(webinar => webinar)); // Filter out any null/undefined results
+        } catch (error) {
+          console.error("Error fetching webinar details:", error);
+          setWebinarDetails([]);
+        } finally {
+          setLoadingWebinars(false);
+        }
+      }
+    };
 
-  // Functions to load more items
+    fetchWebinarDetails();
+  }, [educatorData?.webinars]);
+
+  // Fetch course details when component mounts or educatorData changes
+  useEffect(() => {
+    const fetchCourseDetails = async () => {
+      if (educatorData?.courses && educatorData.courses.length > 0) {
+        setLoadingCourses(true);
+        try {
+          const coursePromises = educatorData.courses.map(courseId => 
+            getCourseById(courseId)
+          );
+          const courses = await Promise.all(coursePromises);          
+          setCourseDetails(courses.filter(course => course)); // Filter out any null/undefined results
+          
+        } catch (error) {
+          console.error("Error fetching course details:", error);
+          setCourseDetails([]);
+        } finally {
+          setLoadingCourses(false);
+        }
+      }
+    };
+
+    fetchCourseDetails();
+  }, [educatorData?.courses]);
+
+  // Fetch test series details when component mounts or educatorData changes
+  useEffect(() => {
+    const fetchTestSeriesDetails = async () => {
+      if (educatorData?.testSeries && educatorData.testSeries.length > 0) {
+        setLoadingTestSeries(true);
+        try {
+          const testSeriesPromises = educatorData.testSeries.map(testSeriesId => 
+            getTestSeriesById(testSeriesId)
+          );
+          const testSeriesList = await Promise.all(testSeriesPromises);
+          setTestSeriesDetails(testSeriesList.filter(testSeries => testSeries)); // Filter out any null/undefined results
+        } catch (error) {
+          console.error("Error fetching test series details:", error);
+          setTestSeriesDetails([]);
+        } finally {
+          setLoadingTestSeries(false);
+        }
+      }
+    };
+
+    fetchTestSeriesDetails();
+  }, [educatorData?.testSeries]);
+
+  if (!educatorData) return null;  // Functions to load more items
   const loadMoreCourses = () => {
     setVisibleCourses((prev) => prev + 3);
   };
@@ -67,16 +152,12 @@ const ViewProfile = ({ educatorData }) => {
               <div className="flex justify-center lg:justify-start mb-6">
                 <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-blue-600">
                   <Image
-                    src={
-                      educatorData.image?.url || "/images/placeholders/1.svg"
-                    }
-                    // onError={(e) => {
-                    //   const TARGET = e.target;
-                    //   TARGET.src = "/images/placeholders/1.svg";
-                    // }}
+                    src={educatorData.image?.url || "/images/placeholders/1.svg"}
                     alt={`${educatorData.firstName} ${educatorData.lastName}`}
                     fill
+                    sizes="(100vw)"
                     className="object-cover"
+                    priority
                   />
                 </div>
               </div>
@@ -89,9 +170,9 @@ const ViewProfile = ({ educatorData }) => {
 
                 <div className="mb-3">
                   {educatorData.qualification &&
-                    educatorData.qualification.map((q) => {
+                    educatorData.qualification.map((q, i) => {
                       return (
-                        <section>
+                        <section key={i}>
                           <p className="text-lg text-blue-600 font-medium">
                             {q?.title}
                           </p>
@@ -259,10 +340,36 @@ const ViewProfile = ({ educatorData }) => {
                   </h3>
                   <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
                     <iframe
-                      src={educatorData.introVideoLink}
+                      src={(() => {
+                        if (!educatorData.introVideoLink) return "";
+                        
+                        const url = educatorData.introVideoLink;
+                        
+                        // Extract video ID from various YouTube URL formats
+                        let videoId = null;
+                        
+                        // Format: https://www.youtube.com/watch?v=VIDEO_ID
+                        if (url.includes("youtube.com/watch?v=")) {
+                          videoId = url.split("watch?v=")[1]?.split("&")[0];
+                        }
+                        // Format: https://youtu.be/VIDEO_ID
+                        else if (url.includes("youtu.be/")) {
+                          videoId = url.split("youtu.be/")[1]?.split("?")[0];
+                        }
+                        // Format: https://www.youtube.com/embed/VIDEO_ID (already correct)
+                        else if (url.includes("youtube.com/embed/")) {
+                          return url;
+                        }
+                        
+                        // Convert to embed URL
+                        return videoId 
+                          ? `https://www.youtube.com/embed/${videoId}`
+                          : url; // Fallback to original if can't parse
+                      })()}
                       title="Introduction Video"
                       className="w-full h-full"
                       frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
                   </div>
@@ -351,7 +458,7 @@ const ViewProfile = ({ educatorData }) => {
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
                     <span className="text-gray-600 font-medium">Courses:</span>
                     <span className="text-lg font-semibold text-gray-900">
-                      {educatorData.courses?.length || 0}
+                      {courseDetails?.length || 0}
                     </span>
                   </div>
                 </div>
@@ -392,22 +499,40 @@ const ViewProfile = ({ educatorData }) => {
         </div>
 
         {/* Courses Section */}
-        {educatorData.courses && educatorData.courses.length > 0 && (
+        {courseDetails && courseDetails.length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Available Courses
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {educatorData.courses
-                .slice(0, visibleCourses)
-                .map((course, index) => (
-                  <CourseCard
-                    key={index}
-                    course={{ ...course, educator: educatorData }}
-                  />
-                ))}
-            </div>
-            {visibleCourses < educatorData.courses.length && (
+            {loadingCourses ? (
+              <div className="flex justify-center items-center py-8">
+                <div className="text-gray-500">Loading courses...</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {courseDetails
+                  .slice(0, visibleCourses)
+                  .map((course, index) => (
+                    <CourseCard
+                      key={course._id || index}
+                      course={{ 
+                        ...course, 
+                        educator: {
+                          _id: educatorData._id,
+                          firstName: educatorData.firstName,
+                          lastName: educatorData.lastName,
+                          image: educatorData.image,
+                          specialization: educatorData.specialization,
+                          qualification: educatorData.qualification,
+                          rating: educatorData.rating,
+                          yearsExperience: educatorData.yearsExperience
+                        }
+                      }}
+                    />
+                  ))}
+              </div>
+            )}
+            {visibleCourses < courseDetails.length && (
               <div className="flex justify-center mt-6">
                 <button
                   onClick={loadMoreCourses}
@@ -415,7 +540,7 @@ const ViewProfile = ({ educatorData }) => {
                 >
                   View More Courses
                   <span className="text-sm">
-                    ({Math.min(3, educatorData.courses.length - visibleCourses)}{" "}
+                    ({Math.min(3, courseDetails.length - visibleCourses)}{" "}
                     more)
                   </span>
                 </button>
@@ -425,35 +550,52 @@ const ViewProfile = ({ educatorData }) => {
         )}
 
         {/* Webinars Section */}
-        {educatorData.webinars && educatorData.webinars.length > 0 && (
+        {webinarDetails && webinarDetails.length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Available Webinars
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {educatorData.webinars
-                .slice(0, visibleWebinars)
-                .map((webinar, index) => (
-                  <UpcomingWebinarCard
-                    key={index}
-                    item={{
-                      ...webinar,
-                      educatorName: educatorData.name,
-                      educatorPhoto: educatorData.profileImage.url,
-                      qualification:
-                        educatorData.qualification?.[0]?.title || "N/A",
-                      specialization: educatorData.specialization,
-                      totalHours: "2 Hours",
-                      timeRange: "10:00 AM - 12:00 PM",
-                      date: "Coming Soon",
-                      fee:
-                        webinar.price?.replace("₹", "").replace(",", "") || "0",
-                      detailsLink: `/webinars/${webinar.id}`,
-                    }}
-                  />
-                ))}
-            </div>
-            {visibleWebinars < educatorData.webinars.length && (
+            {loadingWebinars ? (
+              <div className="flex justify-center items-center py-8">
+                <div className="text-gray-500">Loading webinars...</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {webinarDetails
+                  .slice(0, visibleWebinars)
+                  .map((webinar, index) => (
+                    <UpcomingWebinarCard
+                      key={webinar._id || index}
+                      item={{
+                        id: webinar._id,
+                        title: webinar.title,
+                        description: webinar.description,
+                        educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
+                        educatorPhoto: educatorData.image?.url || "/images/placeholders/1.svg",
+                        qualification: educatorData.qualification?.[0]?.title || "N/A",
+                        specialization: webinar.specialization || educatorData.specialization,
+                        subject: webinar.subject,
+                        totalHours: `${Math.floor(webinar.duration / 60)}h ${webinar.duration % 60}m`,
+                        timeRange: webinar.time,
+                        date: new Date(webinar.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        }),
+                        fee: webinar.fees?.toString() || "0",
+                        detailsLink: `/webinars/${webinar._id}`,
+                        image: webinar.image?.url || "/images/placeholders/1.svg",
+                        seatLimit: webinar.seatLimit,
+                        enrolledCount: webinar.enrolledStudents?.length || 0,
+                        webinarType: webinar.webinarType,
+                        webinarLink: webinar.webinarLink
+                      }}
+                    />
+                  ))}
+              </div>
+            )}
+            {visibleWebinars < webinarDetails.length && (
               <div className="flex justify-center mt-6">
                 <button
                   onClick={loadMoreWebinars}
@@ -464,7 +606,7 @@ const ViewProfile = ({ educatorData }) => {
                     (
                     {Math.min(
                       3,
-                      educatorData.webinars.length - visibleWebinars
+                      webinarDetails.length - visibleWebinars
                     )}{" "}
                     more)
                   </span>
@@ -475,32 +617,43 @@ const ViewProfile = ({ educatorData }) => {
         )}
 
         {/* Test Series Section */}
-        {educatorData.testSeries && educatorData.testSeries.length > 0 && (
+        {testSeriesDetails && testSeriesDetails.length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Available Test Series
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {educatorData.testSeries
-                .slice(0, visibleTestSeries)
-                .map((testSeries, index) => (
-                  <TestSeriesCard
-                    key={index}
-                    testSeries={{
-                      ...testSeries,
-                      id: testSeries.id || `ts_${index}`,
-                      educatorName: educatorData.name,
-                      educatorPhoto: educatorData.profileImage.url,
-                      qualification:
-                        educatorData.qualification?.[0]?.title || "N/A",
-                      noOfTests: testSeries.numberOfTests,
-                      fee: testSeries.price,
-                      slug: testSeries.id || `test-series-${index}`,
-                    }}
-                  />
-                ))}
-            </div>
-            {visibleTestSeries < educatorData.testSeries.length && (
+            {loadingTestSeries ? (
+              <div className="flex justify-center items-center py-8">
+                <div className="text-gray-500">Loading test series...</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {testSeriesDetails
+                  .slice(0, visibleTestSeries)
+                  .map((testSeries, index) => (
+                    <TestSeriesCard
+                      key={testSeries._id || index}
+                      testSeries={{
+                        id: testSeries._id,
+                        title: testSeries.title,
+                        educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
+                        educatorPhoto: educatorData.image?.url || "/images/placeholders/1.svg",
+                        qualification: educatorData.qualification?.[0]?.title || "N/A",
+                        subject: testSeries.subject,
+                        specialization: testSeries.specialization,
+                        noOfTests: testSeries.noOfTests,
+                        fee: testSeries.price,
+                        slug: testSeries._id || `test-series-${index}`,
+                        description: testSeries.description,
+                        validity: testSeries.validity,
+                        startDate: testSeries.startDate,
+                        endDate: testSeries.endDate,
+                      }}
+                    />
+                  ))}
+              </div>
+            )}
+            {visibleTestSeries < testSeriesDetails.length && (
               <div className="flex justify-center mt-6">
                 <button
                   onClick={loadMoreTestSeries}
@@ -511,7 +664,7 @@ const ViewProfile = ({ educatorData }) => {
                     (
                     {Math.min(
                       3,
-                      educatorData.testSeries.length - visibleTestSeries
+                      testSeriesDetails.length - visibleTestSeries
                     )}{" "}
                     more)
                   </span>
@@ -529,19 +682,19 @@ const ViewProfile = ({ educatorData }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-3xl font-bold text-blue-600 mb-2">
-                {educatorData.courses?.length || 0}
+                {courseDetails?.length || 0}
               </div>
               <div className="text-sm text-gray-600">Total Courses</div>
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <div className="text-3xl font-bold text-green-600 mb-2">
-                {educatorData.webinars?.length || 0}
+                {webinarDetails?.length || 0}
               </div>
               <div className="text-sm text-gray-600">Total Webinars</div>
             </div>
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-3xl font-bold text-purple-600 mb-2">
-                {educatorData.testSeries?.length || 0}
+                {testSeriesDetails?.length || 0}
               </div>
               <div className="text-sm text-gray-600">Test Series</div>
             </div>

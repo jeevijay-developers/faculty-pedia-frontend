@@ -21,7 +21,6 @@ const CBSEPageContent = () => {
         const DATA = await fetchIITJEEOnlineCourses({
           specialization: "CBSE",
         });
-        console.log("CBSE Courses:", DATA);
         setData(DATA.courses || DATA || []);
       } catch (error) {
         console.error("Failed to fetch CBSE courses:", error);

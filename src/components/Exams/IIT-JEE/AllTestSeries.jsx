@@ -7,6 +7,7 @@ import { FaGraduationCap } from 'react-icons/fa';
 import { MdDateRange, MdQuiz } from 'react-icons/md';
 import { BsShieldCheck } from 'react-icons/bs';
 import { getTestSeriesByExamAndSubject, getAllSubjectsByExam, formatDate, formatCurrency, calculateValidity } from '../../../Data/TestSeries/testseries.data';
+import EnrollButton from '../../Common/EnrollButton';
 
 const AllTestSeries = ({ exam = 'IIT-JEE' }) => {
   const initialSubjects = getAllSubjectsByExam(exam);
@@ -113,9 +114,13 @@ const AllTestSeries = ({ exam = 'IIT-JEE' }) => {
               View Details
             </button>
           </Link>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-102 shadow-sm hover:shadow-md cursor-pointer">
-            Enroll Now
-          </button>
+          <EnrollButton
+            type="testseries"
+            itemId={testSeries._id}
+            price={testSeries.price}
+            title="Enroll Now"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-102 shadow-sm hover:shadow-md cursor-pointer"
+          />
         </div>
       </div>
     </div>

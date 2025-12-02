@@ -334,18 +334,6 @@ const StudentProfile = ({
     );
   }
 
-  // Debug: Log extracted data
-  console.log("Extracted student data:", {
-    name,
-    email,
-    mobileNumber,
-    image,
-    coursesLength: courses.length,
-    followingEducatorsLength: followingEducators.length,
-    testsLength: tests.length,
-    resultsLength: results.length,
-  });
-
   // Calculate statistics
   const totalCourses = courses.length;
   const totalTests = tests.length;

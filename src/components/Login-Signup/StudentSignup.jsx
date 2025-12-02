@@ -98,12 +98,8 @@ const StudentSignup = () => {
         mobileNumber: formData.mobileNumber.trim(),
       };
 
-      console.log("Submitting student registration data...", submitData);
-
       // Call the API
       const response = await signupAsStudent(submitData);
-
-      console.log("Registration successful:", response);
 
       // Handle success - the controller returns { message, student }
       setSuccessMessage(
@@ -122,7 +118,7 @@ const StudentSignup = () => {
       // Redirect to student login after a short delay since no token is returned
       setTimeout(() => {
         router.push(
-          "/student-login?message=Registration successful! Please login to continue."
+          "/login?message=Registration successful! Please login to continue."
         );
       }, 2000);
     } catch (error) {
@@ -396,7 +392,7 @@ const StudentSignup = () => {
             <p className="text-gray-600">
               Already have an account?{" "}
               <Link
-                href="/student-login"
+                href="/login"
                 className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
               >
                 Sign in here

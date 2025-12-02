@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import { getCourseById } from "../server/course.routes";
 import Loading from "../Common/Loading";
+import EnrollButton from "../Common/EnrollButton";
 
 const CourseDetails = ({ id }) => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -48,6 +49,8 @@ const CourseDetails = ({ id }) => {
     setLoading(true);
     const fetchEducators = async () => {
       try {
+        // console.log("Fetching course with ID:", id);
+        
         const data = await getCourseById(id);
         setCourse(data);
         // setFilteredEducators([...data.educators]);
@@ -322,9 +325,12 @@ const CourseDetails = ({ id }) => {
                         ₹{course.originalPrice}
                       </div>
                     )}
-                  <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-3">
-                    Enroll Now
-                  </button>
+                  <EnrollButton
+                    type="course"
+                    itemId={course._id || course.id}
+                    price={course.price || course.fees}
+                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-3"
+                  />
                 </div>
               </div>
             </div>
@@ -342,9 +348,12 @@ const CourseDetails = ({ id }) => {
               performance with our comprehensive courses.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="bg-blue-600 text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg">
-                Enroll Now - ₹{course.price || course.fees}
-              </button>
+              <EnrollButton
+                type="course"
+                itemId={course._id || course.id}
+                price={course.price || course.fees}
+                className="bg-blue-600 text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg"
+              />
             </div>
           </div>
         )}

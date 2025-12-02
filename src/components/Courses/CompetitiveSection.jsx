@@ -29,10 +29,8 @@ const CompetitiveSection = ({
     const nextSlide = () => {
         if (swiperRef) swiperRef.slideNext();
     };
-
     const coursesToRender = courses.length > 0 ? courses : competitiveCourseData;
-    // console.log('Courses to render:', coursesToRender);
-
+    
     return (
         <section className="py-16 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
