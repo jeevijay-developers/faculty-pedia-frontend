@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import Banner from "@/components/Common/Banner";
-import { defaultCourses } from "@/Data/Courses/courses.data";
+// import { defaultCourses } from "@/Data/Courses/courses.data";
 import CourseCard from "@/components/Courses/CourseCard";
 import { getCourseBySubjectOneToOne } from "@/components/server/course.routes";
 import Loading from "@/components/Common/Loading";
 
-export const getCoursesBySubject = (subject) => {
-  return defaultCourses.filter((course) => course.subject === subject);
-};
+// export const getCoursesBySubject = (subject) => {
+//   return defaultCourses.filter((course) => course.subject === subject);
+// };
 
 const CoursesPage = () => {
   const [activeTab, setActiveTab] = useState("Physics");

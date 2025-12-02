@@ -5,6 +5,7 @@ import Footer from "../components/Common/Footer";
 import { HeroUIProvider } from "@heroui/react";
 import { AlertContainer } from "@/components/CustomAlert";
 import ModernToaster from "@/components/LiveTest/ModernToaster";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,10 @@ export default function RootLayout({ children }) {
           <Footer />
           <AlertContainer />
           <ModernToaster />
+          <Script
+            src="https://checkout.razorpay.com/v1/checkout.js"
+            strategy="beforeInteractive"
+          />
         </HeroUIProvider>
       </body>
     </html>
