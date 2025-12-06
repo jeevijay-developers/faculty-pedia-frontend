@@ -5,25 +5,21 @@ import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
-import { getEducatorsBySpecialization } from "@/Data/Educator/educator-profile.data";
 import EducatorCard from "./EducatorCard";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { fetchIITJEEEducators } from "../server/exams/iit-jee/routes";
+import { getEducatorsBySpecialization } from "../server/educators.routes";
 import Loading from "../Common/Loading";
 import CarouselFallback from "../Common/CarouselFallback";
 
 const EducatorsCarousel = ({ specialization = "All" }) => {
   const [swiperRef, setSwiperRef] = useState(null);
-
-  // Filter educators based on specialization prop
-  const [filteredEducators, setFilteredEducators] = useState(
-    getEducatorsBySpecialization(specialization)
-  );
+  const [filteredEducators, setFilteredEducators] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const prevSlide = () => {
     if (swiperRef) swiperRef.slidePrev();
@@ -32,25 +28,56 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
   const nextSlide = () => {
     if (swiperRef) swiperRef.slideNext();
   };
+
   useEffect(() => {
     const fetchEducators = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const data = await fetchIITJEEEducators({
-          specialization: specialization,
-        });
-        setFilteredEducators([...data.educators]);
+        const response = await getEducatorsBySpecialization(specialization);
+        console.log("📚 Educators API Response:", response);
+        
+        // Handle different response structures
+        let educators = [];
+        if (response?.data?.educators && Array.isArray(response.data.educators)) {
+          educators = response.data.educators;
+        } else if (response?.educators && Array.isArray(response.educators)) {
+          educators = response.educators;
+        } else if (Array.isArray(response)) {
+          educators = response;
+        }
+        
+        console.log(`📚 Found ${educators.length} educators for ${specialization}`);
+        setFilteredEducators(educators);
       } catch (error) {
         console.error("Failed to fetch educators:", error);
+        setError(error.message || "Failed to load educators");
+        setFilteredEducators([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchEducators();
-  }, []);
+    
+    if (specialization) {
+      fetchEducators();
+    }
+  }, [specialization]);
 
   if (loading) {
     return <Loading />;
+  }
+
+  // Show error state if there was an error
+  if (error) {
+    return (
+      <CarouselFallback
+        type="educators"
+        specialization={specialization}
+        viewMoreLink="/educators"
+        actionText="Browse Educators"
+        message={error}
+      />
+    );
   }
 
   // Show fallback if no educators found

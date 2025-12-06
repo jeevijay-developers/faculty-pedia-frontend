@@ -2,11 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { signupAsStudent } from "@/components/server/auth/auth.routes";
+import { createStudent } from "@/components/server/student/student.routes";
 import { LuLoaderCircle, LuUser, LuGraduationCap } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
+const SPECIALIZATION_OPTIONS = ["IIT-JEE", "NEET", "CBSE"];
+const CLASS_OPTIONS = [
+  { label: "Class 6th", value: "class-6th" },
+  { label: "Class 7th", value: "class-7th" },
+  { label: "Class 8th", value: "class-8th" },
+  { label: "Class 9th", value: "class-9th" },
+  { label: "Class 10th", value: "class-10th" },
+  { label: "Class 11th", value: "class-11th" },
+  { label: "Class 12th", value: "class-12th" },
+  { label: "Dropper", value: "dropper" },
+];
 
 const StudentSignup = () => {
   const router = useRouter();
@@ -17,18 +28,30 @@ const StudentSignup = () => {
 
   const [formData, setFormData] = useState({
     name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
     mobileNumber: "",
+    specialization: "",
+    classLevel: "",
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let nextValue = value;
+
+    if (name === "username") {
+      nextValue = value.toLowerCase().replace(/[^a-z0-9_]/g, "");
+    }
+
+    if (name === "mobileNumber") {
+      nextValue = value.replace(/[^0-9]/g, "").slice(0, 10);
+    }
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: nextValue,
     }));
 
     // Clear error when user starts typing
@@ -49,10 +72,25 @@ const StudentSignup = () => {
       newErrors.name = "Name must be at least 2 characters long";
     }
 
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
+    } else if (!/^[a-z0-9_]{3,30}$/.test(formData.username.trim())) {
+      newErrors.username =
+        "Username must be 3-30 characters and use lowercase letters, numbers, or underscores";
+    }
+
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!formData.specialization) {
+      newErrors.specialization = "Select a specialization";
+    }
+
+    if (!formData.classLevel) {
+      newErrors.classLevel = "Select a class";
     }
 
     if (!formData.password) {
@@ -93,34 +131,50 @@ const StudentSignup = () => {
       // Create JSON object (exclude confirmPassword as it's not in schema)
       const submitData = {
         name: formData.name.trim(),
+        username: formData.username.trim(),
         email: formData.email.trim(),
         password: formData.password,
         mobileNumber: formData.mobileNumber.trim(),
+        specialization: formData.specialization,
+        class: formData.classLevel,
       };
 
-      // Call the API
-      const response = await signupAsStudent(submitData);
+      const response = await createStudent(submitData);
+      const createdStudent = response?.data ?? response?.student ?? response;
 
-      // Handle success - the controller returns { message, student }
       setSuccessMessage(
-        response.message || "Registration successful! Welcome to Faculty Pedia!"
+        response?.message ||
+          "Registration successful! Welcome to Faculty Pedia!"
       );
 
-      // Clear form
+      if (createdStudent?._id) {
+        localStorage.setItem(
+          "faculty-pedia-student-data",
+          JSON.stringify(createdStudent)
+        );
+        localStorage.setItem("user-role", "student");
+      }
+
       setFormData({
         name: "",
+        username: "",
         email: "",
         password: "",
         confirmPassword: "",
         mobileNumber: "",
+        specialization: "",
+        classLevel: "",
       });
 
-      // Redirect to student login after a short delay since no token is returned
       setTimeout(() => {
-        router.push(
-          "/login?message=Registration successful! Please login to continue."
-        );
-      }, 2000);
+        if (createdStudent?._id) {
+          router.push(`/profile/student/${createdStudent._id}`);
+        } else {
+          router.push(
+            "/login?message=Registration successful! Please login to continue."
+          );
+        }
+      }, 1500);
     } catch (error) {
       console.error("Registration error:", error);
 
@@ -130,7 +184,9 @@ const StudentSignup = () => {
         if (error.response.data?.errors) {
           const serverErrors = {};
           error.response.data.errors.forEach((err) => {
-            serverErrors[err.path || err.param] = err.msg;
+            const field = err.path || err.param;
+            const mappedField = field === "class" ? "classLevel" : field;
+            serverErrors[mappedField] = err.msg;
           });
           setErrors(serverErrors);
         } else if (error.response.data?.message) {
@@ -195,6 +251,32 @@ const StudentSignup = () => {
               )}
             </div>
 
+            {/* Username Field */}
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Username *
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+                className={`mt-1 block w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors ${
+                  errors.username ? "border-red-300" : "border-gray-300"
+                }`}
+                placeholder="choose a unique handle"
+              />
+              {errors.username && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors.username}
+                </p>
+              )}
+            </div>
+
             {/* Email and Mobile Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Email */}
@@ -243,6 +325,77 @@ const StudentSignup = () => {
                 {errors.mobileNumber && (
                   <p className="mt-2 text-sm text-red-600">
                     {errors.mobileNumber}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Academic Preferences */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="specialization"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Specialization *
+                </label>
+                <select
+                  id="specialization"
+                  name="specialization"
+                  value={formData.specialization}
+                  onChange={handleInputChange}
+                  className={`mt-1 block w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors ${
+                    errors.specialization
+                      ? "border-red-300"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <option value="" disabled>
+                    Select your target exam
+                  </option>
+                  {SPECIALIZATION_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                {errors.specialization && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.specialization}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="classLevel"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Class *
+                </label>
+                <select
+                  id="classLevel"
+                  name="classLevel"
+                  value={formData.classLevel}
+                  onChange={handleInputChange}
+                  className={`mt-1 block w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors ${
+                    errors.classLevel
+                      ? "border-red-300"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <option value="" disabled>
+                    Select your current class
+                  </option>
+                  {CLASS_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                {errors.classLevel && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.classLevel}
                   </p>
                 )}
               </div>

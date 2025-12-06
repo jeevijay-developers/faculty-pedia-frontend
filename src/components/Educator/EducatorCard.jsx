@@ -97,10 +97,10 @@ const EducatorCard = ({ educator }) => {
             <div className="flex items-center space-x-1  pl-2">
               <IoStarSharp className="text-yellow-500 w-4 h-4" />
               <span className="text-sm font-medium text-gray-900">
-                {rating || "N/A"}
+                {rating?.average ? rating.average.toFixed(1) : "N/A"}
               </span>
               <span className="text-xs text-gray-500">
-                ({reviewCount || 0} reviews)
+                ({rating?.count || reviewCount || 0} reviews)
               </span>
             </div>
           </div>

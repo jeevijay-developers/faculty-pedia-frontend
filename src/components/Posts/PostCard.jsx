@@ -6,7 +6,13 @@ import Link from "next/link";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
 const PostCard = ({ post }) => {
-  const { title, description, category, publishDate, facultyInfo, slug } = post;
+  // Map backend fields to frontend
+  const title = post?.title || "Untitled Post";
+  const description = post?.description || "No description available.";
+  const category = post?.specializations?.[0] || post?.specialization || "General";
+  const publishDate = post?.createdAt || new Date().toISOString();
+  const educator = post?.educatorId || {};
+  const slug = post?._id || post?.id || "#";
 
   // Format date
   const formatDate = (dateString) => {
@@ -43,7 +49,7 @@ const PostCard = ({ post }) => {
 
         {/* Description */}
         <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">
-          {post?.content?.short || "No description available."}
+          {description}
         </p>
 
         {/* Meta Info */}
@@ -51,7 +57,7 @@ const PostCard = ({ post }) => {
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-1">
               <FaRegCalendarAlt className="h-4 w-4" />
-              <span>{formatDate(post.createdAt)}</span>
+              <span>{formatDate(publishDate)}</span>
             </div>
             <div className="flex items-center space-x-1">
               <span
@@ -70,15 +76,15 @@ const PostCard = ({ post }) => {
           <div className="flex items-center space-x-3">
             <div className="relative h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
               <Image
-                src={post.author?.image?.url || "/images/placeholders/1.svg"}
-                alt={post.author?.firstName || "Faculty Name"}
+                src={educator?.profilePicture || educator?.image?.url || '/images/placeholders/1.svg'}
+                alt={educator?.fullName || "Educator"}
                 fill
                 className="object-cover"
               />
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-gray-900">
-                {post.author?.firstName || "Faculty Name"}
+                {educator?.fullName || "Educator"}
               </span>
             </div>
           </div>

@@ -1,67 +1,114 @@
  'use client';
 
- import React, { useState, useMemo } from 'react';
- import Link from 'next/link';
- import { Swiper, SwiperSlide } from 'swiper/react';
- import { Navigation, Autoplay } from 'swiper/modules';
- import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
- import { pphData } from '@/Data/1To1PPHClass/pph.data';
- // Optional: if NEET/CBSE datasets exist, import and plug them here
- // import { neetOneToOneCourseCourses } from '@/Data/Exams/neet.data';
- // import { cbseOneToOneCourseCourses } from '@/Data/Exams/cbse.data';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Autoplay } from 'swiper/modules';
+import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
+import { fetchPPHEducatorsBySpecialization } from '../server/exams/iit-jee/routes';
 
- import 'swiper/css';
- import 'swiper/css/navigation';
+import 'swiper/css';
+import 'swiper/css/navigation';
 import OneToOnePPHCard from './OneToOnePPHCard';
 import CarouselFallback from '../Common/CarouselFallback';
+import Loading from '../Common/Loading';
 
- /**
-  * Props:
-  * - title?: string
-  * - specialization?: 'IIT-JEE' | 'NEET' | 'CBSE'
-  * - viewMoreLink?: string
-  */
- const OneToOnePPHCarousel = ({
-   title = '1-1 Live Pay Per Hour',
-   specialization = 'IIT-JEE',
-   viewMoreLink = '/one-to-one-pph',
- }) => {
-   const [swiperRef, setSwiperRef] = useState(null);
+/**
+ * Props:
+ * - title?: string
+ * - specialization?: 'IIT-JEE' | 'NEET' | 'CBSE'
+ * - viewMoreLink?: string
+ */
+const OneToOnePPHCarousel = ({
+  title = '1-1 Live Pay Per Hour',
+  specialization = 'IIT-JEE',
+  viewMoreLink = '/one-to-one-pph',
+}) => {
+  const [swiperRef, setSwiperRef] = useState(null);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-   const data = useMemo(() => {
-     switch (specialization) {
-       case 'NEET':
-         // return neetOneToOneCourseCourses;
-         return pphData; // fallback until NEET dataset available
-       case 'CBSE':
-         // return cbseOneToOneCourseCourses;
-         return pphData; // fallback until CBSE dataset available
-       case 'IIT-JEE':
-       default:
-         return pphData;
-     }
-   }, [specialization]);
+  useEffect(() => {
+    const fetchPPHEducators = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        console.log(`💼 Fetching PPH educators for ${specialization}...`);
+        const response = await fetchPPHEducatorsBySpecialization(specialization);
+        console.log('💼 PPH Educators API Response:', response);
+        
+        // Extract educators from response
+        const educators = response?.educators || [];
+        
+        // Transform educator data to match card component expectations
+        const transformedData = educators.map(educator => ({
+          id: educator._id,
+          _id: educator._id,
+          title: `1-1 Session with ${educator.fullName}`,
+          educatorName: educator.fullName,
+          postImage: educator.profilePicture || educator.image?.url || '',
+          qualification: educator.qualifications || 'Not specified',
+          subject: Array.isArray(educator.subject) ? educator.subject.join(', ') : educator.subject,
+          specialization: Array.isArray(educator.specialization) ? educator.specialization.join(', ') : educator.specialization,
+          fee: educator.payPerHourFee || 0,
+          ...educator
+        }));
+        
+        console.log(`💼 Found ${transformedData.length} PPH educators for ${specialization}`);
+        setData(transformedData);
+      } catch (error) {
+        console.error('Failed to fetch PPH educators:', error);
+        setError(error.message || 'Failed to load PPH educators');
+        setData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-   const prevSlide = () => {
-     if (swiperRef) swiperRef.slidePrev();
-   };
+    if (specialization) {
+      fetchPPHEducators();
+    }
+  }, [specialization]);
 
-   const nextSlide = () => {
-     if (swiperRef) swiperRef.slideNext();
-   };
+  const prevSlide = () => {
+    if (swiperRef) swiperRef.slidePrev();
+  };
 
-   // Show fallback if no PPH classes found
-   if (!data || data.length === 0) {
-     return (
-       <CarouselFallback
-         type="pph"
-         specialization={specialization}
-         title={title}
-         viewMoreLink={viewMoreLink}
-         actionText="Explore PPH Classes"
-       />
-     );
-   }
+  const nextSlide = () => {
+    if (swiperRef) swiperRef.slideNext();
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  // Show error state if there was an error
+  if (error) {
+    return (
+      <CarouselFallback
+        type="pph"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        actionText="Explore PPH Classes"
+        message={error}
+      />
+    );
+  }
+
+  // Show fallback if no PPH educators found
+  if (!data || data.length === 0) {
+    return (
+      <CarouselFallback
+        type="pph"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        actionText="Explore PPH Classes"
+      />
+    );
+  }
 
    return (
      <section className="py-12 bg-gray-50">
@@ -110,9 +157,9 @@ import CarouselFallback from '../Common/CarouselFallback';
              }}
            >
              {data.map((item) => {
-               const detailsHref = `/one-to-one-pph/${item.id}`;
+               const detailsHref = `/educators/${item._id || item.id}`;
                return (
-                 <SwiperSlide key={item.id}>
+                 <SwiperSlide key={item._id || item.id}>
                    <OneToOnePPHCard item={item} detailsHref={detailsHref} />
                  </SwiperSlide>
                );

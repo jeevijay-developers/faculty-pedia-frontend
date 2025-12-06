@@ -15,6 +15,42 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FiTrash2 } from "react-icons/fi";
 import { signupAsEducator } from "../server/auth/auth.routes";
 
+const SUBJECT_OPTIONS = [
+  "biology",
+  "physics",
+  "mathematics",
+  "chemistry",
+  "english",
+  "hindi",
+];
+
+const SUBJECT_LIST_DISPLAY = SUBJECT_OPTIONS.map(
+  (subject) => subject.charAt(0).toUpperCase() + subject.slice(1)
+).join(", ");
+
+const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+const MOBILE_REGEX = /^[6-9]\d{9}$/;
+const MIN_BIO_LENGTH = 20;
+
+const parseSubjectInput = (value = "") => {
+  const rawEntries = value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  const normalizedEntries = rawEntries.map((entry) => entry.toLowerCase());
+
+  const valid = normalizedEntries.filter((entry) =>
+    SUBJECT_OPTIONS.includes(entry)
+  );
+
+  const invalid = rawEntries.filter(
+    (_entry, index) => !SUBJECT_OPTIONS.includes(normalizedEntries[index])
+  );
+
+  return { valid, invalid };
+};
+
 const EducatorSignup = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
@@ -152,54 +188,110 @@ const EducatorSignup = () => {
     }));
   };
 
-  const validateStep = (step) => {
-    const newErrors = {};
+  const collectStepErrors = (step) => {
+    const stepErrors = {};
 
     switch (step) {
-      case 1:
-        if (!formData.firstName) newErrors.firstName = "First name is required";
-        if (!formData.lastName) newErrors.lastName = "Last name is required";
-        if (!formData.email) newErrors.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(formData.email))
-          newErrors.email = "Invalid email format";
-        if (!formData.password) newErrors.password = "Password is required";
-        else if (formData.password.length < 8)
-          newErrors.password = "Password must be at least 8 characters";
+      case 1: {
+        const firstName = formData.firstName.trim();
+        const lastName = formData.lastName.trim();
+        const email = formData.email.trim();
+        const mobile = formData.mobileNumber.trim();
+        const bio = formData.bio.trim();
+
+        if (!firstName)
+          stepErrors.firstName = "First name is required";
+        else if (firstName.length < 2)
+          stepErrors.firstName = "First name must be at least 2 characters";
+
+        if (!lastName)
+          stepErrors.lastName = "Last name is required";
+
+        if (!email) stepErrors.email = "Email is required";
+        else if (!/\S+@\S+\.\S+/.test(email))
+          stepErrors.email = "Invalid email format";
+
+        if (!formData.password)
+          stepErrors.password = "Password is required";
+        else if (!STRONG_PASSWORD_REGEX.test(formData.password))
+          stepErrors.password =
+            "Password must include uppercase, lowercase, and a number";
+
         if (formData.password !== formData.confirmPassword)
-          newErrors.confirmPassword = "Passwords do not match";
-        if (!formData.mobileNumber)
-          newErrors.mobileNumber = "Mobile number is required";
-        else if (!/^\d{10}$/.test(formData.mobileNumber))
-          newErrors.mobileNumber = "Invalid mobile number";
-        if (!formData.bio) newErrors.bio = "Bio is required";
+          stepErrors.confirmPassword = "Passwords do not match";
+
+        if (!mobile) stepErrors.mobileNumber = "Mobile number is required";
+        else if (!MOBILE_REGEX.test(mobile))
+          stepErrors.mobileNumber =
+            "Enter a valid 10-digit Indian mobile number starting with 6-9";
+
+        if (!bio) stepErrors.bio = "Bio is required";
+        else if (bio.length < MIN_BIO_LENGTH)
+          stepErrors.bio = `Bio must be at least ${MIN_BIO_LENGTH} characters`;
+
         if (!formData.specialization)
-          newErrors.specialization = "Specialization is required";
-        if (!formData.subject) newErrors.subject = "Subject is required";
+          stepErrors.specialization = "Specialization is required";
+
+        const { valid: validSubjects, invalid: invalidSubjects } =
+          parseSubjectInput(formData.subject);
+
+        if (invalidSubjects.length) {
+          stepErrors.subject = `Unsupported subjects: ${invalidSubjects.join(
+            ", "
+          )}. Allowed subjects: ${SUBJECT_LIST_DISPLAY}.`;
+        } else if (!validSubjects.length) {
+          stepErrors.subject = `Please enter at least one supported subject (${SUBJECT_LIST_DISPLAY}).`;
+        }
         break;
+      }
       case 2:
         formData.workExperience.forEach((exp, index) => {
           if (!exp.title)
-            newErrors[`workExperience.${index}.title`] =
+            stepErrors[`workExperience.${index}.title`] =
               "Job title is required";
           if (!exp.company)
-            newErrors[`workExperience.${index}.company`] =
+            stepErrors[`workExperience.${index}.company`] =
               "Company is required";
         });
         break;
       case 3:
         formData.qualification.forEach((qual, index) => {
           if (!qual.title)
-            newErrors[`qualification.${index}.title`] =
+            stepErrors[`qualification.${index}.title`] =
               "Qualification title is required";
           if (!qual.institute)
-            newErrors[`qualification.${index}.institute`] =
+            stepErrors[`qualification.${index}.institute`] =
               "Institute is required";
         });
         break;
+      default:
+        break;
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return stepErrors;
+  };
+
+  const validateStep = (step) => {
+    const stepErrors = collectStepErrors(step);
+    setErrors(stepErrors);
+    return Object.keys(stepErrors).length === 0;
+  };
+
+  const validateAllSteps = () => {
+    const combinedErrors = {};
+    let firstInvalidStep = null;
+
+    [1, 2, 3].forEach((step) => {
+      const stepErrors = collectStepErrors(step);
+      if (!firstInvalidStep && Object.keys(stepErrors).length > 0) {
+        firstInvalidStep = step;
+      }
+      Object.assign(combinedErrors, stepErrors);
+    });
+
+    const isValid = Object.keys(combinedErrors).length === 0;
+    setErrors(combinedErrors);
+    return { isValid, firstInvalidStep };
   };
 
   const nextStep = () => {
@@ -213,51 +305,100 @@ const EducatorSignup = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validateStep(currentStep)) {
+    const { isValid, firstInvalidStep } = validateAllSteps();
+    if (!isValid) {
+      setCurrentStep(firstInvalidStep || 1);
       return;
     }
 
     setIsLoading(true);
     setErrors({});
 
-    try {
-      // Prepare the data according to backend schema
-      const submitData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        mobileNumber: formData.mobileNumber,
-        bio: formData.bio,
-        specialization: formData.specialization,
-        subject: formData.subject,
-        workExperience: formData.workExperience,
-        qualification: formData.qualification,
-        ...(formData.introVideoLink && { introVideoLink: formData.introVideoLink }),
-        socials: formData.socials,
-      };
+    const sanitizeEntries = (entries = []) =>
+      entries
+        .map((entry) => ({
+          title: entry.title?.trim() || "",
+          company: entry.company?.trim() || "",
+          institute: entry.institute?.trim() || "",
+          startDate: entry.startDate || "",
+          endDate: entry.endDate || "",
+          description: entry.description?.trim() || "",
+        }))
+        .filter(
+          (entry) =>
+            entry.title ||
+            entry.company ||
+            entry.institute ||
+            entry.startDate ||
+            entry.endDate ||
+            entry.description
+        );
 
-      // Call the API
+    const sanitizeSocialLinks = (links = {}) =>
+      Object.entries(links).reduce((acc, [platform, value]) => {
+        if (typeof value === "string" && value.trim()) {
+          acc[platform] = value.trim();
+        }
+        return acc;
+      }, {});
+
+    const trimmedFirstName = formData.firstName.trim();
+    const trimmedLastName = formData.lastName.trim();
+    const trimmedEmail = formData.email.trim().toLowerCase();
+    const trimmedMobile = formData.mobileNumber.trim();
+    const trimmedBio = formData.bio.trim();
+    const { valid: normalizedSubjects } = parseSubjectInput(formData.subject);
+
+    const submitData = {
+      firstName: trimmedFirstName,
+      lastName: trimmedLastName,
+      email: trimmedEmail,
+      password: formData.password,
+      mobileNumber: trimmedMobile,
+      bio: trimmedBio,
+      specialization: [formData.specialization].filter(Boolean),
+      subject: normalizedSubjects,
+      workExperience: sanitizeEntries(formData.workExperience).map(
+        ({ institute, ...rest }) => rest
+      ),
+      qualification: sanitizeEntries(formData.qualification).map(
+        ({ company, ...rest }) => rest
+      ),
+      socials: sanitizeSocialLinks(formData.socials),
+    };
+
+    if (formData.introVideoLink) {
+      submitData.introVideoLink = formData.introVideoLink.trim();
+    }
+
+    try {
       const response = await signupAsEducator(submitData);
-            
-      // Handle success - redirect to educator login
-      alert("Registration successful! Please login to continue.");
-      router.push("/login");
-      
+      const createdEducator =
+        response?.data?.educator || response?.educator || response?.data;
+      const educatorId = createdEducator?._id || createdEducator?.id;
+
+      alert("Registration successful! Redirecting to your profile.");
+
+      if (educatorId) {
+        router.push(`/profile/educator/${educatorId}`);
+      } else {
+        router.push("/login");
+      }
     } catch (error) {
       console.error("Registration error:", error);
-      
-      // Handle validation errors from backend
-      if (error.response?.data?.errors) {
-        const backendErrors = error.response.data.errors;
-        setErrors({
-          submit: Array.isArray(backendErrors) ? backendErrors.join(", ") : backendErrors
-        });
-      } else {
-        setErrors({
-          submit: error.response?.data?.message || error.message || "Registration failed. Please try again.",
-        });
+      const backendErrors = error.response?.data?.errors;
+      let submitError =
+        error.response?.data?.message ||
+        error.message ||
+        "Registration failed. Please try again.";
+
+      if (Array.isArray(backendErrors) && backendErrors.length > 0) {
+        submitError = backendErrors
+          .map((err) => err?.msg || err?.message || err)
+          .join(", ");
       }
+
+      setErrors((prev) => ({ ...prev, submit: submitError }));
     } finally {
       setIsLoading(false);
     }

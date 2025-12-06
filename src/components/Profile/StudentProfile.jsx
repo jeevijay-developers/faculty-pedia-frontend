@@ -24,6 +24,17 @@ import { getTestSeriesById } from "../server/test-series.route"; // Individual t
 import { getResultById } from "../server/result.routes"; // Individual result helper
 import { updateStudentProfile } from "../server/student/student.routes"; // For profile updates
 
+const CLASS_LABELS = {
+  "class-6th": "Class 6th",
+  "class-7th": "Class 7th",
+  "class-8th": "Class 8th",
+  "class-9th": "Class 9th",
+  "class-10th": "Class 10th",
+  "class-11th": "Class 11th",
+  "class-12th": "Class 12th",
+  dropper: "Dropper",
+};
+
 const StudentProfile = ({
   studentData,
   loading = false,
@@ -34,16 +45,27 @@ const StudentProfile = ({
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // State to force re-render after profile update
-  const [profileUpdateTrigger, setProfileUpdateTrigger] = useState(0);
+  const normalizedStudent = studentData?.student || studentData;
+  const [studentState, setStudentState] = useState(normalizedStudent);
 
-  // Normalize student object early (prevents TDZ when referenced inside hooks)
-  const student = studentData?.student || studentData;
+  useEffect(() => {
+    const normalized = studentData?.student || studentData;
+    console.log("👤 StudentProfile received data:", studentData);
+    console.log("👤 Normalized student:", normalized);
+    console.log("👤 Following educators in normalized:", normalized?.followingEducators);
+    setStudentState(normalized);
+  }, [studentData]);
+
+  const student = studentState || normalizedStudent;
   const {
     name,
     email,
     mobileNumber,
     image,
+    username,
+    specialization,
+    class: academicClass,
+    joinedAt,
     courses = [],
     followingEducators = [],
     tests = [], // expected to include testSeriesId | seriesId
@@ -81,10 +103,11 @@ const StudentProfile = ({
           "faculty-pedia-student-data",
           JSON.stringify(result.student)
         );
+        setStudentState(result.student);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("student-data-updated"));
+        }
       }
-
-      // Trigger re-render to show updated data
-      setProfileUpdateTrigger((prev) => prev + 1);
 
       // Call parent callback if provided
       if (onProfileUpdate) {
@@ -99,26 +122,82 @@ const StudentProfile = ({
   };
 
   useEffect(() => {
-    // If courses are strings/ObjectIds (not populated objects), fetch them.
-    // Otherwise just mirror them into resolvedCourses.
-    const needFetch =
-      Array.isArray(courses) &&
-      courses.some((c) => typeof c === "string" || (c && !c.title));
-    if (!needFetch) {
-      setResolvedCourses(Array.isArray(courses) ? courses : []);
+    if (!Array.isArray(courses)) {
+      setResolvedCourses([]);
       return;
     }
+
+    const normalizedCourses = courses
+      .map((entry) => {
+        if (!entry) return null;
+        if (entry.courseId && typeof entry.courseId === "object") {
+          return {
+            ...entry.courseId,
+            enrollmentMeta: {
+              enrolledAt: entry.enrolledAt,
+              completionStatus: entry.completionStatus,
+              progressPercentage: entry.progressPercentage,
+            },
+          };
+        }
+        if (entry.courseId) {
+          return entry.courseId;
+        }
+        return entry;
+      })
+      .filter(Boolean);
+
+    const fallbackCourses = normalizedCourses.filter(
+      (course) => typeof course === "object" && course?.title
+    );
+
+    const needsFetch = normalizedCourses.some(
+      (course) => typeof course === "string" || (course && !course.title)
+    );
+
+    if (!needsFetch) {
+      setResolvedCourses(fallbackCourses);
+      return;
+    }
+
     let isCancelled = false;
     (async () => {
       try {
         setCoursesLoading(true);
         setCoursesError(null);
+
         const ids = courses
-          .map((c) => (typeof c === "string" ? c : c._id))
+          .map((entry) => {
+            if (typeof entry === "string") return entry;
+            if (entry?._id) return entry._id;
+            if (typeof entry?.courseId === "string") return entry.courseId;
+            if (entry?.courseId?._id) return entry.courseId._id;
+            return null;
+          })
           .filter(Boolean);
+
+        if (!ids.length) {
+          setResolvedCourses(fallbackCourses);
+          return;
+        }
+
         const fetched = await getCoursesByIds(ids);
         if (!isCancelled) {
-          setResolvedCourses(fetched);
+          const mergedCourses = [...fallbackCourses];
+          const seen = new Set(
+            fallbackCourses
+              .map((course) => course?._id)
+              .filter((courseId) => !!courseId)
+          );
+
+          (Array.isArray(fetched) ? fetched : []).forEach((course) => {
+            if (course?._id && seen.has(course._id)) {
+              return;
+            }
+            mergedCourses.push(course);
+          });
+
+          setResolvedCourses(mergedCourses);
         }
       } catch (err) {
         if (!isCancelled) setCoursesError("Failed to load course details");
@@ -126,6 +205,7 @@ const StudentProfile = ({
         if (!isCancelled) setCoursesLoading(false);
       }
     })();
+
     return () => {
       isCancelled = true;
     };
@@ -412,6 +492,10 @@ const StudentProfile = ({
         email={email}
         mobileNumber={mobileNumber}
         image={image}
+        username={username}
+        specialization={specialization}
+        classLevel={CLASS_LABELS[academicClass] || academicClass}
+        joinedAt={joinedAt}
         isOwnProfile={isOwnProfile}
         onEditClick={() => setIsEditModalOpen(true)}
       />

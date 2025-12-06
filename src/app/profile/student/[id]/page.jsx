@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import StudentProfile from "@/components/Profile/StudentProfile";
-import { getCompleteStudentProfile } from "@/components/server/student/student.routes";
+import { getStudentById } from "@/components/server/student/student.routes";
 
 const StudentProfilePage = () => {
   const params = useParams();
@@ -15,41 +15,25 @@ const StudentProfilePage = () => {
   const [isOwnProfile, setIsOwnProfile] = useState(false);
 
   useEffect(() => {
-    // Check if user is viewing their own profile
-    const checkProfileOwnership = () => {
+    const hydrateFromStorage = () => {
       try {
-        const userData = localStorage.getItem("faculty-pedia-student-data");
-        if (userData) {
-          const parsedUserData = JSON.parse(userData);
-          // Check if the URL ID matches the logged-in user's ID
-          if (parsedUserData._id === id) {
-            setIsOwnProfile(true);
-            // For own profile, use localStorage data directly
-            setStudentData({
-              student: {
-                _id: parsedUserData._id,
-                name: parsedUserData.name,
-                email: parsedUserData.email,
-                mobileNumber: parsedUserData.mobileNumber,
-                image: parsedUserData.image,
-                role: parsedUserData.role,
-                courses: parsedUserData.courses || [],
-                tests: parsedUserData.tests || [],
-                results: parsedUserData.results || [],
-                followingEducators: parsedUserData.followingEducators || [],
-                __v: parsedUserData.__v || 0
-              }
-            });
-            setLoading(false);
-            return;
-          }
+        const raw = localStorage.getItem("faculty-pedia-student-data");
+        if (!raw) {
+          return false;
         }
+
+        const parsed = JSON.parse(raw);
+        if (parsed?._id !== id) {
+          return false;
+        }
+
+        setIsOwnProfile(true);
+        // Don't set loading to false yet - we still need to fetch full data
+        return true;
       } catch (err) {
         console.error("Error parsing localStorage data:", err);
+        return false;
       }
-      
-      // If not own profile or no localStorage data, fetch from API
-      fetchStudentProfile(id);
     };
 
     const fetchStudentProfile = async (studentId) => {
@@ -57,9 +41,10 @@ const StudentProfilePage = () => {
         setLoading(true);
         setError(null);
 
-        const profileData = await getCompleteStudentProfile(studentId);
+        const profileData = await getStudentById(studentId);
+        console.log("📊 Fetched student profile data:", profileData);
+        console.log("📊 Following educators:", profileData?.followingEducators);
         setStudentData(profileData);
-        setIsOwnProfile(false);
       } catch (err) {
         console.error("Error loading student profile:", err);
 
@@ -78,13 +63,17 @@ const StudentProfilePage = () => {
       }
     };
 
-    // Check if it's own profile or fetch from API
-    if (id) {
-      checkProfileOwnership();
-    } else {
+    if (!id) {
       setError("Invalid profile ID");
       setLoading(false);
+      return;
     }
+
+    // Check if it's own profile
+    const isOwn = hydrateFromStorage();
+    
+    // Always fetch from API to get populated data (courses, educators, etc.)
+    fetchStudentProfile(id);
   }, [id]);
 
   // Refresh profile data function
@@ -99,28 +88,16 @@ const StudentProfilePage = () => {
       
       // If it's own profile, refresh from localStorage
       if (isOwnProfile) {
-        const userData = localStorage.getItem("faculty-pedia-student-data");
-        if (userData) {
-          const parsedUserData = JSON.parse(userData);
-          setStudentData({
-            student: {
-              _id: parsedUserData._id,
-              name: parsedUserData.name,
-              email: parsedUserData.email,
-              mobileNumber: parsedUserData.mobileNumber,
-              image: parsedUserData.image,
-              role: parsedUserData.role,
-              courses: parsedUserData.courses || [],
-              tests: parsedUserData.tests || [],
-              results: parsedUserData.results || [],
-              followingEducators: parsedUserData.followingEducators || [],
-              __v: parsedUserData.__v || 0
-            }
-          });
+        const raw = localStorage.getItem("faculty-pedia-student-data");
+        if (raw) {
+          try {
+            setStudentData(JSON.parse(raw));
+          } catch (parseError) {
+            console.error("Error parsing stored student data:", parseError);
+          }
         }
       } else {
-        // Fetch from API for other profiles
-        const profileData = await getCompleteStudentProfile(id);
+        const profileData = await getStudentById(id);
         setStudentData(profileData);
       }
     } catch (err) {

@@ -1,157 +1,137 @@
-// import { API_CLIENT } from "../config";
-
 import API_CLIENT from "../config";
 
-// Get student profile by ID
-export const getStudentProfile = async (studentId) => {
+const extractPayload = (response) =>
+  response?.data?.data ?? response?.data?.student ?? response?.data;
+
+// ===================== Student CRUD =====================
+
+export const createStudent = async (studentData) => {
   try {
-    const response = await API_CLIENT.get(`/api/students/profile/${studentId}`);
+    const response = await API_CLIENT.post("/api/students", studentData);
     return response.data;
   } catch (error) {
-    console.error("Error fetching student profile:", error);
+    console.error("Error creating student:", error);
     throw error;
   }
 };
 
-// Get student's enrolled courses
-export const getStudentCourses = async (studentId) => {
+export const getStudents = async (params = {}) => {
   try {
-    const response = await API_CLIENT.get(`/api/students/${studentId}/courses`);
+    const response = await API_CLIENT.get("/api/students", { params });
     return response.data;
   } catch (error) {
-    console.error("Error fetching student courses:", error);
+    console.error("Error fetching students:", error);
     throw error;
   }
 };
 
-// Get student's test results
-export const getStudentResults = async (studentId) => {
+export const getStudentById = async (studentId) => {
   try {
-    const response = await API_CLIENT.get(`/api/students/${studentId}/results`);
-    return response.data;
+    const response = await API_CLIENT.get(`/api/students/${studentId}`);
+    return extractPayload(response);
   } catch (error) {
-    console.error("Error fetching student results:", error);
+    console.error("Error fetching student:", error);
     throw error;
   }
 };
 
-// Get student's following educators
-export const getStudentFollowingEducators = async (studentId) => {
+export const getStudentStatistics = async (studentId) => {
   try {
     const response = await API_CLIENT.get(
-      `/api/students/${studentId}/following`
+      `/api/students/${studentId}/statistics`
     );
-    return response.data;
+    return extractPayload(response);
   } catch (error) {
-    console.error("Error fetching following educators:", error);
+    console.error("Error fetching student statistics:", error);
     throw error;
   }
 };
 
-// Get complete student profile with all related data
-export const getCompleteStudentProfile = async (studentId) => {
-  try {
-    // Fetch all data in parallel for better performance
-    const [
-      profileResponse,
-      coursesResponse,
-      resultsResponse,
-      educatorsResponse,
-    ] = await Promise.allSettled([
-      getStudentProfile(studentId),
-      getStudentCourses(studentId),
-      getStudentResults(studentId),
-      getStudentFollowingEducators(studentId),
-    ]);
-
-    // Extract data from successful responses
-    const profile =
-      profileResponse.status === "fulfilled" ? profileResponse.value : null;
-    const courses =
-      coursesResponse.status === "fulfilled"
-        ? coursesResponse.value.courses
-        : [];
-    const results =
-      resultsResponse.status === "fulfilled"
-        ? resultsResponse.value.results
-        : [];
-    const educators =
-      educatorsResponse.status === "fulfilled"
-        ? educatorsResponse.value.educators
-        : [];
-
-    if (!profile) {
-      throw new Error("Student profile not found");
-    }
-
-    return {
-      ...profile,
-      courses,
-      results,
-      followingEducators: educators,
-    };
-  } catch (error) {
-    console.error("Error fetching complete student profile:", error);
-    throw error;
-  }
-};
-
-// Update student profile
 export const updateStudentProfile = async (studentId, profileData) => {
   try {
-    const response = await API_CLIENT.put(
-      `/api/students/email-name-mobile/${studentId}`,
-      profileData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+    let payload = profileData;
+    let imageFile = null;
+
+    if (profileData instanceof FormData) {
+      payload = {};
+      profileData.forEach((value, key) => {
+        const isFile =
+          (typeof File !== "undefined" && value instanceof File) ||
+          (typeof Blob !== "undefined" && value instanceof Blob);
+
+        if (isFile) {
+          if (key === "image" || key === "profileImage") {
+            imageFile = value;
+          }
+          return;
+        }
+
+        payload[key] = value;
+      });
+
+      if (imageFile) {
+        const uploadData = new FormData();
+        uploadData.append("image", imageFile);
+
+        const uploadResponse = await API_CLIENT.post(
+          "/api/upload/image",
+          uploadData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+
+        const imageUrl =
+          uploadResponse.data?.imageUrl ||
+          uploadResponse.data?.data?.imageUrl ||
+          uploadResponse.data?.url;
+
+        if (!imageUrl) {
+          throw new Error("Image upload failed. Please try again.");
+        }
+
+        payload.image = imageUrl;
+        const publicId =
+          uploadResponse.data?.publicId || uploadResponse.data?.data?.publicId;
+        if (publicId) {
+          payload.imagePublicId = publicId;
+        }
       }
+    }
+
+    const response = await API_CLIENT.put(
+      `/api/students/${studentId}`,
+      payload
     );
-    return response.data;
+
+    return {
+      success: response.data?.success,
+      message: response.data?.message,
+      student: response.data?.data,
+    };
   } catch (error) {
     console.error("Error updating student profile:", error);
     throw error;
   }
 };
 
-// Follow an educator
-export const followEducator = async (studentId, educatorId) => {
+export const deleteStudent = async (studentId) => {
   try {
-    const response = await API_CLIENT.post(
-      `/api/students/${studentId}/follow`,
-      {
-        educatorId,
-      }
-    );
+    const response = await API_CLIENT.delete(`/api/students/${studentId}`);
     return response.data;
   } catch (error) {
-    console.error("Error following educator:", error);
+    console.error("Error deleting student:", error);
     throw error;
   }
 };
 
-// Unfollow an educator
-export const unfollowEducator = async (studentId, educatorId) => {
-  try {
-    const response = await API_CLIENT.delete(
-      `/api/students/${studentId}/follow/${educatorId}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error unfollowing educator:", error);
-    throw error;
-  }
-};
+// ===================== Student Relationships =====================
 
-// Enroll in a course
 export const enrollInCourse = async (studentId, courseId) => {
   try {
     const response = await API_CLIENT.post(
       `/api/students/${studentId}/enroll`,
-      {
-        courseId,
-      }
+      { courseId }
     );
     return response.data;
   } catch (error) {
@@ -160,82 +140,109 @@ export const enrollInCourse = async (studentId, courseId) => {
   }
 };
 
-// Get student's upcoming webinars
-export const getUpcomingWebinars = async (studentId) => {
+export const followEducator = async (studentId, educatorId) => {
   try {
-    const response = await API_CLIENT.get(
-      `/api/students/${studentId}/upcoming-webinars`
+    const response = await API_CLIENT.post(
+      `/api/students/${studentId}/follow`,
+      { educatorId }
     );
     return response.data;
+  } catch (error) {
+    console.error("Error following educator:", error);
+    throw error;
+  }
+};
+
+export const unfollowEducator = async (studentId, educatorId) => {
+  try {
+    const response = await API_CLIENT.delete(
+      `/api/students/${studentId}/unfollow`,
+      {
+        data: { educatorId },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error unfollowing educator:", error);
+    throw error;
+  }
+};
+
+export const registerForWebinar = async (studentId, webinarId) => {
+  try {
+    const response = await API_CLIENT.post(
+      `/api/students/${studentId}/register-webinar`,
+      { webinarId }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error registering for webinar:", error);
+    throw error;
+  }
+};
+
+// ===================== Student Filters =====================
+
+export const getStudentsBySpecialization = async (
+  specialization,
+  params = {}
+) => {
+  try {
+    const response = await API_CLIENT.get(
+      `/api/students/specialization/${specialization}`,
+      { params }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching students by specialization:", error);
+    throw error;
+  }
+};
+
+export const getStudentsByClass = async (className, params = {}) => {
+  try {
+    const response = await API_CLIENT.get(
+      `/api/students/class/${className}`,
+      { params }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching students by class:", error);
+    throw error;
+  }
+};
+
+// ===================== Discoverability Helpers =====================
+
+export const getUpcomingWebinars = async (_studentId, params = {}) => {
+  try {
+    const response = await API_CLIENT.get("/api/webinars/upcoming", {
+      params,
+    });
+    const webinars = Array.isArray(response.data?.data)
+      ? response.data.data
+      : Array.isArray(response.data?.upcomingWebinars)
+        ? response.data.upcomingWebinars
+        : Array.isArray(response.data)
+          ? response.data
+          : [];
+
+    return {
+      upcomingWebinars: webinars,
+      message: response.data?.message,
+    };
   } catch (error) {
     console.error("Error fetching upcoming webinars:", error);
     throw error;
   }
 };
 
-// Get student's upcoming test series
-export const getUpcomingTestSeries = async (studentId) => {
+export const getUpcomingTestSeries = async (_studentId, params = {}) => {
   try {
-    const response = await API_CLIENT.get(
-      `/api/students/${studentId}/test-series`
-    );
+    const response = await API_CLIENT.get("/api/test-series", { params });
     return response.data;
   } catch (error) {
-    console.error("Error fetching upcoming test series:", error);
-    throw error;
-  }
-};
-
-// Get webinar details by ID
-export const getWebinarById = async (webinarId) => {
-  try {
-    const response = await API_CLIENT.get(
-      `/api/webinars/webinar-by-id/${webinarId}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching webinar details:", error);
-    throw error;
-  }
-};
-
-// Verify webinar attendance eligibility
-export const verifyWebinarAttendance = async (webinarId, studentId) => {
-  try {
-    // Since the backend route is GET but expects body data, we'll use POST with the body
-    const response = await API_CLIENT.post(
-      `/api/webinars/attend-webinar/${webinarId}`,
-      { studentId: studentId }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error verifying webinar attendance:", error);
-    throw error;
-  }
-};
-
-// Verify enrollment and fetch test series for student
-export const getTestSeriesForStudent = async (studentId, seriesId) => {
-  try {
-    const response = await API_CLIENT.get(
-      `/api/test-series/verify-and-get/${studentId}/${seriesId}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching test series for student:", error);
-    throw error;
-  }
-};
-
-// Get course details for student (verify enrollment)
-export const getCourseForStudent = async (studentId, courseId) => {
-  try {
-    const response = await API_CLIENT.get(
-      `/api/course/student-course/${studentId}/course/${courseId}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching course for student:", error);
+    console.error("Error fetching test series:", error);
     throw error;
   }
 };

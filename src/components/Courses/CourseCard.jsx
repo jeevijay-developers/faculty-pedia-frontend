@@ -32,10 +32,18 @@ const CourseCard = ({ course }) => {
           // }}
         />
         {/* Specialization Badge */}
-        <div className="absolute top-3 left-3">
-          <span className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium">
-            {course?.specialization}
-          </span>
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1">
+          {Array.isArray(course?.specialization) ? (
+            course.specialization.map((spec, idx) => (
+              <span key={idx} className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium">
+                {spec}
+              </span>
+            ))
+          ) : (
+            <span className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium">
+              {course?.specialization}
+            </span>
+          )}
         </div>
       </div>
 
@@ -49,11 +57,15 @@ const CourseCard = ({ course }) => {
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center text-sm text-gray-600">
             <FaBook className="mr-1 text-blue-700" />
-            <span>{course.subject}</span>
+            <span className="capitalize">
+              {Array.isArray(course.subject) ? course.subject.join(", ") : course.subject}
+            </span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
             <MdSchool className="w-4 h-4 mr-1 text-green-700" />
-            <span>{course.specialization}</span>
+            <span>
+              {Array.isArray(course.specialization) ? course.specialization.join(", ") : course.specialization}
+            </span>
           </div>
         </div>
 
@@ -70,48 +82,49 @@ const CourseCard = ({ course }) => {
             </span>
           </div>
 
-          {/* Duration */}
+          {/* Max Students */}
           <div className="flex items-center justify-between">
             <div className="flex items-center text-sm text-gray-600">
               <MdAccessTime className="w-4 h-4 mr-2 text-purple-700" />
-              <span className="font-medium">Total Seats:</span>
+              <span className="font-medium">Max Students:</span>
             </div>
             <span className="text-sm text-gray-800 font-medium">
-              {course.seatLimit}
+              {course.maxStudents || course.seatLimit || "N/A"}
             </span>
           </div>
         </div>
 
         {/* Educator Section */}
-        {course.educator && (
+        {(course.educatorID || course.educator) && (
           <div className="border-t border-gray-100 pt-4 mb-4">
             <div className="flex items-center space-x-3">
               <div className="flex-shrink-0">
                 <img
                   src={
-                    course.image?.url ||
+                    course.educatorID?.profilePicture ||
+                    course.educator?.profilePicture ||
                     "/images/placeholders/square.svg"
                   }
-                  alt={`${course.educatorId.firstName} ${course.educatorId.lastName}`}
+                  alt={course.educatorID?.fullName || course.educator?.fullName || "Educator"}
                   className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                 />
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-semibold text-gray-900 truncate">
-                  {`${course.educatorId.firstName} ${course.educatorId.lastName}`}
+                  {course.educatorID?.fullName || course.educatorID?.username || course.educator?.fullName || "Instructor"}
                 </h4>
                 <div className="flex items-center space-x-2 mt-1">
-                  <span className="text-xs text-gray-500">
-                    {course.subject}
+                  <span className="text-xs text-gray-500 capitalize">
+                    {Array.isArray(course.subject) ? course.subject[0] : course.subject}
                   </span>
-                  {/* {course.educator.rating && (
+                  {course.rating > 0 && (
                     <div className="flex items-center space-x-1">
                       <IoStarSharp className="w-3 h-3 text-yellow-500" />
                       <span className="text-xs text-gray-600">
-                        {course.educator.rating}
+                        {course.rating.toFixed(1)}
                       </span>
                     </div>
-                  )} */}
+                  )}
                 </div>
               </div>
             </div>
@@ -119,19 +132,18 @@ const CourseCard = ({ course }) => {
         )}
 
         {/* Pricing Section */}
-        <div className="border-t border-gray-100 mb-4 mt-auto">
-          <div className="flex items-center space-x-2">
+        <div className="border-t border-gray-100 mb-4 mt-auto pt-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-baseline space-x-2">
               <span className="text-2xl font-bold text-gray-900">
-                ₹{course.price || course.fees}
+                ₹{(course.fees || 0).toLocaleString()}
               </span>
-              {course.originalPrice &&
-                course.originalPrice !== (course.price || course.fees) && (
-                  <span className="text-lg text-gray-500 line-through">
-                    ₹{course.originalPrice}
-                  </span>
-                )}
             </div>
+            {course.discount > 0 && (
+              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                {course.discount}% OFF
+              </span>
+            )}
           </div>
         </div>
 

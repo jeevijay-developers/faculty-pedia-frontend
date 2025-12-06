@@ -4,23 +4,25 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-import { getClassesBySpecialization } from "@/Data/Classes/1To1Live-course.data";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import OneToOneLiveClassesCard from "./OneToOneLiveClassesCard";
 import Loading from "../Common/Loading";
-import { fetchOneToOneCourses } from "../server/exams/iit-jee/routes";
+import { fetchLiveClassesBySpecialization } from "../server/exams/iit-jee/routes";
 import CarouselFallback from "../Common/CarouselFallback";
 
 const OneToOneLiveClassesCarousel = ({
   title = "1-1 Live Classes",
   viewMoreLink = "/1-1-live-class",
-  specialization = "All", // New prop for filtering by specialization
+  specialization = "IIT-JEE", // Default to IIT-JEE
   autoplay = true,
 }) => {
   const [swiperRef, setSwiperRef] = useState(null);
+  const [classesToRender, setClassesToRender] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const prevSlide = () => {
     if (swiperRef) swiperRef.slidePrev();
@@ -30,32 +32,64 @@ const OneToOneLiveClassesCarousel = ({
     if (swiperRef) swiperRef.slideNext();
   };
 
-  // Get classes based on specialization
-  // const classesToRender = getClassesBySpecialization(specialization);
-
-  const [classesToRender, setCoursesToRender] = useState(
-    getClassesBySpecialization(specialization)
-  );
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const fetchOneToOneClasses = async () => {
+    const fetchLiveClasses = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const data = await fetchOneToOneCourses();
-        setCoursesToRender([...data.courses]);
-        console.log("Fetched 1-1 Classes:", data.courses);
+        console.log(`📚 Fetching live classes for ${specialization}...`);
+        const response = await fetchLiveClassesBySpecialization(specialization);
+        console.log("📚 Live Classes API Response:", response);
         
+        // Handle different response structures
+        let liveClasses = [];
+        
+        // Backend returns: { success: true, data: { liveClasses: [...] } }
+        if (response?.data?.data?.liveClasses && Array.isArray(response.data.data.liveClasses)) {
+          liveClasses = response.data.data.liveClasses;
+        } else if (response?.data?.liveClasses && Array.isArray(response.data.liveClasses)) {
+          liveClasses = response.data.liveClasses;
+        } else if (response?.liveClasses && Array.isArray(response.liveClasses)) {
+          liveClasses = response.liveClasses;
+        } else if (Array.isArray(response?.data)) {
+          liveClasses = response.data;
+        } else if (Array.isArray(response)) {
+          liveClasses = response;
+        }
+        
+        console.log(`📚 Found ${liveClasses.length} live classes for ${specialization}`);
+        console.log("📚 Live Classes Data:", liveClasses);
+        setClassesToRender(liveClasses);
       } catch (error) {
-        console.error("Failed to fetch educators:", error);
+        console.error("Failed to fetch live classes:", error);
+        setError(error.message || "Failed to load live classes");
+        setClassesToRender([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchOneToOneClasses();
-  }, []);
+
+    if (specialization) {
+      fetchLiveClasses();
+    }
+  }, [specialization]);
 
   if (loading) {
     return <Loading />;
+  }
+
+  // Show error state if there was an error
+  if (error) {
+    return (
+      <CarouselFallback
+        type="live-classes"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        actionText="Explore Live Classes"
+        message={error}
+      />
+    );
   }
 
   // Show fallback if no classes found
@@ -141,21 +175,11 @@ const OneToOneLiveClassesCarousel = ({
               },
             }}
           >
-            {classesToRender.length > 0 ? (
-              classesToRender.map((classData) => (
-                <SwiperSlide key={classData.id}>
-                  <OneToOneLiveClassesCard classData={classData} />
-                </SwiperSlide>
-              ))
-            ) : (
-              <SwiperSlide>
-                <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                  <p className="text-gray-500 text-lg">
-                    No 1-1 live classes available for {specialization}
-                  </p>
-                </div>
+            {classesToRender.map((classData) => (
+              <SwiperSlide key={classData._id || classData.id}>
+                <OneToOneLiveClassesCard classData={classData} />
               </SwiperSlide>
-            )}
+            ))}
           </Swiper>
         </div>
       </div>

@@ -2,8 +2,9 @@ import API_CLIENT from "./config";
 
 export const getCourseById = async (id) => {
   try {
-    const response = await API_CLIENT.get(`/api/course/by-id/${id}`);    
-    return response.data;
+    const response = await API_CLIENT.get(`/api/courses/${id}`);
+    // The API returns { course: {...} }, so we need to extract the course object
+    return response.data.course || response.data;
   } catch (error) {
     console.error("Error fetching course by ID:", error);
     throw error;
@@ -19,6 +20,20 @@ export const getCourseBySubject = async (subject) => {
     throw error;
   }
 };
+
+export const getCoursesBySpecialization = async (specialization, params = {}) => {
+  try {
+    const response = await API_CLIENT.get(
+      `/api/courses/specialization/${specialization}`,
+      { params }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching courses by specialization:", error);
+    throw error;
+  }
+};
+
 export const getCourseBySubjectOneToOne = async (subject) => {
   try {
     const response = await API_CLIENT.get(
@@ -37,7 +52,7 @@ export const getCoursesByIds = async (ids = []) => {
     const results = await Promise.all(
       ids.map(async (id) => {
         try {
-          const res = await API_CLIENT.get(`/api/course/${id}`);
+          const res = await API_CLIENT.get(`/api/courses/${id}`);
           return res.data?.course || res.data; // support different response shapes
         } catch (err) {
           console.warn(
@@ -53,5 +68,15 @@ export const getCoursesByIds = async (ids = []) => {
   } catch (error) {
     console.error("Error fetching multiple courses:", error);
     return [];
+  }
+};
+
+export const getAllCourses = async (params = {}) => {
+  try {
+    const response = await API_CLIENT.get(`/api/courses`, { params });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all courses:", error);
+    throw error;
   }
 };

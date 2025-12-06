@@ -6,10 +6,23 @@ import Link from 'next/link';
 
 // Props: { item: { title, educatorName, postImage, qualification, subject, fee }, detailsHref?: string }
 const OneToOnePPHCard = ({ item, detailsHref = '#' }) => {
+  // Handle empty or missing image
+  const imageSrc = item.postImage && item.postImage.trim() !== '' 
+    ? item.postImage 
+    : '/images/placeholders/1.svg';
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
       <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
-        <Image src={item.postImage} alt={item.educatorName} fill className="object-cover" />
+        <Image 
+          src={imageSrc} 
+          alt={item.educatorName || 'Educator'} 
+          fill 
+          className="object-cover"
+          onError={(e) => {
+            e.currentTarget.src = '/images/placeholders/1.svg';
+          }}
+        />
       </div>
       <div className="p-5 flex flex-col flex-grow">
         <h3 className="text-lg font-bold text-gray-800 mb-1 leading-tight overflow-hidden">{item.title}</h3>

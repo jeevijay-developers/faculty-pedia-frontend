@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import Link from "next/link";
-import { getCoursesBySpecialization } from "@/Data/Courses/courses.data";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import CourseCard from "@/components/Courses/CourseCard";
 
@@ -13,7 +12,7 @@ import CourseCard from "@/components/Courses/CourseCard";
 import "swiper/css";
 import "swiper/css/navigation";
 import Loading from "../Common/Loading";
-import { fetchIITJEEOnlineCourses } from "../server/exams/iit-jee/routes";
+import { getCoursesBySpecialization } from "../server/course.routes";
 import CarouselFallback from "../Common/CarouselFallback";
 
 const CourseCarousel = ({
@@ -23,6 +22,9 @@ const CourseCarousel = ({
   autoplay = true,
 }) => {
   const [swiperRef, setSwiperRef] = useState(null);
+  const [coursesToRender, setCoursesToRender] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const prevSlide = () => {
     if (swiperRef) swiperRef.slidePrev();
@@ -32,31 +34,56 @@ const CourseCarousel = ({
     if (swiperRef) swiperRef.slideNext();
   };
 
-  // Get courses based on specialization
-  // const coursesToRender = getCoursesBySpecialization(specialization);
-  const [coursesToRender, setCoursesToRender] = useState(
-    getCoursesBySpecialization(specialization)
-  );
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchOnlineCourse = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const data = await fetchIITJEEOnlineCourses({
-          specialization: specialization,
-        });
-        setCoursesToRender([...data.courses]);
+        const response = await getCoursesBySpecialization(specialization);
+        console.log("📚 Courses API Response:", response);
+        
+        // Handle different response structures
+        let courses = [];
+        if (response?.data?.courses && Array.isArray(response.data.courses)) {
+          courses = response.data.courses;
+        } else if (response?.courses && Array.isArray(response.courses)) {
+          courses = response.courses;
+        } else if (Array.isArray(response)) {
+          courses = response;
+        }
+        
+        console.log(`📚 Found ${courses.length} courses for ${specialization}`);
+        setCoursesToRender(courses);
       } catch (error) {
-        console.error("Failed to fetch educators:", error);
+        console.error("Failed to fetch courses:", error);
+        setError(error.message || "Failed to load courses");
+        setCoursesToRender([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchOnlineCourse();
-  }, []);
+    
+    if (specialization) {
+      fetchOnlineCourse();
+    }
+  }, [specialization]);
 
   if (loading) {
     return <Loading />;
+  }
+
+  // Show error state if there was an error
+  if (error) {
+    return (
+      <CarouselFallback
+        type="courses"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        actionText="Browse Courses"
+        message={error}
+      />
+    );
   }
 
   // Show fallback if no courses found
@@ -92,23 +119,27 @@ const CourseCarousel = ({
 
         <div className="relative">
           {/* Navigation Buttons */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
-            aria-label="Previous slide"
-            style={{ left: "-1rem" }}
-          >
-            <RiArrowLeftSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
-          </button>
+          {coursesToRender.length > 1 && (
+            <>
+              <button
+                onClick={prevSlide}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                aria-label="Previous slide"
+                style={{ left: "-1rem" }}
+              >
+                <RiArrowLeftSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+              </button>
 
-          <button
-            onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
-            aria-label="Next slide"
-            style={{ right: "-1rem" }}
-          >
-            <RiArrowRightSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
-          </button>
+              <button
+                onClick={nextSlide}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                aria-label="Next slide"
+                style={{ right: "-1rem" }}
+              >
+                <RiArrowRightSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+              </button>
+            </>
+          )}
 
           {/* Swiper Carousel */}
           <Swiper
@@ -117,7 +148,7 @@ const CourseCarousel = ({
             spaceBetween={16}
             slidesPerView={1}
             autoplay={
-              autoplay
+              autoplay && coursesToRender.length > 1
                 ? {
                     delay: 3000,
                     disableOnInteraction: false,
@@ -151,7 +182,7 @@ const CourseCarousel = ({
             }}
           >
             {coursesToRender.map((course, idx) => (
-              <SwiperSlide key={course.id}>
+              <SwiperSlide key={course._id || course.id}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
