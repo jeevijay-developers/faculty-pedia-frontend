@@ -40,7 +40,7 @@ const CourseHeader = ({ course }) => {
           {/* Course Image */}
           <div className="lg:col-span-1">
             <img
-              src={course.image?.url || "/images/placeholders/1.svg"}
+              src={course.image || course.courseThumbnail || "/images/placeholders/1.svg"}
               alt={course.title}
               className="w-full h-64 lg:h-48 object-cover rounded-lg border-2 border-white/20"
             />
@@ -49,29 +49,33 @@ const CourseHeader = ({ course }) => {
           {/* Course Info */}
           <div className="lg:col-span-2">
             <div className="flex flex-wrap gap-2 mb-3">
-              <span className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
-                {course.specialization}
-              </span>
-              <span className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
-                Class {course.courseClass}
-              </span>
+              {course.specialization && course.specialization.map((spec, idx) => (
+                <span key={idx} className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
+                  {spec}
+                </span>
+              ))}
+              {course.class && course.class.map((cls, idx) => (
+                <span key={idx} className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
+                  {cls}
+                </span>
+              ))}
               <span className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
                 {course.courseType === "OTA" ? "One to All" : "One to One"}
               </span>
             </div>
 
             <h1 className="text-3xl font-bold mb-3">{course.title}</h1>
-            <p className="text-black/90 text-lg mb-4">
-              {course.description?.shortDesc}
+            <p className="text-black/90 text-lg mb-4 line-clamp-2">
+              {course.description}
             </p>
 
             {/* Instructor Info */}
             <div className="flex items-center space-x-2 mb-4">
               <div className="text-sm">
                 <span className="text-black/80">Instructor: </span>
-                <span className="font-semibold">{`${
-                  course.educatorId?.firstName || "FirstName"
-                } ${course.educatorId?.lastName || "LastName"}`}</span>
+                <span className="font-semibold">
+                  {course.educatorID?.fullName || course.educatorID?.username || "Instructor"}
+                </span>
               </div>
             </div>
 
@@ -79,27 +83,25 @@ const CourseHeader = ({ course }) => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold">
-                  {calculateWeeksDifference(course.startDate, course.endDate)}{" "}
-                  Weeks
-                  {/* {course.classDuration} Hours */}
+                  {course.courseDuration || "N/A"}
                 </div>
                 <div className="text-black/80 text-sm">Duration</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">
-                  {course.courseClass || "0"}
+                  {course.liveClass?.length || 0}
                 </div>
-                <div className="text-black/80 text-sm">Classes</div>
+                <div className="text-black/80 text-sm">Live Classes</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">
-                  {course.classDuration}h
+                  {course.videos?.length || 0}
                 </div>
-                <div className="text-black/80 text-sm">Per Class</div>
+                <div className="text-black/80 text-sm">Videos</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold">{course.seatLimit}</div>
-                <div className="text-black/80 text-sm">Seats</div>
+                <div className="text-2xl font-bold">{course.maxStudents || 0}</div>
+                <div className="text-black/80 text-sm">Max Students</div>
               </div>
             </div>
           </div>
@@ -120,9 +122,9 @@ const CourseHeader = ({ course }) => {
             <div className="text-2xl font-bold text-green-800">
               ₹{course.fees?.toLocaleString()}
             </div>
-            {course.originalPrice && course.originalPrice !== course.price && (
-              <div className="text-sm text-gray-500 line-through">
-                ₹{course.originalPrice}
+            {course.discount > 0 && (
+              <div className="text-sm text-green-600">
+                {course.discount}% discount applied
               </div>
             )}
           </div>
@@ -150,7 +152,7 @@ const CourseHeader = ({ course }) => {
               </span>
             </div>
             <div className="text-2xl font-bold text-purple-800">
-              {course.purchases?.length || 0}/{course.seatLimit}
+              {course.enrolledStudents?.length || 0}/{course.maxStudents || 0}
             </div>
             <div className="text-sm text-purple-600">Students</div>
           </div>
@@ -164,10 +166,10 @@ const CourseHeader = ({ course }) => {
               </span>
             </div>
             <div className="text-lg font-bold text-orange-800">
-              {course.subject}
+              {Array.isArray(course.subject) ? course.subject.join(", ") : course.subject}
             </div>
             <div className="text-sm text-orange-600">
-              {course.specialization}
+              {Array.isArray(course.specialization) ? course.specialization.join(", ") : course.specialization}
             </div>
           </div>
         </div>

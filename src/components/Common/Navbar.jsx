@@ -17,24 +17,45 @@ const Navbar = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is logged in by checking localStorage for token
-    const checkAuthStatus = () => {
-      if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('faculty-pedia-student-data');
-        if (token) {
-          try {
-            const parsedData = JSON.parse(token);
-            setUserData(parsedData);
-            setIsLoggedIn(true);
-          } catch (error) {
-            console.error('Error parsing user data:', error);
-            localStorage.removeItem('faculty-pedia-student-data');
-          }
-        }
+    const syncUserData = () => {
+      if (typeof window === "undefined") return;
+      const stored = localStorage.getItem("faculty-pedia-student-data");
+      if (!stored) {
+        setIsLoggedIn(false);
+        setUserData(null);
+        return;
+      }
+      try {
+        const parsed = JSON.parse(stored);
+        setUserData(parsed);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("faculty-pedia-student-data");
+        setIsLoggedIn(false);
+        setUserData(null);
       }
     };
 
-    checkAuthStatus();
+    const handleStorage = (event) => {
+      if (!event || !event.key || event.key === "faculty-pedia-student-data") {
+        syncUserData();
+      }
+    };
+
+    syncUserData();
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("storage", handleStorage);
+      window.addEventListener("student-data-updated", syncUserData);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("storage", handleStorage);
+        window.removeEventListener("student-data-updated", syncUserData);
+      }
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -51,11 +72,25 @@ const Navbar = () => {
       localStorage.removeItem('faculty-pedia-auth-token');
       setIsLoggedIn(false);
       setUserData(null);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('student-data-updated'));
+      }
       toast.success('Logged out successfully');
       // Optionally redirect to home page
       router.push('/');
 
     }
+  };
+
+  const resolveAvatarSrc = (data) => {
+    if (!data || !data.image) {
+      return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+    }
+    if (typeof data.image === "string") return data.image;
+    return (
+      data.image.url ||
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+    );
   };
 
   const toggleMenu = () => {
@@ -180,7 +215,7 @@ const Navbar = () => {
                       as="button"
                       isBordered={true}
                       style={{ opacity: 1 }}
-                      src={userData.image?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                      src={resolveAvatarSrc(userData)}
                       className=" border-2 border-gray-300 rounded-full transition-transform hover:scale-105"
 
                     />
@@ -348,7 +383,7 @@ const Navbar = () => {
                 <div className="flex items-center space-x-3 pb-3">
                   <Avatar
                     isBordered={true}
-                    src={userData?.image?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                    src={resolveAvatarSrc(userData)}
                     size="sm"
                   />
                   <div>

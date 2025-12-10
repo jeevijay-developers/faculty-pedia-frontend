@@ -33,8 +33,27 @@ const extractVimeoId = (value) => {
   if (match && match[1]) return match[1];
   return null;
 };
+import {
+  followEducator,
+  unfollowEducator,
+} from "@/components/server/student/student.routes";
+import { getUserData } from "@/utils/userData";
+import { toast } from "react-hot-toast";
 
 const ViewProfile = ({ educatorData }) => {
+  // Add safety check at the top
+  if (!educatorData) {
+    console.error("ViewProfile: educatorData is null or undefined");
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+        <div className="bg-white rounded-lg shadow p-8 text-center max-w-md">
+          <p className="text-lg font-semibold text-gray-800">
+            No educator data available
+          </p>
+        </div>
+      </div>
+    );
+  }
   // State for managing visible items
   const [visibleCourses, setVisibleCourses] = useState(6);
   const [visibleWebinars, setVisibleWebinars] = useState(6);
@@ -46,6 +65,16 @@ const ViewProfile = ({ educatorData }) => {
   const vimeoContainerRef = useRef(null);
   const vimeoIframeRef = useRef(null);
   const vimeoPlayerRef = useRef(null);
+
+  const ratingAverage = Number(
+    educatorData?.rating?.average ?? educatorData?.rating ?? 0
+  );
+  const ratingCount = Number(
+    educatorData?.rating?.count ??
+      educatorData?.reviewCount ??
+      educatorData?.ratingsCount ??
+      0
+  );
 
   // State for webinar details
   const [webinarDetails, setWebinarDetails] = useState([]);
@@ -64,6 +93,23 @@ const ViewProfile = ({ educatorData }) => {
   const [followerCount, setFollowerCount] = useState(
     educatorData?.followers?.length || 0
   );
+  const [isLoadingFollow, setIsLoadingFollow] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Check if user is already following this educator
+  useEffect(() => {
+    const userData = getUserData();
+    setCurrentUser(userData);
+
+    if (userData && userData.followingEducators && educatorData?._id) {
+      const following = userData.followingEducators.some(
+        (follow) =>
+          follow.educatorId === educatorData._id ||
+          follow.educatorId?._id === educatorData._id
+      );
+      setIsFollowing(following);
+    }
+  }, [educatorData?._id]);
 
   // Fetch webinar details when component mounts or educatorData changes
   useEffect(() => {
@@ -150,13 +196,78 @@ const ViewProfile = ({ educatorData }) => {
   };
 
   // Follow functionality
-  const handleFollowToggle = () => {
-    if (isFollowing) {
-      setIsFollowing(false);
-      setFollowerCount((prev) => prev - 1);
-    } else {
-      setIsFollowing(true);
-      setFollowerCount((prev) => prev + 1);
+  const handleFollowToggle = async () => {
+    if (!currentUser) {
+      toast.error("Please login as a student to follow educators");
+      return;
+    }
+
+    if (!educatorData?._id) {
+      toast.error("Educator information not available");
+      return;
+    }
+
+    setIsLoadingFollow(true);
+    try {
+      if (isFollowing) {
+        await unfollowEducator(currentUser._id, educatorData._id);
+        toast.success("Unfollowed successfully");
+        setIsFollowing(false);
+        setFollowerCount((prev) => Math.max(0, prev - 1));
+
+        // Update local storage
+        const updatedFollowing = currentUser.followingEducators.filter(
+          (follow) =>
+            follow.educatorId !== educatorData._id &&
+            follow.educatorId?._id !== educatorData._id
+        );
+        const updatedUser = {
+          ...currentUser,
+          followingEducators: updatedFollowing,
+        };
+        localStorage.setItem(
+          "faculty-pedia-student-data",
+          JSON.stringify(updatedUser)
+        );
+        setCurrentUser(updatedUser);
+      } else {
+        await followEducator(currentUser._id, educatorData._id);
+        toast.success("Followed successfully");
+        setIsFollowing(true);
+        setFollowerCount((prev) => prev + 1);
+
+        // Update local storage
+        const newFollow = {
+          educatorId: educatorData._id,
+          followedAt: new Date(),
+        };
+        const updatedFollowing = [
+          ...(currentUser.followingEducators || []),
+          newFollow,
+        ];
+        const updatedUser = {
+          ...currentUser,
+          followingEducators: updatedFollowing,
+        };
+        localStorage.setItem(
+          "faculty-pedia-student-data",
+          JSON.stringify(updatedUser)
+        );
+        setCurrentUser(updatedUser);
+      }
+    } catch (error) {
+      console.error("Error toggling follow:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to update follow status"
+      );
+      // Revert optimistic update on error
+      if (isFollowing) {
+        setFollowerCount((prev) => prev + 1);
+      } else {
+        setFollowerCount((prev) => Math.max(0, prev - 1));
+      }
+    } finally {
+      setIsLoadingFollow(false);
     }
   };
 
@@ -294,7 +405,7 @@ const ViewProfile = ({ educatorData }) => {
                       <IoStarSharp
                         key={i}
                         className={`w-5 h-5 ${
-                          i < Math.floor(educatorData.rating)
+                          i < Math.floor(ratingAverage)
                             ? "text-yellow-400"
                             : "text-gray-300"
                         }`}
@@ -302,11 +413,9 @@ const ViewProfile = ({ educatorData }) => {
                     ))}
                   </div>
                   <span className="text-lg font-semibold text-gray-900">
-                    {educatorData.rating}
+                    {ratingAverage.toFixed(1)}
                   </span>
-                  <span className="text-gray-600">
-                    ({educatorData.reviewCount} reviews)
-                  </span>
+                  <span className="text-gray-600">({ratingCount} reviews)</span>
                 </div>
 
                 {/* Follow Button and Follower Count */}
@@ -314,25 +423,46 @@ const ViewProfile = ({ educatorData }) => {
                   <div className="flex gap-5 items-center">
                     <button
                       onClick={handleFollowToggle}
-                      className={`flex items-center gap-2 px-6 py-2 text-sm rounded-lg font-medium transition-all duration-200 ${
+                      disabled={isLoadingFollow || !currentUser}
+                      className={`flex items-center gap-2 px-6 py-2 text-sm rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                         isFollowing
                           ? "bg-green-100 text-green-700 border border-green-300 hover:bg-green-200"
                           : "bg-blue-600 text-white hover:bg-blue-700"
                       }`}
                     >
-                      {isFollowing ? (
+                      {isLoadingFollow ? (
+                        <>
+                          <svg
+                            className="animate-spin h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          <span>Processing...</span>
+                        </>
+                      ) : isFollowing ? (
                         <>
                           <FaUserCheck className="w-4 h-4" />
                           Following
-                          <span>
-                            {" "}
-                            <IoLogoWhatsapp className="text-green-500" />{" "}
-                          </span>
                         </>
                       ) : (
                         <>
                           <FaUserPlus className="w-4 h-4" />
-                          Follow
+                          {currentUser ? "Follow" : "Login to Follow"}
                         </>
                       )}
                     </button>
@@ -574,7 +704,7 @@ const ViewProfile = ({ educatorData }) => {
                         image: educatorData.image,
                         specialization: educatorData.specialization,
                         qualification: educatorData.qualification,
-                        rating: educatorData.rating,
+                        rating: ratingAverage,
                         yearsExperience: educatorData.yearsExperience,
                       },
                     }}

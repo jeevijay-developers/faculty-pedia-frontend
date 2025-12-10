@@ -1,51 +1,53 @@
 "use client";
 import React, { useMemo, useState, useEffect } from "react";
-import WebinarCard from "@/components/Webinars/WebinarCard";
+import UpcomingWebinarCard from "@/components/Webinars/UpcomingWebinarCard";
 import Loading from "@/components/Common/Loading";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 // API functions
-import { getWebinarBySubject } from "@/components/server/webinars.routes";
+import { fetchAllWebinars } from "@/components/server/exams/iit-jee/routes";
 import Banner from "@/components/Common/Banner";
 
 export default function WebinarsPage() {
-  const [webinars, setWebinars] = useState([]);
+  const [allWebinars, setAllWebinars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
 
-  // Available subjects - you might want to fetch this from API too
-  const subjects = ["Biology", "Chemistry", "Mathematics", "Physics"];
-  const [activeTab, setActiveTab] = useState(subjects[0]);
+  // Available subjects
+  const subjects = ["All", "Biology", "Chemistry", "Mathematics", "Physics"];
+  const [activeTab, setActiveTab] = useState("All");
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
-  // Fetch webinars by subject
-  const fetchWebinars = async (subject) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await getWebinarBySubject({
-        subject: subject.toLowerCase(),
-      });
-      setWebinars(response.webinars || response || []);
-    } catch (err) {
-      setError(err.message || "Failed to fetch webinars");
-      setWebinars([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch webinars when component mounts or tab changes
+  // Fetch all webinars on mount
   useEffect(() => {
-    if (activeTab) {
-      fetchWebinars(activeTab);
-    }
-  }, [activeTab]);
+    const fetchWebinars = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log("🎤 Fetching all webinars...");
+        const response = await fetchAllWebinars();
+        console.log("🎤 Webinars Response:", response);
+        
+        // Extract webinars from response
+        const webinarsData = response?.data?.webinars || response?.webinars || [];
+        console.log(`🎤 Found ${webinarsData.length} webinars`);
+        setAllWebinars(webinarsData);
+      } catch (err) {
+        console.error("Failed to fetch webinars:", err);
+        setError(err.message || "Failed to fetch webinars");
+        setAllWebinars([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWebinars();
+  }, []);
 
   // Handle tab change
   const handleTabChange = (subject) => {
@@ -54,25 +56,40 @@ export default function WebinarsPage() {
 
   // Retry function
   const handleRetry = () => {
-    if (activeTab) {
-      fetchWebinars(activeTab);
-    }
+    window.location.reload();
   };
 
-  // Filter webinars based on search
+  // Filter webinars based on active tab and search
   const filteredWebinars = useMemo(() => {
-    if (!search.trim()) return webinars;
+    let filtered = allWebinars;
 
-    const query = search.trim().toLowerCase();
-    return webinars.filter((w) => {
-      return (
-        w.title?.toLowerCase().includes(query) ||
-        w.description?.short?.toLowerCase().includes(query) ||
-        w.description?.long?.toLowerCase().includes(query) ||
-        w.subject?.toLowerCase().includes(query)
-      );
-    });
-  }, [webinars, search]);
+    // Filter by subject tab
+    if (activeTab !== "All") {
+      filtered = filtered.filter((webinar) => {
+        const webinarSubjects = Array.isArray(webinar.subject) 
+          ? webinar.subject 
+          : [webinar.subject];
+        return webinarSubjects.some(
+          (sub) => sub?.toLowerCase() === activeTab.toLowerCase()
+        );
+      });
+    }
+
+    // Filter by search query
+    if (search.trim()) {
+      const query = search.trim().toLowerCase();
+      filtered = filtered.filter((w) => {
+        return (
+          w.title?.toLowerCase().includes(query) ||
+          w.description?.toLowerCase().includes(query) ||
+          w.subject?.toString().toLowerCase().includes(query) ||
+          w.specialization?.toString().toLowerCase().includes(query)
+        );
+      });
+    }
+
+    return filtered;
+  }, [allWebinars, activeTab, search]);
 
   // Loading state
   if (loading) {
@@ -190,7 +207,7 @@ export default function WebinarsPage() {
         >
           {filteredWebinars.length > 0 ? (
             filteredWebinars.map((webinar) => (
-              <WebinarCard key={webinar._id || webinar.id} webinar={webinar} />
+              <UpcomingWebinarCard key={webinar._id || webinar.id} item={webinar} />
             ))
           ) : (
             <div className="col-span-full text-center py-16">
@@ -208,6 +225,14 @@ export default function WebinarsPage() {
             </div>
           )}
         </div>
+        
+        {/* Results Count */}
+        {filteredWebinars.length > 0 && (
+          <div className="mt-8 text-center text-gray-600" data-aos="fade-up">
+            Showing {filteredWebinars.length} of {allWebinars.length} webinar
+            {allWebinars.length !== 1 ? "s" : ""}
+          </div>
+        )}
       </div>
     </div>
   );

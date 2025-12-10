@@ -45,33 +45,57 @@ const CourseDetails = ({ id }) => {
 
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
   useEffect(() => {
     setLoading(true);
-    const fetchEducators = async () => {
+    setError(null);
+    
+    const fetchCourseDetails = async () => {
       try {
-        // console.log("Fetching course with ID:", id);
+        console.log("Fetching course with ID:", id);
         
         const data = await getCourseById(id);
-        setCourse(data);
-        // setFilteredEducators([...data.educators]);
+        console.log("Course data received:", data);
+        
+        if (data) {
+          setCourse(data);
+        } else {
+          setError("Course not found");
+        }
       } catch (error) {
-        console.error("Error fetching educators:", error);
+        console.error("Error fetching course:", error);
+        setError(error.message || "Failed to load course details");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchEducators();
+    if (id) {
+      fetchCourseDetails();
+    }
   }, [id]);
 
   if (loading) {
     return <Loading />;
   }
 
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto p-4">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <p className="text-red-600 font-medium">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!course) {
     return (
       <div className="max-w-7xl mx-auto p-4">
-        <p className="text-gray-500">Course not found.</p>
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+          <p className="text-gray-500">Course not found.</p>
+        </div>
       </div>
     );
   }
@@ -102,7 +126,7 @@ const CourseDetails = ({ id }) => {
                   : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
             >
-              Classes ({course.classes?.length || 0})
+              Live Classes ({course.liveClass?.length || 0})
             </button>
             <button
               onClick={() => setActiveTab("tests")}
@@ -112,7 +136,7 @@ const CourseDetails = ({ id }) => {
                   : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
             >
-              Tests ({course.tests?.length || 0})
+              Test Series ({course.testSeries?.length || 0})
             </button>
           </nav>
         </div>
@@ -128,28 +152,28 @@ const CourseDetails = ({ id }) => {
                   <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
                     <FaUsers className="w-8 h-8 mx-auto text-blue-600 mb-2" />
                     <div className="text-2xl font-bold text-gray-900">
-                      {course.seatLimit}
+                      {course.maxStudents || 0}
                     </div>
-                    <div className="text-sm text-gray-600">Seat Limit</div>
+                    <div className="text-sm text-gray-600">Max Students</div>
                   </div>
                   <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
                     <FaClock className="w-8 h-8 mx-auto text-green-600 mb-2" />
                     <div className="text-2xl font-bold text-gray-900">
-                      {course.classDuration}h
+                      {course.courseDuration || "N/A"}
                     </div>
-                    <div className="text-sm text-gray-600">Per Class</div>
+                    <div className="text-sm text-gray-600">Course Duration</div>
                   </div>
                   <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
                     <FaGraduationCap className="w-8 h-8 mx-auto text-purple-600 mb-2" />
                     <div className="text-2xl font-bold text-gray-900">
-                      {course.classes?.length || 0}
+                      {course.liveClass?.length || 0}
                     </div>
-                    <div className="text-sm text-gray-600">Total Classes</div>
+                    <div className="text-sm text-gray-600">Live Classes</div>
                   </div>
                   <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
                     <FaChair className="w-8 h-8 mx-auto text-orange-600 mb-2" />
                     <div className="text-2xl font-bold text-gray-900">
-                      {course.purchases?.length || 0}
+                      {course.enrolledStudents?.length || 0}
                     </div>
                     <div className="text-sm text-gray-600">Enrolled</div>
                   </div>
@@ -158,14 +182,14 @@ const CourseDetails = ({ id }) => {
                 {/* Course Videos */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Intro Video */}
-                  {course.videos?.intro && (
+                  {course.introVideo && (
                     <div className="bg-white rounded-lg border border-gray-200 p-6">
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">
                         Course Introduction
                       </h3>
                       <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
                         <iframe
-                          src={getYouTubeEmbedUrl(course.videos.intro)}
+                          src={getYouTubeEmbedUrl(course.introVideo)}
                           title="Course Introduction"
                           className="w-full h-full"
                           frameBorder="0"
@@ -177,18 +201,16 @@ const CourseDetails = ({ id }) => {
                     </div>
                   )}
 
-                  {/* Description Video */}
-                  {course.videos?.descriptionVideo && (
+                  {/* Demo Videos */}
+                  {course.videos && course.videos.length > 0 && (
                     <div className="bg-white rounded-lg border border-gray-200 p-6">
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">
                         Demo Video
                       </h3>
                       <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
                         <iframe
-                          src={getYouTubeEmbedUrl(
-                            course.videos.descriptionVideo
-                          )}
-                          title="Course Description"
+                          src={getYouTubeEmbedUrl(course.videos[0].link)}
+                          title={course.videos[0].title || "Course Demo"}
                           className="w-full h-full"
                           frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -205,8 +227,8 @@ const CourseDetails = ({ id }) => {
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
                     Course Description
                   </h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    {course.description?.longDesc}
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                    {course.description}
                   </p>
                 </div>
 
@@ -238,11 +260,67 @@ const CourseDetails = ({ id }) => {
                       <FaClock className="w-5 h-5 text-green-600" />
                       <div>
                         <p className="text-sm text-gray-500">Duration</p>
-                        <p className="font-medium">{course.duration}</p>
+                        <p className="font-medium">{course.courseDuration}</p>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                {/* Course Objectives */}
+                {course.courseObjectives && course.courseObjectives.length > 0 && (
+                  <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                      Course Objectives
+                    </h3>
+                    <ul className="list-disc list-inside space-y-2">
+                      {course.courseObjectives.map((objective, index) => (
+                        <li key={index} className="text-gray-700">{objective}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Prerequisites */}
+                {course.prerequisites && course.prerequisites.length > 0 && (
+                  <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                      Prerequisites
+                    </h3>
+                    <ul className="list-disc list-inside space-y-2">
+                      {course.prerequisites.map((prerequisite, index) => (
+                        <li key={index} className="text-gray-700">{prerequisite}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Study Materials */}
+                {course.studyMaterials && course.studyMaterials.length > 0 && (
+                  <div className="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                      Study Materials
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {course.studyMaterials.map((material, index) => (
+                        <a
+                          key={index}
+                          href={material.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-900">{material.title}</p>
+                            <p className="text-sm text-gray-500">{material.fileType}</p>
+                          </div>
+                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -250,21 +328,21 @@ const CourseDetails = ({ id }) => {
               <div>
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    Course Classes
+                    Live Classes
                   </h3>
                   <p className="text-gray-600">
-                    All scheduled classes for this course
+                    All scheduled live classes for this course
                   </p>
                 </div>
-                {course.classes && course.classes.length > 0 ? (
+                {course.liveClass && course.liveClass.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {course.classes.map((classItem, index) => (
-                      <ClassCard key={index} classData={classItem} />
+                    {course.liveClass.map((classItem, index) => (
+                      <ClassCard key={classItem._id || index} classData={classItem} />
                     ))}
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">No classes scheduled yet.</p>
+                    <p className="text-gray-500">No live classes scheduled yet.</p>
                   </div>
                 )}
               </div>
@@ -274,36 +352,36 @@ const CourseDetails = ({ id }) => {
               <div>
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    Course Tests
+                    Test Series
                   </h3>
                   <p className="text-gray-600">
                     Practice tests and assessments for this course
                   </p>
                 </div>
-                {course.tests && course.tests.length > 0 ? (
+                {course.testSeries && course.testSeries.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {course.tests.map((test, index) => (
+                    {course.testSeries.map((test, index) => (
                       <TestSeriesCard
-                        key={index}
+                        key={test._id || index}
                         testSeries={{
-                          id: test.id,
+                          id: test._id || test.id,
                           title: test.title,
-                          educatorName: course.instructor,
+                          educatorName: course.educatorID?.fullName || "Instructor",
                           educatorPhoto:
-                            course.image?.url || "/images/placeholders/1.svg",
+                            course.educatorID?.profilePicture || "/images/placeholders/1.svg",
                           qualification: "Course Test",
-                          subject: test.subject,
-                          specialization: course.specialization,
+                          subject: course.subject?.[0] || "General",
+                          specialization: course.specialization?.[0] || "General",
                           noOfTests: 1,
                           fee: 0, // Course tests are usually free
-                          slug: `test-${test.id}`,
+                          slug: test.slug || `test-${test._id || test.id}`,
                         }}
                       />
                     ))}
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">No tests available yet.</p>
+                    <p className="text-gray-500">No test series available yet.</p>
                   </div>
                 )}
               </div>
@@ -317,20 +395,33 @@ const CourseDetails = ({ id }) => {
               <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6 shadow-sm">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-600 mb-2">
-                    ₹{course.price || course.fees}
+                    ₹{course.fees?.toLocaleString()}
                   </div>
-                  {course.originalPrice &&
-                    course.originalPrice > (course.price || course.fees) && (
-                      <div className="text-lg text-gray-500 line-through mb-4">
-                        ₹{course.originalPrice}
-                      </div>
-                    )}
+                  {course.discount > 0 && (
+                    <div className="text-sm text-green-600 mb-4">
+                      {course.discount}% discount
+                    </div>
+                  )}
+                  {course.rating > 0 && (
+                    <div className="flex items-center justify-center mb-4">
+                      <span className="text-yellow-500 mr-1">★</span>
+                      <span className="font-medium">{course.rating.toFixed(1)}</span>
+                      <span className="text-gray-500 text-sm ml-1">
+                        ({course.ratingCount || 0} reviews)
+                      </span>
+                    </div>
+                  )}
                   <EnrollButton
                     type="course"
                     itemId={course._id || course.id}
-                    price={course.price || course.fees}
+                    price={course.fees}
                     className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-3"
                   />
+                  {course.certificateAvailable && (
+                    <div className="text-sm text-gray-600 mt-2">
+                      🎓 Certificate available upon completion
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -351,9 +442,12 @@ const CourseDetails = ({ id }) => {
               <EnrollButton
                 type="course"
                 itemId={course._id || course.id}
-                price={course.price || course.fees}
+                price={course.fees}
                 className="bg-blue-600 text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg"
               />
+              <div className="text-sm text-gray-600">
+                💳 Secure payment • 🔒 Money-back guarantee
+              </div>
             </div>
           </div>
         )}

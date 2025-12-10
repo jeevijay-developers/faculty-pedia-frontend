@@ -9,9 +9,28 @@ const ProfileHeader = ({
   email,
   mobileNumber,
   image,
+  username,
+  specialization,
+  classLevel,
+  joinedAt,
   isOwnProfile = false,
   onEditClick,
 }) => {
+  const joinedDateLabel = joinedAt
+    ? new Date(joinedAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
+
+  const resolvedImageSrc = (() => {
+    if (!image) return null;
+    if (typeof image === "string") return image;
+    if (image?.url) return image.url;
+    return null;
+  })();
+
   return (
     <div className="bg-white shadow-lg border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -19,10 +38,10 @@ const ProfileHeader = ({
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
             {/* Profile Image */}
             <div className="flex-shrink-0">
-              {image?.url ? (
+              {resolvedImageSrc ? (
                 <div className="w-28 h-28 relative">
                   <Image
-                    src={image.url}
+                    src={resolvedImageSrc}
                     alt={name}
                     fill
                     className="object-cover rounded-full border-4 border-white shadow-xl ring-4 ring-blue-100"
@@ -40,6 +59,9 @@ const ProfileHeader = ({
               <div className="flex items-center space-x-3 mb-3">
                 <h1 className="text-3xl font-bold text-gray-900">{name}</h1>
               </div>
+              {username && (
+                <p className="text-sm text-gray-500 mb-3">@{username}</p>
+              )}
               <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-8 text-gray-600">
                 <div className="flex items-center">
                   <div className="p-2 bg-gray-100 rounded-lg mr-3">
@@ -54,6 +76,25 @@ const ProfileHeader = ({
                   <span className="font-medium">{mobileNumber}</span>
                 </div>
               </div>
+              {(specialization || classLevel || joinedDateLabel) && (
+                <div className="flex flex-wrap items-center gap-3 mt-4">
+                  {specialization && (
+                    <span className="px-3 py-1 bg-blue-50 text-blue-800 rounded-full text-xs font-semibold uppercase tracking-wide">
+                      {specialization}
+                    </span>
+                  )}
+                  {classLevel && (
+                    <span className="px-3 py-1 bg-indigo-50 text-indigo-800 rounded-full text-xs font-semibold">
+                      {classLevel}
+                    </span>
+                  )}
+                  {joinedDateLabel && (
+                    <span className="text-sm text-gray-500">
+                      Joined {joinedDateLabel}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 

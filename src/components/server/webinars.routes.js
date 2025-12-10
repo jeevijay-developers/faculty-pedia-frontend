@@ -2,7 +2,7 @@ import API_CLIENT from "./config";
 
 export const getWebinarById = async (id) => {
   try {
-    const response = await API_CLIENT.get(`/api/webinars/webinar-by-id/${id}`);
+    const response = await API_CLIENT.get(`/api/webinars/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching webinar by ID:", error);

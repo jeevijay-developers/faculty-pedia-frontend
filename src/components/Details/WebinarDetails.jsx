@@ -14,20 +14,22 @@ import EnrollButton from "../Common/EnrollButton";
 
 const WebinarDetails = ({ webinar }) => {
   // Handle different response formats and provide fallbacks
-  const imageUrl = webinar.image?.url || "https://placehold.co/800x600";
+  const imageUrl = webinar.image || "https://placehold.co/800x600";
   const title = webinar.title || "Webinar Title";
-  const description =
-    webinar.description?.long ||
-    webinar.description?.longDesc ||
-    webinar.description?.short ||
-    "No description available";
-  const date = webinar.date ? new Date(webinar.date) : new Date();
-  const duration = webinar.duration || 60;
+  const description = webinar.description || "No description available";
+  const timing = webinar.timing ? new Date(webinar.timing) : new Date();
+  const duration = webinar.duration || 1; // duration in hours
   const seatLimit = webinar.seatLimit || 0;
-  const fees = webinar.fees || webinar.price || 0;
-  const subject = webinar.subject || "General";
-  const webinarType = webinar.webinarType || "OTA";
-  const time = webinar.time || "TBD";
+  const fees = webinar.fees || 0;
+  const subject = Array.isArray(webinar.subject) 
+    ? webinar.subject.join(", ") 
+    : webinar.subject || "General";
+  const webinarType = webinar.webinarType || "one-to-all";
+  const specialization = Array.isArray(webinar.specialization)
+    ? webinar.specialization.join(", ")
+    : webinar.specialization || "General";
+  const enrolledCount = webinar.enrolledCount || webinar.studentEnrolled?.length || 0;
+  const seatsAvailable = webinar.seatsAvailable || (seatLimit - enrolledCount);
 
   return (
     <div>
@@ -56,8 +58,8 @@ const WebinarDetails = ({ webinar }) => {
                 <FaBook className="w-3 h-3 inline mr-1" />
                 {subject.charAt(0).toUpperCase() + subject.slice(1)}
               </span>
-              <span className="px-3 py-1 text-xs font-medium text-white bg-green-600 rounded-full">
-                {webinarType === "OTO" ? "One-to-One" : "One-to-All"}
+              <span className="px-3 py-1 text-xs font-medium text-white bg-green-600 rounded-full capitalize">
+                {webinarType.replace('-', ' ')}
               </span>
             </div>
           </div>
@@ -77,14 +79,19 @@ const WebinarDetails = ({ webinar }) => {
                 <div>
                   <p className="text-sm font-medium text-gray-500">Date</p>
                   <p className="font-semibold">
-                    {date.toLocaleDateString("en-US", {
+                    {timing.toLocaleDateString("en-US", {
                       weekday: "short",
                       year: "numeric",
                       month: "short",
                       day: "numeric",
                     })}
                   </p>
-                  <p className="text-sm text-gray-500">{time}</p>
+                  <p className="text-sm text-gray-500">
+                    {timing.toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
                 </div>
               </div>
 
@@ -92,9 +99,9 @@ const WebinarDetails = ({ webinar }) => {
                 <FaClock className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium text-gray-500">Duration</p>
-                  <p className="font-semibold">{duration} minutes</p>
+                  <p className="font-semibold">{duration} hours</p>
                   <p className="text-sm text-gray-500">
-                    {Math.floor(duration / 60)}h {duration % 60}m
+                    {duration * 60} minutes
                   </p>
                 </div>
               </div>
@@ -103,9 +110,9 @@ const WebinarDetails = ({ webinar }) => {
                 <FaUsers className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium text-gray-500">Seats</p>
-                  <p className="font-semibold">{seatLimit} available</p>
+                  <p className="font-semibold">{seatsAvailable} available</p>
                   <p className="text-sm text-gray-500">
-                    {webinar.enrolledStudents?.length || 0} enrolled
+                    {enrolledCount} enrolled
                   </p>
                 </div>
               </div>
@@ -176,7 +183,7 @@ const WebinarDetails = ({ webinar }) => {
                 Specialization
               </h3>
               <p className="text-gray-600">
-                {webinar.specialization || "General"}
+                {specialization}
               </p>
             </div>
             <div>
@@ -185,10 +192,8 @@ const WebinarDetails = ({ webinar }) => {
             </div>
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">Type</h3>
-              <p className="text-gray-600">
-                {webinarType === "OTO"
-                  ? "One-to-One Session"
-                  : "One-to-All Session"}
+              <p className="text-gray-600 capitalize">
+                {webinarType.replace('-', ' ')}
               </p>
             </div>
             <div>
@@ -199,7 +204,7 @@ const WebinarDetails = ({ webinar }) => {
         </div>
 
         {/* Assets Section */}
-        {webinar.assetsLinks && webinar.assetsLinks.length > 0 && (
+        {webinar.assetsLink && webinar.assetsLink.length > 0 && (
           <div
             className="bg-white rounded-xl shadow-lg p-6"
             data-aos="fade-up"
@@ -210,10 +215,10 @@ const WebinarDetails = ({ webinar }) => {
               Study Materials
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {webinar.assetsLinks.map((asset, index) => (
+              {webinar.assetsLink.map((asset, index) => (
                 <a
                   key={index}
-                  href={asset.link}
+                  href={asset}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200"
@@ -222,8 +227,8 @@ const WebinarDetails = ({ webinar }) => {
                     <FaBook className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{asset.name}</p>
-                    <p className="text-sm text-gray-500">Study Material</p>
+                    <p className="font-medium text-gray-900">Material {index + 1}</p>
+                    <p className="text-sm text-gray-500">Study Resource</p>
                   </div>
                 </a>
               ))}

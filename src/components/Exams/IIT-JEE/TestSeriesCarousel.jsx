@@ -9,53 +9,79 @@ import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
-import { getTestsBySpecialization } from "@/Data/Tests/test.data";
-
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { fetchIITJEETestSeries } from "@/components/server/exams/iit-jee/routes";
+import { fetchTestSeriesBySpecialization } from "@/components/server/exams/iit-jee/routes";
 import Loading from "@/components/Common/Loading";
 import CarouselFallback from "@/components/Common/CarouselFallback";
 
 const TestSeriesCarousel = ({
   title = "Online Test Series",
-  specialization = "All", // IIT-JEE | NEET | CBSE | All
+  specialization = "IIT-JEE", // IIT-JEE | NEET | CBSE
   viewMoreLink = "/test-series",
   autoplay = true,
 }) => {
   const [swiperRef, setSwiperRef] = useState(null);
-
-  // const testsToRender = getTestsBySpecialization(specialization);
-
-  const [testsToRender, setData] = useState(
-    getTestsBySpecialization(specialization)
-  );
+  const [testsToRender, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    const fetchWebinars = async () => {
+    const fetchTestSeries = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const DATA = await fetchIITJEETestSeries({
-          specialization: specialization,
-        });
-        setData([...DATA.testSeries]);
+        console.log(`📚 Fetching test series for ${specialization}...`);
+        const response = await fetchTestSeriesBySpecialization(specialization);
+        console.log("📚 Test Series API Response:", response);
+        
+        // Extract test series from response
+        const testSeriesData = response?.testSeries || [];
+        console.log(`📚 Found ${testSeriesData.length} test series`);
+        setData(testSeriesData);
       } catch (error) {
-        console.error("Failed to fetch educators:", error);
+        console.error("Failed to fetch test series:", error);
+        setError(error.message || "Failed to load test series");
+        setData([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchWebinars();
-  }, []);
+    
+    if (specialization) {
+      fetchTestSeries();
+    }
+  }, [specialization]);
 
   if (loading) {
     return <Loading />;
   }
 
-  if (testsToRender.length === 0) {
-    return <CarouselFallback type="test-series" title={title} />;
+  // Show error state if there was an error
+  if (error) {
+    return (
+      <CarouselFallback
+        type="test-series"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        message={error}
+      />
+    );
+  }
+
+  // Show fallback if no test series found
+  if (!testsToRender || testsToRender.length === 0) {
+    return (
+      <CarouselFallback
+        type="test-series"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+      />
+    );
   }
 
   const prevSlide = () => {
@@ -162,62 +188,69 @@ const TestSeriesCarousel = ({
 export const TestSeriesCard = ({ testSeries }) => {
   console.log("Test series: ", testSeries);
   
+  // Format validity date
+  const validityDate = testSeries.validity 
+    ? new Date(testSeries.validity).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })
+    : 'N/A';
+  
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
-      {/* Educator Photo */}
+      {/* Test Series Image */}
       <div className="relative h-40 bg-gray-100">
         <Image
           src={
-            testSeries.educatorId?.image?.url || "/images/placeholders/1.svg"
+            testSeries.image || "/images/placeholders/1.svg"
           }
-          alt={testSeries.educatorId?.firstName || "Educator"}
+          alt={testSeries.title || "Test Series"}
           fill
           className="object-cover"
         />
         <div className="absolute top-3 left-3">
           <span className="bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded-md">
-            {testSeries.specialization}
+            {testSeries.specialization?.[0] || 'General'}
           </span>
         </div>
       </div>
 
       {/* Card Content */}
       <div className="p-5 flex flex-col flex-grow">
-        <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight">
+        <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight line-clamp-2">
           {testSeries.title}
         </h3>
-        <h4 className="text-base font-semibold text-blue-600 mb-1">
-          {testSeries.educatorName}
+        <h4 className="text-base font-semibold text-blue-600 mb-3">
+          {testSeries.educatorId?.fullName || 'Educator'}
         </h4>
-        <div className="mb-2 text-sm text-gray-600">
-          <span className="font-medium">Qualification: </span>
-          <span className="text-sm text-gray-800 font-medium truncate">
-            {testSeries.qualification && (
-              <span className="text-sm text-gray-800 font-medium truncate">
-                {testSeries.qualification}
-              </span>
-            )}
-          </span>
+        
+        <div className="space-y-2 mb-4">
+          <div className="text-sm text-gray-600">
+            <span className="font-medium">Subject: </span>
+            <span className="text-gray-800">
+              {Array.isArray(testSeries.subject) 
+                ? testSeries.subject.join(', ') 
+                : testSeries.subject}
+            </span>
+          </div>
+          <div className="text-sm text-gray-600">
+            <span className="font-medium">Number of Tests: </span>
+            <span className="text-gray-800">{testSeries.numberOfTests || 0}</span>
+          </div>
+          <div className="text-sm text-gray-600">
+            <span className="font-medium">Valid Until: </span>
+            <span className="text-gray-800">{validityDate}</span>
+          </div>
         </div>
-        <div className="mb-2 text-sm text-gray-600">
-          <span className="font-medium">Subject: </span>
-          {testSeries.subject}
-        </div>
-        <div className="mb-2 text-sm text-gray-600">
-          <span className="font-medium">Number of Tests: </span>
-          {testSeries.noOfTests}
-        </div>
-        <div className="mb-4 text-xl font-bold text-black">
-          ₹{testSeries.fee}
-        </div>
+        
+        <div className="mt-auto">
+          <div className="mb-4 text-2xl font-bold text-blue-600">
+            ₹{testSeries.price?.toLocaleString('en-IN') || 0}
+          </div>
 
-        {/* Action Button */}
-        <div className="flex flex-row gap-2">
+          {/* Action Button */}
           <Link
-            href={`/details/test-series/${testSeries.id}`}
-            className="w-full text-white border bg-blue-600 border-gray-300 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+            href={`/test-series/${testSeries._id || testSeries.id}`}
+            className="w-full text-white bg-blue-600 hover:bg-blue-700 py-2.5 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
           >
-            View details
+            View Details
           </Link>
         </div>
       </div>

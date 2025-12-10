@@ -9,12 +9,11 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import UpcomingWebinarCard from "./UpcomingWebinarCard";
-import { upcomingWebinarSpecializedData } from "@/Data/Webinar/webinar.data";
 import CarouselFallback from "../Common/CarouselFallback";
 
 import "swiper/css";
 import "swiper/css/navigation";
-import { fetchIITJEEWebinars } from "../server/exams/iit-jee/routes";
+import { fetchWebinarsBySpecialization } from "../server/exams/iit-jee/routes";
 import Loading from "../Common/Loading";
 
 /**
@@ -29,42 +28,64 @@ const UpcomingWebinarCarousel = ({
   viewMoreLink = "/webinars",
 }) => {
   const [swiperRef, setSwiperRef] = useState(null);
-
-  // const data = useMemo(() => {
-  //   return upcomingWebinarSpecializedData.filter(
-  //     (w) => w.specialization === specialization
-  //   );
-  // }, [specialization]);
-
-  const [data, setData] = useState(
-    upcomingWebinarSpecializedData.filter(
-      (w) => w.specialization === specialization
-    )
-  );
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchWebinars = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const DATA = await fetchIITJEEWebinars({
-          specialization: specialization,
-        });
-        setData([...DATA.webinars]);
+        console.log(`🎤 Fetching webinars for ${specialization}...`);
+        const response = await fetchWebinarsBySpecialization(specialization);
+        console.log("🎤 Webinars API Response:", response);
+        
+        // Extract webinars from response
+        const webinarsData = response?.data?.webinars || response?.webinars || [];
+        console.log(`🎤 Found ${webinarsData.length} webinars`);
+        setData(webinarsData);
       } catch (error) {
-        console.error("Failed to fetch educators:", error);
+        console.error("Failed to fetch webinars:", error);
+        setError(error.message || "Failed to load webinars");
+        setData([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchWebinars();
-  }, []);
+    
+    if (specialization) {
+      fetchWebinars();
+    }
+  }, [specialization]);
 
   if (loading) {
     return <Loading />;
   }
 
-  if (data.length === 0) {
-    return <CarouselFallback type="webinars" title={title} />;
+  // Show error state if there was an error
+  if (error) {
+    return (
+      <CarouselFallback
+        type="webinars"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+        message={error}
+      />
+    );
+  }
+
+  // Show fallback if no webinars found
+  if (!data || data.length === 0) {
+    return (
+      <CarouselFallback
+        type="webinars"
+        specialization={specialization}
+        title={title}
+        viewMoreLink={viewMoreLink}
+      />
+    );
   }
 
   const prevSlide = () => {

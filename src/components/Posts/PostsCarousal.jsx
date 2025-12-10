@@ -22,27 +22,51 @@ const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
 
   const [filteredPosts, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchPosts = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const DATA = await fetchIITJEEBlogs({
-          specialization,
-        });
-        setData([...DATA.blogs]);
+        console.log(`📝 Fetching posts for ${specialization}...`);
+        const response = await fetchIITJEEBlogs(specialization);
+        console.log("📝 Posts API Response:", response);
+        
+        // Extract posts from response
+        const postsData = response?.data?.posts || response?.posts || [];
+        console.log(`📝 Found ${postsData.length} posts`);
+        setData(postsData);
       } catch (error) {
-        console.error("Failed to fetch educators:", error);
+        console.error("Failed to fetch posts:", error);
+        setError(error.message || "Failed to load posts");
+        setData([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchBlogs();
+    
+    if (specialization) {
+      fetchPosts();
+    }
   }, [specialization]);
 
   if (loading) {
     return <Loading />;
   }
 
+  // Show error state if there was an error
+  if (error) {
+    return (
+      <CarouselFallback 
+        type="posts" 
+        title={subject === "All" ? "Latest Posts" : `${subject} Posts`}
+        message={error}
+      />
+    );
+  }
+
+  // Show fallback if no posts found
   if (filteredPosts.length === 0) {
     return (
       <CarouselFallback 
@@ -122,7 +146,7 @@ const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
             }}
           >
             {filteredPosts.map((post) => (
-              <SwiperSlide key={post.id}>
+              <SwiperSlide key={post._id || post.id}>
                 <PostCard post={post} />
               </SwiperSlide>
             ))}

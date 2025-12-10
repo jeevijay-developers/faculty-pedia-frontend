@@ -7,6 +7,11 @@ import { FiX, FiUser, FiMail, FiPhone, FiCamera, FiCheckCircle, FiSave, FiLoader
 const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
   // Handle both profileImage and image fields for compatibility
   const initialImage = studentData?.profileImage || studentData?.image;
+  const resolveImageSrc = (image) => {
+    if (!image) return null;
+    if (typeof image === "string") return image;
+    return image?.url || null;
+  };
   
   const [formData, setFormData] = useState({
     name: studentData?.name || "",
@@ -18,7 +23,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
-  const [imagePreview, setImagePreview] = useState(initialImage?.url || null);
+  const [imagePreview, setImagePreview] = useState(resolveImageSrc(initialImage));
   const fileInputRef = useRef(null);
   const modalRef = useRef(null);
 
@@ -179,7 +184,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
       mobileNumber: studentData?.mobileNumber || "",
       profileImage: initialImage || null,
     });
-    setImagePreview(initialImage?.url || null);
+    setImagePreview(resolveImageSrc(initialImage));
     setErrors({});
     setLoading(false);
     onClose();

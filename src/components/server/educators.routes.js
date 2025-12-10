@@ -1,21 +1,61 @@
 import API_CLIENT from "./config";
 
-export const getEducatorsBySubject = async (subject) => {
+const EDUCATORS_BASE_PATH = "/api/educators";
+const EDUCATOR_UPDATE_BASE_PATH = "/api/educator-update";
+
+export const getAllEducators = async (params = {}) => {
   try {
-    const response = await API_CLIENT.post(`/api/educator/by-subject`, subject);
+    const response = await API_CLIENT.get(`${EDUCATORS_BASE_PATH}`, { params });
     return response.data;
   } catch (error) {
-    console.error("Error fetching educators by subject:", error);
-    return [];
+    console.error("Error fetching all educators:", error);
+    throw error;
   }
 };
-export const getEducatorProfile = async (id) => {
+
+export const getEducatorsBySubject = async (subject, params = {}) => {
   try {
-    const response = await API_CLIENT.get(`/api/educator/by-id/${id}`);
+    const response = await API_CLIENT.get(
+      `${EDUCATORS_BASE_PATH}/subject/${subject}`,
+      { params }
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching educators by subject:", error);
-    return [];
+    throw error;
+  }
+};
+
+export const getEducatorsBySpecialization = async (specialization, params = {}) => {
+  try {
+    const response = await API_CLIENT.get(
+      `${EDUCATORS_BASE_PATH}/specialization/${specialization}`,
+      { params }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching educators by specialization:", error);
+    throw error;
+  }
+};
+
+export const getEducatorProfile = async (id) => {
+  try {
+    const response = await API_CLIENT.get(`${EDUCATORS_BASE_PATH}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching educator profile:", error);
+    throw error;
+  }
+};
+
+export const createEducatorProfile = async (payload) => {
+  try {
+    const response = await API_CLIENT.post(EDUCATORS_BASE_PATH, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating educator profile:", error);
+    throw error;
   }
 };
 
@@ -23,7 +63,7 @@ export const getEducatorProfile = async (id) => {
 export const updateEducatorImage = async (educatorId, formData) => {
   try {
     const response = await API_CLIENT.put(
-      `/api/educator/update-image/${educatorId}`,
+      `${EDUCATOR_UPDATE_BASE_PATH}/update-image/${educatorId}`,
       formData,
       {
         headers: {
@@ -42,7 +82,7 @@ export const updateEducatorImage = async (educatorId, formData) => {
 export const updateEducatorProfile = async (educatorId, formData) => {
   try {
     const response = await API_CLIENT.put(
-      `/api/educator/update-name-email-number-bio-ivlink/${educatorId}`,
+      `${EDUCATOR_UPDATE_BASE_PATH}/update-name-email-number-bio-ivlink/${educatorId}`,
       formData,
       {
         headers: {
