@@ -4,6 +4,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import Banner from '@/components/Common/Banner';
 import OneToOnePPHCard from '@/components/OneToOne/OneToOnePPHCard';
 import Loading from '@/components/Common/Loading';
+import ShareButton from '@/components/Common/ShareButton';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -157,9 +158,17 @@ const OneToOnePPHPage = () => {
           className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"
           data-aos="fade-up"
         >
-          <h1 className="text-3xl font-bold text-gray-900">
-            Pay Per Hour Educators
-          </h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Pay Per Hour Educators
+            </h1>
+            <ShareButton
+              title="1-1 Pay Per Hour Educators"
+              text="Browse pay per hour educators on Faculty Pedia."
+              path="/one-to-one-pph"
+              size="sm"
+            />
+          </div>
           {/* Search */}
           <div className="w-full md:w-80 relative">
             <input
@@ -211,7 +220,7 @@ const OneToOnePPHPage = () => {
               <OneToOnePPHCard
                 key={educator._id || educator.id}
                 item={educator}
-                detailsHref={`/educators/${educator._id || educator.id}`}
+                detailsHref={`/one-to-one-pph/${educator._id || educator.id}`}
               />
             ))
           ) : (

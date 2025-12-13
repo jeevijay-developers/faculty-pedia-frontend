@@ -14,14 +14,23 @@ export const fetchIITJEEEducators = async (body) => {
   }
 };
 // fetch educators of IIT JEE
-export const fetchIITJEEOnlineCourses = async (body) => {
+export const fetchIITJEEOnlineCourses = async (specialization, params = {}) => {
   try {
-    const response = await API_CLIENT.post(
-      "/api/course/by-specialization",
-      body
-    );
+    const queryParams = {
+      limit: 100,
+      ...params,
+    };
+
+    if (specialization && specialization !== "All") {
+      queryParams.specialization = specialization;
+    }
+
+    const response = await API_CLIENT.get("/api/courses", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
+    console.error("Error fetching courses:", error);
     throw error;
   }
 };

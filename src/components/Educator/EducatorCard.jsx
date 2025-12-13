@@ -12,18 +12,85 @@ const EducatorCard = ({ educator }) => {
     firstName,
     lastName,
     name,
+    fullName,
     profileImage,
+    profilePicture,
+    image,
     qualification,
+    qualifications,
     experience,
     yearsExperience,
+    yoe,
     followers,
+    followerCount,
     bio,
+    description,
     specialization,
     subject,
     rating,
     reviewCount,
     status,
   } = educator;
+
+  // Normalize educator data for display
+  const displayName =
+    name ||
+    fullName ||
+    [firstName, lastName].filter(Boolean).join(" ") ||
+    "Educator";
+
+  const formatSubject = (value) => {
+    if (typeof value !== "string") return value;
+    return value
+      .split(" ")
+      .map((word) =>
+        word.length > 0 ? word[0].toUpperCase() + word.slice(1).toLowerCase() : word
+      )
+      .join(" ");
+  };
+
+  const displaySubjects = Array.isArray(subject)
+    ? subject.map((sub) => formatSubject(sub?.replace(/-/g, " ") || ""))?.join(", ")
+    : subject
+    ? formatSubject(subject?.replace(/-/g, " ") || "")
+    : "Not specified";
+
+  const displayFollowers =
+    typeof followerCount === "number"
+      ? followerCount
+      : Array.isArray(followers)
+      ? followers.length
+      : 0;
+
+  const displayQualification = (() => {
+    if (Array.isArray(qualification) && qualification.length > 0) {
+      return qualification[0]?.title || qualification[0];
+    }
+    if (Array.isArray(qualifications) && qualifications.length > 0) {
+      return qualifications[0]?.title || qualifications[0];
+    }
+    if (typeof qualification === "string" && qualification.trim()) {
+      return qualification;
+    }
+    return "Not specified";
+  })();
+
+  const displayExperience =
+    experience || `${yoe ?? yearsExperience ?? 0}+ years`;
+
+  const displayBio = bio || description || "";
+
+  const profileImageUrl =
+    profileImage?.url ||
+    profilePicture ||
+    image?.url ||
+    "/images/placeholders/1.svg";
+
+  const ratingAverage =
+    typeof rating?.average === "number" ? rating.average : null;
+
+  const ratingCount =
+    rating?.count ?? reviewCount ?? followers?.length ?? 0;
   
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100 h-full flex flex-col">
@@ -32,8 +99,8 @@ const EducatorCard = ({ educator }) => {
         <div className="flex items-start space-x-4">
           <div className="relative flex-shrink-0">
             <Image
-              src={profileImage?.url || "/images/placeholders/1.svg"}
-              alt={name || `${firstName} ${lastName}`}
+              src={profileImageUrl}
+              alt={displayName}
               width={80}
               height={80}
               className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
@@ -47,16 +114,16 @@ const EducatorCard = ({ educator }) => {
 
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-gray-900 mb-1">
-              {name || `${firstName} ${lastName}`}
+              {displayName}
             </h3>
 
             <p className="text-blue-600 font-medium text-sm mb-2 flex items-center">
               <FaBook className="mr-1" />
-              {subject || "Not specified"}
+              {displaySubjects}
             </p>
             <p className="text-black/70 font-medium text-sm mb-2 flex items-center">
               <FaUser className="mr-2 w-3 h-3" />
-              Followers: {followers?.length || 0}
+              Followers: {displayFollowers}
             </p>
           </div>
         </div>
@@ -67,7 +134,7 @@ const EducatorCard = ({ educator }) => {
         {/* Bio Section */}
         <div className="mb-4">
           <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-            {bio}
+            {displayBio}
           </p>
         </div>
         {/* Qualification & Experience */}
@@ -77,7 +144,7 @@ const EducatorCard = ({ educator }) => {
               Education:
             </span>
             <span className="text-sm text-gray-600 text-right flex-1 pl-2 line-clamp-1">
-              {qualification?.[0]?.title || "Not specified"}
+              {displayQualification}
             </span>
           </div>
 
@@ -86,7 +153,7 @@ const EducatorCard = ({ educator }) => {
               Experience:
             </span>
             <span className="text-sm text-gray-600 text-right flex-1 pl-2">
-              {experience || `${yearsExperience || 0}+ years`}
+              {displayExperience}
             </span>
           </div>
 
@@ -97,20 +164,31 @@ const EducatorCard = ({ educator }) => {
             <div className="flex items-center space-x-1  pl-2">
               <IoStarSharp className="text-yellow-500 w-4 h-4" />
               <span className="text-sm font-medium text-gray-900">
-                {rating?.average ? rating.average.toFixed(1) : "N/A"}
+                {ratingAverage !== null ? ratingAverage.toFixed(1) : "N/A"}
               </span>
               <span className="text-xs text-gray-500">
-                ({rating?.count || reviewCount || 0} reviews)
+                ({ratingCount} reviews)
               </span>
             </div>
           </div>
         </div>
 
         {/* Specialization Badge */}
-        <div className="mb-3">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
-            {specialization}
-          </span>
+        <div className="mb-3 flex flex-wrap gap-2">
+          {Array.isArray(specialization) ? (
+            specialization.map((spec, index) => (
+              <span
+                key={index}
+                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200"
+              >
+                {spec}
+              </span>
+            ))
+          ) : (
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
+              {specialization || 'Not specified'}
+            </span>
+          )}
         </div>
       </div>
 

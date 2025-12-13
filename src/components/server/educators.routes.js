@@ -96,3 +96,21 @@ export const updateEducatorProfile = async (educatorId, formData) => {
     throw error;
   }
 };
+
+export const rateEducator = async (educatorId, data) => {
+  try {
+    const payload =
+      typeof data === "number" ? { rating: data } : { ...data };
+    if (payload.rating === undefined) {
+      throw new Error("Rating value is required");
+    }
+    const response = await API_CLIENT.post(
+      `${EDUCATORS_BASE_PATH}/${educatorId}/rating`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting educator rating:", error);
+    throw error;
+  }
+};

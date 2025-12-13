@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import Image from "next/image";
 import {
@@ -11,6 +13,7 @@ import {
 } from "react-icons/fa";
 import Banner from "../Common/Banner";
 import EnrollButton from "../Common/EnrollButton";
+import ShareButton from "@/components/Common/ShareButton";
 
 const WebinarDetails = ({ webinar }) => {
   // Handle different response formats and provide fallbacks
@@ -30,14 +33,11 @@ const WebinarDetails = ({ webinar }) => {
     : webinar.specialization || "General";
   const enrolledCount = webinar.enrolledCount || webinar.studentEnrolled?.length || 0;
   const seatsAvailable = webinar.seatsAvailable || (seatLimit - enrolledCount);
+  const shareText = `Join the webinar "${title}" on Faculty Pedia.`;
 
   return (
     <div>
-      <Banner
-        url={"/images/placeholders/1.svg"}
-        title={"Webinar Details"}
-        subtitle={`Learn with expert guidance`}
-      />
+      
       <div className="max-w-7xl mx-auto p-4 space-y-8">
         {/* Header Section */}
         <div
@@ -65,12 +65,20 @@ const WebinarDetails = ({ webinar }) => {
           </div>
 
           <div className="p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              {title
-                .split("-")
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(" ")}
-            </h1>
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 mb-4">
+              <h1 className="text-3xl font-bold text-gray-900">
+                {title
+                  .split("-")
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(" ")}
+              </h1>
+              <ShareButton
+                title={title || "Webinar"}
+                text={shareText}
+                useCurrentUrl
+                size="sm"
+              />
+            </div>
             <p className="text-gray-600 mb-6 leading-relaxed">{description}</p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">

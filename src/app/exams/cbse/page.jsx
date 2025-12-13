@@ -23,15 +23,18 @@ const page = () => {
         btnTitle={" Join as Educator"}
         btnUrl={"/join-as-educator"}
       />
-      <CBSEPageContent />
       <EducatorsCarousel specialization="CBSE" />
+
+      <CBSEPageContent />
+
       {/* <CourseCarousel
         title="Online Courses for NEET"
         viewMoreLink="/courses"
         specialization="NEET"
       /> */}
       {/* <OneToOneLiveClassesCarousel specialization="NEET" /> */}
-      <OneToOnePPHCarousel specialization="CBSET" />
+      <OneToOnePPHCarousel specialization="CBSE" />
+
       <UpcomingWebinarCarousel specialization="CBSE" />
       <TestSeriesCarousel specialization="CBSE" />
       <PostCarousel subject="CBSE" />

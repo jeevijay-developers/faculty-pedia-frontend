@@ -14,6 +14,7 @@ import {
 import { MdSchool } from "react-icons/md";
 import { IoPersonSharp } from "react-icons/io5";
 import EnrollButton from "@/components/Common/EnrollButton";
+import ShareButton from "@/components/Common/ShareButton";
 
 const LiveClassDetailsPage = ({ params }) => {
   const [liveClass, setLiveClass] = useState(null);
@@ -148,9 +149,17 @@ const LiveClassDetailsPage = ({ params }) => {
               ))}
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {liveClass.liveClassTitle}
-          </h1>
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 mb-4">
+            <h1 className="text-3xl font-bold text-gray-900">
+              {liveClass.liveClassTitle}
+            </h1>
+            <ShareButton
+              title={liveClass.liveClassTitle || "Live Class"}
+              text={`Join the live class "${liveClass.liveClassTitle}" on Faculty Pedia.`}
+              useCurrentUrl
+              size="sm"
+            />
+          </div>
 
           {/* Educator Info */}
           {liveClass.educatorID && (
@@ -208,30 +217,12 @@ const LiveClassDetailsPage = ({ params }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Intro Video */}
-            {liveClass.introVideo && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <FaVideo className="text-blue-600" />
-                  Introduction Video
-                </h2>
-                <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
-                  <iframe
-                    src={getYouTubeEmbedUrl(liveClass.introVideo)}
-                    title="Live Class Introduction"
-                    className="w-full h-full"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              </div>
-            )}
+            
 
             {/* Description */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4">
-                About This Live Class
+                Description
               </h2>
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {liveClass.description || "Interactive live class session with expert instructor."}

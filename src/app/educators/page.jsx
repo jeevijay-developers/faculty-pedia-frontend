@@ -3,51 +3,48 @@
 import React, { useEffect, useState } from "react";
 import EducatorCard from "../../components/Educator/EducatorCard";
 import Banner from "@/components/Common/Banner";
-import { getEducatorsBySubject, getAllEducators } from "@/components/server/educators.routes";
+import { getAllEducators } from "@/components/server/educators.routes";
 import Loading from "@/components/Common/Loading";
 
 const EducatorsPage = () => {
   const [activeTab, setActiveTab] = useState("All");
+  const [allEducators, setAllEducators] = useState([]);
   const [filteredEducators, setFilteredEducators] = useState([]);
+  const [sortedEducators, setSortedEducators] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortOption, setSortOption] = useState("none");
 
   const subjects = ["All", "Physics", "Chemistry", "Biology", "Mathematics"];
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
     const fetchEducators = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        let response;
-        
-        // Fetch all educators if "All" is selected, otherwise filter by subject
-        if (activeTab === "All") {
-          response = await getAllEducators();
-        } else {
-          response = await getEducatorsBySubject(activeTab.toLowerCase());
-        }
-        
-        console.log("API Response:", response);
-        
-        // Handle the response structure: response.data.educators
+        const response = await getAllEducators({ limit: 200 });
+        console.log("Educators API Response:", response);
+
+        let educators = [];
         if (response?.data?.educators && Array.isArray(response.data.educators)) {
-          console.log("Found educators:", response.data.educators.length);
-          setFilteredEducators(response.data.educators);
+          educators = response.data.educators;
         } else if (response?.educators && Array.isArray(response.educators)) {
-          console.log("Found educators (alternate format):", response.educators.length);
-          setFilteredEducators(response.educators);
+          educators = response.educators;
         } else if (Array.isArray(response)) {
-          console.log("Found educators (array format):", response.length);
-          setFilteredEducators(response);
+          educators = response;
         } else {
-          console.warn("Unexpected data format:", response);
-          setFilteredEducators([]);
+          console.warn("Unexpected educators format:", response);
         }
+
+        setAllEducators(educators);
+        setFilteredEducators(educators);
       } catch (error) {
         console.error("Error fetching educators:", error);
         console.error("Error details:", error.response?.data);
-        setError(error.response?.data?.message || "Failed to load educators. Please try again later.");
+        setError(
+          error.response?.data?.message || "Failed to load educators. Please try again later."
+        );
+        setAllEducators([]);
         setFilteredEducators([]);
       } finally {
         setLoading(false);
@@ -55,7 +52,67 @@ const EducatorsPage = () => {
     };
 
     fetchEducators();
-  }, [activeTab]);
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "All") {
+      setFilteredEducators(allEducators);
+      return;
+    }
+
+    const subjectKey = activeTab.toLowerCase();
+    const filtered = allEducators.filter((educator) => {
+      const subjectsList = Array.isArray(educator.subject)
+        ? educator.subject
+        : educator.subject
+        ? [educator.subject]
+        : [];
+
+      return subjectsList.some((subject) => subject?.toLowerCase() === subjectKey);
+    });
+
+    setFilteredEducators(filtered);
+  }, [activeTab, allEducators]);
+
+  useEffect(() => {
+    if (activeTab !== "All" && sortOption !== "none") {
+      setSortOption("none");
+    }
+  }, [activeTab, sortOption]);
+
+  useEffect(() => {
+    const educatorsToSort = [...filteredEducators];
+
+    if (activeTab === "All") {
+      switch (sortOption) {
+        case "rating":
+          educatorsToSort.sort(
+            (a, b) =>
+              Number(b.rating?.average ?? b.rating ?? 0) -
+              Number(a.rating?.average ?? a.rating ?? 0)
+          );
+          break;
+        case "followers":
+          educatorsToSort.sort(
+            (a, b) =>
+              Number(b.followers?.length ?? 0) -
+              Number(a.followers?.length ?? 0)
+          );
+          break;
+        case "experience":
+          educatorsToSort.sort(
+            (a, b) =>
+              Number(b.yearsExperience ?? b.experience ?? 0) -
+              Number(a.yearsExperience ?? a.experience ?? 0)
+          );
+          break;
+        default:
+          break;
+      }
+    }
+
+    setSortedEducators(educatorsToSort);
+  }, [filteredEducators, sortOption, activeTab]);
 
   if (loading) {
     return <Loading />;
@@ -113,20 +170,40 @@ const EducatorsPage = () => {
           </div>
         </div>
 
-        {/* Results count */}
-        {filteredEducators.length > 0 && (
-          <div className="mb-4 text-center">
-            <p className="text-gray-600 text-sm">
-              Found <span className="font-semibold text-blue-600">{filteredEducators.length}</span> educator{filteredEducators.length !== 1 ? 's' : ''}
+        {/* Results count & sorting */}
+        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          {sortedEducators.length > 0 ? (
+            <p className="text-gray-600 text-center md:text-left text-sm">
+              Found <span className="font-semibold text-blue-600">{sortedEducators.length}</span> educator
+              {sortedEducators.length !== 1 ? "s" : ""}
               {activeTab !== "All" && <span> in {activeTab}</span>}
             </p>
-          </div>
-        )}
+          ) : (
+            <p className="text-gray-600 text-center md:text-left text-sm">
+              No educators found{activeTab !== "All" ? ` in ${activeTab}` : ""}
+            </p>
+          )}
+
+          {activeTab === "All" && (
+            <div className="flex items-center justify-center">
+              <select
+                value={sortOption}
+                onChange={(event) => setSortOption(event.target.value)}
+                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="none">Sort by</option>
+                <option value="rating">Rating</option>
+                <option value="followers">Followers</option>
+                <option value="experience">Years of Experience</option>
+              </select>
+            </div>
+          )}
+        </div>
 
         {/* Educators Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {filteredEducators && filteredEducators.length > 0 ? (
-            filteredEducators.map((educator, i) => (
+          {sortedEducators && sortedEducators.length > 0 ? (
+            sortedEducators.map((educator, i) => (
               <EducatorCard key={educator._id || i} educator={educator} />
             ))
           ) : (

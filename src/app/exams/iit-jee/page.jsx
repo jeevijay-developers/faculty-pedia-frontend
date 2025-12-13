@@ -22,12 +22,12 @@ const page = async () => {
 
       <EducatorsCarousel specialization="IIT-JEE" />
       <CourseCarousel
-        title="Online Courses for IIT-JEE"
+        title="Courses for IIT-JEE"
         viewMoreLink="/courses"
         specialization="IIT-JEE"
       />
       <OneToOneLiveClassesCarousel specialization="IIT-JEE" />
-      <OneToOnePPHCarousel specialization="IIT-JEE" />
+      {/* <OneToOnePPHCarousel specialization="IIT-JEE" /> */}
       <UpcomingWebinarCarousel specialization="IIT-JEE" />
       <TestSeriesCarousel specialization="IIT-JEE" />
       <PostCarousel subject="IIT-JEE" />

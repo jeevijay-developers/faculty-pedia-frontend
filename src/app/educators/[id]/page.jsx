@@ -19,6 +19,7 @@ import {
 import { MdSchool, MdEmail, MdPhone } from "react-icons/md";
 import { IoPersonSharp } from "react-icons/io5";
 import EnrollButton from "@/components/Common/EnrollButton";
+import ShareButton from "@/components/Common/ShareButton";
 
 const EducatorDetailsPage = ({ params }) => {
   const [educator, setEducator] = useState(null);
@@ -121,6 +122,10 @@ const EducatorDetailsPage = ({ params }) => {
     testSeries,
   } = educator;
 
+  const shareText = fullName
+    ? `Discover educator ${fullName} on Faculty Pedia.`
+    : "Check out this educator on Faculty Pedia.";
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -141,7 +146,16 @@ const EducatorDetailsPage = ({ params }) => {
 
             {/* Educator Info */}
             <div className="lg:col-span-2 text-center lg:text-left">
-              <h1 className="text-4xl md:text-5xl font-bold mb-3">{fullName}</h1>
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+                <h1 className="text-4xl md:text-5xl font-bold">{fullName}</h1>
+                <ShareButton
+                  title={fullName || "Educator"}
+                  text={shareText}
+                  useCurrentUrl
+                  size="sm"
+                  variant="solid"
+                />
+              </div>
               <p className="text-xl text-blue-100 mb-4">@{username}</p>
               
               <div className="flex flex-wrap gap-2 justify-center lg:justify-start mb-6">

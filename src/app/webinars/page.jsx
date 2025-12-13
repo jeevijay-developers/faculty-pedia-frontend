@@ -8,6 +8,7 @@ import "aos/dist/aos.css";
 // API functions
 import { fetchAllWebinars } from "@/components/server/exams/iit-jee/routes";
 import Banner from "@/components/Common/Banner";
+import ShareButton from "@/components/Common/ShareButton";
 
 export default function WebinarsPage() {
   const [allWebinars, setAllWebinars] = useState([]);
@@ -156,9 +157,17 @@ export default function WebinarsPage() {
           className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"
           data-aos="fade-up"
         >
-          <h1 className="text-3xl font-bold text-gray-900">
-            Upcoming Webinars
-          </h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <h1 className="text-3xl font-bold text-gray-900">
+              Upcoming Webinars
+            </h1>
+            <ShareButton
+              title="Upcoming Webinars"
+              text="Discover upcoming webinars on Faculty Pedia."
+              path="/webinars"
+              size="sm"
+            />
+          </div>
           {/* Search */}
           <div className="w-full md:w-80 relative">
             <input

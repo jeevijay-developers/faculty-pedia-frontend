@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { IoStarSharp, IoCallSharp, IoMailSharp } from "react-icons/io5";
 import {
@@ -9,6 +10,8 @@ import {
   FaYoutube,
   FaUserPlus,
   FaUserCheck,
+  FaMoneyBillWave,
+  FaClock,
 } from "react-icons/fa";
 import CourseCard from "@/components/Courses/CourseCard";
 import UpcomingWebinarCard from "@/components/Webinars/UpcomingWebinarCard";
@@ -18,6 +21,7 @@ import Link from "next/link";
 import { getWebinarById } from "@/components/server/webinars.routes";
 import { getCourseById } from "@/components/server/course.routes";
 import { getTestSeriesById } from "@/components/server/test-series.route";
+import { rateEducator } from "@/components/server/educators.routes";
 import { followEducator, unfollowEducator } from "@/components/server/student/student.routes";
 import { getUserData } from "@/utils/userData";
 import { toast } from "react-hot-toast";
@@ -45,15 +49,62 @@ const ViewProfile = ({ educatorData }) => {
 
   console.log("Educator data: ", educatorData);
 
-  const ratingAverage = Number(
-    educatorData?.rating?.average ?? educatorData?.rating ?? 0
-  );
-  const ratingCount = Number(
-    educatorData?.rating?.count ??
-      educatorData?.reviewCount ??
-      educatorData?.ratingsCount ??
-      0
-  );
+  const payPerHourFeeValue = Number(educatorData?.payPerHourFee ?? 0);
+  const hasPayPerHour = Number.isFinite(payPerHourFeeValue) && payPerHourFeeValue > 0;
+  const [isPayPerHourModalOpen, setIsPayPerHourModalOpen] = useState(false);
+  const [isPayPerHourPortalReady, setIsPayPerHourPortalReady] = useState(false);
+
+  useEffect(() => {
+    setIsPayPerHourPortalReady(true);
+    return () => setIsPayPerHourPortalReady(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isPayPerHourModalOpen || typeof document === "undefined") {
+      return;
+    }
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isPayPerHourModalOpen]);
+
+  useEffect(() => {
+    if (!isPayPerHourModalOpen || typeof window === "undefined") {
+      return;
+    }
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsPayPerHourModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPayPerHourModalOpen]);
+
+  useEffect(() => {
+    if (!hasPayPerHour && isPayPerHourModalOpen) {
+      setIsPayPerHourModalOpen(false);
+    }
+  }, [hasPayPerHour, isPayPerHourModalOpen]);
+
+  const [ratingState, setRatingState] = useState(() => ({
+    average: Number(
+      educatorData?.rating?.average ?? educatorData?.rating ?? 0
+    ),
+    count: Number(
+      educatorData?.rating?.count ??
+        educatorData?.reviewCount ??
+        educatorData?.ratingsCount ??
+        0
+    ),
+  }));
+  const [userRating, setUserRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [isSubmittingRating, setIsSubmittingRating] = useState(false);
   
   // State for webinar details
   const [webinarDetails, setWebinarDetails] = useState([]);
@@ -74,6 +125,48 @@ const ViewProfile = ({ educatorData }) => {
   );
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const canRate = Boolean(currentUser?._id);
+  const payPerHourSubjects = Array.isArray(educatorData?.subject)
+    ? educatorData.subject.filter(Boolean).join(", ")
+    : educatorData?.subject || null;
+  const payPerHourSpecializations = Array.isArray(educatorData?.specialization)
+    ? educatorData.specialization.filter(Boolean).join(", ")
+    : educatorData?.specialization || null;
+  const payPerHourDescription =
+    educatorData?.payPerHourDescription || educatorData?.bio || null;
+  const payPerHourWhatsAppLink = educatorData?.mobileNumber
+    ? `https://wa.me/${educatorData.mobileNumber}`
+    : null;
+  const payPerHourEmailLink = educatorData?.email
+    ? `mailto:${educatorData.email}`
+    : null;
+  const payPerHourDisplayName =
+    [educatorData?.firstName, educatorData?.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim() ||
+    educatorData?.fullName ||
+    educatorData?.name ||
+    "this educator";
+
+  useEffect(() => {
+    setRatingState({
+      average: Number(
+        educatorData?.rating?.average ?? educatorData?.rating ?? 0
+      ),
+      count: Number(
+        educatorData?.rating?.count ??
+          educatorData?.reviewCount ??
+          educatorData?.ratingsCount ??
+          0
+      ),
+    });
+    setUserRating(0);
+    setHoverRating(0);
+  }, [educatorData]);
+
+  const ratingAverage = ratingState.average ?? 0;
+  const ratingCount = ratingState.count ?? 0;
 
   // Check if user is already following this educator
   useEffect(() => {
@@ -225,6 +318,51 @@ const ViewProfile = ({ educatorData }) => {
     }
   };
 
+  const handleRatingSubmit = async (value) => {
+    if (isSubmittingRating) {
+      return;
+    }
+
+    if (!canRate) {
+      toast.error("Please login as a student to rate this educator");
+      return;
+    }
+
+    if (!educatorData?._id) {
+      toast.error("Educator information not available");
+      return;
+    }
+
+    if (!value || value < 1 || value > 5) {
+      toast.error("Please select a rating between 1 and 5 stars");
+      return;
+    }
+
+    try {
+      setIsSubmittingRating(true);
+      const response = await rateEducator(educatorData._id, {
+        rating: value,
+        studentId: currentUser._id,
+      });
+      const nextRating = response?.data?.rating;
+      if (nextRating) {
+        setRatingState({
+          average: Number(nextRating.average ?? value),
+          count: Number(nextRating.count ?? ratingCount),
+        });
+      }
+      setUserRating(value);
+      setHoverRating(0);
+      toast.success("Thanks for rating this educator!");
+    } catch (error) {
+      console.error("Error submitting rating:", error);
+      const errorMessage = error?.response?.data?.message || "Unable to submit your rating. Please try again.";
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmittingRating(false);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -295,30 +433,73 @@ const ViewProfile = ({ educatorData }) => {
                 </div>
 
                 {/* Rating */}
-                <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <IoStarSharp
-                        key={i}
-                        className={`w-5 h-5 ${
-                          i < Math.floor(ratingAverage)
-                            ? "text-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
+                <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <IoStarSharp
+                          key={i}
+                          className={`w-5 h-5 ${
+                            i < Math.floor(ratingAverage)
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                          aria-hidden="true"
+                        />
+                      ))}
+                    </div>
+                    <span className="text-lg font-semibold text-gray-900">
+                      {ratingAverage.toFixed(1)}
+                    </span>
+                    <span className="text-gray-600">
+                      ({ratingCount} reviews)
+                    </span>
                   </div>
-                  <span className="text-lg font-semibold text-gray-900">
-                    {ratingAverage.toFixed(1)}
-                  </span>
-                  <span className="text-gray-600">
-                    ({ratingCount} reviews)
-                  </span>
+                  {canRate ? (
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <span>Rate this educator:</span>
+                      <div className="flex items-center">
+                        {[1, 2, 3, 4, 5].map((value) => (
+                          <button
+                            key={value}
+                            type="button"
+                            className="p-0.5"
+                            onMouseEnter={() => setHoverRating(value)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            onFocus={() => setHoverRating(value)}
+                            onBlur={() => setHoverRating(0)}
+                            onClick={() => handleRatingSubmit(value)}
+                            disabled={isSubmittingRating}
+                            aria-label={`Rate ${value} ${value === 1 ? "star" : "stars"}`}
+                          >
+                            <IoStarSharp
+                              className={`w-5 h-5 ${
+                                value <= (hoverRating || userRating)
+                                  ? "text-yellow-400"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {isSubmittingRating
+                          ? "Submitting..."
+                          : userRating
+                          ? `You rated ${userRating}/5`
+                          : "Tap a star"}
+                      </span>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-500">
+                      Login as a student to share your rating.
+                    </p>
+                  )}
                 </div>
 
                 {/* Follow Button and Follower Count */}
                 <div className="flex flex-col items-center lg:items-start gap-3 mb-6">
-                  <div className="flex gap-5 items-center">
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
                     <button
                       onClick={handleFollowToggle}
                       disabled={isLoadingFollow || !currentUser}
@@ -334,7 +515,7 @@ const ViewProfile = ({ educatorData }) => {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          <span>Processing...</span>
+                          <span>Following  ...</span>
                         </>
                       ) : isFollowing ? (
                         <>
@@ -348,6 +529,17 @@ const ViewProfile = ({ educatorData }) => {
                         </>
                       )}
                     </button>
+
+                    {hasPayPerHour && (
+                      <button
+                        type="button"
+                        onClick={() => setIsPayPerHourModalOpen(true)}
+                        className="flex items-center gap-2 px-6 py-2 text-sm rounded-lg font-medium border border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                      >
+                        <FaMoneyBillWave className="w-4 h-4" />
+                        Pay Per Hour
+                      </button>
+                    )}
 
                     <Link
                       href={`https://wa.me/${educatorData.mobileNumber}`}
@@ -790,6 +982,126 @@ const ViewProfile = ({ educatorData }) => {
             </div>
           </div>
         </div>
+        {isPayPerHourPortalReady && isPayPerHourModalOpen
+          ? createPortal(
+              <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
+                <div
+                  className="absolute inset-0 bg-black/50"
+                  onClick={() => setIsPayPerHourModalOpen(false)}
+                  aria-hidden="true"
+                />
+                <div
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Pay per hour session details"
+                  className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <div className="flex flex-col max-h-[85vh]">
+                    <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+                      <div>
+                        <h2 className="text-xl font-semibold text-gray-900">Pay Per Hour Session</h2>
+                        <p className="text-xs text-gray-500">Personalised 1 : 1 guidance with {payPerHourDisplayName}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setIsPayPerHourModalOpen(false)}
+                        className="rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+                        aria-label="Close pay per hour details"
+                      >
+                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div className="overflow-y-auto px-6 pb-6 pt-4">
+                      <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4">
+                        <FaMoneyBillWave className="mt-1 h-5 w-5 text-blue-600" />
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">Hourly rate</p>
+                          <p className="text-3xl font-bold text-gray-900">
+                            ₹{payPerHourFeeValue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+                          </p>
+                          <p className="text-sm text-gray-600">per hour session with {payPerHourDisplayName}</p>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 grid gap-3">
+                        {payPerHourSpecializations && (
+                          <div className="rounded-lg border border-gray-200 bg-white p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Specialisations</p>
+                            <p className="mt-1 text-sm text-gray-700">{payPerHourSpecializations}</p>
+                          </div>
+                        )}
+                        {payPerHourSubjects && (
+                          <div className="rounded-lg border border-gray-200 bg-white p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Subjects covered</p>
+                            <p className="mt-1 text-sm text-gray-700">{payPerHourSubjects}</p>
+                          </div>
+                        )}
+                        {educatorData?.yearsExperience && (
+                          <div className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4">
+                            <FaClock className="mt-1 h-4 w-4 text-blue-600" />
+                            <div>
+                              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Experience</p>
+                              <p className="text-sm text-gray-700">{educatorData.yearsExperience}+ years of mentoring students</p>
+                            </div>
+                          </div>
+                        )}
+                        {payPerHourDescription && (
+                          <div className="rounded-lg border border-gray-200 bg-white p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Session overview</p>
+                            <p className="mt-1 text-sm text-gray-700 whitespace-pre-line">
+                              {payPerHourDescription}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                        {payPerHourWhatsAppLink && (
+                          <Link
+                            href={payPerHourWhatsAppLink}
+                            target="_blank"
+                            className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-green-600"
+                          >
+                            <IoLogoWhatsapp className="h-5 w-5" />
+                            WhatsApp Now
+                          </Link>
+                        )}
+                        {payPerHourEmailLink && (
+                          <a
+                            href={payPerHourEmailLink}
+                            className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
+                          >
+                            <IoMailSharp className="h-5 w-5" />
+                            Email {payPerHourDisplayName.split(" ")[0] || "Educator"}
+                          </a>
+                        )}
+                        {!payPerHourWhatsAppLink && !payPerHourEmailLink && (
+                          <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-center text-sm text-gray-500">
+                            Contact details are currently unavailable. Please try connecting via the follow button instead.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="border-t border-gray-200 bg-gray-50 px-6 py-4 text-right">
+                      <button
+                        type="button"
+                        onClick={() => setIsPayPerHourModalOpen(false)}
+                        className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>,
+              document.body
+            )
+          : null}
       </div>
     </div>
   );

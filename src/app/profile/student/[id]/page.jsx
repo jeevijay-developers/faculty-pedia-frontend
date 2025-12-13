@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import StudentProfile from "@/components/Profile/StudentProfile";
+import StudentDashboard from "@/components/Profile/StudentProfile";
 import { getStudentById } from "@/components/server/student/student.routes";
 
-const StudentProfilePage = () => {
+const StudentDashboardPage = () => {
   const params = useParams();
   const { id } = params; // Get ID from URL parameter
   
@@ -108,7 +108,7 @@ const StudentProfilePage = () => {
 
   return (
     <div>
-      <StudentProfile
+      <StudentDashboard
         studentData={studentData}
         loading={loading}
         error={error}
@@ -119,4 +119,4 @@ const StudentProfilePage = () => {
   );
 };
 
-export default StudentProfilePage;
+export default StudentDashboardPage;

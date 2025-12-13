@@ -19,7 +19,7 @@ const page = () => {
         btnUrl={"/join-as-educator"}
       />
       <EducatorsCarousel specialization='NEET' />
-      <CourseCarousel title='Online Courses for NEET' viewMoreLink='/courses' specialization='NEET' />
+      <CourseCarousel title='Courses for NEET' viewMoreLink='/courses' specialization='NEET' />
       <OneToOneLiveClassesCarousel specialization='NEET' />
       <OneToOnePPHCarousel specialization='NEET' />
       <UpcomingWebinarCarousel specialization='NEET' />

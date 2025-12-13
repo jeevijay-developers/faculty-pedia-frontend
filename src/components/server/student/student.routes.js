@@ -3,6 +3,55 @@ import API_CLIENT from "../config";
 const extractPayload = (response) =>
   response?.data?.data ?? response?.data?.student ?? response?.data;
 
+const createHttpError = (status, message) => {
+  const error = new Error(message || "Request failed");
+  error.response = {
+    status,
+    data: {
+      success: false,
+      message: message || "Request failed",
+    },
+  };
+  return error;
+};
+
+const isStudentEnrolledInCourse = (student, courseId) => {
+  if (!student || !Array.isArray(student.courses)) {
+    return false;
+  }
+
+  const expectedId =
+    typeof courseId === "string"
+      ? courseId
+      : typeof courseId === "object" && courseId !== null && "toString" in courseId
+        ? courseId.toString()
+        : `${courseId}`;
+
+  return student.courses.some((enrollment) => {
+    if (!enrollment) {
+      return false;
+    }
+
+    const rawId =
+      enrollment.courseId?._id ??
+      enrollment.courseId ??
+      enrollment._id;
+
+    if (!rawId) {
+      return false;
+    }
+
+    const normalizedId =
+      typeof rawId === "string"
+        ? rawId
+        : typeof rawId === "object" && rawId !== null && "toString" in rawId
+          ? rawId.toString()
+          : `${rawId}`;
+
+    return normalizedId === expectedId;
+  });
+};
+
 // ===================== Student CRUD =====================
 
 export const createStudent = async (studentData) => {
@@ -178,6 +227,110 @@ export const registerForWebinar = async (studentId, webinarId) => {
   } catch (error) {
     console.error("Error registering for webinar:", error);
     throw error;
+  }
+};
+
+export const getStudentNotifications = async (studentId, params = {}) => {
+  if (!studentId) {
+    throw createHttpError(400, "Student ID is required");
+  }
+
+  try {
+    const [listResponse, unreadResponse] = await Promise.all([
+      API_CLIENT.get(`/api/notifications/${studentId}`, { params }),
+      API_CLIENT.get(`/api/notifications/${studentId}/unread-count`),
+    ]);
+
+    const notificationsSource = listResponse?.data;
+    const notifications = Array.isArray(notificationsSource?.notifications)
+      ? notificationsSource.notifications
+      : [];
+
+    return {
+      success: notificationsSource?.success ?? true,
+      notifications,
+      pagination: notificationsSource?.pagination ?? {},
+      unreadCount: unreadResponse?.data?.unreadCount ?? 0,
+    };
+  } catch (error) {
+    console.error("Error fetching student notifications:", error);
+    throw error;
+  }
+};
+
+export const markNotificationAsRead = async (studentId, notificationId) => {
+  if (!studentId || !notificationId) {
+    throw createHttpError(400, "Student ID and notification ID are required");
+  }
+
+  try {
+    const response = await API_CLIENT.put(`/api/notifications/${notificationId}/read`, {
+      studentId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+    throw error;
+  }
+};
+
+const isLikelyObjectId = (value) =>
+  typeof value === "string" && /^[0-9a-fA-F]{24}$/.test(value.trim());
+
+export const getCourseForStudent = async (studentId, courseIdentifier) => {
+  if (!studentId || !courseIdentifier) {
+    throw createHttpError(400, "Student ID and course ID are required");
+  }
+
+  try {
+    const normalizedIdentifier = String(courseIdentifier).trim();
+    const useSlugLookup = !isLikelyObjectId(normalizedIdentifier);
+    const encodedIdentifier = encodeURIComponent(normalizedIdentifier);
+
+    const [studentResponse, courseResponse] = await Promise.all([
+      API_CLIENT.get(`/api/students/${studentId}`),
+      useSlugLookup
+        ? API_CLIENT.get(`/api/courses/slug/${encodedIdentifier}`)
+        : API_CLIENT.get(`/api/courses/${encodedIdentifier}`),
+    ]);
+
+    const student = extractPayload(studentResponse);
+    if (!student) {
+      throw createHttpError(404, "Student not found");
+    }
+
+    const courseData =
+      courseResponse?.data?.course ??
+      courseResponse?.data?.data ??
+      courseResponse?.data;
+    if (!courseData) {
+      throw createHttpError(404, "Course not found");
+    }
+
+    const effectiveCourseId =
+      typeof courseData === "object" && courseData !== null
+        ? courseData._id ?? courseData.id ?? courseData.courseId
+        : null;
+
+    if (!effectiveCourseId) {
+      throw createHttpError(500, "Course response missing identifier");
+    }
+
+    const isEnrolled = isStudentEnrolledInCourse(
+      student,
+      effectiveCourseId
+    );
+    if (!isEnrolled) {
+      throw createHttpError(403, "You are not enrolled in this course");
+    }
+
+    return courseData;
+  } catch (error) {
+    if (error?.response) {
+      throw error;
+    }
+
+    throw createHttpError(500, error?.message || "Failed to fetch course");
   }
 };
 

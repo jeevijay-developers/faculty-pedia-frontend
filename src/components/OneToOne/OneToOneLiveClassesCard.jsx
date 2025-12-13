@@ -165,7 +165,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
             href={`/1-1-live-class/${classData._id || classData.id}`}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
           >
-            Book Session
+            View Details
           </Link>
         </div>
       </div>

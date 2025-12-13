@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -14,7 +14,7 @@ import { fetchIITJEEBlogs } from "../server/exams/iit-jee/routes";
 import Loading from "../Common/Loading";
 import CarouselFallback from "../Common/CarouselFallback";
 
-const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
+const PostCarousel = ({ subject = "All", specialization }) => {
   const [swiperRef, setSwiperRef] = useState(null);
 
   // Get posts based on subject prop
@@ -23,14 +23,24 @@ const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
   const [filteredPosts, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const effectiveSpecialization = useMemo(() => {
+    if (specialization && specialization !== "All") {
+      return specialization;
+    }
+    if (subject && subject !== "All") {
+      return subject;
+    }
+    return "IIT-JEE";
+  }, [subject, specialization]);
   
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       setError(null);
       try {
-        console.log(`📝 Fetching posts for ${specialization}...`);
-        const response = await fetchIITJEEBlogs(specialization);
+        console.log(`📝 Fetching posts for ${effectiveSpecialization}...`);
+        const response = await fetchIITJEEBlogs(effectiveSpecialization);
         console.log("📝 Posts API Response:", response);
         
         // Extract posts from response
@@ -46,10 +56,10 @@ const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
       }
     };
     
-    if (specialization) {
+    if (effectiveSpecialization) {
       fetchPosts();
     }
-  }, [specialization]);
+  }, [effectiveSpecialization]);
 
   if (loading) {
     return <Loading />;
@@ -147,7 +157,7 @@ const PostCarousel = ({ subject = "All", specialization = "IIT-JEE" }) => {
           >
             {filteredPosts.map((post) => (
               <SwiperSlide key={post._id || post.id}>
-                <PostCard post={post} />
+                <PostCard post={post} activeSpecialization={effectiveSpecialization} />
               </SwiperSlide>
             ))}
           </Swiper>

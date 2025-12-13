@@ -232,7 +232,7 @@ const CourseDetails = ({ id }) => {
                   </p>
                 </div>
 
-                {/* Course Timeline */}
+                {/* Course Timeline
                 <div className="bg-white rounded-lg border border-gray-200 p-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
                     Course Timeline
@@ -264,13 +264,13 @@ const CourseDetails = ({ id }) => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Course Objectives */}
                 {course.courseObjectives && course.courseObjectives.length > 0 && (
                   <div className="bg-white rounded-lg border border-gray-200 p-6">
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                      Course Objectives
+                      Course Feature
                     </h3>
                     <ul className="list-disc list-inside space-y-2">
                       {course.courseObjectives.map((objective, index) => (
@@ -428,29 +428,7 @@ const CourseDetails = ({ id }) => {
           </div>
         </div>
 
-        {/* Enroll Button for Overview Tab Bottom */}
-        {activeTab === "overview" && (
-          <div className="mt-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8 text-center border border-blue-200">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Ready to Start Your Learning Journey?
-            </h3>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Join thousands of students who have transformed their academic
-              performance with our comprehensive courses.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <EnrollButton
-                type="course"
-                itemId={course._id || course.id}
-                price={course.fees}
-                className="bg-blue-600 text-white py-4 px-8 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg"
-              />
-              <div className="text-sm text-gray-600">
-                💳 Secure payment • 🔒 Money-back guarantee
-              </div>
-            </div>
-          </div>
-        )}
+       
       </div>
     </div>
   );

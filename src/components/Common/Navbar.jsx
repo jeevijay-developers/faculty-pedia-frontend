@@ -1,19 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@heroui/react";
-import { User as UserIcon, BookOpen, BarChart2, Settings as SettingsIcon, HelpCircle, LogOut } from "lucide-react";
+import { User as UserIcon, BookOpen, BarChart2, Settings as SettingsIcon, HelpCircle, LogOut, Bell, Loader2, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { confirmAlert } from "../CustomAlert";
 import toast from "react-hot-toast";
+import {
+  getStudentNotifications,
+  markNotificationAsRead,
+} from "../server/student/student.routes";
+
+const INITIAL_NOTIFICATION_STATE = {
+  items: [],
+  loading: false,
+  error: null,
+  unreadCount: 0,
+};
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExamDropdownOpen, setIsExamDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [notificationState, setNotificationState] = useState(INITIAL_NOTIFICATION_STATE);
+  const notificationPanelRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,6 +72,131 @@ const Navbar = () => {
     };
   }, []);
 
+  const fetchNotifications = useCallback(
+    async ({ suppressUnread = false } = {}) => {
+      if (!userData?._id) {
+        return;
+      }
+
+      setNotificationState((prev) => ({
+        ...prev,
+        loading: true,
+        error: null,
+      }));
+
+      try {
+        const result = await getStudentNotifications(userData._id, {
+          limit: 20,
+          unreadOnly: true,
+        });
+        const items = Array.isArray(result?.notifications)
+          ? result.notifications
+          : [];
+        const unreadCount = result?.unreadCount ?? items.length;
+
+        setNotificationState((prev) => ({
+          ...prev,
+          items,
+          loading: false,
+          error: null,
+          unreadCount,
+        }));
+      } catch (error) {
+        console.error("Error loading notifications:", error);
+        setNotificationState((prev) => ({
+          ...prev,
+          loading: false,
+          error: "Unable to load notifications right now.",
+        }));
+      }
+    },
+    [userData?._id]
+  );
+
+  const formatRelativeTime = (value) => {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+
+    const diffMs = Date.now() - date.getTime();
+    if (diffMs <= 0) return "Just now";
+
+    const diffSeconds = Math.floor(diffMs / 1000);
+    if (diffSeconds < 60) return `${diffSeconds}s ago`;
+
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    if (diffMinutes < 60) return `${diffMinutes}m ago`;
+
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) return `${diffDays}d ago`;
+
+    return date.toLocaleDateString(undefined, {
+      day: "2-digit",
+      month: "short",
+    });
+  };
+
+  const getNameInitials = (name = "") => {
+    const trimmed = name.trim();
+    if (!trimmed) return "FP";
+    const parts = trimmed.split(/\s+/).slice(0, 2);
+    const initials = parts
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("");
+    return initials || "FP";
+  };
+
+  const handleNotificationRefresh = () => {
+    fetchNotifications({ suppressUnread: isNotificationOpen });
+  };
+
+  const handleNotificationToggle = () => {
+    setIsNotificationOpen((prev) => !prev);
+    setIsMenuOpen(false);
+    setIsExamDropdownOpen(false);
+  };
+
+  const closeNotifications = () => setIsNotificationOpen(false);
+
+  const handleNotificationSelect = useCallback(
+    (item) => {
+      if (!item) {
+        return;
+      }
+
+      closeNotifications();
+
+      const notificationId = item.id || item._id;
+      if (notificationId && userData?._id) {
+        setNotificationState((prev) => {
+          const filteredItems = prev.items.filter(
+            (entry) => entry.id !== notificationId
+          );
+          const nextUnread = Math.max(prev.unreadCount - 1, 0);
+          return {
+            ...prev,
+            items: filteredItems,
+            unreadCount: nextUnread,
+          };
+        });
+
+        markNotificationAsRead(userData._id, notificationId).catch((error) => {
+          console.error("Failed to mark notification as read:", error);
+          // Re-fetch to resync state if API call fails
+          fetchNotifications({ suppressUnread: true });
+        });
+      }
+
+      if (item.link) {
+        router.push(item.link);
+      }
+    },
+    [userData?._id, router, fetchNotifications]
+  );
+
   const handleLogout = async () => {
     const confirmed = await confirmAlert({
       title: 'Delete Student',
@@ -72,6 +211,8 @@ const Navbar = () => {
       localStorage.removeItem('faculty-pedia-auth-token');
       setIsLoggedIn(false);
       setUserData(null);
+      setIsNotificationOpen(false);
+      setNotificationState(INITIAL_NOTIFICATION_STATE);
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new Event('student-data-updated'));
       }
@@ -81,6 +222,42 @@ const Navbar = () => {
 
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn && userData?._id) {
+      fetchNotifications();
+    } else {
+      setNotificationState(INITIAL_NOTIFICATION_STATE);
+    }
+  }, [isLoggedIn, userData?._id, fetchNotifications]);
+
+  useEffect(() => {
+    if (!isNotificationOpen || !isLoggedIn || !userData?._id) {
+      return;
+    }
+
+    fetchNotifications({ suppressUnread: true });
+  }, [isNotificationOpen, isLoggedIn, userData?._id, fetchNotifications]);
+
+  useEffect(() => {
+    if (!isNotificationOpen) {
+      return;
+    }
+
+    const handleClickOutside = (event) => {
+      if (
+        notificationPanelRef.current &&
+        !notificationPanelRef.current.contains(event.target)
+      ) {
+        setIsNotificationOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isNotificationOpen]);
 
   const resolveAvatarSrc = (data) => {
     if (!data || !data.image) {
@@ -94,11 +271,13 @@ const Navbar = () => {
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen((prev) => !prev);
+    setIsNotificationOpen(false);
   };
 
   const toggleExamDropdown = () => {
-    setIsExamDropdownOpen(!isExamDropdownOpen);
+    setIsExamDropdownOpen((prev) => !prev);
+    setIsNotificationOpen(false);
   };
   const hoverExamDropdown = "hover:bg-gray-200 transition-colors duration-200 rounded-md p-2";
   const menuItems = [
@@ -209,33 +388,131 @@ const Navbar = () => {
           <div className="hidden lg:block">
             <div className="ml-4 flex items-center space-x-4">
               {isLoggedIn && userData ? (
-                <Dropdown placement="bottom-end">
-                  <DropdownTrigger>
-                    <Avatar
-                      as="button"
-                      isBordered={true}
-                      style={{ opacity: 1 }}
-                      src={resolveAvatarSrc(userData)}
-                      className=" border-2 border-gray-300 rounded-full transition-transform hover:scale-105"
+                <>
+                  <div className="relative" ref={notificationPanelRef}>
+                    <button
+                      type="button"
+                      aria-label="Notifications"
+                      aria-expanded={isNotificationOpen}
+                      onClick={handleNotificationToggle}
+                      className="relative inline-flex items-center justify-center rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <Bell className="h-5 w-5" />
+                      {notificationState.unreadCount > 0 && notificationState.items.length > 0 && (
+                        <span className="absolute -right-1 -top-1 flex h-2.5 w-2.5">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                        </span>
+                      )}
+                    </button>
 
-                    />
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Profile Actions" variant="flat" className="w-52 shadow-lg rounded-lg bg-white p-2">
-                    <DropdownItem key="profile_settings" className={`${hoverExamDropdown}`}>
-                      <Link href={`/profile/${userData.role}/${userData._id}`} className="flex items-center">
-                        <UserIcon className="size-4 mr-2" /> My Profile
-                      </Link>
-                    </DropdownItem>
-                    <DropdownItem key="help" className={`${hoverExamDropdown}`}>
-                      <Link href="/help" className="flex items-center">
-                        <HelpCircle className="size-4 mr-2" /> Help & Support
-                      </Link>
-                    </DropdownItem>
-                    <DropdownItem className="hover:bg-red-200 transition-colors duration-200 rounded-md" key="logout" color="danger" onClick={handleLogout}>
-                      <span className="flex items-center"><LogOut className="size-4 mr-2" /> Log Out</span>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
+                    {isNotificationOpen && (
+                      <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl">
+                        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                          <span className="text-sm font-semibold text-gray-900">Notifications</span>
+                          <button
+                            type="button"
+                            onClick={handleNotificationRefresh}
+                            disabled={notificationState.loading}
+                            className="flex items-center justify-center rounded-full p-1 text-blue-600 transition hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            aria-label="Refresh notifications"
+                          >
+                            {notificationState.loading ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : (
+                              <RefreshCcw className="h-3.5 w-3.5" />
+                            )}
+                          </button>
+                        </div>
+                        <div className="max-h-80 overflow-y-auto">
+                          {notificationState.loading ? (
+                            <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-gray-500">
+                              <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                              <span>Loading notifications...</span>
+                            </div>
+                          ) : notificationState.error ? (
+                            <div className="space-y-3 px-4 py-6 text-sm">
+                              <p className="text-red-500">{notificationState.error}</p>
+                              <button
+                                type="button"
+                                onClick={handleNotificationRefresh}
+                                className="text-blue-600 hover:text-blue-700"
+                              >
+                                Try again
+                              </button>
+                            </div>
+                          ) : notificationState.items.length === 0 ? (
+                            <div className="px-4 py-6 text-sm text-gray-500">
+                              You're all caught up! Follow your favourite educators to get updates.
+                            </div>
+                          ) : (
+                            <ul className="divide-y divide-gray-100">
+                              {notificationState.items.map((item) => (
+                                <li key={item.id}>
+                                  <button
+                                    type="button"
+                                    className="flex w-full gap-3 px-4 py-3 text-left transition hover:bg-blue-50 focus:outline-none"
+                                    onClick={() => handleNotificationSelect(item)}
+                                  >
+                                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                                      {getNameInitials(item.educatorName)}
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="flex items-center justify-between gap-2">
+                                        <span className="text-sm font-semibold text-gray-900 line-clamp-1">
+                                          {item.title}
+                                        </span>
+                                        <span className="text-xs text-gray-400">
+                                          {formatRelativeTime(item.createdAt)}
+                                        </span>
+                                      </div>
+                                      <p className="mt-1 text-xs text-gray-600">
+                                        {item.message}
+                                      </p>
+                                      <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-gray-400">
+                                        <span className="text-gray-500">{item.educatorName}</span>
+                                        <span>•</span>
+                                        <span>{item.type}</span>
+                                      </div>
+                                    </div>
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <Dropdown placement="bottom-end">
+                    <DropdownTrigger>
+                      <Avatar
+                        as="button"
+                        isBordered={true}
+                        style={{ opacity: 1 }}
+                        src={resolveAvatarSrc(userData)}
+                        className=" border-2 border-gray-300 rounded-full transition-transform hover:scale-105"
+
+                      />
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="Profile Actions" variant="flat" className="w-52 shadow-lg rounded-lg bg-white p-2">
+                      <DropdownItem key="profile_settings" className={`${hoverExamDropdown}`}>
+                        <Link href={`/profile/${userData.role}/${userData._id}`} className="flex items-center">
+                          <UserIcon className="size-4 mr-2" /> Dashboard
+                        </Link>
+                      </DropdownItem>
+                      <DropdownItem key="help" className={`${hoverExamDropdown}`}>
+                        <Link href="/help" className="flex items-center">
+                          <HelpCircle className="size-4 mr-2" /> Help & Support
+                        </Link>
+                      </DropdownItem>
+                      <DropdownItem className="hover:bg-red-200 transition-colors duration-200 rounded-md" key="logout" color="danger" onClick={handleLogout}>
+                        <span className="flex items-center"><LogOut className="size-4 mr-2" /> Log Out</span>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </>
               ) : (
                 <>
                   <Link

@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react";
 import ProfileSkeleton from "./ProfileSkeleton";
-import ProfileHeader from "./ProfileHeader";
-import TabNavigation from "./TabNavigation";
 import OverviewTab from "./OverviewTab";
 import CoursesTab from "./CoursesTab";
 import ResultsTab from "./ResultsTab";
 import EducatorsTab from "./EducatorsTab";
 import WebinarsTab from "./WebinarsTab";
 import TestSeriesTab from "./TestSeriesTab";
+import MessagesTab from "./MessagesTab";
 import EditProfileModal from "./EditProfileModal";
 import {
   FiUser,
@@ -18,6 +17,8 @@ import {
   FiUsers,
   FiCalendar,
   FiFileText,
+  FiMessageSquare,
+  FiEdit3,
 } from "react-icons/fi";
 import { getCoursesByIds } from "../server/course.routes";
 import { getTestSeriesById } from "../server/test-series.route"; // Individual test series helper
@@ -35,12 +36,13 @@ const CLASS_LABELS = {
   dropper: "Dropper",
 };
 
-const StudentProfile = ({
+const StudentDashboard = ({
   studentData,
   loading = false,
   error = null,
   isOwnProfile = false,
   onProfileUpdate, // Optional callback for parent component
+  onRefresh,
 }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -50,7 +52,7 @@ const StudentProfile = ({
 
   useEffect(() => {
     const normalized = studentData?.student || studentData;
-    console.log("👤 StudentProfile received data:", studentData);
+    console.log("👤 StudentDashboard received data:", studentData);
     console.log("👤 Normalized student:", normalized);
     console.log("👤 Following educators in normalized:", normalized?.followingEducators);
     setStudentState(normalized);
@@ -425,8 +427,20 @@ const StudentProfile = ({
     { id: "results", label: "Test Results", icon: FiAward },
     { id: "webinars", label: "Webinars", icon: FiCalendar },
     { id: "testseries", label: "Test Series", icon: FiFileText },
+    { id: "messages", label: "Messages", icon: FiMessageSquare },
     { id: "educators", label: "Following", icon: FiUsers },
+    { id: "edit", label: "Edit Profile", icon: FiEdit3, disabled: !isOwnProfile },
   ];
+
+  const handleTabSelect = (tabId) => {
+    if (tabId === "edit" && !isOwnProfile) {
+      return;
+    }
+    setActiveTab(tabId);
+    if (tabId !== "edit" && isEditModalOpen) {
+      setIsEditModalOpen(false);
+    }
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -439,7 +453,7 @@ const StudentProfile = ({
             tests={tests}
             getSeries={getSeries}
             getSeriesId={getSeriesId}
-            onTabChange={setActiveTab}
+            onTabChange={handleTabSelect}
           />
         );
       case "courses":
@@ -467,8 +481,92 @@ const StudentProfile = ({
         return <WebinarsTab studentId={student?._id} />;
       case "testseries":
         return <TestSeriesTab studentId={student?._id} />;
+      case "messages":
+        return (
+          <MessagesTab
+            studentId={student?._id}
+            followingEducators={followingEducators}
+          />
+        );
       case "educators":
         return <EducatorsTab followingEducators={followingEducators} />;
+      case "edit":
+        return (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="flex flex-col gap-2 border-b border-gray-100 p-6 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Profile Settings</h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  Update your personal information and keep your dashboard in sync.
+                </p>
+              </div>
+              {typeof onRefresh === "function" && (
+                <button
+                  type="button"
+                  onClick={onRefresh}
+                  className="inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:border-blue-200 hover:text-blue-600"
+                >
+                  Refresh data
+                </button>
+              )}
+            </div>
+            <div className="p-6">
+              {isOwnProfile ? (
+                <div className="space-y-6">
+                  <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-700">
+                    Tip: Upload a clear profile photo and verify your contact details so educators can recognise you across courses and sessions.
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsEditModalOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                      <FiEdit3 className="h-4 w-4" />
+                      Open profile editor
+                    </button>
+                    {typeof onRefresh === "function" && (
+                      <button
+                        type="button"
+                        onClick={onRefresh}
+                        className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-600 transition hover:border-blue-200 hover:text-blue-600"
+                      >
+                        Sync latest data
+                      </button>
+                    )}
+                  </div>
+                  <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
+                      Current details
+                    </h3>
+                    <dl className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <dt className="text-xs uppercase tracking-wide text-gray-400">Name</dt>
+                        <dd className="text-sm font-medium text-gray-900">{name || "—"}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs uppercase tracking-wide text-gray-400">Email</dt>
+                        <dd className="text-sm font-medium text-gray-900 break-all">{email || "—"}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs uppercase tracking-wide text-gray-400">Mobile</dt>
+                        <dd className="text-sm font-medium text-gray-900">{mobileNumber || "—"}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs uppercase tracking-wide text-gray-400">Class</dt>
+                        <dd className="text-sm font-medium text-gray-900">{CLASS_LABELS[academicClass] || academicClass || "—"}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              ) : (
+                <div className="rounded-xl border border-gray-100 bg-gray-50 p-6 text-center text-gray-500">
+                  Profile editing is only available to the account owner.
+                </div>
+              )}
+            </div>
+          </div>
+        );
       default:
         return (
           <OverviewTab
@@ -478,7 +576,7 @@ const StudentProfile = ({
             tests={tests}
             getSeries={getSeries}
             getSeriesId={getSeriesId}
-            onTabChange={setActiveTab}
+            onTabChange={handleTabSelect}
           />
         );
     }
@@ -486,33 +584,62 @@ const StudentProfile = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Header */}
-      <ProfileHeader
-        name={name}
-        email={email}
-        mobileNumber={mobileNumber}
-        image={image}
-        username={username}
-        specialization={specialization}
-        classLevel={CLASS_LABELS[academicClass] || academicClass}
-        joinedAt={joinedAt}
-        isOwnProfile={isOwnProfile}
-        onEditClick={() => setIsEditModalOpen(true)}
-      />
-
-      {/* Navigation Tabs */}
-      <TabNavigation
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
-
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">{renderTabContent()}</div>
+      <div className="w-full px-4 py-8 sm:px-6 lg:px-10">
+        <div className="flex flex-col gap-6 lg:flex-row">
+          <aside className="lg:w-64">
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+              <div className="border-b border-gray-100 px-4 py-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Student Dashboard
+                </p>
+                <p className="text-sm font-medium text-gray-900">
+                  Navigate your learning
+                </p>
+              </div>
+              <nav className="space-y-1 p-2">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => handleTabSelect(tab.id)}
+                      disabled={tab.disabled}
+                      className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                        isActive
+                          ? "bg-blue-600 text-white shadow-sm"
+                          : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+                      } ${
+                        tab.disabled
+                          ? "cursor-not-allowed opacity-50 hover:bg-transparent hover:text-gray-400"
+                          : ""
+                      }`}
+                    >
+                      <Icon className={`h-4 w-4 ${isActive ? "text-white" : ""}`} />
+                      <span className="flex-1 text-left">{tab.label}</span>
+                      {isActive && <span className="h-2 w-2 rounded-full bg-white" />}
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+            {typeof onRefresh === "function" && (
+              <button
+                type="button"
+                onClick={onRefresh}
+                className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-600 shadow-sm transition hover:border-blue-200 hover:text-blue-600"
+              >
+                Refresh dashboard data
+              </button>
+            )}
+          </aside>
+          <main className="min-w-0 flex-1">
+            <div className="mb-8">{renderTabContent()}</div>
+          </main>
+        </div>
       </div>
 
-      {/* Edit Profile Modal */}
       <EditProfileModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
@@ -523,4 +650,4 @@ const StudentProfile = ({
   );
 };
 
-export default StudentProfile;
+export default StudentDashboard;

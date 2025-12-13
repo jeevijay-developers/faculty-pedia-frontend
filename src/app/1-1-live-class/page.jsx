@@ -5,6 +5,7 @@ import Banner from "@/components/Common/Banner";
 import Loading from "@/components/Common/Loading";
 import { fetchAllLiveClasses } from "@/components/server/exams/iit-jee/routes";
 import OneToOneLiveClassesCard from "@/components/OneToOne/OneToOneLiveClassesCard";
+import ShareButton from "@/components/Common/ShareButton";
 
 const LiveClassesPage = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -83,6 +84,16 @@ const LiveClassesPage = () => {
       />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Live Classes</h1>
+          <ShareButton
+            title="Live Classes"
+            text="Explore live classes on Faculty Pedia."
+            path="/1-1-live-class"
+            size="sm"
+          />
+        </div>
+
         {/* Tabs Navigation */}
         <div className="mb-8">
           <div className="border-b border-gray-200">

@@ -5,34 +5,63 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiUser, FiStar } from "react-icons/fi";
 
+const deriveEducatorName = (educator) => {
+  if (!educator || typeof educator !== "object") {
+    return "";
+  }
+
+  const candidates = [
+    educator.name,
+    educator.fullName,
+    educator.displayName,
+    educator.educatorName,
+    educator.personalInfo?.fullName,
+    educator.personalInfo?.name,
+    educator.profile?.fullName,
+    educator.profile?.name,
+    [educator.firstName, educator.lastName].filter(Boolean).join(" "),
+    educator.user?.name,
+    [educator.user?.firstName, educator.user?.lastName]
+      .filter(Boolean)
+      .join(" "),
+  ]
+    .map((value) => (typeof value === "string" ? value.trim() : ""))
+    .filter((value) => value && value.length > 0);
+
+  return candidates[0] || "";
+};
+
 const EducatorsTab = ({ followingEducators }) => {
   // Extract the actual educator data from the followingEducators array
   const educators = followingEducators
     .map((follow) => {
       // Handle both populated and unpopulated references
       const educatorData = follow.educatorId || follow;
-      
+
       // Skip if no valid educator data
       if (!educatorData || !educatorData._id) {
         console.warn("Skipping invalid educator data:", follow);
         return null;
       }
-      
+
       // Validate MongoDB ObjectId format
       const isValidId = /^[a-f\d]{24}$/i.test(educatorData._id);
       if (!isValidId) {
         console.warn("Invalid educator ID format:", educatorData._id);
         return null;
       }
-      
+
       return {
         ...educatorData,
-        followedAt: follow.followedAt
+        followedAt: follow.followedAt,
       };
     })
     .filter(Boolean); // Remove null entries
 
-  console.log("Processed educators:", educators.map(e => ({ id: e._id, name: e.name })));
+  console.log(
+    "Processed educators:",
+    educators.map((e) => ({ id: e._id, name: deriveEducatorName(e) }))
+  );
 
   return (
     <div className="bg-white rounded-lg shadow-sm border">
@@ -45,8 +74,8 @@ const EducatorsTab = ({ followingEducators }) => {
         </h3>
         {educators.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {educators.map((educator, index) => {
-              const educatorName = educator.name || `${educator.firstName || ''} ${educator.lastName || ''}`.trim();
+            {educators.map((educator) => {
+              const educatorName = deriveEducatorName(educator);
               const profileImage = educator.profileImage?.url || educator.image?.url;
               const educatorId = educator._id;
               
@@ -79,7 +108,7 @@ const EducatorsTab = ({ followingEducators }) => {
                     )}
                     <div className="ml-3 flex-1 min-w-0">
                       <h4 className="font-semibold text-gray-900 truncate">
-                        {educatorName || "Educator"}
+                        {educatorName ? `Educator: ${educatorName}` : "Educator"}
                       </h4>
                       <p className="text-sm text-gray-600 truncate">
                         {educator.specialization || educator.subject}

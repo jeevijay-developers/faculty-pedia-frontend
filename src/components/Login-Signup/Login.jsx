@@ -83,6 +83,16 @@ const Login = ({
       localStorage.setItem(storageKey, JSON.stringify(response.userData));
       localStorage.setItem("user-role", response.userType);
 
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new Event(
+            response.userType === "student"
+              ? "student-data-updated"
+              : "educator-data-updated"
+          )
+        );
+      }
+
       // Show success toast
       toast.success(`Welcome back, ${response.userData.firstName || response.userData.name || "User"}!`);
 

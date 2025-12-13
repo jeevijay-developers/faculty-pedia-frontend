@@ -71,6 +71,7 @@ return (
             <div className="space-y-3 mb-8">
               <div className="flex items-start space-x-3">
                 <FiMapPin className="text-blue-600 mt-1 flex-shrink-0" />
+                
                 <span className="text-sm"> C304 om enclave, Anantpura, Kota,  Rajasthan, 324005</span>
               </div>
               <div className="flex items-center space-x-3">

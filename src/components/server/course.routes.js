@@ -1,10 +1,19 @@
 import API_CLIENT from "./config";
 
-export const getCourseById = async (id) => {
+const isLikelyObjectId = (value) =>
+  typeof value === "string" && /^[0-9a-fA-F]{24}$/.test(value.trim());
+
+export const getCourseById = async (identifier) => {
   try {
-    const response = await API_CLIENT.get(`/api/courses/${id}`);
-    // The API returns { course: {...} }, so we need to extract the course object
-    return response.data.course || response.data;
+    const normalized = String(identifier).trim();
+    const useSlugLookup = !isLikelyObjectId(normalized);
+    const encoded = encodeURIComponent(normalized);
+
+    const response = useSlugLookup
+      ? await API_CLIENT.get(`/api/courses/slug/${encoded}`)
+      : await API_CLIENT.get(`/api/courses/${encoded}`);
+
+    return response.data?.course || response.data;
   } catch (error) {
     console.error("Error fetching course by ID:", error);
     throw error;

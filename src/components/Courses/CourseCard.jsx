@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MdSchool, MdAccessTime, MdCalendarToday } from "react-icons/md";
 import { IoStarSharp } from "react-icons/io5";
 import { FaBook } from "react-icons/fa";
+
+const DEFAULT_COURSE_IMAGE = "/images/placeholders/1.svg";
+const DEFAULT_EDUCATOR_IMAGE = "/images/placeholders/square.svg";
+const HEX_OBJECT_ID_REGEX = /^[a-f\d]{24}$/i;
+
+const sanitizeImageUrl = (value, fallback) => {
+  if (!value || typeof value !== "string") {
+    return fallback;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return fallback;
+  }
+
+  if (trimmed.includes("example.com")) {
+    return fallback;
+  }
+
+  return trimmed;
+};
 
 const CourseCard = ({ course }) => {
   // Format the starting date
@@ -16,20 +37,110 @@ const CourseCard = ({ course }) => {
     });
   };
 
+  const educatorSource =
+    (course?.educatorID && typeof course.educatorID === "object"
+      ? course.educatorID
+      : null) ||
+    (course?.educatorId && typeof course.educatorId === "object"
+      ? course.educatorId
+      : null) ||
+    (course?.educator && typeof course.educator === "object"
+      ? course.educator
+      : null) ||
+    (course?.educatorDetails && typeof course.educatorDetails === "object"
+      ? course.educatorDetails
+      : null);
+
+  const rawCourseImage =
+    (typeof course?.image === "object" && course.image?.url) ||
+    (typeof course?.courseThumbnail === "object" &&
+      course.courseThumbnail?.url) ||
+    course?.image ||
+    course?.courseThumbnail;
+
+  const rawEducatorAvatar =
+    educatorSource?.profilePicture ||
+    course?.educatorProfilePicture ||
+    course?.educatorPhoto;
+
+  const sanitizedCourseImage = sanitizeImageUrl(
+    rawCourseImage,
+    DEFAULT_COURSE_IMAGE
+  );
+  const sanitizedEducatorAvatar = sanitizeImageUrl(
+    rawEducatorAvatar,
+    DEFAULT_EDUCATOR_IMAGE
+  );
+
+  const [heroImageSrc, setHeroImageSrc] = useState(sanitizedCourseImage);
+  const [avatarSrc, setAvatarSrc] = useState(sanitizedEducatorAvatar);
+
+  useEffect(() => {
+    setHeroImageSrc(sanitizedCourseImage);
+  }, [sanitizedCourseImage]);
+
+  useEffect(() => {
+    setAvatarSrc(sanitizedEducatorAvatar);
+  }, [sanitizedEducatorAvatar]);
+
+  const handleHeroImageError = () => {
+    if (heroImageSrc !== DEFAULT_COURSE_IMAGE) {
+      setHeroImageSrc(DEFAULT_COURSE_IMAGE);
+    }
+  };
+
+  const handleAvatarError = () => {
+    if (avatarSrc !== DEFAULT_EDUCATOR_IMAGE) {
+      setAvatarSrc(DEFAULT_EDUCATOR_IMAGE);
+    }
+  };
+
+  const educatorNameRaw =
+    educatorSource?.fullName ||
+    educatorSource?.name ||
+    course?.educatorName ||
+    course?.educatorFullName ||
+    course?.creatorName ||
+    (typeof course?.educator === "string" ? course.educator : "") ||
+    (typeof course?.educatorId === "string" ? course.educatorId : "") ||
+    (typeof course?.educatorID === "string" ? course.educatorID : "") ||
+    educatorSource?.username ||
+    course?.educatorUsername ||
+    "";
+
+  const educatorName = (() => {
+    if (typeof educatorNameRaw !== "string") {
+      return "";
+    }
+    const trimmed = educatorNameRaw.trim();
+    if (!trimmed) {
+      return "";
+    }
+    if (HEX_OBJECT_ID_REGEX.test(trimmed)) {
+      return "";
+    }
+    return trimmed;
+  })();
+
+  const educatorAvatar =
+    educatorSource?.profilePicture?.url ||
+    educatorSource?.profilePicture ||
+    educatorSource?.profilePicture ||
+    course?.educatorProfilePicture ||
+    "/images/placeholders/square.svg";
+
+  const hasEducator = Boolean(educatorSource || educatorName);
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100 flex flex-col h-full overflow-hidden">
       {/* Course Image */}
       <div className="relative h-48 bg-gray-200 overflow-hidden">
         <Image
-          src={
-            course?.image?.url || course?.image || "/images/placeholders/1.svg"
-          }
+          src={heroImageSrc}
           alt={course?.title || "Course"}
           fill
           className="object-cover"
-          // onError={(e) => {
-          //   e.target.src = "/images/placeholders/1.svg";
-          // }}
+          onError={handleHeroImageError}
         />
         {/* Specialization Badge */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1">
@@ -49,9 +160,15 @@ const CourseCard = ({ course }) => {
 
       <div className="p-6 flex flex-col flex-1">
         {/* Course Title */}
-        <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight line-clamp-2">
+        <h3 className="text-xl font-bold text-gray-900 mb-2 leading-tight line-clamp-2">
           {course.title}
         </h3>
+
+        {hasEducator && (
+          <h4 className="text-base font-semibold text-blue-600 mb-4">
+            {educatorName || "Instructor"}
+          </h4>
+        )}
 
         {/* Subject and Specialization */}
         <div className="flex items-center gap-4 mb-4">
@@ -94,42 +211,7 @@ const CourseCard = ({ course }) => {
           </div>
         </div>
 
-        {/* Educator Section */}
-        {(course.educatorID || course.educator) && (
-          <div className="border-t border-gray-100 pt-4 mb-4">
-            <div className="flex items-center space-x-3">
-              <div className="flex-shrink-0">
-                <img
-                  src={
-                    course.educatorID?.profilePicture ||
-                    course.educator?.profilePicture ||
-                    "/images/placeholders/square.svg"
-                  }
-                  alt={course.educatorID?.fullName || course.educator?.fullName || "Educator"}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-semibold text-gray-900 truncate">
-                  {course.educatorID?.fullName || course.educatorID?.username || course.educator?.fullName || "Instructor"}
-                </h4>
-                <div className="flex items-center space-x-2 mt-1">
-                  <span className="text-xs text-gray-500 capitalize">
-                    {Array.isArray(course.subject) ? course.subject[0] : course.subject}
-                  </span>
-                  {course.rating > 0 && (
-                    <div className="flex items-center space-x-1">
-                      <IoStarSharp className="w-3 h-3 text-yellow-500" />
-                      <span className="text-xs text-gray-600">
-                        {course.rating.toFixed(1)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        
 
         {/* Pricing Section */}
         <div className="border-t border-gray-100 mb-4 mt-auto pt-4">

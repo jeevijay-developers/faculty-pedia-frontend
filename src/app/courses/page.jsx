@@ -10,8 +10,10 @@ const CoursesPage = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [allCourses, setAllCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
+  const [sortedCourses, setSortedCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortOption, setSortOption] = useState("none");
 
   const subjects = ["All", "physics", "chemistry", "biology", "mathematics"];
 
@@ -64,6 +66,34 @@ const CoursesPage = () => {
     }
   }, [activeTab, allCourses]);
 
+  useEffect(() => {
+    if (activeTab !== "All" && sortOption !== "none") {
+      setSortOption("none");
+    }
+  }, [activeTab, sortOption]);
+
+  useEffect(() => {
+    const coursesToSort = [...filteredCourses];
+
+    if (activeTab === "All") {
+      switch (sortOption) {
+        case "priceHigh":
+          coursesToSort.sort((a, b) => Number(b.fees ?? b.price ?? 0) - Number(a.fees ?? a.price ?? 0));
+          break;
+        case "priceLow":
+          coursesToSort.sort((a, b) => Number(a.fees ?? a.price ?? 0) - Number(b.fees ?? b.price ?? 0));
+          break;
+        case "enrolled":
+          coursesToSort.sort((a, b) => Number(b.enrolledStudents?.length ?? b.enrolledCount ?? 0) - Number(a.enrolledStudents?.length ?? a.enrolledCount ?? 0));
+          break;
+        default:
+          break;
+      }
+    }
+
+    setSortedCourses(coursesToSort);
+  }, [filteredCourses, sortOption, activeTab]);
+
   if (loading) {
     return <Loading />;
   }
@@ -115,20 +145,35 @@ const CoursesPage = () => {
         </div>
 
         {/* Course Count */}
-        <div className="mb-6 text-center">
-          <p className="text-gray-600">
-            Showing <span className="font-semibold text-gray-900">{filteredCourses.length}</span> course
-            {filteredCourses.length !== 1 ? "s" : ""}
+        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <p className="text-gray-600 text-center md:text-left">
+            Showing <span className="font-semibold text-gray-900">{sortedCourses.length}</span> course
+            {sortedCourses.length !== 1 ? "s" : ""}
             {activeTab !== "All" && (
               <span className="capitalize"> in {activeTab}</span>
             )}
           </p>
+
+          {activeTab === "All" && (
+            <div className="flex items-center justify-center">
+              <select
+                value={sortOption}
+                onChange={(event) => setSortOption(event.target.value)}
+                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="none">Sort by</option>
+                <option value="priceHigh">Price: High to Low</option>
+                <option value="priceLow">Price: Low to High</option>
+                <option value="enrolled">Enrolled Students</option>
+              </select>
+            </div>
+          )}
         </div>
 
         {/* Courses Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses && filteredCourses.length > 0 ? (
-            filteredCourses.map((course) => (
+          {sortedCourses && sortedCourses.length > 0 ? (
+            sortedCourses.map((course) => (
               <CourseCard key={course._id || course.id} course={course} />
             ))
           ) : (

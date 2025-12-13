@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import {
   FaStar,
@@ -8,6 +10,7 @@ import {
   FaGraduationCap,
   FaRupeeSign,
 } from "react-icons/fa";
+import ShareButton from "@/components/Common/ShareButton";
 
 const CourseHeader = ({ course }) => {
   const formatDate = (dateString) => {
@@ -31,6 +34,10 @@ const CourseHeader = ({ course }) => {
 
     return Math.round(weeks); // rounded to nearest whole week
   }
+
+  const shareText = course?.title
+    ? `Explore the course "${course.title}" on Faculty Pedia.`
+    : "Check out this course on Faculty Pedia.";
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -64,7 +71,16 @@ const CourseHeader = ({ course }) => {
               </span>
             </div>
 
-            <h1 className="text-3xl font-bold mb-3">{course.title}</h1>
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
+              <h1 className="text-3xl font-bold">{course.title}</h1>
+              <ShareButton
+                title={course?.title || "Course"}
+                text={shareText}
+                useCurrentUrl
+                size="sm"
+                className="lg:ml-auto"
+              />
+            </div>
             <p className="text-black/90 text-lg mb-4 line-clamp-2">
               {course.description}
             </p>
