@@ -22,12 +22,27 @@ import { getWebinarById } from "@/components/server/webinars.routes";
 import { getCourseById } from "@/components/server/course.routes";
 import { getTestSeriesById } from "@/components/server/test-series.route";
 import { rateEducator } from "@/components/server/educators.routes";
-import { followEducator, unfollowEducator } from "@/components/server/student/student.routes";
+import Player from "@vimeo/player";
+
+const extractVimeoId = (value) => {
+  if (!value) return null;
+  if (/^\d+$/.test(value)) return value;
+
+  const match =
+    value.match(/vimeo\.com\/(?:video\/|videos\/)?(\d+)/) ||
+    value.match(/player\.vimeo\.com\/video\/(\d+)/);
+
+  if (match && match[1]) return match[1];
+  return null;
+};
+import {
+  followEducator,
+  unfollowEducator,
+} from "@/components/server/student/student.routes";
 import { getUserData } from "@/utils/userData";
 import { toast } from "react-hot-toast";
 
 const ViewProfile = ({ educatorData }) => {
-  
   // Add safety check at the top
   if (!educatorData) {
     console.error("ViewProfile: educatorData is null or undefined");
@@ -41,13 +56,17 @@ const ViewProfile = ({ educatorData }) => {
       </div>
     );
   }
-    
   // State for managing visible items
   const [visibleCourses, setVisibleCourses] = useState(6);
   const [visibleWebinars, setVisibleWebinars] = useState(6);
   const [visibleTestSeries, setVisibleTestSeries] = useState(6);
 
   console.log("Educator data: ", educatorData);
+
+  // Vimeo player refs
+  const vimeoContainerRef = useRef(null);
+  const vimeoIframeRef = useRef(null);
+  const vimeoPlayerRef = useRef(null);
 
   const payPerHourFeeValue = Number(educatorData?.payPerHourFee ?? 0);
   const hasPayPerHour = Number.isFinite(payPerHourFeeValue) && payPerHourFeeValue > 0;
@@ -105,7 +124,7 @@ const ViewProfile = ({ educatorData }) => {
   const [userRating, setUserRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmittingRating, setIsSubmittingRating] = useState(false);
-  
+
   // State for webinar details
   const [webinarDetails, setWebinarDetails] = useState([]);
   const [loadingWebinars, setLoadingWebinars] = useState(false);
@@ -172,10 +191,12 @@ const ViewProfile = ({ educatorData }) => {
   useEffect(() => {
     const userData = getUserData();
     setCurrentUser(userData);
-    
+
     if (userData && userData.followingEducators && educatorData?._id) {
       const following = userData.followingEducators.some(
-        (follow) => follow.educatorId === educatorData._id || follow.educatorId?._id === educatorData._id
+        (follow) =>
+          follow.educatorId === educatorData._id ||
+          follow.educatorId?._id === educatorData._id
       );
       setIsFollowing(following);
     }
@@ -187,11 +208,11 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.webinars && educatorData.webinars.length > 0) {
         setLoadingWebinars(true);
         try {
-          const webinarPromises = educatorData.webinars.map(webinarId => 
+          const webinarPromises = educatorData.webinars.map((webinarId) =>
             getWebinarById(webinarId)
           );
           const webinars = await Promise.all(webinarPromises);
-          setWebinarDetails(webinars.filter(webinar => webinar)); // Filter out any null/undefined results
+          setWebinarDetails(webinars.filter((webinar) => webinar)); // Filter out any null/undefined results
         } catch (error) {
           console.error("Error fetching webinar details:", error);
           setWebinarDetails([]);
@@ -210,12 +231,11 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.courses && educatorData.courses.length > 0) {
         setLoadingCourses(true);
         try {
-          const coursePromises = educatorData.courses.map(courseId => 
+          const coursePromises = educatorData.courses.map((courseId) =>
             getCourseById(courseId)
           );
-          const courses = await Promise.all(coursePromises);          
-          setCourseDetails(courses.filter(course => course)); // Filter out any null/undefined results
-          
+          const courses = await Promise.all(coursePromises);
+          setCourseDetails(courses.filter((course) => course)); // Filter out any null/undefined results
         } catch (error) {
           console.error("Error fetching course details:", error);
           setCourseDetails([]);
@@ -234,11 +254,13 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.testSeries && educatorData.testSeries.length > 0) {
         setLoadingTestSeries(true);
         try {
-          const testSeriesPromises = educatorData.testSeries.map(testSeriesId => 
-            getTestSeriesById(testSeriesId)
+          const testSeriesPromises = educatorData.testSeries.map(
+            (testSeriesId) => getTestSeriesById(testSeriesId)
           );
           const testSeriesList = await Promise.all(testSeriesPromises);
-          setTestSeriesDetails(testSeriesList.filter(testSeries => testSeries)); // Filter out any null/undefined results
+          setTestSeriesDetails(
+            testSeriesList.filter((testSeries) => testSeries)
+          ); // Filter out any null/undefined results
         } catch (error) {
           console.error("Error fetching test series details:", error);
           setTestSeriesDetails([]);
@@ -251,7 +273,7 @@ const ViewProfile = ({ educatorData }) => {
     fetchTestSeriesDetails();
   }, [educatorData?.testSeries]);
 
-  if (!educatorData) return null;  // Functions to load more items
+  if (!educatorData) return null; // Functions to load more items
   const loadMoreCourses = () => {
     setVisibleCourses((prev) => prev + 3);
   };
@@ -283,30 +305,52 @@ const ViewProfile = ({ educatorData }) => {
         toast.success("Unfollowed successfully");
         setIsFollowing(false);
         setFollowerCount((prev) => Math.max(0, prev - 1));
-        
+
         // Update local storage
         const updatedFollowing = currentUser.followingEducators.filter(
-          (follow) => follow.educatorId !== educatorData._id && follow.educatorId?._id !== educatorData._id
+          (follow) =>
+            follow.educatorId !== educatorData._id &&
+            follow.educatorId?._id !== educatorData._id
         );
-        const updatedUser = { ...currentUser, followingEducators: updatedFollowing };
-        localStorage.setItem("faculty-pedia-student-data", JSON.stringify(updatedUser));
+        const updatedUser = {
+          ...currentUser,
+          followingEducators: updatedFollowing,
+        };
+        localStorage.setItem(
+          "faculty-pedia-student-data",
+          JSON.stringify(updatedUser)
+        );
         setCurrentUser(updatedUser);
       } else {
         await followEducator(currentUser._id, educatorData._id);
         toast.success("Followed successfully");
         setIsFollowing(true);
         setFollowerCount((prev) => prev + 1);
-        
+
         // Update local storage
-        const newFollow = { educatorId: educatorData._id, followedAt: new Date() };
-        const updatedFollowing = [...(currentUser.followingEducators || []), newFollow];
-        const updatedUser = { ...currentUser, followingEducators: updatedFollowing };
-        localStorage.setItem("faculty-pedia-student-data", JSON.stringify(updatedUser));
+        const newFollow = {
+          educatorId: educatorData._id,
+          followedAt: new Date(),
+        };
+        const updatedFollowing = [
+          ...(currentUser.followingEducators || []),
+          newFollow,
+        ];
+        const updatedUser = {
+          ...currentUser,
+          followingEducators: updatedFollowing,
+        };
+        localStorage.setItem(
+          "faculty-pedia-student-data",
+          JSON.stringify(updatedUser)
+        );
         setCurrentUser(updatedUser);
       }
     } catch (error) {
       console.error("Error toggling follow:", error);
-      toast.error(error.response?.data?.message || "Failed to update follow status");
+      toast.error(
+        error.response?.data?.message || "Failed to update follow status"
+      );
       // Revert optimistic update on error
       if (isFollowing) {
         setFollowerCount((prev) => prev + 1);
@@ -363,6 +407,62 @@ const ViewProfile = ({ educatorData }) => {
     }
   };
 
+  // Initialize Vimeo intro video player when introVideoLink changes
+  useEffect(() => {
+    const link = educatorData?.introVideoLink;
+    const container = vimeoContainerRef.current;
+
+    if (!link || !container) return;
+
+    const videoId = extractVimeoId(link);
+    if (!videoId) return;
+
+    if (!vimeoIframeRef.current) {
+      const iframe = document.createElement("iframe");
+      iframe.allow = "autoplay; fullscreen; picture-in-picture";
+      iframe.allowFullscreen = true;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "0";
+      container.innerHTML = "";
+      container.appendChild(iframe);
+      vimeoIframeRef.current = iframe;
+    }
+
+    if (!vimeoPlayerRef.current) {
+      vimeoPlayerRef.current = new Player(vimeoIframeRef.current, {
+        id: videoId,
+        autopause: false,
+        muted: false,
+      });
+    } else {
+      vimeoPlayerRef.current.loadVideo(videoId).catch(() => {});
+    }
+
+    const playerInstance = vimeoPlayerRef.current;
+    const handlePlay = () => {
+      console.log("Played the intro video");
+    };
+
+    playerInstance.on("play", handlePlay);
+
+    return () => {
+      playerInstance.off("play", handlePlay);
+    };
+  }, [educatorData?.introVideoLink]);
+
+  // Cleanup on unmount
+  useEffect(
+    () => () => {
+      if (vimeoPlayerRef.current) {
+        vimeoPlayerRef.current.unload().catch(() => {});
+        vimeoPlayerRef.current = null;
+      }
+      vimeoIframeRef.current = null;
+    },
+    []
+  );
+
   return (
     <div className="w-full min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -375,7 +475,9 @@ const ViewProfile = ({ educatorData }) => {
               <div className="flex justify-center lg:justify-start mb-6">
                 <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-blue-600">
                   <Image
-                    src={educatorData.image?.url || "/images/placeholders/1.svg"}
+                    src={
+                      educatorData.image?.url || "/images/placeholders/1.svg"
+                    }
                     alt={`${educatorData.firstName} ${educatorData.lastName}`}
                     fill
                     sizes="(100vw)"
@@ -511,9 +613,25 @@ const ViewProfile = ({ educatorData }) => {
                     >
                       {isLoadingFollow ? (
                         <>
-                          <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          <svg
+                            className="animate-spin h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
                           </svg>
                           <span>Following  ...</span>
                         </>
@@ -621,39 +739,13 @@ const ViewProfile = ({ educatorData }) => {
                     Introduction Video
                   </h3>
                   <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
-                    <iframe
-                      src={(() => {
-                        if (!educatorData.introVideoLink) return "";
-                        
-                        const url = educatorData.introVideoLink;
-                        
-                        // Extract video ID from various YouTube URL formats
-                        let videoId = null;
-                        
-                        // Format: https://www.youtube.com/watch?v=VIDEO_ID
-                        if (url.includes("youtube.com/watch?v=")) {
-                          videoId = url.split("watch?v=")[1]?.split("&")[0];
-                        }
-                        // Format: https://youtu.be/VIDEO_ID
-                        else if (url.includes("youtu.be/")) {
-                          videoId = url.split("youtu.be/")[1]?.split("?")[0];
-                        }
-                        // Format: https://www.youtube.com/embed/VIDEO_ID (already correct)
-                        else if (url.includes("youtube.com/embed/")) {
-                          return url;
-                        }
-                        
-                        // Convert to embed URL
-                        return videoId 
-                          ? `https://www.youtube.com/embed/${videoId}`
-                          : url; // Fallback to original if can't parse
-                      })()}
-                      title="Introduction Video"
-                      className="w-full h-full"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
+                    {educatorData.introVideoLink ? (
+                      <div ref={vimeoContainerRef} className="w-full h-full" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-gray-500 text-sm">
+                        No intro video available
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -792,26 +884,24 @@ const ViewProfile = ({ educatorData }) => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {courseDetails
-                  .slice(0, visibleCourses)
-                  .map((course, index) => (
-                    <CourseCard
-                      key={course._id || index}
-                      course={{ 
-                        ...course, 
-                        educator: {
-                          _id: educatorData._id,
-                          firstName: educatorData.firstName,
-                          lastName: educatorData.lastName,
-                          image: educatorData.image,
-                          specialization: educatorData.specialization,
-                          qualification: educatorData.qualification,
-                          rating: ratingAverage,
-                          yearsExperience: educatorData.yearsExperience
-                        }
-                      }}
-                    />
-                  ))}
+                {courseDetails.slice(0, visibleCourses).map((course, index) => (
+                  <CourseCard
+                    key={course._id || index}
+                    course={{
+                      ...course,
+                      educator: {
+                        _id: educatorData._id,
+                        firstName: educatorData.firstName,
+                        lastName: educatorData.lastName,
+                        image: educatorData.image,
+                        specialization: educatorData.specialization,
+                        qualification: educatorData.qualification,
+                        rating: ratingAverage,
+                        yearsExperience: educatorData.yearsExperience,
+                      },
+                    }}
+                  />
+                ))}
               </div>
             )}
             {visibleCourses < courseDetails.length && (
@@ -822,8 +912,7 @@ const ViewProfile = ({ educatorData }) => {
                 >
                   View More Courses
                   <span className="text-sm">
-                    ({Math.min(3, courseDetails.length - visibleCourses)}{" "}
-                    more)
+                    ({Math.min(3, courseDetails.length - visibleCourses)} more)
                   </span>
                 </button>
               </div>
@@ -853,25 +942,35 @@ const ViewProfile = ({ educatorData }) => {
                         title: webinar.title,
                         description: webinar.description,
                         educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
-                        educatorPhoto: educatorData.image?.url || "/images/placeholders/1.svg",
-                        qualification: educatorData.qualification?.[0]?.title || "N/A",
-                        specialization: webinar.specialization || educatorData.specialization,
+                        educatorPhoto:
+                          educatorData.image?.url ||
+                          "/images/placeholders/1.svg",
+                        qualification:
+                          educatorData.qualification?.[0]?.title || "N/A",
+                        specialization:
+                          webinar.specialization || educatorData.specialization,
                         subject: webinar.subject,
-                        totalHours: `${Math.floor(webinar.duration / 60)}h ${webinar.duration % 60}m`,
+                        totalHours: `${Math.floor(webinar.duration / 60)}h ${
+                          webinar.duration % 60
+                        }m`,
                         timeRange: webinar.time,
-                        date: new Date(webinar.date).toLocaleDateString('en-US', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        }),
+                        date: new Date(webinar.date).toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        ),
                         fee: webinar.fees?.toString() || "0",
                         detailsLink: `/webinars/${webinar._id}`,
-                        image: webinar.image?.url || "/images/placeholders/1.svg",
+                        image:
+                          webinar.image?.url || "/images/placeholders/1.svg",
                         seatLimit: webinar.seatLimit,
                         enrolledCount: webinar.enrolledStudents?.length || 0,
                         webinarType: webinar.webinarType,
-                        webinarLink: webinar.webinarLink
+                        webinarLink: webinar.webinarLink,
                       }}
                     />
                   ))}
@@ -885,11 +984,7 @@ const ViewProfile = ({ educatorData }) => {
                 >
                   View More Webinars
                   <span className="text-sm">
-                    (
-                    {Math.min(
-                      3,
-                      webinarDetails.length - visibleWebinars
-                    )}{" "}
+                    ({Math.min(3, webinarDetails.length - visibleWebinars)}{" "}
                     more)
                   </span>
                 </button>
@@ -919,8 +1014,11 @@ const ViewProfile = ({ educatorData }) => {
                         id: testSeries._id,
                         title: testSeries.title,
                         educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
-                        educatorPhoto: educatorData.image?.url || "/images/placeholders/1.svg",
-                        qualification: educatorData.qualification?.[0]?.title || "N/A",
+                        educatorPhoto:
+                          educatorData.image?.url ||
+                          "/images/placeholders/1.svg",
+                        qualification:
+                          educatorData.qualification?.[0]?.title || "N/A",
                         subject: testSeries.subject,
                         specialization: testSeries.specialization,
                         noOfTests: testSeries.noOfTests,
@@ -943,11 +1041,7 @@ const ViewProfile = ({ educatorData }) => {
                 >
                   View More Test Series
                   <span className="text-sm">
-                    (
-                    {Math.min(
-                      3,
-                      testSeriesDetails.length - visibleTestSeries
-                    )}{" "}
+                    ({Math.min(3, testSeriesDetails.length - visibleTestSeries)}{" "}
                     more)
                   </span>
                 </button>
