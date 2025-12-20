@@ -1,21 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { isAuthenticated, getAuthToken } from "@/utils/auth";
+import { isAuthenticated } from "@/utils/auth";
 import { toast } from "react-hot-toast";
-
-// Get base URL for API calls
-const getBaseURL = () => {
-  const PRODUCTION_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL;
-  const DEVELOPMENT_URL = "http://localhost:5000";
-  const isProduction = process.env.NODE_ENV === "production";
-  
-  if (isProduction && PRODUCTION_URL) {
-    return PRODUCTION_URL;
-  }
-  return DEVELOPMENT_URL;
-};
+import {
+  createPaymentOrder,
+  verifyPayment,
+} from "../server/payment.routes";
 
 /**
  * Authentication-aware enrollment button component
@@ -27,26 +19,57 @@ const EnrollButton = ({
   studentId = null,
   price = 0,
   title = "Enroll Now",
+  joinLabel = null,
   className = "",
   onEnrollmentSuccess = null,
   disabled = false,
   enrollmentEndpoint = null, // Custom API endpoint if needed
+  initialEnrolled = false,
 }) => {
   const router = useRouter();
   const [isEnrolling, setIsEnrolling] = useState(false);
+  const [hasEnrolled, setHasEnrolled] = useState(false);
 
-  // Map enrollment types to their respective API endpoints
-  const getEnrollmentEndpoint = () => {
-    if (enrollmentEndpoint) return enrollmentEndpoint;
-    
-    const endpoints = {
-      course: "/api/subscribe/subscribe-course",
-      testseries: "/api/subscribe/subscribe-testseries", 
-      webinar: "/api/subscribe/subscribe-webinar",
-      liveclass: "/api/subscribe/subscribe-liveclass"
+  useEffect(() => {
+    if (initialEnrolled) {
+      setHasEnrolled(true);
+    }
+  }, [initialEnrolled]);
+
+  const loadRazorpayScript = () => {
+    if (typeof window === "undefined") return Promise.resolve(false);
+    if (window.Razorpay) return Promise.resolve(true);
+
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => reject(new Error("Failed to load Razorpay"));
+      document.body.appendChild(script);
+    });
+  };
+
+  const resolveProductType = () => {
+    const normalized = (type || "").toLowerCase();
+    const map = {
+      course: "course",
+      testseries: "testSeries",
+      webinar: "webinar",
+      liveclass: "liveClass",
+      "live-class": "liveClass",
+      test: "test",
     };
-    
-    return endpoints[type];
+
+    if (enrollmentEndpoint) return null; // custom flow
+
+    return map[normalized];
+  };
+
+  const getRedirectTarget = () => {
+    if (type === "course") return `/course-panel?courseId=${itemId}`;
+    if (type === "testseries") return `/test-series/${itemId}`;
+    if (type === "webinar") return `/webinars/${itemId}`;
+    return "/profile?tab=courses";
   };
 
   const handleEnrollment = async () => {
@@ -81,89 +104,156 @@ const EnrollButton = ({
       return;
     }
 
+    const productType = resolveProductType();
+    const redirectTarget = getRedirectTarget();
+
+    if (hasEnrolled) {
+      try {
+        if (onEnrollmentSuccess) {
+          const handled = await onEnrollmentSuccess({
+            productType,
+            itemId,
+            alreadyEnrolled: true,
+          });
+          if (handled) return;
+        }
+        router.push(redirectTarget);
+      } catch (error) {
+        console.error("Redirect error:", error);
+        toast.error("Unable to open webinar link right now.");
+      }
+      return;
+    }
+
     setIsEnrolling(true);
 
     try {
-      const token = getAuthToken();
-      const endpoint = getEnrollmentEndpoint();
-      const baseURL = getBaseURL();
-      
-      if (!endpoint) {
+      if (!productType) {
         throw new Error("Invalid enrollment type");
       }
 
-      // Prepare request body based on type
-      const requestBody = {
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Unable to load payment gateway");
+      }
+
+      const orderResponse = await createPaymentOrder({
         studentId: actualStudentId,
+        productId: itemId,
+        productType,
+      }).catch((err) => {
+        const alreadyEnrolled =
+          err?.response?.data?.message?.toLowerCase?.().includes("already enrolled") ||
+          err?.response?.data?.errors?.some?.((e) =>
+            String(e?.msg || e?.message || "")
+              .toLowerCase()
+              .includes("already enrolled")
+          );
+
+        if (alreadyEnrolled) {
+          setHasEnrolled(true);
+
+          if (onEnrollmentSuccess) {
+            onEnrollmentSuccess({
+              productType,
+              itemId,
+              alreadyEnrolled: true,
+            });
+          }
+
+          toast.success("You're already enrolled");
+          return null; // Skip payment
+        }
+
+        throw err;
+      });
+
+      if (!orderResponse) {
+        setIsEnrolling(false);
+        return;
+      }
+
+      const payload = orderResponse?.data || orderResponse;
+      const orderData = payload?.data || payload;
+
+      if (!orderData?.orderId || !orderData?.razorpayKey) {
+        throw new Error("Invalid payment order response");
+      }
+
+      const userData = (() => {
+        try {
+          return JSON.parse(
+            localStorage.getItem("faculty-pedia-student-data") || "{}"
+          );
+        } catch (err) {
+          return {};
+        }
+      })();
+
+      const options = {
+        key: orderData.razorpayKey,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Faculty Pedia",
+        description: orderData.product?.title || "Checkout",
+        order_id: orderData.orderId,
+        prefill: {
+          name: userData?.name || userData?.fullName || "",
+          email: userData?.email || "",
+        },
+        notes: {
+          productType,
+          productId: itemId,
+          intentId: orderData.intentId,
+        },
+        handler: async (response) => {
+          try {
+            const verifyRes = await verifyPayment({
+              orderId: response.razorpay_order_id,
+              paymentId: response.razorpay_payment_id,
+              signature: response.razorpay_signature,
+              intentId: orderData.intentId,
+            });
+
+            if (!verifyRes?.success) {
+              throw new Error(verifyRes?.message || "Payment verification failed");
+            }
+
+            toast.success("Enrollment successful!");
+            setHasEnrolled(true);
+
+            if (onEnrollmentSuccess) {
+              const handled = await onEnrollmentSuccess({
+                productType,
+                itemId,
+                orderData,
+                paymentResponse: response,
+              });
+              if (handled) {
+                return;
+              }
+            }
+
+            setTimeout(() => {
+              router.push(redirectTarget);
+            }, 800);
+          } catch (err) {
+            console.error("Verification error", err);
+            toast.error(err?.message || "Payment verification failed");
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            toast("Payment cancelled", { icon: "ℹ️" });
+          },
+        },
+        theme: {
+          color: "#0f172a",
+        },
       };
 
-      switch (type) {
-        case "course":
-          requestBody.courseId = itemId;
-          break;
-        case "testseries":
-          requestBody.testSeriesId = itemId;
-          break;
-        case "webinar":
-          requestBody.webinarId = itemId;
-          break;
-        case "liveclass":
-          requestBody.liveClassId = itemId;
-          break;
-        default:
-          throw new Error("Invalid enrollment type");
-      }
-
-      console.log("Enrollment Request:", {
-        url: `${baseURL}${endpoint}`,
-        body: requestBody,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": token ? "Bearer [REDACTED]" : "None"
-        }
-      });
-
-      const response = await fetch(`${baseURL}${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { "Authorization": `Bearer ${token}` }),
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Handle specific error cases
-        if (response.status === 401 && data.requiresAuth) {
-          toast.error("Please login to enroll");
-          router.push("/login");
-          return;
-        }
-        
-        if (response.status === 409) {
-          toast.success("You are already enrolled in this course!");
-          if (onEnrollmentSuccess) onEnrollmentSuccess(data);
-          return;
-        }
-
-        throw new Error(data.message || "Enrollment failed");
-      }
-
-      // Success
-      toast.success(data.message || "Enrollment successful!");
-      
-      // Call success callback if provided
-      if (onEnrollmentSuccess) {
-        onEnrollmentSuccess(data);
-      } else {
-        // Default success behavior - redirect to dashboard or course page
-        setTimeout(() => {
-          router.push("/profile?tab=courses");
-        }, 1500);
-      }
-
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (error) {
       console.error("Enrollment error:", error);
       toast.error(error.message || "Failed to enroll. Please try again.");
@@ -173,6 +263,12 @@ const EnrollButton = ({
   };
 
   const displayTitle = price > 0 ? `${title} - ₹${price}` : title;
+  const joinCopy =
+    joinLabel ||
+    (type && String(type).toLowerCase().includes("live")
+      ? "Join Class"
+      : "Join the Webinar");
+  const finalTitle = hasEnrolled ? joinCopy : displayTitle;
 
   return (
     <button
@@ -190,7 +286,7 @@ const EnrollButton = ({
           <span>Enrolling...</span>
         </div>
       ) : (
-        displayTitle
+        finalTitle
       )}
     </button>
   );

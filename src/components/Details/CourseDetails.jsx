@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import CourseHeader from "./CourseHeader";
 import ClassCard from "./ClassCard";
 import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
@@ -15,7 +16,14 @@ import Loading from "../Common/Loading";
 import EnrollButton from "../Common/EnrollButton";
 
 const CourseDetails = ({ id }) => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [showCoursePanel, setShowCoursePanel] = useState(false);
+  const [panelTab, setPanelTab] = useState("videos");
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const coursePanelRef = useRef(null);
 
   // Function to convert YouTube URL to embed format
   const getYouTubeEmbedUrl = (url) => {
@@ -46,8 +54,37 @@ const CourseDetails = ({ id }) => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [studentId, setStudentId] = useState(null);
+
+  const groupedVideos = useMemo(() => {
+    const groups = {};
+    if (course?.videos && Array.isArray(course.videos)) {
+      course.videos.forEach((video) => {
+        const topic = (video?.topic || video?.subject || "General").trim() || "General";
+        if (!groups[topic]) {
+          groups[topic] = [];
+        }
+        groups[topic].push(video);
+      });
+    }
+    return groups;
+  }, [course?.videos]);
+
+  const topics = useMemo(() => Object.keys(groupedVideos), [groupedVideos]);
   
   useEffect(() => {
+    // Extract current student id from localStorage (browser only)
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("faculty-pedia-student-data");
+        const parsed = raw ? JSON.parse(raw) : {};
+        const idFromStorage = parsed?._id || parsed?.id;
+        setStudentId(idFromStorage || null);
+      } catch (err) {
+        console.error("Error parsing student data from storage", err);
+      }
+    }
+
     setLoading(true);
     setError(null);
     
@@ -76,6 +113,56 @@ const CourseDetails = ({ id }) => {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (!course || !studentId) {
+      setIsEnrolled(false);
+      return;
+    }
+
+    const matchesId = (val) => {
+      if (!val) return false;
+      const v = val.studentId || val._id || val.id || val;
+      return v?.toString() === studentId?.toString();
+    };
+
+    const enrolledInCourse =
+      (Array.isArray(course.enrolledStudents) &&
+        course.enrolledStudents.some(matchesId)) ||
+      (Array.isArray(course.purchase) && course.purchase.some(matchesId));
+
+    setIsEnrolled(Boolean(enrolledInCourse));
+  }, [course, studentId]);
+
+  useEffect(() => {
+    if (topics.length === 0) {
+      if (selectedTopic !== "" || selectedVideo !== null) {
+        setSelectedTopic("");
+        setSelectedVideo(null);
+      }
+      return;
+    }
+
+    const nextTopic = topics.includes(selectedTopic) ? selectedTopic : topics[0];
+    const nextVideo = groupedVideos[nextTopic]?.[0] || null;
+
+    if (nextTopic !== selectedTopic) {
+      setSelectedTopic(nextTopic);
+    }
+    if (nextVideo !== selectedVideo) {
+      setSelectedVideo(nextVideo || null);
+    }
+  }, [topics, groupedVideos]);
+
+  const assets = useMemo(() => {
+    if (Array.isArray(course?.studyMaterials) && course.studyMaterials.length > 0) {
+      return course.studyMaterials;
+    }
+    if (Array.isArray(course?.assetsLinks) && course.assetsLinks.length > 0) {
+      return course.assetsLinks;
+    }
+    return [];
+  }, [course?.studyMaterials, course?.assetsLinks]);
+
   if (loading) {
     return <Loading />;
   }
@@ -99,6 +186,22 @@ const CourseDetails = ({ id }) => {
       </div>
     );
   }
+
+  const handleOpenCoursePanel = () => {
+    const targetId = course?._id || course?.id || id;
+    const query = targetId ? `?courseId=${targetId}` : "";
+    router.push(`/course-panel${query}`);
+  };
+
+  const handleTopicChange = (value) => {
+    setSelectedTopic(value);
+    const firstVideo = groupedVideos[value]?.[0] || null;
+    setSelectedVideo(firstVideo);
+  };
+
+  const handleVideoSelect = (video) => {
+    setSelectedVideo(video);
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -223,14 +326,14 @@ const CourseDetails = ({ id }) => {
                 </div>
 
                 {/* Course Description */}
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                {/* <div className="bg-white rounded-lg border border-gray-200 p-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">
                     Course Description
                   </h3>
                   <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                     {course.description}
                   </p>
-                </div>
+                </div> */}
 
                 {/* Course Timeline
                 <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -294,33 +397,7 @@ const CourseDetails = ({ id }) => {
                   </div>
                 )}
 
-                {/* Study Materials */}
-                {course.studyMaterials && course.studyMaterials.length > 0 && (
-                  <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                      Study Materials
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {course.studyMaterials.map((material, index) => (
-                        <a
-                          key={index}
-                          href={material.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                        >
-                          <div className="flex-1">
-                            <p className="font-medium text-gray-900">{material.title}</p>
-                            <p className="text-sm text-gray-500">{material.fileType}</p>
-                          </div>
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                
               </div>
             )}
 
@@ -411,12 +488,21 @@ const CourseDetails = ({ id }) => {
                       </span>
                     </div>
                   )}
-                  <EnrollButton
-                    type="course"
-                    itemId={course._id || course.id}
-                    price={course.fees}
-                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-3"
-                  />
+                  {isEnrolled ? (
+                    <button
+                      onClick={handleOpenCoursePanel}
+                      className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors mb-3"
+                    >
+                      Go to Course
+                    </button>
+                  ) : (
+                    <EnrollButton
+                      type="course"
+                      itemId={course._id || course.id}
+                      price={course.fees}
+                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-3"
+                    />
+                  )}
                   {course.certificateAvailable && (
                     <div className="text-sm text-gray-600 mt-2">
                       🎓 Certificate available upon completion
@@ -427,9 +513,156 @@ const CourseDetails = ({ id }) => {
             </div>
           </div>
         </div>
-
-       
       </div>
+
+      {showCoursePanel && isEnrolled && (
+        <div
+          ref={coursePanelRef}
+          className="mt-10 bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <div className="border-b md:border-b-0 md:border-r bg-gray-50">
+              <div className="flex md:flex-col">
+                <button
+                  onClick={() => setPanelTab("videos")}
+                  className={`flex-1 px-4 py-3 text-left text-sm font-medium border-b md:border-b-0 md:border-b-transparent md:border-l-4 transition-colors ${
+                    panelTab === "videos"
+                      ? "bg-white text-blue-700 md:border-blue-600"
+                      : "text-gray-600 hover:text-gray-900 md:border-transparent"
+                  }`}
+                >
+                  Videos
+                </button>
+                <button
+                  onClick={() => setPanelTab("assets")}
+                  className={`flex-1 px-4 py-3 text-left text-sm font-medium border-b md:border-b-0 md:border-l-4 transition-colors ${
+                    panelTab === "assets"
+                      ? "bg-white text-blue-700 md:border-blue-600"
+                      : "text-gray-600 hover:text-gray-900 md:border-transparent"
+                  }`}
+                >
+                  Assets
+                </button>
+              </div>
+            </div>
+
+            <div className="md:col-span-3 p-6 space-y-4">
+              {panelTab === "videos" ? (
+                topics.length === 0 ? (
+                  <div className="text-center text-gray-500">No course videos available.</div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">Course Videos</h3>
+                        <p className="text-sm text-gray-600">Select a topic to browse its videos.</p>
+                      </div>
+                      <select
+                        value={selectedTopic}
+                        onChange={(e) => handleTopicChange(e.target.value)}
+                        className="w-full sm:w-64 rounded-md border border-gray-300 px-3 py-2 text-sm"
+                      >
+                        {topics.map((topic) => (
+                          <option key={topic} value={topic}>
+                            {topic}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                      <div className="lg:col-span-3">
+                        {selectedVideo ? (
+                          <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 border">
+                            <iframe
+                              src={getYouTubeEmbedUrl(selectedVideo.link || selectedVideo.url)}
+                              title={selectedVideo.title || selectedVideo.name || "Course Video"}
+                              className="w-full h-full"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              referrerPolicy="strict-origin-when-cross-origin"
+                              allowFullScreen
+                            />
+                          </div>
+                        ) : (
+                          <div className="h-full min-h-[240px] flex items-center justify-center text-gray-500 border rounded-lg">
+                            Select a video to start watching.
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="lg:col-span-2 space-y-3">
+                        <p className="text-sm font-semibold text-gray-800">Videos in this topic</p>
+                        <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+                          {groupedVideos[selectedTopic]?.map((video, idx) => {
+                            const videoTitle = video.title || video.name || `Video ${idx + 1}`;
+                            return (
+                              <button
+                                key={`${selectedTopic}-${idx}-${videoTitle}`}
+                                onClick={() => handleVideoSelect(video)}
+                                className={`w-full text-left p-3 rounded-md border transition-colors ${
+                                  selectedVideo === video
+                                    ? "border-blue-200 bg-blue-50 text-blue-800"
+                                    : "border-gray-200 hover:border-blue-200 hover:bg-blue-50/60"
+                                }`}
+                              >
+                                <p className="text-sm font-medium line-clamp-1">{videoTitle}</p>
+                                {video.topic && (
+                                  <p className="text-xs text-gray-500 line-clamp-1">{video.topic}</p>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              ) : assets.length === 0 ? (
+                <div className="text-center text-gray-500">No assets shared for this course yet.</div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Course Assets</h3>
+                    <p className="text-sm text-gray-600">Downloadable resources shared by the instructor.</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {assets.map((asset, index) => (
+                      <a
+                        key={`${asset.title || asset.name || "asset"}-${index}`}
+                        href={asset.link || asset.url || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-blue-200 hover:bg-blue-50/60 transition-colors"
+                      >
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900 line-clamp-1">{asset.title || asset.name || `Asset ${index + 1}`}</p>
+                          <p className="text-sm text-gray-500 line-clamp-2">
+                            {asset.fileType || asset.type || "Resource"}
+                          </p>
+                        </div>
+                        <svg
+                          className="w-5 h-5 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M7 10l5 5m0 0l5-5m-5 5V3"
+                          />
+                        </svg>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

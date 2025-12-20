@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   FaClock,
@@ -16,6 +16,42 @@ import EnrollButton from "../Common/EnrollButton";
 import ShareButton from "@/components/Common/ShareButton";
 
 const WebinarDetails = ({ webinar }) => {
+  const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
+
+  useEffect(() => {
+    try {
+      const userData = JSON.parse(
+        localStorage.getItem("faculty-pedia-student-data") || "{}"
+      );
+      const studentId = userData?._id || userData?.id;
+
+      const enrollmentList =
+        webinar?.studentEnrolled || webinar?.enrolledStudents || [];
+
+      const normalized = Array.isArray(enrollmentList)
+        ? enrollmentList
+        : [];
+
+      const alreadyEnrolled = normalized.some((entry) => {
+        if (!entry) return false;
+        const id =
+          typeof entry === "string"
+            ? entry
+            : entry?._id || entry?.id || entry?.studentId;
+        return id && studentId && id.toString() === studentId.toString();
+      });
+
+      if (studentId && (alreadyEnrolled || webinar?.isEnrolled)) {
+        setIsAlreadyEnrolled(true);
+      } else {
+        setIsAlreadyEnrolled(false);
+      }
+    } catch (error) {
+      console.error("Enrollment state check failed", error);
+      setIsAlreadyEnrolled(false);
+    }
+  }, [webinar]);
+
   // Handle different response formats and provide fallbacks
   const imageUrl = webinar.image || "https://placehold.co/800x600";
   const title = webinar.title || "Webinar Title";
@@ -282,14 +318,16 @@ const WebinarDetails = ({ webinar }) => {
             itemId={webinar._id || webinar.id}
             price={fees}
             className="bg-blue-600 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300 font-medium"
+            title="Enroll & Join"
+            initialEnrolled={isAlreadyEnrolled}
+            onEnrollmentSuccess={() => {
+              if (webinar.webinarLink) {
+                window.location.href = webinar.webinarLink;
+                return true; // handled, skip default redirect
+              }
+              return false; // fallback to default redirect
+            }}
           />
-          <button
-            className="bg-green-600 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-green-700 transition-colors duration-300 font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
-            onClick={() => window.open(webinar.webinarLink || "#", "_blank")}
-            disabled={!webinar.webinarLink}
-          >
-            {webinar.webinarLink ? "Join Webinar" : "Link Not Available"}
-          </button>
         </div>
       </div>
     </div>

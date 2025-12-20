@@ -280,9 +280,23 @@ const CourseCarousel = ({
           courses = response;
         }
         
-        console.log(`📚 Found ${courses.length} courses for ${specialization}`);
+        const activeCourses = courses.filter((course) => {
+          const status = (course?.status || "").toLowerCase();
+          const explicitInactive = course?.isActive === false || course?.active === false;
+          const flaggedDeleted = course?.isDeleted || course?.deletedAt || course?.deleted === true;
+          return (
+            !!course &&
+            !!(course._id || course.id || course.slug) &&
+            !explicitInactive &&
+            !flaggedDeleted &&
+            status !== "deleted" &&
+            status !== "inactive"
+          );
+        });
+
+        console.log(`📚 Found ${courses.length} courses, rendering ${activeCourses.length} active for ${specialization}`);
         const enrichedCourses = await enrichCoursesWithEducators(
-          courses,
+          activeCourses,
           specialization
         );
         setCoursesToRender(enrichedCourses);

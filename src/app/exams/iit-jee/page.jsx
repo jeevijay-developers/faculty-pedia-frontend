@@ -13,7 +13,7 @@ const page = async () => {
   return (
     <>
       <Banner
-        url="/images/placeholders/1.svg"
+        url="/images/placeholders/iit.png"
         title="IIT JEE"
         subtitle="Unlock your potential with expert IIT JEE preparation, curated study material, and personalized guidance from top educators."
         btnTitle={" Join as Educator"}

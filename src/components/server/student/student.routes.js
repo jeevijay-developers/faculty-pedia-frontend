@@ -1,5 +1,10 @@
 import API_CLIENT from "../config";
 
+const extractWebinarPayload = (response) => {
+  const data = response?.data ?? response;
+  return data?.data || data?.webinar || data;
+};
+
 const extractPayload = (response) =>
   response?.data?.data ?? response?.data?.student ?? response?.data;
 
@@ -49,6 +54,34 @@ const isStudentEnrolledInCourse = (student, courseId) => {
           : `${rawId}`;
 
     return normalizedId === expectedId;
+  });
+};
+
+const isStudentEnrolledInLiveClass = (liveClass, studentId) => {
+  if (!liveClass || !studentId) return false;
+
+  const list = liveClass.enrolledStudents;
+  if (!Array.isArray(list)) return false;
+
+  return list.some((entry) => {
+    const idCandidates = [
+      typeof entry === "string" ? entry : null,
+      entry?.studentId,
+      entry?.studentId?._id,
+      entry?.studentId?.id,
+      entry?.studentID,
+      entry?.student,
+      entry?.userId,
+      entry?.user,
+      entry?._id,
+      entry?.id,
+      entry?.student?._id,
+      entry?.student?.id,
+    ];
+
+    return idCandidates.some(
+      (candidate) => candidate && candidate.toString() === studentId.toString()
+    );
   });
 };
 
@@ -365,6 +398,60 @@ export const getStudentsByClass = async (className, params = {}) => {
   }
 };
 
+// ===================== Webinar helpers =====================
+
+export const getWebinarById = async (webinarId) => {
+  try {
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(webinarId || "");
+    const endpoint = isObjectId
+      ? `/api/webinars/${webinarId}`
+      : `/api/webinars/slug/${webinarId}`;
+
+    const response = await API_CLIENT.get(endpoint);
+    return extractWebinarPayload(response);
+  } catch (error) {
+    console.error("Error fetching webinar by ID/slug:", error);
+    throw error;
+  }
+};
+
+export const verifyWebinarAttendance = async (webinarId, studentId) => {
+  try {
+    const webinar = await getWebinarById(webinarId);
+
+    const enrolledList =
+      webinar?.studentEnrolled || webinar?.enrolledStudents || [];
+
+    const isEnrolled = Array.isArray(enrolledList)
+      ? enrolledList.some((entry) => {
+          const id =
+            typeof entry === "string"
+              ? entry
+              : entry?._id || entry?.id || entry?.studentId;
+          return id && studentId && id.toString() === studentId.toString();
+        })
+      : false;
+
+    if (!isEnrolled) {
+      const err = new Error("Please enroll in the webinar before accessing links");
+      err.response = {
+        status: 400,
+        data: { message: "Student not enrolled in this webinar" },
+      };
+      throw err;
+    }
+
+    return {
+      success: true,
+      enrolled: true,
+      webinar,
+    };
+  } catch (error) {
+    console.error("Error verifying webinar attendance:", error);
+    throw error;
+  }
+};
+
 // ===================== Discoverability Helpers =====================
 
 export const getUpcomingWebinars = async (_studentId, params = {}) => {
@@ -386,6 +473,51 @@ export const getUpcomingWebinars = async (_studentId, params = {}) => {
     };
   } catch (error) {
     console.error("Error fetching upcoming webinars:", error);
+    throw error;
+  }
+};
+
+// ===================== Live Classes =====================
+
+export const getEnrolledLiveClasses = async (studentId, params = {}) => {
+  if (!studentId) {
+    throw createHttpError(400, "Student ID is required");
+  }
+
+  try {
+    const response = await API_CLIENT.get("/api/live-classes", {
+      params: { limit: 200, studentId, ...params },
+    });
+
+    const rawList =
+      response?.data?.data?.liveClasses ??
+      response?.data?.liveClasses ??
+      response?.data?.data ??
+      response?.data ??
+      [];
+
+    const liveClasses = Array.isArray(rawList)
+      ? rawList
+      : Array.isArray(rawList.liveClasses)
+        ? rawList.liveClasses
+        : [];
+
+    const enrolledLiveClasses = liveClasses
+      .filter((item) => isStudentEnrolledInLiveClass(item, studentId))
+      .sort((a, b) => {
+        const aTime = Date.parse(a?.classTiming || "");
+        const bTime = Date.parse(b?.classTiming || "");
+        if (Number.isNaN(aTime) || Number.isNaN(bTime)) return 0;
+        return aTime - bTime;
+      });
+
+    return {
+      liveClasses: enrolledLiveClasses,
+      total: enrolledLiveClasses.length,
+      message: response?.data?.message,
+    };
+  } catch (error) {
+    console.error("Error fetching enrolled live classes:", error);
     throw error;
   }
 };

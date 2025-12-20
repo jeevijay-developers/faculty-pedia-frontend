@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import Link from 'next/link';
 import { FiArrowRight } from 'react-icons/fi';
-import { getTestsBySpecialization } from '@/Data/Tests/test.data';
-import { TestSeriesCard } from '@/components/Exams/IIT-JEE/TestSeriesCarousel';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { fetchIITJEEOnlineCourses } from '@/components/server/exams/iit-jee/routes';
+import CourseCard from '@/components/Courses/CourseCard';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -16,9 +16,40 @@ import 'swiper/css/pagination';
 
 const NEETExamSection = () => {
   const [swiperRef, setSwiperRef] = useState(null);
-  
-  // Get NEET test series data
-  const neetTests = getTestsBySpecialization('NEET');
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await fetchIITJEEOnlineCourses('NEET', {
+          limit: 12,
+          sortBy: 'startDate',
+          sortOrder: 'asc',
+          status: 'ongoing',
+        });
+        const list = data?.courses || data?.data?.courses || [];
+        if (isMounted) setCourses(list);
+      } catch (err) {
+        console.error('Failed to load NEET courses', err);
+        if (isMounted) {
+          setError('Unable to load NEET courses right now.');
+          setCourses([]);
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   
   const prevSlide = () => {
     if (swiperRef) swiperRef.slidePrev();
@@ -63,42 +94,51 @@ const NEETExamSection = () => {
           </button>
 
           {/* Swiper Carousel */}
-          <Swiper
-            modules={[Navigation]}
-            onSwiper={setSwiperRef}
-            spaceBetween={24}
-            slidesPerView={1}
-            loop={neetTests.length > 3}
-            className="neet-exam-carousel pb-12"
-            breakpoints={{
-              640: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-              768: {
-                slidesPerView: 3,
-                spaceBetween: 24,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 24,
-              },
-            }}
-          >
-            {neetTests.length > 0 ? (
-              neetTests.map((testSeries) => (
-                <SwiperSlide key={testSeries.id}>
-                  <TestSeriesCard testSeries={testSeries} />
+          {loading ? (
+            <div className="py-16 text-center text-gray-500">Loading courses...</div>
+          ) : error ? (
+            <div className="py-16 text-center text-red-500">{error}</div>
+          ) : courses.length === 0 ? (
+            <div className="py-16 text-center text-gray-500">No NEET courses available right now.</div>
+          ) : (
+            <Swiper
+              modules={[Navigation]}
+              onSwiper={setSwiperRef}
+              spaceBetween={24}
+              slidesPerView={1}
+              loop={courses.length > 3}
+              className="neet-exam-carousel pb-12"
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 24,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 24,
+                },
+              }}
+            >
+              {courses.map((course) => (
+                <SwiperSlide key={course._id}>
+                  <CourseCard
+                    course={{
+                      ...course,
+                      totalWeeks: course.classDuration,
+                      educatorName:
+                        course?.educatorID?.fullName ||
+                        course?.educatorName ||
+                        course?.educator,
+                    }}
+                  />
                 </SwiperSlide>
-              ))
-            ) : (
-              <SwiperSlide>
-                <div className="bg-white rounded-lg border border-gray-200 p-10 text-center w-full">
-                  <p className="text-gray-500 text-lg">No NEET test series available</p>
-                </div>
-              </SwiperSlide>
-            )}
-          </Swiper>
+              ))}
+            </Swiper>
+          )}
         </div>
       </div>
     </section>

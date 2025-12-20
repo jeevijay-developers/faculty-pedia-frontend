@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import Link from 'next/link';
-import Image from 'next/image';
-import { FiArrowRight, FiCalendar, FiUser, FiClock } from 'react-icons/fi';
-import { examData } from '@/Data/exam.data';
+import { FiArrowRight } from 'react-icons/fi';
 import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { fetchIITJEEOnlineCourses } from '@/components/server/exams/iit-jee/routes';
+import CourseCard from '@/components/Courses/CourseCard';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -15,6 +15,42 @@ import 'swiper/css/pagination';
 
 const IITJEESection = () => {
   const [swiperRef, setSwiperRef] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadCourses = async () => {
+      try {
+        setLoading(true);
+        setError('');
+        const data = await fetchIITJEEOnlineCourses('IIT-JEE', {
+          limit: 12,
+          sortBy: 'startDate',
+          sortOrder: 'asc',
+          status: 'ongoing',
+        });
+        const list = data?.courses || data?.data?.courses || [];
+        if (isMounted) {
+          setCourses(list);
+        }
+      } catch (err) {
+        console.error('Failed to load IIT-JEE courses', err);
+        if (isMounted) {
+          setError('Unable to load IIT-JEE courses right now.');
+          setCourses([]);
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    loadCourses();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Sample exam data - in a real app, this would likely come from props or an API
   const prevSlide = () => {
@@ -60,110 +96,54 @@ const IITJEESection = () => {
           </button>
 
           {/* Swiper Carousel */}
-          <Swiper
-            modules={[Navigation]}
-            onSwiper={setSwiperRef}
-            spaceBetween={24}
-            slidesPerView={1}
-            loop={examData.length > 4}
-            className="exam-carousel pb-12"
-            breakpoints={{
-              640: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-              },
-              768: {
-                slidesPerView: 3,
-                spaceBetween: 24,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 24,
-              },
-            }}
-          >
-            {examData.map((exam) => (
-              <SwiperSlide key={exam.id}>
-                <ExamCard exam={exam} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          {loading ? (
+            <div className="py-16 text-center text-gray-500">Loading courses...</div>
+          ) : error ? (
+            <div className="py-16 text-center text-red-500">{error}</div>
+          ) : courses.length === 0 ? (
+            <div className="py-16 text-center text-gray-500">No IIT-JEE courses available right now.</div>
+          ) : (
+            <Swiper
+              modules={[Navigation]}
+              onSwiper={setSwiperRef}
+              spaceBetween={24}
+              slidesPerView={1}
+              loop={courses.length > 4}
+              className="exam-carousel pb-12"
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 24,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 24,
+                },
+              }}
+            >
+              {courses.map((course) => (
+                <SwiperSlide key={course._id}>
+                  <CourseCard
+                    course={{
+                      ...course,
+                      totalWeeks: course.classDuration,
+                      educatorName:
+                        course?.educatorID?.fullName ||
+                        course?.educatorName ||
+                        course?.educator,
+                    }}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </div>
       </div>
     </section>
   );
 };
-
-// Exam Card Component
-const ExamCard = ({ exam }) => {
-  return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden h-full min-h-[420px] flex flex-col border border-gray-100">
-      {/* Exam Banner Image */}
-      <div className="relative h-48 bg-gray-100">
-        <Image
-          src={exam.image}
-          alt={exam.title}
-          fill
-          className="object-cover"
-          onError={(e) => {
-            e.target.style.display = 'none';
-          }}
-        />
-      </div>
-
-      {/* Card Content */}
-      <div className="p-5 flex flex-col flex-grow h-full">
-        {/* Title */}
-        <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2 leading-tight text-ellipsis truncate">
-          {exam.title}
-        </h3>
-
-        {/* Instructor */}
-        <div className="flex items-center mb-3 text-gray-600">
-          <FiUser className="mr-2 text-blue-600" size={16} />
-          <p className="text-sm">{exam.instructor}</p>
-        </div>
-
-        {/* Duration and Start Date */}
-        <div className="flex flex-col space-y-2 mb-4 text-gray-600">
-          <div className="flex items-center">
-            <FiClock className="mr-2 text-blue-600" size={16} />
-            <span className="text-sm">{exam.duration}</span>
-          </div>
-          <div className="flex items-center">
-            <FiCalendar className="mr-2 text-blue-600" size={16} />
-            <span className="text-sm">Starts {exam.startDate}</span>
-          </div>
-        </div>
-
-        {/* Pricing */}
-        <div className="mt-auto mb-4">
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-gray-900">₹{exam.price}</span>
-            {exam.originalPrice && (
-              <span className="text-sm text-gray-500 line-through">₹{exam.originalPrice}</span>
-            )}
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-row gap-2">
-          {/* <Link
-            href={exam.enrollLink}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
-          >
-            Enroll Now
-          </Link> */}
-          <Link
-            href={`/details/exam/${exam.id}`}
-            className="w-full text-white border bg-blue-600 border-gray-300 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
-          >
-            View details
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default IITJEESection;

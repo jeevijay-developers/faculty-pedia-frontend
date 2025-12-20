@@ -63,3 +63,17 @@ export const getTestSeries = async () => {
     throw error;
   }
 };
+
+export const getTestSeriesByEducator = async (educatorId, params = {}) => {
+  if (!educatorId) return { testSeries: [], pagination: { totalTestSeries: 0 } };
+  try {
+    const response = await API_CLIENT.get(
+      `/api/test-series/educator/${educatorId}`,
+      { params }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching test series by educator:", error);
+    throw error;
+  }
+};

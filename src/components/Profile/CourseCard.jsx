@@ -7,6 +7,9 @@ import Link from "next/link";
 const CourseCard = ({ course }) => {
   if (!course) return null;
 
+  const courseId = course?._id || course?.id || course?.slug;
+  const courseHref = courseId ? `/course-panel?courseId=${courseId}` : null;
+
   return (
     <div className="border border-gray-200 rounded-xl p-5 hover:shadow-lg hover:border-blue-200 transition-all duration-200">
       {course?.image?.url && (
@@ -41,12 +44,12 @@ const CourseCard = ({ course }) => {
         {course?.subject && (
           <p className="text-sm text-gray-600 capitalize">{course.subject}</p>
         )}
-        {(course?.slug || course?._id) && (
+        {courseHref && (
           <Link
-            href={`/student-courses/${course._id || course.slug}`}
+            href={courseHref}
             className="mt-4 inline-flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium group"
           >
-            View Details
+            Visit Course 
             <svg
               className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
               fill="none"

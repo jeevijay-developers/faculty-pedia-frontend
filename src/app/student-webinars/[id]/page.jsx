@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   getWebinarById,
@@ -15,13 +15,14 @@ import {
   FiStar,
   FiExternalLink,
   FiFileText,
-  FiDollarSign,
   FiArrowLeft,
   FiCheckCircle,
   FiAlertCircle,
 } from "react-icons/fi";
+import { TbCurrencyRupee } from "react-icons/tb";
 import Image from "next/image";
 import Link from "next/link";
+import EnrollButton from "@/components/Common/EnrollButton";
 
 const StudentWebinarDetailPage = () => {
   const params = useParams();
@@ -35,6 +36,53 @@ const StudentWebinarDetailPage = () => {
   const [verifying, setVerifying] = useState(false);
   const [studentId, setStudentId] = useState(null);
   const [canShowLinks, setCanShowLinks] = useState(false);
+
+  const resolvedDescription = useMemo(() => {
+    if (!webinar) return "";
+    const desc = webinar.description;
+    if (!desc) return "";
+    if (typeof desc === "string") return desc;
+    return desc.long || desc.short || "";
+  }, [webinar]);
+
+  const { displayDate, displayTime } = useMemo(() => {
+    if (!webinar) return { displayDate: "", displayTime: "" };
+
+    const timingValue = webinar.timing || webinar.date;
+    const timingDate = timingValue ? new Date(timingValue) : null;
+    const hasValidTiming = timingDate && !Number.isNaN(timingDate.getTime());
+
+    let dateText = "";
+    let timeText = "";
+
+    if (hasValidTiming) {
+      dateText = timingDate.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      timeText = timingDate.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } else if (webinar.date) {
+      const dateOnly = new Date(webinar.date);
+      if (!Number.isNaN(dateOnly.getTime())) {
+        dateText = dateOnly.toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      }
+      if (webinar.time) {
+        timeText = webinar.time;
+      }
+    }
+
+    return { displayDate: dateText, displayTime: timeText };
+  }, [webinar]);
 
   useEffect(() => {
     // Get student ID from localStorage
@@ -147,35 +195,26 @@ const StudentWebinarDetailPage = () => {
     if (!webinar || !attendanceVerified) return;
 
     const now = new Date();
-    const webinarDate = new Date(webinar.date);
+    const baseDate = webinar.timing
+      ? new Date(webinar.timing)
+      : webinar.date
+        ? new Date(webinar.date)
+        : null;
+
+    if (!baseDate || Number.isNaN(baseDate.getTime())) return;
+
     const webinarTime = webinar.time;
 
-    // Parse time and combine with date
     if (webinarTime && webinarTime.includes(":")) {
       const [hours, minutes] = webinarTime.split(":");
-      webinarDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+      baseDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
     }
 
-    // Show links if current time matches webinar time (within a reasonable window)
-    const timeDifference = Math.abs(now.getTime() - webinarDate.getTime());
+    const timeDifference = Math.abs(now.getTime() - baseDate.getTime());
     const oneHourInMs = 60 * 60 * 1000;
 
-    // Allow access 30 minutes before and during/after webinar
-    if (timeDifference <= oneHourInMs || now >= webinarDate) {
+    if (timeDifference <= oneHourInMs || now >= baseDate) {
       setCanShowLinks(true);
-    }
-  };
-
-  const formatDate = (dateString) => {
-    try {
-      return new Date(dateString).toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    } catch (e) {
-      return "Invalid Date";
     }
   };
 
@@ -188,9 +227,9 @@ const StudentWebinarDetailPage = () => {
         const displayHour = hour % 12 || 12;
         return `${displayHour}:${minutes} ${ampm}`;
       }
-      return timeString;
+      return timeString || "";
     } catch (e) {
-      return timeString;
+      return timeString || "";
     }
   };
 
@@ -341,15 +380,36 @@ const StudentWebinarDetailPage = () => {
               </div>
 
               <div className="p-6">
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                  {webinar.title}
-                </h1>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900">
+                      {webinar.title}
+                    </h1>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {displayDate || "Date to be announced"} {displayTime && `• ${displayTime}`}
+                    </p>
+                  </div>
+                  {!attendanceVerified && (
+                    <EnrollButton
+                      type="webinar"
+                      itemId={webinar._id || webinar.id || id}
+                      price={webinar.fees || 0}
+                      title="Enroll & Join"
+                      className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-blue-700"
+                      onEnrollmentSuccess={() => {
+                        if (webinar.webinarLink) {
+                          window.open(webinar.webinarLink, "_blank");
+                          return true;
+                        }
+                        return false;
+                      }}
+                    />
+                  )}
+                </div>
 
                 <div className="prose max-w-none text-gray-600 mb-6">
                   <p>
-                    {webinar.description?.long ||
-                      webinar.description?.short ||
-                      "No description available"}
+                    {resolvedDescription || "No description available"}
                   </p>
                 </div>
 
@@ -360,7 +420,7 @@ const StudentWebinarDetailPage = () => {
                     <div>
                       <p className="text-xs text-gray-500">Date</p>
                       <p className="font-medium text-gray-900">
-                        {formatDate(webinar.date)}
+                        {displayDate || "TBD"}
                       </p>
                     </div>
                   </div>
@@ -370,7 +430,7 @@ const StudentWebinarDetailPage = () => {
                     <div>
                       <p className="text-xs text-gray-500">Time</p>
                       <p className="font-medium text-gray-900">
-                        {formatTime(webinar.time)}
+                        {displayTime || "TBD"}
                       </p>
                     </div>
                   </div>
@@ -386,7 +446,7 @@ const StudentWebinarDetailPage = () => {
                   </div>
 
                   <div className="flex items-center">
-                    <FiDollarSign className="w-5 h-5 text-blue-600 mr-2" />
+                    <TbCurrencyRupee className="w-5 h-5 text-blue-600 mr-2" />
                     <div>
                       <p className="text-xs text-gray-500">Fee</p>
                       <p className="font-medium text-gray-900">

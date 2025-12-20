@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { IoStarSharp, IoCallSharp, IoMailSharp } from "react-icons/io5";
@@ -18,9 +18,18 @@ import UpcomingWebinarCard from "@/components/Webinars/UpcomingWebinarCard";
 import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
 import { IoLogoWhatsapp } from "react-icons/io";
 import Link from "next/link";
-import { getWebinarById } from "@/components/server/webinars.routes";
-import { getCourseById } from "@/components/server/course.routes";
-import { getTestSeriesById } from "@/components/server/test-series.route";
+import {
+  getWebinarById,
+  getWebinarsByEducator,
+} from "@/components/server/webinars.routes";
+import {
+  getCourseById,
+  getCoursesByEducator,
+} from "@/components/server/course.routes";
+import {
+  getTestSeriesById,
+  getTestSeriesByEducator,
+} from "@/components/server/test-series.route";
 import { rateEducator } from "@/components/server/educators.routes";
 import Player from "@vimeo/player";
 
@@ -41,6 +50,17 @@ import {
 } from "@/components/server/student/student.routes";
 import { getUserData } from "@/utils/userData";
 import { toast } from "react-hot-toast";
+
+const safeNumber = (value, fallback = 0) => {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+};
+
+const safeYear = (value, fallback = new Date().getFullYear()) => {
+  const date = value ? new Date(value) : null;
+  const year = date && Number.isFinite(date.getTime()) ? date.getFullYear() : NaN;
+  return Number.isFinite(year) ? year : fallback;
+};
 
 const ViewProfile = ({ educatorData }) => {
   // Add safety check at the top
@@ -68,7 +88,7 @@ const ViewProfile = ({ educatorData }) => {
   const vimeoIframeRef = useRef(null);
   const vimeoPlayerRef = useRef(null);
 
-  const payPerHourFeeValue = Number(educatorData?.payPerHourFee ?? 0);
+  const payPerHourFeeValue = safeNumber(educatorData?.payPerHourFee, 0);
   const hasPayPerHour = Number.isFinite(payPerHourFeeValue) && payPerHourFeeValue > 0;
   const [isPayPerHourModalOpen, setIsPayPerHourModalOpen] = useState(false);
   const [isPayPerHourPortalReady, setIsPayPerHourPortalReady] = useState(false);
@@ -144,6 +164,13 @@ const ViewProfile = ({ educatorData }) => {
   );
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const educatorId = educatorData?._id;
+  const [summaryCounts, setSummaryCounts] = useState({
+    courses: 0,
+    webinars: 0,
+    testSeries: 0,
+  });
+  const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const canRate = Boolean(currentUser?._id);
   const payPerHourSubjects = Array.isArray(educatorData?.subject)
     ? educatorData.subject.filter(Boolean).join(", ")
@@ -186,6 +213,8 @@ const ViewProfile = ({ educatorData }) => {
 
   const ratingAverage = ratingState.average ?? 0;
   const ratingCount = ratingState.count ?? 0;
+  const ratingAverageSafe = safeNumber(ratingAverage, 0);
+  const ratingCountSafe = safeNumber(ratingCount, 0);
 
   // Check if user is already following this educator
   useEffect(() => {
@@ -272,6 +301,77 @@ const ViewProfile = ({ educatorData }) => {
 
     fetchTestSeriesDetails();
   }, [educatorData?.testSeries]);
+
+  // Fetch summary counts (courses, webinars, test series) by educator ID
+  useEffect(() => {
+    if (!educatorId) return;
+
+    let isMounted = true;
+
+    const loadSummaryCounts = async () => {
+      setIsLoadingSummary(true);
+      try {
+        const [coursesRes, webinarsRes, testSeriesRes] = await Promise.all([
+          getCoursesByEducator(educatorId, { page: 1, limit: 1 }),
+          getWebinarsByEducator(educatorId, { page: 1, limit: 1 }),
+          getTestSeriesByEducator(educatorId, { page: 1, limit: 1 }),
+        ]);
+
+        const totalCourses =
+          coursesRes?.pagination?.totalCourses ??
+          coursesRes?.pagination?.total ??
+          coursesRes?.totalCourses ??
+          coursesRes?.courses?.length ??
+          0;
+
+        const totalWebinars =
+          webinarsRes?.data?.pagination?.totalWebinars ??
+          webinarsRes?.pagination?.totalWebinars ??
+          webinarsRes?.totalWebinars ??
+          webinarsRes?.data?.webinars?.length ??
+          0;
+
+        const totalTestSeries =
+          testSeriesRes?.pagination?.totalTestSeries ??
+          testSeriesRes?.pagination?.total ??
+          testSeriesRes?.totalTestSeries ??
+          testSeriesRes?.testSeries?.length ??
+          0;
+
+        if (isMounted) {
+          setSummaryCounts({
+            courses: totalCourses,
+            webinars: totalWebinars,
+            testSeries: totalTestSeries,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching educator summary counts:", error);
+        if (isMounted) {
+          setSummaryCounts({
+            courses: courseDetails?.length || 0,
+            webinars: webinarDetails?.length || 0,
+            testSeries: testSeriesDetails?.length || 0,
+          });
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingSummary(false);
+        }
+      }
+    };
+
+    loadSummaryCounts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    educatorId,
+    courseDetails?.length,
+    webinarDetails?.length,
+    testSeriesDetails?.length,
+  ]);
 
   if (!educatorData) return null; // Functions to load more items
   const loadMoreCourses = () => {
@@ -511,7 +611,7 @@ const ViewProfile = ({ educatorData }) => {
 
                 <div className="mb-3">
                   <p className="text-gray-600">
-                    {educatorData.yearsExperience}+ years experience
+                    {safeNumber(educatorData.yearsExperience, 0)}+ years experience
                   </p>
                 </div>
 
@@ -542,7 +642,7 @@ const ViewProfile = ({ educatorData }) => {
                         <IoStarSharp
                           key={i}
                           className={`w-5 h-5 ${
-                            i < Math.floor(ratingAverage)
+                            i < Math.floor(ratingAverageSafe)
                               ? "text-yellow-400"
                               : "text-gray-300"
                           }`}
@@ -551,10 +651,10 @@ const ViewProfile = ({ educatorData }) => {
                       ))}
                     </div>
                     <span className="text-lg font-semibold text-gray-900">
-                      {ratingAverage.toFixed(1)}
+                      {ratingAverageSafe.toFixed(1)}
                     </span>
                     <span className="text-gray-600">
-                      ({ratingCount} reviews)
+                      ({ratingCountSafe} reviews)
                     </span>
                   </div>
                   {canRate ? (
@@ -671,7 +771,7 @@ const ViewProfile = ({ educatorData }) => {
                   </div>
                   <div className="text-center lg:text-left">
                     <span className="text-lg font-semibold text-gray-900">
-                      {followerCount.toLocaleString()}
+                      {safeNumber(followerCount, 0).toLocaleString()}
                     </span>
                     <span className="text-gray-600 ml-1">
                       {followerCount === 1 ? "Follower" : "Followers"}
@@ -740,7 +840,7 @@ const ViewProfile = ({ educatorData }) => {
                   </h3>
                   <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
                     {educatorData.introVideoLink ? (
-                      <div ref={vimeoContainerRef} className="w-full h-full" />
+                      <iframe src="https://player.vimeo.com/video/VIDEO_ID" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                     ) : (
                       <div className="flex h-full items-center justify-center text-gray-500 text-sm">
                         No intro video available
@@ -774,8 +874,7 @@ const ViewProfile = ({ educatorData }) => {
                   </h3>
                   <p className="text-blue-600 font-medium">{exp.company}</p>
                   <p className="text-sm text-gray-600">
-                    {new Date(exp.startDate).getFullYear()} -{" "}
-                    {new Date(exp.endDate).getFullYear()}
+                    {safeYear(exp.startDate)} - {safeYear(exp.endDate)}
                   </p>
                 </div>
               ))}
@@ -795,8 +894,7 @@ const ViewProfile = ({ educatorData }) => {
                   </h3>
                   <p className="text-green-600 font-medium">{qual.institute}</p>
                   <p className="text-sm text-gray-600">
-                    {new Date(qual.startDate).getFullYear()} -{" "}
-                    {new Date(qual.endDate).getFullYear()}
+                    {safeYear(qual.startDate)} - {safeYear(qual.endDate)}
                   </p>
                 </div>
               ))}
@@ -807,7 +905,7 @@ const ViewProfile = ({ educatorData }) => {
         {/* Course Details & Payment Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Course Details Section */}
-          <div className="lg:col-span-2">
+          {/* <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Course Details
@@ -843,7 +941,7 @@ const ViewProfile = ({ educatorData }) => {
                       Experience:
                     </span>
                     <span className="text-lg font-semibold text-gray-900">
-                      {educatorData.yearsExperience}+ years
+                      {safeNumber(educatorData.yearsExperience, 0)}+ years
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
@@ -869,7 +967,7 @@ const ViewProfile = ({ educatorData }) => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Courses Section */}
@@ -897,7 +995,7 @@ const ViewProfile = ({ educatorData }) => {
                         specialization: educatorData.specialization,
                         qualification: educatorData.qualification,
                         rating: ratingAverage,
-                        yearsExperience: educatorData.yearsExperience,
+                        yearsExperience: safeNumber(educatorData.yearsExperience, 0),
                       },
                     }}
                   />
@@ -950,9 +1048,12 @@ const ViewProfile = ({ educatorData }) => {
                         specialization:
                           webinar.specialization || educatorData.specialization,
                         subject: webinar.subject,
-                        totalHours: `${Math.floor(webinar.duration / 60)}h ${
-                          webinar.duration % 60
-                        }m`,
+                        totalHours: (() => {
+                          const durationMinutes = safeNumber(webinar.duration, 0);
+                          const hours = Math.floor(durationMinutes / 60);
+                          const minutes = durationMinutes % 60;
+                          return `${hours}h ${minutes}m`;
+                        })(),
                         timeRange: webinar.time,
                         date: new Date(webinar.date).toLocaleDateString(
                           "en-US",
@@ -1058,19 +1159,25 @@ const ViewProfile = ({ educatorData }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
               <div className="text-3xl font-bold text-blue-600 mb-2">
-                {courseDetails?.length || 0}
+                {isLoadingSummary
+                  ? "..."
+                  : safeNumber(summaryCounts.courses ?? courseDetails?.length, 0)}
               </div>
               <div className="text-sm text-gray-600">Total Courses</div>
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <div className="text-3xl font-bold text-green-600 mb-2">
-                {webinarDetails?.length || 0}
+                {isLoadingSummary
+                  ? "..."
+                  : safeNumber(summaryCounts.webinars ?? webinarDetails?.length, 0)}
               </div>
               <div className="text-sm text-gray-600">Total Webinars</div>
             </div>
             <div className="text-center p-4 bg-purple-50 rounded-lg">
               <div className="text-3xl font-bold text-purple-600 mb-2">
-                {testSeriesDetails?.length || 0}
+                {isLoadingSummary
+                  ? "..."
+                  : safeNumber(summaryCounts.testSeries ?? testSeriesDetails?.length, 0)}
               </div>
               <div className="text-sm text-gray-600">Test Series</div>
             </div>

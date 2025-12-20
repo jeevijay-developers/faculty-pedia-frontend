@@ -15,12 +15,15 @@ import { MdSchool } from "react-icons/md";
 import { IoPersonSharp } from "react-icons/io5";
 import EnrollButton from "@/components/Common/EnrollButton";
 import ShareButton from "@/components/Common/ShareButton";
+import { isAuthenticated } from "@/utils/auth";
 
 const LiveClassDetailsPage = ({ params }) => {
   const [liveClass, setLiveClass] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [id, setId] = useState(null);
+  const [studentId, setStudentId] = useState(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
 
   useEffect(() => {
     const resolveParams = async () => {
@@ -29,6 +32,21 @@ const LiveClassDetailsPage = ({ params }) => {
     };
     resolveParams();
   }, [params]);
+
+  useEffect(() => {
+    // Resolve student ID from localStorage if available
+    try {
+      const userData = JSON.parse(
+        typeof window !== "undefined"
+          ? localStorage.getItem("faculty-pedia-student-data") || "{}"
+          : "{}"
+      );
+      const resolvedId = userData?._id || userData?.id;
+      if (resolvedId) setStudentId(resolvedId);
+    } catch (e) {
+      console.warn("Unable to parse student data", e);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchLiveClassDetails = async () => {
@@ -65,6 +83,22 @@ const LiveClassDetailsPage = ({ params }) => {
 
     fetchLiveClassDetails();
   }, [id]);
+
+  useEffect(() => {
+    if (!liveClass || !studentId) return;
+
+    const enrolled = Array.isArray(liveClass.enrolledStudents)
+      ? liveClass.enrolledStudents.some((entry) => {
+          const entryId =
+            typeof entry === "string"
+              ? entry
+              : entry?.studentId || entry?.studentID || entry?.userId || entry?.user || entry?._id || entry?.id || entry?.student?._id;
+          return entryId && entryId.toString() === studentId.toString();
+        })
+      : false;
+
+    setIsEnrolled(enrolled);
+  }, [liveClass, studentId]);
 
   const formatDate = (dateString) => {
     if (!dateString) return "TBD";
@@ -270,6 +304,27 @@ const LiveClassDetailsPage = ({ params }) => {
                   type="liveClass"
                   itemId={liveClass._id || liveClass.id}
                   price={liveClass.liveClassesFee}
+                  joinLabel="Join Now"
+                  initialEnrolled={isEnrolled}
+                  onEnrollmentSuccess={({ alreadyEnrolled }) => {
+                    // If already enrolled, open meeting link if present, then redirect to profile live classes tab
+                    const link =
+                      liveClass?.liveClassLink ||
+                      liveClass?.classLink ||
+                      liveClass?.meetingLink ||
+                      liveClass?.recordingURL;
+
+                    if (link) {
+                      window.open(link, "_blank", "noopener,noreferrer");
+                    }
+
+                    const target = studentId
+                      ? `/profile/student/${studentId}?tab=liveclasses`
+                      : "/profile?tab=liveclasses";
+
+                    window.location.href = target;
+                    return true; // handled
+                  }}
                   className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 />
 

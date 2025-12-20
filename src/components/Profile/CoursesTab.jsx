@@ -6,6 +6,18 @@ import { FiBookOpen } from "react-icons/fi";
 import CourseCard from "./CourseCard";
 
 const CoursesTab = ({ resolvedCourses, coursesLoading, coursesError }) => {
+  const isCourseActive = (course) => {
+    if (!course) return false;
+    const status = (course.status || "").toLowerCase();
+    const explicitInactive = course.isActive === false || course.active === false;
+    const flaggedDeleted = course.isDeleted || course.deletedAt || course.deleted === true;
+    return !explicitInactive && !flaggedDeleted && status !== "deleted" && status !== "inactive";
+  };
+
+  const activeCourses = Array.isArray(resolvedCourses)
+    ? resolvedCourses.filter(isCourseActive)
+    : [];
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100">
       <div className="p-6 border-b border-gray-100 flex items-center justify-between">
@@ -24,9 +36,9 @@ const CoursesTab = ({ resolvedCourses, coursesLoading, coursesError }) => {
             {coursesError}
           </div>
         )}
-        {resolvedCourses.length > 0 ? (
+        {activeCourses.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {resolvedCourses.map((course, index) => (
+            {activeCourses.map((course, index) => (
               <CourseCard key={course?._id || index} course={course} />
             ))}
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ProfileSkeleton from "./ProfileSkeleton";
 import OverviewTab from "./OverviewTab";
 import CoursesTab from "./CoursesTab";
@@ -10,6 +11,7 @@ import WebinarsTab from "./WebinarsTab";
 import TestSeriesTab from "./TestSeriesTab";
 import MessagesTab from "./MessagesTab";
 import EditProfileModal from "./EditProfileModal";
+import LiveClassesTab from "./LiveClassesTab";
 import {
   FiUser,
   FiBookOpen,
@@ -36,6 +38,18 @@ const CLASS_LABELS = {
   dropper: "Dropper",
 };
 
+const TAB_IDS = [
+  "overview",
+  "courses",
+  "results",
+  "liveclasses",
+  "webinars",
+  "testseries",
+  "messages",
+  "educators",
+  "edit",
+];
+
 const StudentDashboard = ({
   studentData,
   loading = false,
@@ -44,11 +58,20 @@ const StudentDashboard = ({
   onProfileUpdate, // Optional callback for parent component
   onRefresh,
 }) => {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const normalizedStudent = studentData?.student || studentData;
   const [studentState, setStudentState] = useState(normalizedStudent);
+
+  const isCourseActive = (course) => {
+    if (!course) return false;
+    const status = (course.status || "").toLowerCase();
+    const explicitInactive = course.isActive === false || course.active === false;
+    const flaggedDeleted = course.isDeleted || course.deletedAt || course.deleted === true;
+    return !explicitInactive && !flaggedDeleted && status !== "deleted" && status !== "inactive";
+  };
 
   useEffect(() => {
     const normalized = studentData?.student || studentData;
@@ -57,6 +80,20 @@ const StudentDashboard = ({
     console.log("👤 Following educators in normalized:", normalized?.followingEducators);
     setStudentState(normalized);
   }, [studentData]);
+
+  useEffect(() => {
+    const tabParam = searchParams?.get("tab");
+    if (!tabParam) return;
+
+    const normalizedTab = tabParam.toLowerCase();
+    if (!TAB_IDS.includes(normalizedTab)) return;
+
+    if (normalizedTab === "edit" && !isOwnProfile) {
+      return;
+    }
+
+    setActiveTab(normalizedTab);
+  }, [searchParams, isOwnProfile]);
 
   const student = studentState || normalizedStudent;
   const {
@@ -150,17 +187,8 @@ const StudentDashboard = ({
       .filter(Boolean);
 
     const fallbackCourses = normalizedCourses.filter(
-      (course) => typeof course === "object" && course?.title
+      (course) => typeof course === "object" && course?.title && isCourseActive(course)
     );
-
-    const needsFetch = normalizedCourses.some(
-      (course) => typeof course === "string" || (course && !course.title)
-    );
-
-    if (!needsFetch) {
-      setResolvedCourses(fallbackCourses);
-      return;
-    }
 
     let isCancelled = false;
     (async () => {
@@ -185,21 +213,21 @@ const StudentDashboard = ({
 
         const fetched = await getCoursesByIds(ids);
         if (!isCancelled) {
-          const mergedCourses = [...fallbackCourses];
-          const seen = new Set(
-            fallbackCourses
-              .map((course) => course?._id)
-              .filter((courseId) => !!courseId)
-          );
+          const fetchedActive = (Array.isArray(fetched) ? fetched : [])
+            .filter(Boolean)
+            .filter(isCourseActive);
 
-          (Array.isArray(fetched) ? fetched : []).forEach((course) => {
-            if (course?._id && seen.has(course._id)) {
-              return;
-            }
+          const mergedCourses = [...fetchedActive];
+          const seen = new Set(fetchedActive.map((course) => course?._id).filter(Boolean));
+
+          fallbackCourses.forEach((course) => {
+            if (!course) return;
+            if (course?._id && seen.has(course._id)) return;
+            if (!isCourseActive(course)) return;
             mergedCourses.push(course);
           });
 
-          setResolvedCourses(mergedCourses);
+          setResolvedCourses(mergedCourses.filter(isCourseActive));
         }
       } catch (err) {
         if (!isCancelled) setCoursesError("Failed to load course details");
@@ -417,7 +445,7 @@ const StudentDashboard = ({
   }
 
   // Calculate statistics
-  const totalCourses = courses.length;
+  const totalCourses = resolvedCourses.filter(isCourseActive).length;
   const totalTests = tests.length;
   const totalResults = results.length;
 
@@ -425,6 +453,7 @@ const StudentDashboard = ({
     { id: "overview", label: "Overview", icon: FiUser },
     { id: "courses", label: "Courses", icon: FiBookOpen },
     { id: "results", label: "Test Results", icon: FiAward },
+    { id: "liveclasses", label: "Live Classes", icon: FiCalendar },
     { id: "webinars", label: "Webinars", icon: FiCalendar },
     { id: "testseries", label: "Test Series", icon: FiFileText },
     { id: "messages", label: "Messages", icon: FiMessageSquare },
@@ -459,7 +488,7 @@ const StudentDashboard = ({
       case "courses":
         return (
           <CoursesTab
-            resolvedCourses={resolvedCourses}
+            resolvedCourses={resolvedCourses.filter(isCourseActive)}
             coursesLoading={coursesLoading}
             coursesError={coursesError}
           />
@@ -479,6 +508,8 @@ const StudentDashboard = ({
         );
       case "webinars":
         return <WebinarsTab studentId={student?._id} />;
+      case "liveclasses":
+        return <LiveClassesTab studentId={student?._id} />;
       case "testseries":
         return <TestSeriesTab studentId={student?._id} />;
       case "messages":

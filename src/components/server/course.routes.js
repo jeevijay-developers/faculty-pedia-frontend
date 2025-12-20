@@ -89,3 +89,17 @@ export const getAllCourses = async (params = {}) => {
     throw error;
   }
 };
+
+export const getCoursesByEducator = async (educatorId, params = {}) => {
+  if (!educatorId) return { courses: [], pagination: { totalCourses: 0 } };
+  try {
+    const response = await API_CLIENT.get(
+      `/api/courses/educator/${educatorId}`,
+      { params }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching courses by educator:", error);
+    throw error;
+  }
+};
