@@ -14,10 +14,23 @@ const TestResultRow = ({
   const resultId = getResultId(result);
   const currentResult = resolvedResult || result;
 
-  const percentage = currentResult.totalScore
-    ? ((currentResult.obtainedScore / currentResult.totalScore) * 100).toFixed(
-        1
-      )
+  // Normalize score fields so both server and offline submissions render correctly.
+  const totalScore =
+    currentResult.totalScore ??
+    currentResult.totalMarks ??
+    currentResult.total ??
+    0;
+  const obtainedScore =
+    currentResult.obtainedScore ??
+    currentResult.obtained ??
+    currentResult.score ??
+    0;
+  const totalCorrect = currentResult.totalCorrect ?? currentResult.correct ?? 0;
+  const totalIncorrect =
+    currentResult.totalIncorrect ?? currentResult.incorrect ?? 0;
+
+  const percentage = totalScore
+    ? ((obtainedScore / totalScore) * 100).toFixed(1)
     : 0;
 
   const performanceColor =
@@ -33,6 +46,30 @@ const TestResultRow = ({
       : percentage >= 60
       ? "bg-yellow-100"
       : "bg-red-100";
+
+  const seriesRef =
+    currentResult.seriesId ||
+    currentResult.testSeriesId ||
+    currentResult.series ||
+    currentResult.test?.testSeriesId ||
+    currentResult.test?.seriesId;
+  const series = getSeries(seriesRef);
+
+  const seriesTitle =
+    series?.title ||
+    seriesRef?.title ||
+    currentResult.seriesTitle ||
+    currentResult.testSeriesTitle ||
+    currentResult.test?.testSeries?.title ||
+    currentResult.test?.series?.title ||
+    "Independent Test";
+  const seriesSlug =
+    series?.slug ||
+    seriesRef?.slug ||
+    currentResult.seriesSlug ||
+    currentResult.testSeriesSlug ||
+    currentResult.test?.testSeries?.slug ||
+    currentResult.test?.series?.slug;
 
   return (
     <tr className="hover:bg-gray-50 transition-colors">
@@ -50,14 +87,8 @@ const TestResultRow = ({
                 }`}
             </p>
             {(() => {
-              const series = getSeries(currentResult.seriesId);
-              const title =
-                series?.title ||
-                currentResult.seriesId?.title ||
-                `Series #${
-                  currentResult.seriesId?._id || currentResult.seriesId || "N/A"
-                }`;
-              const slug = series?.slug || currentResult.seriesId?.slug;
+              const title = seriesTitle;
+              const slug = seriesSlug;
               return slug ? (
                 <Link
                   href={`/live-test/series/${slug}`}
@@ -73,7 +104,6 @@ const TestResultRow = ({
               );
             })()}
             {(() => {
-              const series = getSeries(currentResult.seriesId);
               if (!series) return null;
               return (
                 <div className="mt-1 flex flex-wrap gap-1">
@@ -95,23 +125,23 @@ const TestResultRow = ({
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm font-bold text-gray-900">
-          {currentResult.obtainedScore || 0}/{currentResult.totalScore || 0}
+          {obtainedScore}/{totalScore}
         </div>
         <div className="text-xs text-gray-500">{percentage}% scored</div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-          {currentResult.totalCorrect || 0}
+          {totalCorrect}
         </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-          {currentResult.totalIncorrect || 0}
+          {totalIncorrect}
         </span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
         {new Date(
-          currentResult.createdAt || currentResult.date || Date.now()
+          currentResult.createdAt || currentResult.submittedAt || currentResult.date || Date.now()
         ).toLocaleDateString("en-US", {
           year: "numeric",
           month: "short",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ProfileSkeleton from "./ProfileSkeleton";
 import OverviewTab from "./OverviewTab";
@@ -64,6 +64,20 @@ const StudentDashboard = ({
 
   const normalizedStudent = studentData?.student || studentData;
   const [studentState, setStudentState] = useState(normalizedStudent);
+  const [localResults, setLocalResults] = useState([]);
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("faculty-pedia-offline-results") || "[]"
+          : "[]"
+      );
+      if (Array.isArray(stored)) setLocalResults(stored);
+    } catch (err) {
+      console.warn("Failed to read offline results", err);
+    }
+  }, []);
 
   const isCourseActive = (course) => {
     if (!course) return false;
@@ -110,6 +124,19 @@ const StudentDashboard = ({
     tests = [], // expected to include testSeriesId | seriesId
     results = [], // expected to include seriesId referencing test series
   } = student || {};
+
+  const combinedResults = useMemo(() => {
+    const merged = [...(localResults || []), ...(results || [])];
+    const toTime = (val) => {
+      const ms = val ? Date.parse(val) : 0;
+      return Number.isNaN(ms) ? 0 : ms;
+    };
+    return merged.sort((a, b) => {
+      const tsA = toTime(a?.submittedAt || a?.createdAt);
+      const tsB = toTime(b?.submittedAt || b?.createdAt);
+      return tsB - tsA;
+    });
+  }, [localResults, results]);
 
   // Courses state
   const [resolvedCourses, setResolvedCourses] = useState([]);
@@ -301,7 +328,7 @@ const StudentDashboard = ({
         });
 
         // Also check results array for any additional series references
-        results.forEach((result) => {
+        combinedResults.forEach((result) => {
           // Handle both populated objects and IDs
           const seriesRef = result?.seriesId || result?.testSeriesId;
           const seriesId =
@@ -352,7 +379,7 @@ const StudentDashboard = ({
     return () => {
       cancelled = true;
     };
-  }, [JSON.stringify(tests), JSON.stringify(results)]);
+  }, [JSON.stringify(tests), JSON.stringify(combinedResults)]);
 
   // Resolve result details by fetching each result ID from results array individually.
   useEffect(() => {
@@ -364,7 +391,7 @@ const StudentDashboard = ({
 
         // Extract result IDs from results array - each result can be string ID or object with _id
         const resultIds = new Set();
-        results.forEach((result) => {
+        combinedResults.forEach((result) => {
           const resultId = getResultId(result);
           if (resultId && !resolvedResultsMap[resultId]) {
             resultIds.add(resultId);
@@ -408,7 +435,7 @@ const StudentDashboard = ({
     return () => {
       cancelled = true;
     };
-  }, [JSON.stringify(results)]);
+  }, [JSON.stringify(combinedResults)]);
 
   if (loading) {
     return <ProfileSkeleton />;
@@ -447,7 +474,7 @@ const StudentDashboard = ({
   // Calculate statistics
   const totalCourses = resolvedCourses.filter(isCourseActive).length;
   const totalTests = tests.length;
-  const totalResults = results.length;
+  const totalResults = combinedResults.length;
 
   const tabs = [
     { id: "overview", label: "Overview", icon: FiUser },
@@ -479,6 +506,7 @@ const StudentDashboard = ({
             totalCourses={totalCourses}
             totalResults={totalResults}
             followingEducatorsLength={followingEducators.length}
+            results={combinedResults}
             tests={tests}
             getSeries={getSeries}
             getSeriesId={getSeriesId}
@@ -496,7 +524,7 @@ const StudentDashboard = ({
       case "results":
         return (
           <ResultsTab
-            results={results}
+            results={combinedResults}
             seriesLoading={seriesLoading}
             resultsLoading={resultsLoading}
             seriesError={seriesError}
@@ -504,6 +532,7 @@ const StudentDashboard = ({
             getSeries={getSeries}
             getResult={getResult}
             getResultId={getResultId}
+            onTabChange={handleTabSelect}
           />
         );
       case "webinars":
@@ -604,6 +633,7 @@ const StudentDashboard = ({
             totalCourses={totalCourses}
             totalResults={totalResults}
             followingEducatorsLength={followingEducators.length}
+            results={combinedResults}
             tests={tests}
             getSeries={getSeries}
             getSeriesId={getSeriesId}
@@ -615,9 +645,9 @@ const StudentDashboard = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="w-full px-4 py-8 sm:px-6 lg:px-10">
-        <div className="flex flex-col gap-6 lg:flex-row">
-          <aside className="lg:w-64">
+      <div className="w-full px-4 py-8 sm:px-6 lg:px-10 lg:h-[calc(100vh-2rem)] lg:overflow-hidden">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start h-full">
+          <aside className="lg:w-64 lg:sticky lg:top-6 lg:self-start">
             <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
               <div className="border-b border-gray-100 px-4 py-4">
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -665,7 +695,7 @@ const StudentDashboard = ({
               </button>
             )}
           </aside>
-          <main className="min-w-0 flex-1">
+          <main className="min-w-0 flex-1 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:pr-1">
             <div className="mb-8">{renderTabContent()}</div>
           </main>
         </div>

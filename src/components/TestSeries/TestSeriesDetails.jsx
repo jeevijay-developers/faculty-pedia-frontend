@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FaCalendarAlt,
   FaClock,
@@ -13,10 +13,14 @@ import {
 import AOS from "aos";
 import "aos/dist/aos.css";
 import EnrollButton from "../Common/EnrollButton";
+import { useRouter } from "next/navigation";
 
 const TestSeriesDetails = ({ testSeriesData }) => {
   const [activeTab, setActiveTab] = useState("description");
   const [isClient, setIsClient] = useState(false);
+  const [studentId, setStudentId] = useState(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const router = useRouter();
 
   // Check if testSeriesData exists
   if (!testSeriesData) {
@@ -36,6 +40,45 @@ const TestSeriesDetails = ({ testSeriesData }) => {
       once: true,
     });
   }, []);
+
+  useEffect(() => {
+    try {
+      const raw =
+        typeof window !== "undefined"
+          ? localStorage.getItem("faculty-pedia-student-data")
+          : null;
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      const id = parsed?._id || parsed?.id;
+      if (id) setStudentId(id);
+    } catch (err) {
+      console.warn("Failed to read student data", err);
+    }
+  }, []);
+
+  const enrolledStudentIds = useMemo(() => {
+    const list = testSeriesData?.enrolledStudents;
+    if (!Array.isArray(list)) return [];
+    return list
+      .map((entry) => {
+        if (typeof entry === "string") return entry;
+        return (
+          entry?.studentId ||
+          entry?.studentID ||
+          entry?.student?.id ||
+          entry?.student?._id ||
+          entry?._id ||
+          entry?.id
+        );
+      })
+      .filter(Boolean)
+      .map((v) => v.toString());
+  }, [testSeriesData?.enrolledStudents]);
+
+  useEffect(() => {
+    if (!studentId) return;
+    setIsEnrolled(enrolledStudentIds.includes(studentId.toString()));
+  }, [studentId, enrolledStudentIds]);
 
   const formatDate = (dateString) => {
     if (!isClient) return "Loading...";
@@ -81,6 +124,51 @@ const TestSeriesDetails = ({ testSeriesData }) => {
     }
   };
 
+  const descriptionText = useMemo(() => {
+    const desc = testSeriesData?.description;
+    if (!desc) return "";
+    if (typeof desc === "string") return desc;
+    return desc.long || desc.short || "";
+  }, [testSeriesData?.description]);
+
+  const testsCount = useMemo(() => {
+    const series = testSeriesData?.testSeries || testSeriesData;
+
+    // Prefer actual array length when available
+    if (Array.isArray(series?.tests) && series.tests.length > 0) {
+      return series.tests.length;
+    }
+    if (Array.isArray(series?.liveTests) && series.liveTests.length > 0) {
+      return series.liveTests.length;
+    }
+
+    // Fall back to numeric fields
+    if (typeof series?.numberOfTests === "number") return series.numberOfTests;
+    if (typeof series?.noOfTests === "number") return series.noOfTests;
+
+    return 0;
+  }, [testSeriesData?.testSeries, testSeriesData?.tests, testSeriesData?.liveTests, testSeriesData?.numberOfTests, testSeriesData?.noOfTests]);
+
+  const handleEnrollmentSuccess = useCallback(
+    async ({ alreadyEnrolled }) => {
+      // Redirect only for independent test series
+      if (testSeriesData?.courseId || testSeriesData?.isCourseSpecific) {
+        return false;
+      }
+
+      const targetStudentId = studentId;
+      const fallbackProfile = "/profile?tab=testseries";
+      const profileUrl = targetStudentId
+        ? `/profile/student/${targetStudentId}?tab=testseries`
+        : fallbackProfile;
+
+      // Ensure enrolled students see their dashboard tab
+      router.push(profileUrl);
+      return true; // Prevent default redirect in EnrollButton
+    },
+    [router, studentId, testSeriesData?.courseId, testSeriesData?.isCourseSpecific]
+  );
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="grid lg:grid-cols-3 gap-8">
@@ -89,35 +177,21 @@ const TestSeriesDetails = ({ testSeriesData }) => {
           {/* Header Section */}
           <div data-aos="fade-up" className="space-y-4">
             <div className="flex items-center space-x-2">
-              <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-sm font-medium">
-                {testSeriesData.isCourseSpecific
-                  ? "Course Specific"
-                  : "General"}
-              </span>
+              
               <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
-                {testSeriesData.noOfTests || 0} Tests
+                {testsCount} Tests
               </span>
             </div>
             <h1 className="text-4xl font-bold capitalize text-gray-900">
               {testSeriesData.title || "Test Series Title"}
             </h1>
             <p className="text-lg text-gray-600">
-              {testSeriesData.description?.short || "No description available"}
+              {descriptionText || "No description available"}
             </p>
           </div>
 
           {/* Test Series Image */}
-          <div
-            data-aos="fade-up"
-            data-aos-delay="100"
-            className="rounded-xl overflow-hidden shadow-lg"
-          >
-            <img
-              src={testSeriesData.image?.url || "/images/placeholders/1.svg"}
-              alt={testSeriesData.title || "Test Series"}
-              className="w-full h-64 object-cover"
-            />
-          </div>
+         
 
           {/* Key Information */}
           <div
@@ -125,35 +199,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
             data-aos-delay="200"
             className="grid md:grid-cols-2 gap-6"
           >
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-lg">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="p-2 bg-blue-500 rounded-lg">
-                  <FaCalendarAlt className="text-white text-lg" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  Duration
-                </h3>
-              </div>
-              <p className="text-gray-700 font-medium">
-                Start: {formatDate(testSeriesData.startDate)}
-              </p>
-              <p className="text-gray-600">
-                End: {formatDate(testSeriesData.endDate)}
-              </p>
-              <div className="w-full bg-gray-200 rounded-full h-3 mt-3">
-                <div
-                  className="bg-gradient-to-r from-blue-400 to-blue-600 h-3 rounded-full transition-all duration-500 ease-out"
-                  style={{
-                    width: `${getProgressPercentage()}%`,
-                  }}
-                ></div>
-              </div>
-              <p className="text-sm text-gray-600 mt-2">
-                {isClient
-                  ? `${getProgressPercentage()}% Complete`
-                  : "Loading..."}
-              </p>
-            </div>
+            
 
             <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-lg">
               <div className="flex items-center space-x-3 mb-4">
@@ -249,58 +295,14 @@ const TestSeriesDetails = ({ testSeriesData }) => {
               </h2>
               <div className="prose max-w-none">
                 <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {testSeriesData.description?.long ||
-                    testSeriesData.description?.short ||
-                    "No description available."}
+                  {descriptionText || "No description available."}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Test Schedule */}
-          <div
-            data-aos="fade-up"
-            data-aos-delay="400"
-            className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 rounded-xl shadow-lg"
-          >
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">
-              Test Schedule
-            </h2>
-            <div className="space-y-4">
-              {Array.from(
-                { length: testSeriesData.noOfTests || 0 },
-                (_, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-800">
-                          Test {index + 1}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          Full Length Mock Test
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="text-right">
-                        <p className="text-sm text-gray-600">Duration</p>
-                        <p className="font-semibold">3 hours</p>
-                      </div>
-                      <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300">
-                        {index === 0 ? "Start Test" : "Locked"}
-                      </button>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
+         
+          
         </div>
 
         {/* Sidebar */}
@@ -327,6 +329,9 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                   itemId={testSeriesData._id || testSeriesData.id}
                   price={testSeriesData.price}
                   title="🎯 Enroll Now"
+                  joinLabel="Join Test Series"
+                  initialEnrolled={isEnrolled}
+                  onEnrollmentSuccess={handleEnrollmentSuccess}
                   className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:cursor-pointer"
                 />
                 {/* <button className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300">
@@ -341,7 +346,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                     Total Tests:
                   </span>
                   <span className="font-semibold text-gray-800">
-                    {testSeriesData.noOfTests || 0}
+                    {testsCount}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
@@ -353,15 +358,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                     {testSeriesData.enrolledStudents?.length || 0} students
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 flex items-center">
-                    <FaCalendarAlt className="w-4 h-4 mr-2 text-purple-500" />
-                    Access:
-                  </span>
-                  <span className="font-semibold text-gray-800">
-                    Until {getFormattedEndDate()}
-                  </span>
-                </div>
+               
                 {testSeriesData.isCourseSpecific && (
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600 flex items-center">

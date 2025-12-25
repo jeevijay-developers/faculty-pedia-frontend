@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import CourseHeader from "./CourseHeader";
 import ClassCard from "./ClassCard";
 import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
+import { getTestSeriesByCourse } from "@/components/server/test-series.route";
 import {
   FaUsers,
   FaClock,
@@ -55,6 +56,8 @@ const CourseDetails = ({ id }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [studentId, setStudentId] = useState(null);
+  const [courseTests, setCourseTests] = useState([]);
+  const [testsLoading, setTestsLoading] = useState(false);
 
   const groupedVideos = useMemo(() => {
     const groups = {};
@@ -71,6 +74,11 @@ const CourseDetails = ({ id }) => {
   }, [course?.videos]);
 
   const topics = useMemo(() => Object.keys(groupedVideos), [groupedVideos]);
+
+  const hasTestSeries = useMemo(
+    () => Array.isArray(courseTests) && courseTests.length > 0,
+    [courseTests]
+  );
   
   useEffect(() => {
     // Extract current student id from localStorage (browser only)
@@ -153,6 +161,50 @@ const CourseDetails = ({ id }) => {
     }
   }, [topics, groupedVideos]);
 
+  useEffect(() => {
+    if (activeTab === "tests" && !hasTestSeries) {
+      setActiveTab("overview");
+    }
+  }, [activeTab, hasTestSeries]);
+
+  useEffect(() => {
+    const courseId = course?._id || course?.id || id;
+    if (!courseId) return;
+
+    const initialSeries = Array.isArray(course?.testSeries)
+      ? course.testSeries
+      : [];
+
+    if (initialSeries.length > 0) {
+      setCourseTests(initialSeries);
+      return;
+    }
+
+    let cancelled = false;
+    const fetchCourseTests = async () => {
+      setTestsLoading(true);
+      try {
+        const response = await getTestSeriesByCourse(courseId);
+        const list =
+          response?.testSeries || response?.data?.testSeries || response || [];
+        if (!cancelled) {
+          setCourseTests(Array.isArray(list) ? list : []);
+        }
+      } catch (err) {
+        console.error("Error fetching course test series:", err);
+        if (!cancelled) setCourseTests([]);
+      } finally {
+        if (!cancelled) setTestsLoading(false);
+      }
+    };
+
+    fetchCourseTests();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [course?.testSeries, course?._id, course?.id, id]);
+
   const assets = useMemo(() => {
     if (Array.isArray(course?.studyMaterials) && course.studyMaterials.length > 0) {
       return course.studyMaterials;
@@ -229,18 +281,20 @@ const CourseDetails = ({ id }) => {
                   : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
             >
-              Live Classes ({course.liveClass?.length || 0})
+              Classes
             </button>
-            <button
-              onClick={() => setActiveTab("tests")}
-              className={`${
-                activeTab === "tests"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
-            >
-              Test Series ({course.testSeries?.length || 0})
-            </button>
+            {hasTestSeries && (
+              <button
+                onClick={() => setActiveTab("tests")}
+                className={`${
+                  activeTab === "tests"
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
+              >
+                Test Series ({courseTests.length || 0})
+              </button>
+            )}
           </nav>
         </div>
 
@@ -435,30 +489,50 @@ const CourseDetails = ({ id }) => {
                     Practice tests and assessments for this course
                   </p>
                 </div>
-                {course.testSeries && course.testSeries.length > 0 ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {course.testSeries.map((test, index) => (
-                      <TestSeriesCard
-                        key={test._id || index}
-                        testSeries={{
-                          id: test._id || test.id,
-                          title: test.title,
-                          educatorName: course.educatorID?.fullName || "Instructor",
-                          educatorPhoto:
-                            course.educatorID?.profilePicture || "/images/placeholders/1.svg",
-                          qualification: "Course Test",
-                          subject: course.subject?.[0] || "General",
-                          specialization: course.specialization?.[0] || "General",
-                          noOfTests: 1,
-                          fee: 0, // Course tests are usually free
-                          slug: test.slug || `test-${test._id || test.id}`,
-                        }}
-                      />
-                    ))}
+                {!hasTestSeries && !testsLoading && (
+                  <div className="text-center py-8 text-gray-500">
+                    No test series assigned to this course yet.
                   </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">No test series available yet.</p>
+                )}
+                {testsLoading && (
+                  <div className="text-center py-8 text-gray-500">
+                    Loading test series...
+                  </div>
+                )}
+                {hasTestSeries && (
+                  <div className="space-y-4">
+                    {courseTests.map((test, index) => {
+                      const questionCount =
+                        test.totalQuestions ||
+                        test.noOfQuestions ||
+                        test.numberOfQuestions ||
+                        (Array.isArray(test.questions)
+                          ? test.questions.length
+                          : null);
+
+                      return (
+                        <div
+                          key={test._id || test.id || index}
+                          className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm"
+                        >
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-lg font-semibold text-gray-900 line-clamp-2">
+                                {test.title || "Untitled Test Series"}
+                              </h4>
+                              {questionCount != null && (
+                                <span className="text-sm font-medium text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+                                  {questionCount} questions
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-600 whitespace-pre-line line-clamp-3">
+                              {test.description || "No description provided."}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>

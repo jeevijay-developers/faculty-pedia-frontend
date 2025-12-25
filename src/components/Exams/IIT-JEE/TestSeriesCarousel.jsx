@@ -36,10 +36,16 @@ const TestSeriesCarousel = ({
         console.log(`📚 Fetching test series for ${specialization}...`);
         const response = await fetchTestSeriesBySpecialization(specialization);
         console.log("📚 Test Series API Response:", response);
-        
-        // Extract test series from response
-        const testSeriesData = response?.testSeries || [];
-        console.log(`📚 Found ${testSeriesData.length} test series`);
+
+        // Extract test series from response and keep only independent ones
+        const testSeriesData = (response?.testSeries || []).filter((ts) => {
+          // Exclude anything linked to a course or marked course specific
+          const hasCourse = Boolean(ts?.courseId);
+          const isCourseSpecific = Boolean(ts?.isCourseSpecific);
+          return !hasCourse && !isCourseSpecific;
+        });
+
+        console.log(`📚 Found ${testSeriesData.length} independent test series`);
         setData(testSeriesData);
       } catch (error) {
         console.error("Failed to fetch test series:", error);
@@ -192,6 +198,18 @@ export const TestSeriesCard = ({ testSeries }) => {
   const validityDate = testSeries.validity 
     ? new Date(testSeries.validity).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })
     : 'N/A';
+
+  const testsCount = (() => {
+    if (Array.isArray(testSeries.tests) && testSeries.tests.length > 0) {
+      return testSeries.tests.length;
+    }
+    if (Array.isArray(testSeries.liveTests) && testSeries.liveTests.length > 0) {
+      return testSeries.liveTests.length;
+    }
+    if (typeof testSeries.numberOfTests === "number") return testSeries.numberOfTests;
+    if (typeof testSeries.noOfTests === "number") return testSeries.noOfTests;
+    return 0;
+  })();
   
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
@@ -232,7 +250,7 @@ export const TestSeriesCard = ({ testSeries }) => {
           </div>
           <div className="text-sm text-gray-600">
             <span className="font-medium">Number of Tests: </span>
-            <span className="text-gray-800">{testSeries.numberOfTests || 0}</span>
+            <span className="text-gray-800">{testsCount}</span>
           </div>
           <div className="text-sm text-gray-600">
             <span className="font-medium">Valid Until: </span>

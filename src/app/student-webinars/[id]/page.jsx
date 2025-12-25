@@ -153,14 +153,7 @@ const StudentWebinarDetailPage = () => {
 
   useEffect(() => {
     if (attendanceVerified && webinar) {
-      checkIfCanShowLinks();
-
-      // Set up interval to check time every minute
-      const interval = setInterval(() => {
-        checkIfCanShowLinks();
-      }, 60000); // Check every minute
-
-      return () => clearInterval(interval);
+      setCanShowLinks(true);
     }
   }, [attendanceVerified, webinar]);
 
@@ -173,7 +166,7 @@ const StudentWebinarDetailPage = () => {
 
       // If the API call succeeds, the student is enrolled
       setAttendanceVerified(true);
-      checkIfCanShowLinks();
+      setCanShowLinks(true);
       toast.success("Access verified successfully");
     } catch (err) {
       console.error("Attendance verification failed:", err);
@@ -193,29 +186,7 @@ const StudentWebinarDetailPage = () => {
 
   const checkIfCanShowLinks = () => {
     if (!webinar || !attendanceVerified) return;
-
-    const now = new Date();
-    const baseDate = webinar.timing
-      ? new Date(webinar.timing)
-      : webinar.date
-        ? new Date(webinar.date)
-        : null;
-
-    if (!baseDate || Number.isNaN(baseDate.getTime())) return;
-
-    const webinarTime = webinar.time;
-
-    if (webinarTime && webinarTime.includes(":")) {
-      const [hours, minutes] = webinarTime.split(":");
-      baseDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-    }
-
-    const timeDifference = Math.abs(now.getTime() - baseDate.getTime());
-    const oneHourInMs = 60 * 60 * 1000;
-
-    if (timeDifference <= oneHourInMs || now >= baseDate) {
-      setCanShowLinks(true);
-    }
+    setCanShowLinks(true);
   };
 
   const formatTime = (timeString) => {
@@ -397,6 +368,8 @@ const StudentWebinarDetailPage = () => {
                       title="Enroll & Join"
                       className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold shadow hover:bg-blue-700"
                       onEnrollmentSuccess={() => {
+                        setAttendanceVerified(true);
+                        setCanShowLinks(true);
                         if (webinar.webinarLink) {
                           window.open(webinar.webinarLink, "_blank");
                           return true;
@@ -461,10 +434,7 @@ const StudentWebinarDetailPage = () => {
             {/* Webinar Links Section */}
             {attendanceVerified && (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <FiExternalLink className="w-5 h-5 mr-2" />
-                  Webinar Access
-                </h2>
+                
 
                 {verifying ? (
                   <div className="flex items-center justify-center py-8">

@@ -2,20 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import { getUpcomingTestSeries } from "@/components/server/student/student.routes";
+import { getTestsBySeries, getTestById } from "@/components/server/test.route";
 import toast from "react-hot-toast";
-import {
-  FiCalendar,
-  FiFileText,
-  FiUsers,
-  FiPlay,
-  FiClock,
-} from "react-icons/fi";
-import Image from "next/image";
+import { FiFileText, FiChevronDown } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 const TestSeriesTab = ({ studentId }) => {
   const [testSeries, setTestSeries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedSeriesId, setExpandedSeriesId] = useState(null);
+  const [testsBySeries, setTestsBySeries] = useState({});
+  const [testsLoading, setTestsLoading] = useState({});
+  const router = useRouter();
 
   useEffect(() => {
     if (!studentId) {
@@ -39,7 +38,28 @@ const TestSeriesTab = ({ studentId }) => {
         const seriesList = Array.isArray(data)
           ? data
           : data.testSeries || data.data || [];
-        setTestSeries(seriesList);
+
+        const enrolledSeries = seriesList.filter((series) => {
+          const list = series?.enrolledStudents;
+          if (!Array.isArray(list)) return false;
+          return list.some((entry) => {
+            if (!studentId) return false;
+            const sid = studentId.toString();
+            if (typeof entry === "string" || typeof entry === "number") {
+              return entry.toString() === sid;
+            }
+            const candidate =
+              entry?.studentId ||
+              entry?.studentID ||
+              entry?.student?.id ||
+              entry?.student?._id ||
+              entry?._id ||
+              entry?.id;
+            return candidate ? candidate.toString() === sid : false;
+          });
+        });
+
+        setTestSeries(enrolledSeries);
       } catch (err) {
         console.error("Failed to load test series:", err);
 
@@ -87,25 +107,19 @@ const TestSeriesTab = ({ studentId }) => {
     }
   };
 
-  const getImageUrl = (image) => {
-    if (!image) return null;
-
-    if (typeof image === "string") {
-      return image.trim() !== "" ? image : null;
-    }
-
-    if (typeof image === "object" && image.url) {
-      return image.url.trim() !== "" ? image.url : null;
-    }
-
-    return null;
-  };
-
   const isSeriesActive = (startDate, endDate) => {
     const now = new Date();
     const start = new Date(startDate);
     const end = new Date(endDate);
     return now >= start && now <= end;
+  };
+
+  const getTestsCount = (series) => {
+    if (Array.isArray(series?.tests) && series.tests.length > 0) return series.tests.length;
+    if (Array.isArray(series?.liveTests) && series.liveTests.length > 0) return series.liveTests.length;
+    if (typeof series?.numberOfTests === "number") return series.numberOfTests;
+    if (typeof series?.noOfTests === "number") return series.noOfTests;
+    return 0;
   };
 
   const getSeriesStatus = (startDate, endDate) => {
@@ -116,6 +130,98 @@ const TestSeriesTab = ({ studentId }) => {
     if (now < start) return { status: "upcoming", color: "blue" };
     if (now > end) return { status: "completed", color: "gray" };
     return { status: "active", color: "green" };
+  };
+
+  const handleStartTest = (series) => {
+    const seriesId = series?._id || series?.id;
+    if (!seriesId) {
+      toast.error("Series id unavailable right now");
+      return;
+    }
+
+    const nextExpanded = expandedSeriesId === seriesId ? null : seriesId;
+    setExpandedSeriesId(nextExpanded);
+
+    if (!nextExpanded) return;
+
+    // If tests are already on the series payload, seed them and skip API
+    if (!testsBySeries[seriesId]) {
+      const embedded = Array.isArray(series?.tests)
+        ? series.tests
+        : Array.isArray(series?.liveTests)
+        ? series.liveTests
+        : null;
+
+      if (embedded && embedded.length > 0) {
+        hydrateTests(seriesId, embedded);
+        return;
+      }
+
+      setTestsLoading((prev) => ({ ...prev, [seriesId]: true }));
+      getTestsBySeries(seriesId, { limit: 50 })
+        .then((res) => {
+          const tests = res?.tests || res?.data?.tests || res?.data || [];
+          hydrateTests(seriesId, tests);
+        })
+        .catch((err) => {
+          console.error("Failed to load tests for series", err);
+          toast.error("Could not load tests for this series");
+          setTestsBySeries((prev) => ({ ...prev, [seriesId]: [] }));
+        })
+        .finally(() => {
+          // hydrateTests toggles loading, so only clear here if hydration did not run
+          setTestsLoading((prev) => ({ ...prev, [seriesId]: false }));
+        });
+    }
+  };
+
+  const handleJoinTest = (test) => {
+    const targetSlug = test?.slug || test?._id || test?.id;
+    if (!targetSlug) {
+      toast.error("Test link unavailable right now");
+      return;
+    }
+    router.push(`/test-panel/${targetSlug}`);
+  };
+
+  const hydrateTests = async (seriesId, tests) => {
+    // If tests already include titles/descriptions and slug/id, keep them
+    const needsHydration = tests.some(
+      (t) => !t || !t.title || !t.description || (!t.slug && !t._id && !t.id)
+    );
+
+    if (!needsHydration) {
+      setTestsBySeries((prev) => ({ ...prev, [seriesId]: tests }));
+      return;
+    }
+
+    try {
+      setTestsLoading((prev) => ({ ...prev, [seriesId]: true }));
+      const enriched = await Promise.all(
+        tests.map(async (t) => {
+          // If the item is just an id or lacks essential fields, fetch details
+          const id = t?._id || t?.id || t;
+          const alreadyHas = t && t.title && (t.slug || t._id || t.id);
+          if (!id || alreadyHas) return t;
+          try {
+            const detail = await getTestById(id);
+            return detail?.data || detail || t;
+          } catch (err) {
+            console.error("Failed to hydrate test", id, err);
+            return t;
+          }
+        })
+      );
+      setTestsBySeries((prev) => ({ ...prev, [seriesId]: enriched }));
+    } finally {
+      setTestsLoading((prev) => ({ ...prev, [seriesId]: false }));
+    }
+  };
+
+  const statusBadgeClass = (color) => {
+    if (color === "green") return "bg-green-100 text-green-800";
+    if (color === "blue") return "bg-blue-100 text-blue-800";
+    return "bg-gray-100 text-gray-800";
   };
 
   if (loading) {
@@ -144,7 +250,7 @@ const TestSeriesTab = ({ studentId }) => {
   if (!testSeries.length) {
     return (
       <div className="p-8 text-center">
-        <div className="text-gray-600 text-lg">No test series found</div>
+        <div className="text-gray-600 text-lg">No enrolled test series</div>
         <p className="text-gray-500 mt-2">
           You haven't enrolled in any test series yet.
         </p>
@@ -154,147 +260,84 @@ const TestSeriesTab = ({ studentId }) => {
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="space-y-4">
         {testSeries.map((series) => {
           const statusInfo = getSeriesStatus(series.startDate, series.endDate);
+          const descriptionText =
+            series.description?.short ||
+            series.description?.long ||
+            "Comprehensive test series to boost your preparation";
+          const seriesId = series?._id || series?.id;
+          const testsCount = testsBySeries[seriesId]?.length ?? getTestsCount(series);
+          const isExpanded = expandedSeriesId === seriesId;
 
           return (
             <div
               key={series._id}
-              className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+              className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5"
             >
-              {/* Image */}
-              <div className="relative h-48 bg-gray-100">
-                {getImageUrl(series.image) ? (
-                  <Image
-                    src={getImageUrl(series.image)}
-                    alt={series.title}
-                    fill
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-100 to-purple-100">
-                    <div className="text-gray-500 text-center">
-                      <FiFileText className="w-12 h-12 mx-auto mb-2" />
-                      <span className="text-sm">Test Series</span>
-                    </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-lg text-gray-900 leading-snug">
+                    {series.title || "Test Series"}
+                  </h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {descriptionText}
+                  </p>
+                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                    <FiFileText className="w-4 h-4" />
+                    <span>{testsCount} tests</span>
                   </div>
-                )}
-
-                {/* Status Badge */}
-                <div className="absolute top-3 left-3">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      statusInfo.color === "green"
-                        ? "bg-green-100 text-green-800"
-                        : statusInfo.color === "blue"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {statusInfo.status}
-                  </span>
                 </div>
-
-                {/* Price Badge */}
-                <div className="absolute top-3 right-3">
-                  <span className="px-2 py-1 bg-black bg-opacity-70 text-white rounded-full text-xs font-medium">
-                    ₹{series.price}
-                  </span>
+                <div className="flex-shrink-0 flex items-center justify-end">
+                  <button
+                    onClick={() => handleStartTest(series)}
+                    aria-label={isExpanded ? "Hide tests" : "Show tests"}
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 bg-white text-gray-600 hover:border-indigo-200 hover:text-indigo-700 transition-transform duration-200 shadow-sm"
+                  >
+                    <FiChevronDown
+                      className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : "rotate-0"}`}
+                    />
+                  </button>
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="p-4">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
-                  {series.title}
-                </h3>
-
-                <p className="text-sm text-gray-600 mb-4 line-clamp-3">
-                  {series.description?.short ||
-                    series.description?.long ||
-                    "Comprehensive test series to boost your preparation"}
-                </p>
-
-                {/* Details */}
-                <div className="space-y-2 text-xs text-gray-500">
-                  <div className="flex items-center">
-                    <FiCalendar className="w-4 h-4 mr-2" />
-                    <span>
-                      {formatDate(series.startDate)} -{" "}
-                      {formatDate(series.endDate)}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center">
-                    <span className="font-medium mr-2">Subject:</span>
-                    <span className="capitalize">{series.subject}</span>
-                  </div>
-
-                  <div className="flex items-center">
-                    <span className="font-medium mr-2">Level:</span>
-                    <span>{series.specialization}</span>
-                  </div>
-
-                  <div className="flex items-center">
-                    <FiFileText className="w-4 h-4 mr-2" />
-                    <span>{series.noOfTests} Tests</span>
-                  </div>
-
-                  <div className="flex items-center">
-                    <FiUsers className="w-4 h-4 mr-2" />
-                    <span>{series.enrolledStudents?.length || 0} Enrolled</span>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
-                  <button
-                    onClick={() => {
-                      window.location.href = `/student-test-series/${series._id}`;
-                    }}
-                    className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    View Details
-                  </button>
-
-                  {isSeriesActive(series.startDate, series.endDate) ? (
-                    // <button
-                    //   onClick={() => {
-                    //     if (series.slug) {
-                    //       window.location.href = `/test-series/${series.slug}`;
-                    //     } else {
-                    //       window.location.href = `/test-series/${series._id}`;
-                    //     }
-                    //   }}
-                    //   className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
-                    // >
-                    //   Start Tests
-                    // </button>
-                    <></>
-                  ) : statusInfo.status === "upcoming" ? (
-                    <button
-                      disabled
-                      className="w-full px-4 py-2 bg-gray-100 text-gray-500 text-sm font-medium rounded-lg cursor-not-allowed"
-                    >
-                      Starts on {formatDate(series.startDate)}
-                    </button>
+              {isExpanded && (
+                <div className="mt-4 border border-gray-100 rounded-lg bg-gray-50 p-3 space-y-3">
+                  {testsLoading[seriesId] ? (
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                      <span>Loading tests...</span>
+                    </div>
+                  ) : testsBySeries[seriesId] && testsBySeries[seriesId].length > 0 ? (
+                    testsBySeries[seriesId].map((test) => (
+                      <div
+                        key={test._id || test.id || test.slug}
+                        className="bg-white border border-gray-200 rounded-lg p-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div className="space-y-1">
+                          <h4 className="text-sm font-semibold text-gray-900 line-clamp-2">
+                            {test.title || "Test"}
+                          </h4>
+                          <p className="text-sm text-gray-600 line-clamp-2">
+                            {test.description || "No description provided."}
+                          </p>
+                        </div>
+                        <div className="flex-shrink-0 flex items-center justify-end w-full sm:w-auto">
+                          <button
+                            onClick={() => handleJoinTest(test)}
+                            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-semibold text-white bg-green-600 hover:bg-green-700 transition-colors"
+                          >
+                            Start Test
+                          </button>
+                        </div>
+                      </div>
+                    ))
                   ) : (
-                    <button
-                      onClick={() => {
-                        if (series.slug) {
-                          window.location.href = `/test-series/${series.slug}/results`;
-                        } else {
-                          window.location.href = `/test-series/${series._id}/results`;
-                        }
-                      }}
-                      className="w-full px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors"
-                    >
-                      View Results
-                    </button>
+                    <p className="text-sm text-gray-500">No tests available for this series.</p>
                   )}
                 </div>
-              </div>
+              )}
             </div>
           );
         })}

@@ -1,6 +1,10 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { FiChevronDown, FiFileText } from "react-icons/fi";
 import { getCourseById } from "@/components/server/course.routes";
+import { getTestSeriesByCourse, getTestSeriesById } from "@/components/server/test-series.route";
+import { getTestsBySeries, getTestById } from "@/components/server/test.route";
 
 const sampleCoursePanel = {
   title: "Physics Crash Course Panel",
@@ -105,6 +109,9 @@ const sampleCoursePanel = {
       description: "Downloadable tones to demo beats, resonance, and Doppler shifts.",
     },
   ],
+  testSeries: [
+    // Intentionally empty; avoid showing Test Series tab unless real data exists
+  ],
 };
 
 const getYouTubeEmbedUrl = (url) => {
@@ -124,11 +131,17 @@ const CoursePanelPage = ({ searchParams }) => {
   const [showVideoDropdown, setShowVideoDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [courseTests, setCourseTests] = useState([]);
+  const [testsLoading, setTestsLoading] = useState(false);
+  const [expandedSeriesId, setExpandedSeriesId] = useState(null);
+  const [testsBySeries, setTestsBySeries] = useState({});
+  const [seriesTestsLoading, setSeriesTestsLoading] = useState({});
 
   useEffect(() => {
     const load = async () => {
       if (!courseId) {
         setSelectedVideoId(sampleCoursePanel.topics?.[0]?.videos?.[0]?.url || null);
+        setCourseTests([]);
         return;
       }
       try {
@@ -150,6 +163,47 @@ const CoursePanelPage = ({ searchParams }) => {
     };
     load();
   }, [courseId]);
+
+  useEffect(() => {
+    const resolvedCourseId = courseData?._id || courseData?.id || courseId;
+    if (!resolvedCourseId) return;
+
+    const initialSeries = Array.isArray(courseData?.testSeries)
+      ? courseData.testSeries
+      : [];
+
+    if (initialSeries.length > 0) {
+      setCourseTests(initialSeries);
+      return;
+    }
+
+    let cancelled = false;
+    const fetchTests = async () => {
+      setTestsLoading(true);
+      try {
+        const res = await getTestSeriesByCourse(resolvedCourseId);
+        const candidates = [
+          res?.testSeries,
+          res?.data?.testSeries,
+          res?.data?.data?.testSeries,
+          res?.data,
+          res,
+        ];
+        const list = candidates.find(Array.isArray) || [];
+        if (!cancelled) setCourseTests(list);
+      } catch (err) {
+        console.error("Failed to fetch course test series", err);
+        if (!cancelled) setCourseTests([]);
+      } finally {
+        if (!cancelled) setTestsLoading(false);
+      }
+    };
+
+    fetchTests();
+    return () => {
+      cancelled = true;
+    };
+  }, [courseData?._id, courseData?.id, courseData?.testSeries, courseId]);
 
   const allVideos = useMemo(() => {
     if (Array.isArray(courseData?.videos) && courseData.videos.length > 0) {
@@ -213,6 +267,238 @@ const CoursePanelPage = ({ searchParams }) => {
     const found = allVideos.find((v) => v.id === selectedVideoId);
     return found || allVideos[0];
   }, [allVideos, selectedVideoId]);
+
+  const hasCourseTests = useMemo(
+    () => Array.isArray(courseTests) && courseTests.length > 0,
+    [courseTests]
+  );
+
+  const getTestsCount = (series) => {
+    if (Array.isArray(series?.tests) && series.tests.length > 0) return series.tests.length;
+    if (Array.isArray(series?.liveTests) && series.liveTests.length > 0) return series.liveTests.length;
+    if (typeof series?.numberOfTests === "number") return series.numberOfTests;
+    if (typeof series?.noOfTests === "number") return series.noOfTests;
+    return 0;
+  };
+
+  const hydrateTests = async (seriesId, tests) => {
+    const needsHydration = tests.some(
+      (t) => !t || !t.title || !t.description || (!t.slug && !t._id && !t.id)
+    );
+
+    if (!needsHydration) {
+      setTestsBySeries((prev) => ({ ...prev, [seriesId]: tests }));
+      return;
+    }
+
+    try {
+      setSeriesTestsLoading((prev) => ({ ...prev, [seriesId]: true }));
+      const enriched = await Promise.all(
+        tests.map(async (t) => {
+          const id = t?._id || t?.id || t;
+          const alreadyHas = t && t.title && (t.slug || t._id || t.id);
+          if (!id || alreadyHas) return t;
+          try {
+            const detail = await getTestById(id);
+            return detail?.data || detail || t;
+          } catch (err) {
+            console.error("Failed to hydrate test", id, err);
+            return t;
+          }
+        })
+      );
+      setTestsBySeries((prev) => ({ ...prev, [seriesId]: enriched }));
+    } finally {
+      setSeriesTestsLoading((prev) => ({ ...prev, [seriesId]: false }));
+    }
+  };
+
+  const fetchSeriesTests = async (series) => {
+    const seriesId = series?._id || series?.id || null;
+    const stateKey = seriesId || series?.slug;
+    if (!stateKey || testsBySeries[stateKey]) return;
+
+    const embedded = Array.isArray(series?.tests)
+      ? series.tests
+      : Array.isArray(series?.liveTests)
+      ? series.liveTests
+      : null;
+
+    if (embedded && embedded.length > 0) {
+      hydrateTests(stateKey, embedded);
+      return;
+    }
+
+    if (!seriesId) {
+      setTestsBySeries((prev) => ({ ...prev, [stateKey]: [] }));
+      return;
+    }
+
+    setSeriesTestsLoading((prev) => ({ ...prev, [stateKey]: true }));
+
+    try {
+      const detail = await getTestSeriesById(seriesId);
+      const detailSeries = detail?.testSeries || detail?.data?.testSeries || detail?.data || detail;
+      const fromDetail =
+        (Array.isArray(detailSeries?.tests) && detailSeries.tests) ||
+        (Array.isArray(detailSeries?.liveTests) && detailSeries.liveTests) ||
+        [];
+      if (fromDetail.length > 0) {
+        hydrateTests(stateKey, fromDetail);
+        return;
+      }
+
+      const res = await getTestsBySeries(seriesId, { limit: 50 });
+      const tests = res?.tests || res?.data?.tests || res?.data || [];
+      hydrateTests(stateKey, tests);
+    } catch (err) {
+      console.error("Failed to load tests for series", err);
+      setTestsBySeries((prev) => ({ ...prev, [stateKey]: [] }));
+    } finally {
+      setSeriesTestsLoading((prev) => ({ ...prev, [stateKey]: false }));
+    }
+  };
+
+  const handleToggleSeries = (series) => {
+    const seriesId = series?._id || series?.id || null;
+    const stateKey = seriesId || series?.slug;
+    if (!stateKey) return;
+
+    const nextExpanded = expandedSeriesId === stateKey ? null : stateKey;
+    setExpandedSeriesId(nextExpanded);
+
+    if (!nextExpanded) return;
+
+    if (testsBySeries[stateKey]) return;
+
+    fetchSeriesTests(series);
+  };
+
+  useEffect(() => {
+    if (!hasCourseTests && activeTab === "tests") {
+      setActiveTab("videos");
+    }
+  }, [hasCourseTests, activeTab]);
+
+  // Preload tests/counts for all series so course-specific sets are hydrated without manual toggle
+  useEffect(() => {
+    if (!Array.isArray(courseTests) || courseTests.length === 0) return;
+    courseTests.forEach((series) => {
+      const key = series?._id || series?.id || series?.slug;
+      if (!key || testsBySeries[key]) return;
+      fetchSeriesTests(series);
+    });
+  }, [courseTests, testsBySeries]);
+
+  const renderTests = () => {
+    if (testsLoading && courseTests.length === 0) {
+      return (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 text-center text-slate-500">
+          Loading test series...
+        </div>
+      );
+    }
+
+    if (!hasCourseTests) {
+      return (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 text-center text-slate-500">
+          No test series assigned to this course yet.
+        </div>
+      );
+    }
+
+    return (
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-lg font-semibold text-slate-900">Test Series</h2>
+          <p className="text-sm text-slate-600">Course-specific tests and assessments.</p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4">
+          {courseTests.map((ts, index) => {
+            const seriesKey = ts._id || ts.id || ts.slug;
+            const seriesTests = testsBySeries[seriesKey];
+            const testsCount = seriesTests?.length ?? getTestsCount(ts);
+            const isExpanded = expandedSeriesId === seriesKey;
+
+            return (
+              <div
+                key={ts._id || ts.id || index}
+                className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm flex flex-col gap-3"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-2">
+                    <h3 className="text-base font-semibold text-slate-900 line-clamp-2">
+                      {ts.title || "Untitled Test Series"}
+                    </h3>
+                    <p className="text-sm text-slate-600 whitespace-pre-line line-clamp-3">
+                      {ts.description || "No description provided."}
+                    </p>
+                    <div className="flex items-center gap-2 text-sm text-slate-700">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-700">
+                        <FiFileText className="w-4 h-4" />
+                      </span>
+                      <span className="font-medium">{testsCount} tests</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleToggleSeries(ts)}
+                    aria-label={isExpanded ? "Hide tests" : "Show tests"}
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-indigo-200 hover:text-indigo-700 transition-transform duration-200 shadow-sm"
+                  >
+                    <FiChevronDown
+                      className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : "rotate-0"}`}
+                    />
+                  </button>
+                </div>
+
+                {isExpanded && (
+                  <div className="border border-slate-100 rounded-lg bg-slate-50 p-3 space-y-3">
+                    {seriesTestsLoading[seriesKey] ? (
+                      <div className="flex items-center gap-2 text-sm text-slate-500">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-600"></div>
+                        <span>Loading tests...</span>
+                      </div>
+                    ) : seriesTests && seriesTests.length > 0 ? (
+                      seriesTests.map((test) => {
+                        const targetSlug = test?.slug || test?._id || test?.id;
+                        const href = targetSlug ? `/test-panel/${encodeURIComponent(targetSlug)}` : "#";
+                        return (
+                          <div
+                            key={test._id || test.id || test.slug}
+                            className="bg-white border border-slate-200 rounded-lg p-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                          >
+                            <div className="space-y-1">
+                              <h4 className="text-sm font-semibold text-slate-900 line-clamp-2">
+                                {test.title || "Test"}
+                              </h4>
+                              <p className="text-sm text-slate-600 line-clamp-2">
+                                {test.description || "No description provided."}
+                              </p>
+                            </div>
+                            <div className="flex-shrink-0 flex items-center justify-end w-full sm:w-auto">
+                              <Link
+                                href={href}
+                                className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-semibold text-white bg-green-600 hover:bg-green-700 transition-colors"
+                              >
+                                Start Test
+                              </Link>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-sm text-slate-500">No tests available for this series.</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="bg-slate-50 min-h-screen py-8 px-4 sm:px-6 lg:px-10">
@@ -280,6 +566,18 @@ const CoursePanelPage = ({ searchParams }) => {
               >
                 Assets
               </button>
+              {hasCourseTests && (
+                <button
+                  onClick={() => setActiveTab("tests")}
+                  className={`flex-1 text-left px-4 py-3 text-sm font-medium border-b md:border-b-0 md:border-l-4 transition-colors ${
+                    activeTab === "tests"
+                      ? "bg-indigo-50 text-indigo-700 md:border-indigo-600"
+                      : "text-slate-600 hover:text-slate-900 md:border-transparent"
+                  }`}
+                >
+                  Test Series
+                </button>
+              )}
             </div>
            
           </aside>
@@ -313,7 +611,7 @@ const CoursePanelPage = ({ searchParams }) => {
                   </div>
                 </div>
               </div>
-            ) : (
+            ) : activeTab === "assets" ? (
               <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
                 <div className="flex items-start justify-between gap-3 flex-wrap">
                   <div>
@@ -344,6 +642,8 @@ const CoursePanelPage = ({ searchParams }) => {
                   )}
                 </div>
               </div>
+            ) : (
+              renderTests()
             )}
           </section>
         </div>

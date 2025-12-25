@@ -29,7 +29,7 @@ export const getTestSeriesById = async (id) => {
     if (isServer) {
       // Use native fetch for server components
       const baseURL = getBaseURL();
-      const response = await fetch(`${baseURL}/api/test-series/by-id/${id}`, {
+      const response = await fetch(`${baseURL}/api/test-series/${id}`, {
         cache: 'no-store', // Always get fresh data
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export const getTestSeriesById = async (id) => {
       return data.data || data; // Handle both {data: ...} and direct response formats
     } else {
       // Use axios for client components
-      const response = await API_CLIENT.get(`/api/test-series/by-id/${id}`);
+      const response = await API_CLIENT.get(`/api/test-series/${id}`);
       return response.data;
     }
   } catch (error) {
@@ -74,6 +74,32 @@ export const getTestSeriesByEducator = async (educatorId, params = {}) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching test series by educator:", error);
+    throw error;
+  }
+};
+
+export const getTestSeriesByCourse = async (courseId, params = {}) => {
+  if (!courseId) return { testSeries: [], pagination: { totalTestSeries: 0 } };
+  try {
+    const response = await API_CLIENT.get(
+      `/api/test-series/course/${courseId}`,
+      { params }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching test series by course:", error);
+    throw error;
+  }
+};
+
+// Fetch a test series by slug
+export const getTestSeriesBySlug = async (slug) => {
+  if (!slug) return null;
+  try {
+    const response = await API_CLIENT.get(`/api/test-series/slug/${slug}`);
+    return response.data?.testSeries || response.data;
+  } catch (error) {
+    console.error("Error fetching test series by slug:", error);
     throw error;
   }
 };
