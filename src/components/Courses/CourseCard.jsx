@@ -132,9 +132,9 @@ const CourseCard = ({ course }) => {
   const hasEducator = Boolean(educatorSource || educatorName);
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100 flex flex-col h-full overflow-hidden">
+    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Course Image */}
-      <div className="relative h-48 bg-gray-200 overflow-hidden">
+      <div className="relative h-48 bg-gray-200 overflow-hidden rounded-xl mb-4">
         <Image
           src={heroImageSrc}
           alt={course?.title || "Course"}
@@ -146,7 +146,10 @@ const CourseCard = ({ course }) => {
         <div className="absolute top-3 left-3 flex flex-wrap gap-1">
           {Array.isArray(course?.specialization) ? (
             course.specialization.map((spec, idx) => (
-              <span key={idx} className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium">
+              <span
+                key={idx}
+                className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium"
+              >
                 {spec}
               </span>
             ))
@@ -158,7 +161,7 @@ const CourseCard = ({ course }) => {
         </div>
       </div>
 
-      <div className="p-6 flex flex-col flex-1">
+      <div className="flex flex-col flex-1">
         {/* Course Title */}
         <h3 className="text-xl font-bold text-gray-900 mb-2 leading-tight line-clamp-2">
           {course.title}
@@ -175,13 +178,17 @@ const CourseCard = ({ course }) => {
           <div className="flex items-center text-sm text-gray-600">
             <FaBook className="mr-1 text-blue-700" />
             <span className="capitalize">
-              {Array.isArray(course.subject) ? course.subject.join(", ") : course.subject}
+              {Array.isArray(course.subject)
+                ? course.subject.join(", ")
+                : course.subject}
             </span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
             <MdSchool className="w-4 h-4 mr-1 text-green-700" />
             <span>
-              {Array.isArray(course.specialization) ? course.specialization.join(", ") : course.specialization}
+              {Array.isArray(course.specialization)
+                ? course.specialization.join(", ")
+                : course.specialization}
             </span>
           </div>
         </div>
@@ -211,8 +218,6 @@ const CourseCard = ({ course }) => {
           </div>
         </div>
 
-        
-
         {/* Pricing Section */}
         <div className="border-t border-gray-100 mb-4 mt-auto pt-4">
           <div className="flex items-center justify-between">
@@ -233,7 +238,7 @@ const CourseCard = ({ course }) => {
         <div className="flex gap-2 mt-auto">
           <Link
             href={`/details/course/${course._id || course.id}`}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-md transition-colors duration-200 font-medium text-sm text-center"
+            className="flex-1 rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center block"
           >
             View Details
           </Link>

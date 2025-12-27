@@ -45,7 +45,9 @@ const TestSeriesCarousel = ({
           return !hasCourse && !isCourseSpecific;
         });
 
-        console.log(`📚 Found ${testSeriesData.length} independent test series`);
+        console.log(
+          `📚 Found ${testSeriesData.length} independent test series`
+        );
         setData(testSeriesData);
       } catch (error) {
         console.error("Failed to fetch test series:", error);
@@ -55,7 +57,7 @@ const TestSeriesCarousel = ({
         setLoading(false);
       }
     };
-    
+
     if (specialization) {
       fetchTestSeries();
     }
@@ -193,58 +195,64 @@ const TestSeriesCarousel = ({
 // Test Series Card Component
 export const TestSeriesCard = ({ testSeries }) => {
   console.log("Test series: ", testSeries);
-  
+
   // Format validity date
-  const validityDate = testSeries.validity 
-    ? new Date(testSeries.validity).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })
-    : 'N/A';
+  const validityDate = testSeries.validity
+    ? new Date(testSeries.validity).toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    : "N/A";
 
   const testsCount = (() => {
     if (Array.isArray(testSeries.tests) && testSeries.tests.length > 0) {
       return testSeries.tests.length;
     }
-    if (Array.isArray(testSeries.liveTests) && testSeries.liveTests.length > 0) {
+    if (
+      Array.isArray(testSeries.liveTests) &&
+      testSeries.liveTests.length > 0
+    ) {
       return testSeries.liveTests.length;
     }
-    if (typeof testSeries.numberOfTests === "number") return testSeries.numberOfTests;
+    if (typeof testSeries.numberOfTests === "number")
+      return testSeries.numberOfTests;
     if (typeof testSeries.noOfTests === "number") return testSeries.noOfTests;
     return 0;
   })();
-  
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
+    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Test Series Image */}
-      <div className="relative h-40 bg-gray-100">
+      <div className="relative h-40 bg-gray-100 rounded-xl mb-4">
         <Image
-          src={
-            testSeries.image || "/images/placeholders/1.svg"
-          }
+          src={testSeries.image || "/images/placeholders/1.svg"}
           alt={testSeries.title || "Test Series"}
           fill
           className="object-cover"
         />
         <div className="absolute top-3 left-3">
           <span className="bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded-md">
-            {testSeries.specialization?.[0] || 'General'}
+            {testSeries.specialization?.[0] || "General"}
           </span>
         </div>
       </div>
 
       {/* Card Content */}
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow">
         <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight line-clamp-2">
           {testSeries.title}
         </h3>
         <h4 className="text-base font-semibold text-blue-600 mb-3">
-          {testSeries.educatorId?.fullName || 'Educator'}
+          {testSeries.educatorId?.fullName || "Educator"}
         </h4>
-        
+
         <div className="space-y-2 mb-4">
           <div className="text-sm text-gray-600">
             <span className="font-medium">Subject: </span>
             <span className="text-gray-800">
-              {Array.isArray(testSeries.subject) 
-                ? testSeries.subject.join(', ') 
+              {Array.isArray(testSeries.subject)
+                ? testSeries.subject.join(", ")
                 : testSeries.subject}
             </span>
           </div>
@@ -257,16 +265,16 @@ export const TestSeriesCard = ({ testSeries }) => {
             <span className="text-gray-800">{validityDate}</span>
           </div>
         </div>
-        
+
         <div className="mt-auto">
           <div className="mb-4 text-2xl font-bold text-blue-600">
-            ₹{testSeries.price?.toLocaleString('en-IN') || 0}
+            ₹{testSeries.price?.toLocaleString("en-IN") || 0}
           </div>
 
           {/* Action Button */}
           <Link
             href={`/test-series/${testSeries._id || testSeries.id}`}
-            className="w-full text-white bg-blue-600 hover:bg-blue-700 py-2.5 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+            className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center block"
           >
             View Details
           </Link>

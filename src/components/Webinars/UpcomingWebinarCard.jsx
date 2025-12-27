@@ -4,28 +4,28 @@ import Link from "next/link";
 import { FaUser, FaClock } from "react-icons/fa";
 import { MdSchool, MdCalendarToday } from "react-icons/md";
 
-const UpcomingWebinarCard = ({ item }) => {  
+const UpcomingWebinarCard = ({ item }) => {
   console.log("Webinar item: ", item);
-  
+
   // Format timing date
-  const webinarDate = item.timing 
-    ? new Date(item.timing).toLocaleDateString('en-IN', { 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
+  const webinarDate = item.timing
+    ? new Date(item.timing).toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       })
-    : 'N/A';
-    
+    : "N/A";
+
   const webinarTime = item.timing
-    ? new Date(item.timing).toLocaleTimeString('en-IN', {
-        hour: '2-digit',
-        minute: '2-digit'
+    ? new Date(item.timing).toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
       })
-    : 'N/A';
-  
+    : "N/A";
+
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col border border-gray-100">
-      <div className="relative h-40 bg-gray-100">
+    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
+      <div className="relative h-40 bg-gray-100 rounded-xl mb-4">
         <Image
           src={item.image || "/images/placeholders/1.svg"}
           alt={item.title || "Webinar"}
@@ -35,19 +35,21 @@ const UpcomingWebinarCard = ({ item }) => {
         {item.specialization && (
           <div className="absolute top-3 left-3">
             <span className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium">
-              {Array.isArray(item.specialization) ? item.specialization[0] : item.specialization}
+              {Array.isArray(item.specialization)
+                ? item.specialization[0]
+                : item.specialization}
             </span>
           </div>
         )}
         {item.webinarType && (
           <div className="absolute top-3 right-3">
             <span className="bg-green-600 text-white px-2 py-1 rounded-md text-xs font-medium capitalize">
-              {item.webinarType.replace('-', ' ')}
+              {item.webinarType.replace("-", " ")}
             </span>
           </div>
         )}
       </div>
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow">
         <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight line-clamp-2">
           {item.title || "Webinar Title"}
         </h3>
@@ -108,7 +110,9 @@ const UpcomingWebinarCard = ({ item }) => {
                 <span className="font-medium">Subject:</span>
               </div>
               <span className="text-sm text-gray-800 font-medium capitalize">
-                {Array.isArray(item.subject) ? item.subject.join(', ') : item.subject}
+                {Array.isArray(item.subject)
+                  ? item.subject.join(", ")
+                  : item.subject}
               </span>
             </div>
           )}
@@ -118,7 +122,9 @@ const UpcomingWebinarCard = ({ item }) => {
           <div className="flex items-center justify-between mb-4 p-2 bg-gray-50 rounded">
             <span className="text-sm text-gray-600">Available Seats:</span>
             <span className="text-sm font-medium text-gray-800">
-              {item.seatsAvailable || (item.seatLimit - (item.enrolledCount || 0))} / {item.seatLimit}
+              {item.seatsAvailable ||
+                item.seatLimit - (item.enrolledCount || 0)}{" "}
+              / {item.seatLimit}
             </span>
           </div>
         )}
@@ -127,14 +133,14 @@ const UpcomingWebinarCard = ({ item }) => {
           <div className="flex items-center space-x-2">
             <div className="flex items-baseline space-x-2">
               <span className="text-xl font-bold text-blue-600">
-                ₹{Number(item.fees || 0).toLocaleString('en-IN')}
+                ₹{Number(item.fees || 0).toLocaleString("en-IN")}
               </span>
             </div>
           </div>
         </div>
         <Link
           href={`/webinars/${item._id || item.id}`}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+          className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center block"
         >
           View Details
         </Link>

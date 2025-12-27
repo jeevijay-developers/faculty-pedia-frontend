@@ -34,27 +34,34 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
       setLoading(true);
       setError(null);
       try {
-        console.log(`📚 Fetching educators for specialization: ${specialization}`);
+        console.log(
+          `📚 Fetching educators for specialization: ${specialization}`
+        );
         const response = await getEducatorsBySpecialization(specialization);
         console.log("📚 Educators API Full Response:", response);
         console.log("📚 Response structure:", {
           hasData: !!response?.data,
           hasEducators: !!response?.data?.educators,
           isArray: Array.isArray(response?.data?.educators),
-          type: typeof response
+          type: typeof response,
         });
-        
+
         // Handle different response structures
         let educators = [];
-        if (response?.data?.educators && Array.isArray(response.data.educators)) {
+        if (
+          response?.data?.educators &&
+          Array.isArray(response.data.educators)
+        ) {
           educators = response.data.educators;
         } else if (response?.educators && Array.isArray(response.educators)) {
           educators = response.educators;
         } else if (Array.isArray(response)) {
           educators = response;
         }
-        
-        console.log(`📚 Found ${educators.length} educators for ${specialization}`);
+
+        console.log(
+          `📚 Found ${educators.length} educators for ${specialization}`
+        );
         if (educators.length > 0) {
           console.log("📚 First educator sample:", educators[0]);
         }
@@ -64,7 +71,7 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
         console.error("Error details:", {
           message: error.message,
           response: error.response?.data,
-          status: error.response?.status
+          status: error.response?.status,
         });
         setError(error.message || "Failed to load educators");
         setFilteredEducators([]);
@@ -72,7 +79,7 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
         setLoading(false);
       }
     };
-    
+
     if (specialization) {
       fetchEducators();
     }

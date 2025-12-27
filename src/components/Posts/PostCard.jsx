@@ -23,7 +23,9 @@ const PostCard = ({ post, activeSpecialization }) => {
   const category = normalizedActive
     ? specializationsArray.find(
         (spec) => spec?.toUpperCase() === normalizedActive
-      ) || specializationsArray[0] || "General"
+      ) ||
+      specializationsArray[0] ||
+      "General"
     : specializationsArray[0] || "General";
 
   const publishDate = post?.createdAt || new Date().toISOString();
@@ -89,14 +91,20 @@ const PostCard = ({ post, activeSpecialization }) => {
   };
 
   const fullContent =
-    post?.content || post?.fullDescription || post?.longDescription || description;
+    post?.content ||
+    post?.fullDescription ||
+    post?.longDescription ||
+    description;
   const coverImage =
-    post?.coverImage?.url || post?.featuredImage?.url || post?.image?.url || null;
+    post?.coverImage?.url ||
+    post?.featuredImage?.url ||
+    post?.image?.url ||
+    null;
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col group">
+    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Content */}
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow">
         {/* Title */}
         <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors line">
           {title}
@@ -131,7 +139,11 @@ const PostCard = ({ post, activeSpecialization }) => {
           <div className="flex items-center space-x-3">
             <div className="relative h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
               <Image
-                src={educator?.profilePicture || educator?.image?.url || '/images/placeholders/1.svg'}
+                src={
+                  educator?.profilePicture ||
+                  educator?.image?.url ||
+                  "/images/placeholders/1.svg"
+                }
                 alt={educator?.fullName || "Educator"}
                 fill
                 className="object-cover"
@@ -184,14 +196,21 @@ const PostCard = ({ post, activeSpecialization }) => {
               >
                 <div className="flex flex-col max-h-[85vh]">
                   <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-                    <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      {title}
+                    </h2>
                     <button
                       type="button"
                       onClick={handleCloseModal}
                       className="rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
                       aria-label="Close"
                     >
-                      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <svg
+                        className="h-5 w-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"

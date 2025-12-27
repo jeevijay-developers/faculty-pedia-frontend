@@ -30,9 +30,9 @@ const OneToOneLiveClassesCard = ({ classData }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Class Image */}
-      <div className="relative h-40 bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden flex-shrink-0">
+      <div className="relative h-40 bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden flex-shrink-0 rounded-xl mb-4">
         {classData.introVideo ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-white text-center">
@@ -62,7 +62,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
         </div>
       </div>
 
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="flex flex-col flex-grow">
         {/* Class Title */}
         <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight line-clamp-2">
           {classData.liveClassTitle}
@@ -163,7 +163,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
         <div className="mt-auto">
           <Link
             href={`/1-1-live-class/${classData._id || classData.id}`}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+            className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center block"
           >
             View Details
           </Link>
