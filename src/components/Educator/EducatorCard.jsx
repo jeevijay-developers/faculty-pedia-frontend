@@ -3,8 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { IoStarSharp } from "react-icons/io5";
-import { FaBook, FaUser } from "react-icons/fa";
 
 const EducatorCard = ({ educator }) => {
   const {
@@ -44,13 +42,17 @@ const EducatorCard = ({ educator }) => {
     return value
       .split(" ")
       .map((word) =>
-        word.length > 0 ? word[0].toUpperCase() + word.slice(1).toLowerCase() : word
+        word.length > 0
+          ? word[0].toUpperCase() + word.slice(1).toLowerCase()
+          : word
       )
       .join(" ");
   };
 
   const displaySubjects = Array.isArray(subject)
-    ? subject.map((sub) => formatSubject(sub?.replace(/-/g, " ") || ""))?.join(", ")
+    ? subject
+        .map((sub) => formatSubject(sub?.replace(/-/g, " ") || ""))
+        ?.join(", ")
     : subject
     ? formatSubject(subject?.replace(/-/g, " ") || "")
     : "Not specified";
@@ -62,6 +64,13 @@ const EducatorCard = ({ educator }) => {
       ? followers.length
       : 0;
 
+  const formatFollowers = (count) => {
+    if (count >= 1000) {
+      return `${(count / 1000).toFixed(1)}k`;
+    }
+    return count.toString();
+  };
+
   const displayQualification = (() => {
     if (Array.isArray(qualification) && qualification.length > 0) {
       return qualification[0]?.title || qualification[0];
@@ -72,13 +81,14 @@ const EducatorCard = ({ educator }) => {
     if (typeof qualification === "string" && qualification.trim()) {
       return qualification;
     }
-    return "Not specified";
+    return "Graduate";
   })();
 
   const displayExperience =
-    experience || `${yoe ?? yearsExperience ?? 0}+ years`;
+    yoe ?? yearsExperience ?? (experience ? parseInt(experience) : 0);
 
-  const displayBio = bio || description || "";
+  const displayBio =
+    bio || description || "Passionate educator dedicated to student success.";
 
   const profileImageUrl =
     profileImage?.url ||
@@ -87,119 +97,97 @@ const EducatorCard = ({ educator }) => {
     "/images/placeholders/1.svg";
 
   const ratingAverage =
-    typeof rating?.average === "number" ? rating.average : null;
+    typeof rating?.average === "number" ? rating.average : 4.5;
 
-  const ratingCount =
-    rating?.count ?? reviewCount ?? followers?.length ?? 0;
-  
+  const ratingCount = rating?.count ?? reviewCount ?? 0;
+
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100 h-full flex flex-col">
-      {/* Header Section */}
-      <div className="p-2 border-b border-gray-100">
-        <div className="flex items-start space-x-4">
-          <div className="relative flex-shrink-0">
+    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full">
+      {/* Profile Section */}
+      <div className="mb-4 flex flex-col items-center gap-3">
+        <div className="relative">
+          <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-white shadow-md group-hover:border-blue-50 transition-colors">
             <Image
               src={profileImageUrl}
               alt={displayName}
-              width={80}
-              height={80}
-              className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
+              width={96}
+              height={96}
+              className="h-full w-full object-cover"
             />
-            {status === "active" && (
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
-              </div>
-            )}
           </div>
-
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">
-              {displayName}
-            </h3>
-
-            <p className="text-blue-600 font-medium text-sm mb-2 flex items-center">
-              <FaBook className="mr-1" />
-              {displaySubjects}
-            </p>
-            <p className="text-black/70 font-medium text-sm mb-2 flex items-center">
-              <FaUser className="mr-2 w-3 h-3" />
-              Followers: {displayFollowers}
-            </p>
-          </div>
+          <span
+            className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-white shadow-sm ${
+              status === "active" ? "bg-green-500" : "bg-gray-400"
+            }`}
+            title={status === "active" ? "Online" : "Offline"}
+          />
+        </div>
+        <div className="text-center">
+          <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+            {displayName}
+          </h3>
+          <p className="text-sm font-medium text-gray-600 mt-1">
+            {displaySubjects}
+          </p>
         </div>
       </div>
 
-      {/* Details Section */}
-      <div className="px-6 py-2 flex-1">
-        {/* Bio Section */}
-        <div className="mb-4">
-          <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
-            {displayBio}
+      {/* Stats Section */}
+      <div className="mb-5 flex justify-center gap-6 border-y border-gray-100 py-3">
+        <div className="text-center">
+          <p className="text-base font-bold text-gray-900">
+            {ratingAverage.toFixed(1)}
           </p>
+          <p className="text-xs text-gray-500">Rating</p>
         </div>
-        {/* Qualification & Experience */}
-        <div className="space-y-3 mb-4">
-          <div className="flex justify-between items-start">
-            <span className="text-sm font-medium text-gray-700 w-24 flex-shrink-0">
-              Education:
-            </span>
-            <span className="text-sm text-gray-600 text-right flex-1 pl-2 line-clamp-1">
-              {displayQualification}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700 w-24 flex-shrink-0">
-              Experience:
-            </span>
-            <span className="text-sm text-gray-600 text-right flex-1 pl-2">
-              {displayExperience}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700 w-24 flex-shrink-0">
-              Rating:
-            </span>
-            <div className="flex items-center space-x-1  pl-2">
-              <IoStarSharp className="text-yellow-500 w-4 h-4" />
-              <span className="text-sm font-medium text-gray-900">
-                {ratingAverage !== null ? ratingAverage.toFixed(1) : "N/A"}
-              </span>
-              <span className="text-xs text-gray-500">
-                ({ratingCount} reviews)
-              </span>
-            </div>
-          </div>
+        <div className="h-full w-px bg-gray-200"></div>
+        <div className="text-center">
+          <p className="text-base font-bold text-gray-900">
+            {formatFollowers(displayFollowers)}
+          </p>
+          <p className="text-xs text-gray-500">Followers</p>
         </div>
+        <div className="h-full w-px bg-gray-200"></div>
+        <div className="text-center">
+          <p className="text-base font-bold text-gray-900">
+            {displayExperience} Yrs
+          </p>
+          <p className="text-xs text-gray-500">Exp.</p>
+        </div>
+      </div>
 
-        {/* Specialization Badge */}
-        <div className="mb-3 flex flex-wrap gap-2">
-          {Array.isArray(specialization) ? (
-            specialization.map((spec, index) => (
+      {/* Bio & Badges */}
+      <div className="mb-5 flex-1">
+        <p className="text-sm text-gray-600 line-clamp-2 text-center mb-3">
+          {displayBio}
+        </p>
+        <div className="flex flex-wrap justify-center gap-2">
+          <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+            {displayQualification}
+          </span>
+          {Array.isArray(specialization) && specialization.length > 0 ? (
+            specialization.slice(0, 2).map((spec, index) => (
               <span
                 key={index}
-                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200"
+                className="inline-flex items-center rounded-full bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
               >
                 {spec}
               </span>
             ))
-          ) : (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
-              {specialization || 'Not specified'}
+          ) : specialization ? (
+            <span className="inline-flex items-center rounded-full bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+              {specialization}
             </span>
-          )}
+          ) : null}
         </div>
       </div>
 
-      {/* Footer Section */}
-      <div className="p-3 pt-0 mt-auto">
-        <Link href={`/profile/educator/${_id}`}>
-          <button className="w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            View Full Profile
-          </button>
-        </Link>
-      </div>
+      {/* Action Button */}
+      <Link href={`/profile/educator/${_id}`}>
+        <button className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          View Full Profile
+        </button>
+      </Link>
     </div>
   );
 };

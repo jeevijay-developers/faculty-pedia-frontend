@@ -12,7 +12,16 @@ import {
   FaUserCheck,
   FaMoneyBillWave,
   FaClock,
+  FaGraduationCap,
 } from "react-icons/fa";
+import {
+  BookOpen,
+  Video,
+  TestTube,
+  Calendar,
+  FileQuestion,
+  Briefcase,
+} from "lucide-react";
 import CourseCard from "@/components/Courses/CourseCard";
 import UpcomingWebinarCard from "@/components/Webinars/UpcomingWebinarCard";
 import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
@@ -58,7 +67,8 @@ const safeNumber = (value, fallback = 0) => {
 
 const safeYear = (value, fallback = new Date().getFullYear()) => {
   const date = value ? new Date(value) : null;
-  const year = date && Number.isFinite(date.getTime()) ? date.getFullYear() : NaN;
+  const year =
+    date && Number.isFinite(date.getTime()) ? date.getFullYear() : NaN;
   return Number.isFinite(year) ? year : fallback;
 };
 
@@ -89,7 +99,8 @@ const ViewProfile = ({ educatorData }) => {
   const vimeoPlayerRef = useRef(null);
 
   const payPerHourFeeValue = safeNumber(educatorData?.payPerHourFee, 0);
-  const hasPayPerHour = Number.isFinite(payPerHourFeeValue) && payPerHourFeeValue > 0;
+  const hasPayPerHour =
+    Number.isFinite(payPerHourFeeValue) && payPerHourFeeValue > 0;
   const [isPayPerHourModalOpen, setIsPayPerHourModalOpen] = useState(false);
   const [isPayPerHourPortalReady, setIsPayPerHourPortalReady] = useState(false);
 
@@ -131,9 +142,7 @@ const ViewProfile = ({ educatorData }) => {
   }, [hasPayPerHour, isPayPerHourModalOpen]);
 
   const [ratingState, setRatingState] = useState(() => ({
-    average: Number(
-      educatorData?.rating?.average ?? educatorData?.rating ?? 0
-    ),
+    average: Number(educatorData?.rating?.average ?? educatorData?.rating ?? 0),
     count: Number(
       educatorData?.rating?.count ??
         educatorData?.reviewCount ??
@@ -237,8 +246,18 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.webinars && educatorData.webinars.length > 0) {
         setLoadingWebinars(true);
         try {
-          const webinarPromises = educatorData.webinars.map((webinarId) =>
-            getWebinarById(webinarId)
+          const validIds = educatorData.webinars.filter(
+            (id) => id && typeof id === "string" && id.trim().length > 0
+          );
+
+          const webinarPromises = validIds.map((webinarId) =>
+            getWebinarById(webinarId).catch((err) => {
+              console.warn(
+                `Failed to fetch webinar ${webinarId}:`,
+                err.message
+              );
+              return null;
+            })
           );
           const webinars = await Promise.all(webinarPromises);
           setWebinarDetails(webinars.filter((webinar) => webinar)); // Filter out any null/undefined results
@@ -260,8 +279,15 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.courses && educatorData.courses.length > 0) {
         setLoadingCourses(true);
         try {
-          const coursePromises = educatorData.courses.map((courseId) =>
-            getCourseById(courseId)
+          const validIds = educatorData.courses.filter(
+            (id) => id && typeof id === "string" && id.trim().length > 0
+          );
+
+          const coursePromises = validIds.map((courseId) =>
+            getCourseById(courseId).catch((err) => {
+              console.warn(`Failed to fetch course ${courseId}:`, err.message);
+              return null;
+            })
           );
           const courses = await Promise.all(coursePromises);
           setCourseDetails(courses.filter((course) => course)); // Filter out any null/undefined results
@@ -283,8 +309,18 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.testSeries && educatorData.testSeries.length > 0) {
         setLoadingTestSeries(true);
         try {
-          const testSeriesPromises = educatorData.testSeries.map(
-            (testSeriesId) => getTestSeriesById(testSeriesId)
+          const validIds = educatorData.testSeries.filter(
+            (id) => id && typeof id === "string" && id.trim().length > 0
+          );
+
+          const testSeriesPromises = validIds.map((testSeriesId) =>
+            getTestSeriesById(testSeriesId).catch((err) => {
+              console.warn(
+                `Failed to fetch test series ${testSeriesId}:`,
+                err.message
+              );
+              return null;
+            })
           );
           const testSeriesList = await Promise.all(testSeriesPromises);
           setTestSeriesDetails(
@@ -500,7 +536,9 @@ const ViewProfile = ({ educatorData }) => {
       toast.success("Thanks for rating this educator!");
     } catch (error) {
       console.error("Error submitting rating:", error);
-      const errorMessage = error?.response?.data?.message || "Unable to submit your rating. Please try again.";
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Unable to submit your rating. Please try again.";
       toast.error(errorMessage);
     } finally {
       setIsSubmittingRating(false);
@@ -564,416 +602,524 @@ const ViewProfile = ({ educatorData }) => {
   );
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Educator Info Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Left Side - Educator Photo & Basic Info */}
-            <div className="lg:w-1/3">
-              {/* Educator Photo */}
-              <div className="flex justify-center lg:justify-start mb-6">
-                <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-blue-600">
+    <div className="w-full min-h-screen bg-[#f6f6f8]">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
+        {/* Breadcrumbs */}
+        <div className="flex flex-wrap items-center gap-2 text-sm text-[#636388] mb-6 font-medium">
+          <a className="hover:text-[#231fe5] transition-colors" href="/">
+            Home
+          </a>
+          <span className="text-gray-400">›</span>
+          <a
+            className="hover:text-[#231fe5] transition-colors"
+            href="/educators"
+          >
+            Educators
+          </a>
+          <span className="text-gray-400">›</span>
+          <span className="text-[#111118]">{`${educatorData.firstName} ${educatorData.lastName}`}</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* LEFT COLUMN (Profile & About) */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            {/* Profile Header Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-50 to-indigo-50 opacity-50 z-0"></div>
+
+              <div className="relative z-10 mt-4 mb-4">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-md ring-4 ring-white">
                   <Image
                     src={
                       educatorData.image?.url || "/images/placeholders/1.svg"
                     }
                     alt={`${educatorData.firstName} ${educatorData.lastName}`}
                     fill
-                    sizes="(100vw)"
+                    sizes="128px"
                     className="object-cover"
                     priority
                   />
+                  <div
+                    className="absolute bottom-1 right-1 bg-green-500 border-2 border-white rounded-full w-4 h-4 shadow-sm"
+                    title="Online"
+                  ></div>
                 </div>
               </div>
 
-              {/* Basic Info */}
-              <div className="text-center lg:text-left">
-                <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+              <div className="relative z-10 flex flex-col items-center w-full">
+                <h1 className="text-[#111118] text-2xl font-bold tracking-tight">
                   {`${educatorData.firstName} ${educatorData.lastName}`}
                 </h1>
+                <p className="text-[#636388] text-sm font-medium mt-1">
+                  @{educatorData.username || "educator"}
+                </p>
 
-                <div className="mb-3">
-                  {educatorData.qualification &&
-                    educatorData.qualification.map((q, i) => {
-                      return (
-                        <section key={i}>
-                          <p className="text-lg text-blue-600 font-medium">
-                            {q?.title}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {q?.institute}
-                          </p>
-                        </section>
-                      );
-                    })}
-                </div>
-
-                <div className="mb-3">
-                  <p className="text-gray-600">
-                    {safeNumber(educatorData.yearsExperience, 0)}+ years experience
-                  </p>
-                </div>
-
-                {/* Specialization Badge */}
-                <div className="flex flex-wrap gap-2 justify-center lg:justify-start mb-4">
-                  <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    {educatorData.specialization}
+                <div className="flex items-center gap-1 mt-3 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-100">
+                  <IoStarSharp className="text-yellow-500 text-[18px]" />
+                  <span className="text-[#111118] text-sm font-bold">
+                    {ratingAverageSafe.toFixed(1)}
+                  </span>
+                  <span className="text-[#636388] text-xs font-normal">
+                    ({ratingCountSafe} reviews)
                   </span>
                 </div>
 
-                {/* Contact Info */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center justify-center lg:justify-start gap-2 text-gray-600">
-                    <IoMailSharp className="w-4 h-4" />
-                    <span className="text-sm">{educatorData.email}</span>
+                <div className="mt-6 w-full flex flex-col gap-3">
+                  <button
+                    onClick={handleFollowToggle}
+                    disabled={isLoadingFollow || !currentUser}
+                    className={`w-full text-white text-sm font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
+                      isFollowing
+                        ? "bg-green-600 hover:bg-green-700 shadow-green-200"
+                        : "bg-[#231fe5] hover:bg-[#1a16b5] shadow-blue-200"
+                    }`}
+                  >
+                    {isLoadingFollow ? (
+                      <>
+                        <svg
+                          className="animate-spin h-4 w-4"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        <span>Following...</span>
+                      </>
+                    ) : isFollowing ? (
+                      <>
+                        <FaUserCheck className="w-4 h-4" />
+                        Following
+                      </>
+                    ) : (
+                      <>
+                        <FaUserPlus className="w-4 h-4" />
+                        {currentUser ? "Follow" : "Login to Follow"}
+                      </>
+                    )}
+                  </button>
+
+                  <div className="text-[#636388] text-xs font-medium">
+                    {safeNumber(followerCount, 0).toLocaleString()} Followers
                   </div>
-                  <div className="flex items-center justify-center lg:justify-start gap-2 text-gray-600">
-                    <IoCallSharp className="w-4 h-4" />
-                    <span className="text-sm">{educatorData.mobileNumber}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* About Section Card */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h2 className="text-[#111118] text-lg font-bold mb-4 flex items-center gap-2">
+                <span className="text-[#231fe5] text-[22px]">ℹ️</span>
+                About Me
+              </h2>
+              <div className="prose prose-sm text-[#636388] font-normal leading-relaxed mb-6">
+                <p>{educatorData.bio || educatorData.description}</p>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <div>
+                  <p className="text-xs font-semibold text-[#111118] uppercase tracking-wider mb-2">
+                    Specialization
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {Array.isArray(educatorData.specialization) ? (
+                      educatorData.specialization.map((spec, idx) => (
+                        <span
+                          key={idx}
+                          className="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium"
+                        >
+                          {spec}
+                        </span>
+                      ))
+                    ) : educatorData.specialization ? (
+                      <span className="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium">
+                        {educatorData.specialization}
+                      </span>
+                    ) : null}
+                    {Array.isArray(educatorData.subject) &&
+                      educatorData.subject.map((subj, idx) => (
+                        <span
+                          key={`subj-${idx}`}
+                          className="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium"
+                        >
+                          {subj}
+                        </span>
+                      ))}
                   </div>
                 </div>
 
-                {/* Rating */}
-                <div className="flex flex-col items-center lg:items-start gap-2 mb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
+                <div>
+                  <p className="text-xs font-semibold text-[#111118] uppercase tracking-wider mb-2">
+                    Experience
+                  </p>
+                  <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
+                    <FaGraduationCap className="text-gray-500 w-[18px] h-[18px]" />
+                    <span className="text-sm text-[#111118] font-medium">
+                      {safeNumber(educatorData.yearsExperience, 0)}+ Years
+                      Experience
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Rating Section for Students */}
+            {canRate && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 className="text-[#111118] text-lg font-bold mb-4">
+                  Rate This Educator
+                </h3>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        className="p-1"
+                        onMouseEnter={() => setHoverRating(value)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        onFocus={() => setHoverRating(value)}
+                        onBlur={() => setHoverRating(0)}
+                        onClick={() => handleRatingSubmit(value)}
+                        disabled={isSubmittingRating}
+                        aria-label={`Rate ${value} ${
+                          value === 1 ? "star" : "stars"
+                        }`}
+                      >
                         <IoStarSharp
-                          key={i}
-                          className={`w-5 h-5 ${
-                            i < Math.floor(ratingAverageSafe)
+                          className={`w-8 h-8 ${
+                            value <= (hoverRating || userRating)
                               ? "text-yellow-400"
                               : "text-gray-300"
                           }`}
-                          aria-hidden="true"
                         />
-                      ))}
-                    </div>
-                    <span className="text-lg font-semibold text-gray-900">
-                      {ratingAverageSafe.toFixed(1)}
-                    </span>
-                    <span className="text-gray-600">
-                      ({ratingCountSafe} reviews)
-                    </span>
+                      </button>
+                    ))}
                   </div>
-                  {canRate ? (
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <span>Rate this educator:</span>
-                      <div className="flex items-center">
-                        {[1, 2, 3, 4, 5].map((value) => (
-                          <button
-                            key={value}
-                            type="button"
-                            className="p-0.5"
-                            onMouseEnter={() => setHoverRating(value)}
-                            onMouseLeave={() => setHoverRating(0)}
-                            onFocus={() => setHoverRating(value)}
-                            onBlur={() => setHoverRating(0)}
-                            onClick={() => handleRatingSubmit(value)}
-                            disabled={isSubmittingRating}
-                            aria-label={`Rate ${value} ${value === 1 ? "star" : "stars"}`}
-                          >
-                            <IoStarSharp
-                              className={`w-5 h-5 ${
-                                value <= (hoverRating || userRating)
-                                  ? "text-yellow-400"
-                                  : "text-gray-300"
-                              }`}
-                            />
-                          </button>
-                        ))}
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {isSubmittingRating
-                          ? "Submitting..."
-                          : userRating
-                          ? `You rated ${userRating}/5`
-                          : "Tap a star"}
-                      </span>
+                  <span className="text-sm text-[#636388]">
+                    {isSubmittingRating
+                      ? "Submitting..."
+                      : userRating
+                      ? `You rated ${userRating}/5`
+                      : "Click to rate"}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT COLUMN (Media, Stats, Experience, Actions) */}
+          <div className="lg:col-span-8 flex flex-col gap-6">
+            {/* Intro Media Section */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="relative w-full aspect-video bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
+                {educatorData.introVideoLink &&
+                extractVimeoId(educatorData.introVideoLink) ? (
+                  <iframe
+                    src={`${educatorData.introVideoLink}?title=0&byline=0&portrait=0`}
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
+                    <div className="w-20 h-20 bg-[#231fe5]/10 rounded-full flex items-center justify-center shadow-sm mb-6 border border-[#231fe5]/20">
+                      <Video className="w-10 h-10 text-[#231fe5]" />
                     </div>
+                    <h3 className="text-xl font-semibold mb-2 text-center text-[#111118]">
+                      Intro Video of {educatorData.firstName}{" "}
+                      {educatorData.lastName}
+                    </h3>
+                    <p className="text-sm text-[#636388] text-center max-w-md">
+                      is not currently available. Check out soon!
+                    </p>
+                    <div className="mt-6 flex items-center gap-2 text-xs text-[#636388]">
+                      <div className="w-2 h-2 bg-[#231fe5] rounded-full animate-pulse"></div>
+                      <span>Coming Soon</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Teaching Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-1">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <p className="text-2xl font-bold text-[#111118]">
+                  {isLoadingSummary
+                    ? "..."
+                    : safeNumber(
+                        summaryCounts.courses ?? courseDetails?.length,
+                        0
+                      )}
+                </p>
+                <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
+                  Courses
+                </p>
+              </div>
+
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-1">
+                  <TestTube className="w-5 h-5" />
+                </div>
+                <p className="text-2xl font-bold text-[#111118]">
+                  {isLoadingSummary
+                    ? "..."
+                    : safeNumber(
+                        summaryCounts.testSeries ?? testSeriesDetails?.length,
+                        0
+                      )}
+                </p>
+                <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
+                  Test Series
+                </p>
+              </div>
+
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center mb-1">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <p className="text-2xl font-bold text-[#111118]">
+                  {isLoadingSummary
+                    ? "..."
+                    : safeNumber(
+                        summaryCounts.webinars ?? webinarDetails?.length,
+                        0
+                      )}
+                </p>
+                <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
+                  Webinars
+                </p>
+              </div>
+
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1">
+                  <FileQuestion className="w-5 h-5" />
+                </div>
+                <p className="text-2xl font-bold text-[#111118]">
+                  {safeNumber(followerCount, 0).toLocaleString()}
+                </p>
+                <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
+                  Followers
+                </p>
+              </div>
+            </div>
+
+            {/* Experience & Qualifications Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Work Experience */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 className="text-[#111118] text-lg font-bold mb-6 flex items-center gap-2">
+                  <Briefcase className="text-[#231fe5] w-5 h-5" />
+                  Work Experience
+                </h3>
+                <div className="relative border-l-2 border-gray-100 ml-3 space-y-8">
+                  {educatorData.workExperience &&
+                  educatorData.workExperience.length > 0 ? (
+                    educatorData.workExperience.map((exp, index) => (
+                      <div key={index} className="relative pl-6">
+                        <div
+                          className={`absolute -left-[9px] top-1.5 w-4 h-4 rounded-full ${
+                            index === 0 ? "bg-[#231fe5]" : "bg-gray-300"
+                          } border-4 border-white shadow-sm`}
+                        ></div>
+                        <h4 className="text-[#111118] text-sm font-bold">
+                          {exp.title}
+                        </h4>
+                        <p
+                          className={`${
+                            index === 0 ? "text-[#231fe5]" : "text-[#636388]"
+                          } text-xs font-medium mb-1`}
+                        >
+                          {exp.company} • {safeYear(exp.startDate)} -{" "}
+                          {safeYear(exp.endDate)}
+                        </p>
+                        {exp.description && (
+                          <p className="text-[#636388] text-xs">
+                            {exp.description}
+                          </p>
+                        )}
+                      </div>
+                    ))
                   ) : (
-                    <p className="text-xs text-gray-500">
-                      Login as a student to share your rating.
+                    <p className="text-[#636388] text-sm">
+                      No work experience listed
                     </p>
                   )}
                 </div>
-
-                {/* Follow Button and Follower Count */}
-                <div className="flex flex-col items-center lg:items-start gap-3 mb-6">
-                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
-                    <button
-                      onClick={handleFollowToggle}
-                      disabled={isLoadingFollow || !currentUser}
-                      className={`flex items-center gap-2 px-6 py-2 text-sm rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-                        isFollowing
-                          ? "bg-green-100 text-green-700 border border-green-300 hover:bg-green-200"
-                          : "bg-blue-600 text-white hover:bg-blue-700"
-                      }`}
-                    >
-                      {isLoadingFollow ? (
-                        <>
-                          <svg
-                            className="animate-spin h-4 w-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          <span>Following  ...</span>
-                        </>
-                      ) : isFollowing ? (
-                        <>
-                          <FaUserCheck className="w-4 h-4" />
-                          Following
-                        </>
-                      ) : (
-                        <>
-                          <FaUserPlus className="w-4 h-4" />
-                          {currentUser ? "Follow" : "Login to Follow"}
-                        </>
-                      )}
-                    </button>
-
-                    {hasPayPerHour && (
-                      <button
-                        type="button"
-                        onClick={() => setIsPayPerHourModalOpen(true)}
-                        className="flex items-center gap-2 px-6 py-2 text-sm rounded-lg font-medium border border-blue-600 text-blue-600 hover:bg-blue-50 transition-all duration-200"
-                      >
-                        <FaMoneyBillWave className="w-4 h-4" />
-                        Pay Per Hour
-                      </button>
-                    )}
-
-                    <Link
-                      href={`https://wa.me/${educatorData.mobileNumber}`}
-                      target="_blank"
-                    >
-                      <span className="cursor-pointer">
-                        {" "}
-                        <IoLogoWhatsapp className="text-green-500 w-8 h-8" />{" "}
-                      </span>
-                    </Link>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <span className="text-lg font-semibold text-gray-900">
-                      {safeNumber(followerCount, 0).toLocaleString()}
-                    </span>
-                    <span className="text-gray-600 ml-1">
-                      {followerCount === 1 ? "Follower" : "Followers"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Social Links */}
-                <div className="flex justify-center lg:justify-start gap-3">
-                  {educatorData.socials?.instagram && (
-                    <a
-                      href={educatorData.socials.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FaInstagram className="w-5 h-5 text-pink-600 hover:text-pink-700" />
-                    </a>
-                  )}
-                  {educatorData.socials?.facebook && (
-                    <a
-                      href={educatorData.socials.facebook}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FaFacebook className="w-5 h-5 text-blue-600 hover:text-blue-700" />
-                    </a>
-                  )}
-                  {educatorData.socials?.twitter && (
-                    <a
-                      href={educatorData.socials.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FaTwitter className="w-5 h-5 text-blue-400 hover:text-blue-500" />
-                    </a>
-                  )}
-                  {educatorData.socials?.linkedin && (
-                    <a
-                      href={educatorData.socials.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FaLinkedin className="w-5 h-5 text-blue-700 hover:text-blue-800" />
-                    </a>
-                  )}
-                  {educatorData.socials?.youtube && (
-                    <a
-                      href={educatorData.socials.youtube}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FaYoutube className="w-5 h-5 text-red-600 hover:text-red-700" />
-                    </a>
-                  )}
-                </div>
               </div>
-            </div>
 
-            {/* Right Side - Video */}
-            <div className="lg:w-2/3">
-              <div className="grid grid-cols-1 gap-6">
-                {/* Intro Video */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                    Introduction Video
+              {/* Qualifications & Socials Wrapper */}
+              <div className="flex flex-col gap-6">
+                {/* Qualifications */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                  <h3 className="text-[#111118] text-lg font-bold mb-4 flex items-center gap-2">
+                    <FaGraduationCap className="text-[#231fe5] w-5 h-5" />
+                    Qualifications
                   </h3>
-                  <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
-                    {educatorData.introVideoLink ? (
-                      <iframe src="https://player.vimeo.com/video/VIDEO_ID" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                  <ul className="space-y-4">
+                    {educatorData.qualification &&
+                    educatorData.qualification.length > 0 ? (
+                      educatorData.qualification.map((qual, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <div className="mt-1 w-2 h-2 rounded-full bg-blue-200"></div>
+                          <div>
+                            <p className="text-[#111118] text-sm font-semibold">
+                              {qual.title}
+                            </p>
+                            <p className="text-[#636388] text-xs">
+                              {qual.institute},{" "}
+                              {safeYear(qual.endDate || qual.startDate)}
+                            </p>
+                          </div>
+                        </li>
+                      ))
                     ) : (
-                      <div className="flex h-full items-center justify-center text-gray-500 text-sm">
-                        No intro video available
+                      <p className="text-[#636388] text-sm">
+                        No qualifications listed
+                      </p>
+                    )}
+                  </ul>
+                </div>
+
+                {/* Contact & Social */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                  <h3 className="text-[#111118] text-lg font-bold mb-4">
+                    Connect
+                  </h3>
+                  <div className="space-y-3 mb-6">
+                    {educatorData.email && (
+                      <div className="flex items-center gap-3 text-sm text-[#636388]">
+                        <IoMailSharp className="w-5 h-5" />
+                        <span className="truncate">{educatorData.email}</span>
+                      </div>
+                    )}
+                    {educatorData.mobileNumber && (
+                      <div className="flex items-center gap-3 text-sm text-[#636388]">
+                        <IoCallSharp className="w-5 h-5" />
+                        <span>{educatorData.mobileNumber}</span>
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bio Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">About</h2>
-          <p className="text-gray-700 leading-relaxed">{educatorData.bio}</p>
-        </div>
-
-        {/* Work Experience & Qualifications Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Work Experience */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              Work Experience
-            </h2>
-            <div className="space-y-6">
-              {educatorData.workExperience?.map((exp, index) => (
-                <div key={index} className="border-l-4 border-blue-600 pl-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {exp.title}
-                  </h3>
-                  <p className="text-blue-600 font-medium">{exp.company}</p>
-                  <p className="text-sm text-gray-600">
-                    {safeYear(exp.startDate)} - {safeYear(exp.endDate)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Qualifications */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
-              Education & Qualifications
-            </h2>
-            <div className="space-y-6">
-              {educatorData.qualification?.map((qual, index) => (
-                <div key={index} className="border-l-4 border-green-600 pl-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {qual.title}
-                  </h3>
-                  <p className="text-green-600 font-medium">{qual.institute}</p>
-                  <p className="text-sm text-gray-600">
-                    {safeYear(qual.startDate)} - {safeYear(qual.endDate)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Course Details & Payment Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Course Details Section */}
-          {/* <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Course Details
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="">
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">
-                      Specialization:
-                    </span>
-                    <span className="text-lg font-semibold text-blue-600">
-                      {educatorData.specialization}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">Classes:</span>
-                    <span className="text-lg font-semibold text-gray-900">
-                      {educatorData.class}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">Courses:</span>
-                    <span className="text-lg font-semibold text-gray-900">
-                      {courseDetails?.length || 0}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="">
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">
-                      Experience:
-                    </span>
-                    <span className="text-lg font-semibold text-gray-900">
-                      {safeNumber(educatorData.yearsExperience, 0)}+ years
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">Status:</span>
-                    <span
-                      className={`text-lg font-semibold ${
-                        educatorData.status === "active"
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {educatorData.status === "active" ? "Active" : "Inactive"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <span className="text-gray-600 font-medium">
-                      Followers:
-                    </span>
-                    <span className="text-lg font-semibold text-gray-900">
-                      {educatorData.followers?.length || 0}
-                    </span>
+                  <div className="flex gap-2">
+                    {educatorData.socials?.linkedin && (
+                      <a
+                        href={educatorData.socials.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      >
+                        <FaLinkedin className="w-4 h-4" />
+                      </a>
+                    )}
+                    {educatorData.socials?.twitter && (
+                      <a
+                        href={educatorData.socials.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-400 transition-colors"
+                      >
+                        <FaTwitter className="w-4 h-4" />
+                      </a>
+                    )}
+                    {educatorData.socials?.instagram && (
+                      <a
+                        href={educatorData.socials.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors"
+                      >
+                        <FaInstagram className="w-4 h-4" />
+                      </a>
+                    )}
+                    {educatorData.socials?.youtube && (
+                      <a
+                        href={educatorData.socials.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+                      >
+                        <FaYoutube className="w-4 h-4" />
+                      </a>
+                    )}
+                    {educatorData.socials?.facebook && (
+                      <a
+                        href={educatorData.socials.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      >
+                        <FaFacebook className="w-4 h-4" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
-          </div> */}
+
+            {/* Pay Per Hour Action Card - Book 1:1 Session */}
+            {hasPayPerHour && (
+              <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-xl shadow-lg shadow-blue-900/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-white relative overflow-hidden">
+                <div
+                  className="absolute inset-0 opacity-10"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(#ffffff 1px, transparent 1px)",
+                    backgroundSize: "20px 20px",
+                  }}
+                ></div>
+                <div className="relative z-10 text-center sm:text-left">
+                  <p className="text-blue-200 text-sm font-medium uppercase tracking-wider mb-1">
+                    Book a Session
+                  </p>
+                  <div className="flex items-baseline gap-2 justify-center sm:justify-start">
+                    <h2 className="text-3xl font-bold">
+                      ₹{payPerHourFeeValue.toLocaleString("en-IN")}
+                    </h2>
+                    <span className="text-blue-200">/ hour</span>
+                  </div>
+                  <p className="text-blue-100/80 text-sm mt-2 max-w-xs">
+                    One-on-one mentorship and personalized doubt clearing
+                    sessions.
+                  </p>
+                </div>
+                <div className="relative z-10 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={() => setIsPayPerHourModalOpen(true)}
+                    className="w-full sm:w-auto bg-white text-[#231fe5] hover:bg-blue-50 font-bold py-3 px-8 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  >
+                    <span>Book 1:1 Session</span>
+                    <Calendar className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Courses Section */}
         {courseDetails && courseDetails.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
+            <h2 className="text-2xl font-bold text-[#111118] mb-6">
               Available Courses
             </h2>
             {loadingCourses ? (
@@ -995,7 +1141,10 @@ const ViewProfile = ({ educatorData }) => {
                         specialization: educatorData.specialization,
                         qualification: educatorData.qualification,
                         rating: ratingAverage,
-                        yearsExperience: safeNumber(educatorData.yearsExperience, 0),
+                        yearsExperience: safeNumber(
+                          educatorData.yearsExperience,
+                          0
+                        ),
                       },
                     }}
                   />
@@ -1006,10 +1155,10 @@ const ViewProfile = ({ educatorData }) => {
               <div className="flex justify-center mt-6">
                 <button
                   onClick={loadMoreCourses}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+                  className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
                 >
                   View More Courses
-                  <span className="text-sm">
+                  <span className="text-sm opacity-90">
                     ({Math.min(3, courseDetails.length - visibleCourses)} more)
                   </span>
                 </button>
@@ -1020,8 +1169,8 @@ const ViewProfile = ({ educatorData }) => {
 
         {/* Webinars Section */}
         {webinarDetails && webinarDetails.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
+            <h2 className="text-2xl font-bold text-[#111118] mb-6">
               Available Webinars
             </h2>
             {loadingWebinars ? (
@@ -1049,7 +1198,10 @@ const ViewProfile = ({ educatorData }) => {
                           webinar.specialization || educatorData.specialization,
                         subject: webinar.subject,
                         totalHours: (() => {
-                          const durationMinutes = safeNumber(webinar.duration, 0);
+                          const durationMinutes = safeNumber(
+                            webinar.duration,
+                            0
+                          );
                           const hours = Math.floor(durationMinutes / 60);
                           const minutes = durationMinutes % 60;
                           return `${hours}h ${minutes}m`;
@@ -1081,10 +1233,10 @@ const ViewProfile = ({ educatorData }) => {
               <div className="flex justify-center mt-6">
                 <button
                   onClick={loadMoreWebinars}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+                  className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
                 >
                   View More Webinars
-                  <span className="text-sm">
+                  <span className="text-sm opacity-90">
                     ({Math.min(3, webinarDetails.length - visibleWebinars)}{" "}
                     more)
                   </span>
@@ -1096,8 +1248,8 @@ const ViewProfile = ({ educatorData }) => {
 
         {/* Test Series Section */}
         {testSeriesDetails && testSeriesDetails.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
+            <h2 className="text-2xl font-bold text-[#111118] mb-6">
               Available Test Series
             </h2>
             {loadingTestSeries ? (
@@ -1138,10 +1290,10 @@ const ViewProfile = ({ educatorData }) => {
               <div className="flex justify-center mt-6">
                 <button
                   onClick={loadMoreTestSeries}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+                  className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
                 >
                   View More Test Series
-                  <span className="text-sm">
+                  <span className="text-sm opacity-90">
                     ({Math.min(3, testSeriesDetails.length - visibleTestSeries)}{" "}
                     more)
                   </span>
@@ -1151,43 +1303,12 @@ const ViewProfile = ({ educatorData }) => {
           </div>
         )}
 
-        {/* Statistics Summary */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Educator Summary
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="text-3xl font-bold text-blue-600 mb-2">
-                {isLoadingSummary
-                  ? "..."
-                  : safeNumber(summaryCounts.courses ?? courseDetails?.length, 0)}
-              </div>
-              <div className="text-sm text-gray-600">Total Courses</div>
-            </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="text-3xl font-bold text-green-600 mb-2">
-                {isLoadingSummary
-                  ? "..."
-                  : safeNumber(summaryCounts.webinars ?? webinarDetails?.length, 0)}
-              </div>
-              <div className="text-sm text-gray-600">Total Webinars</div>
-            </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="text-3xl font-bold text-purple-600 mb-2">
-                {isLoadingSummary
-                  ? "..."
-                  : safeNumber(summaryCounts.testSeries ?? testSeriesDetails?.length, 0)}
-              </div>
-              <div className="text-sm text-gray-600">Test Series</div>
-            </div>
-          </div>
-        </div>
+        {/* Pay Per Hour Modal */}
         {isPayPerHourPortalReady && isPayPerHourModalOpen
           ? createPortal(
-              <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
+              <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 bg-black/50">
                 <div
-                  className="absolute inset-0 bg-black/50"
+                  className="absolute inset-0"
                   onClick={() => setIsPayPerHourModalOpen(false)}
                   aria-hidden="true"
                 />
@@ -1199,60 +1320,96 @@ const ViewProfile = ({ educatorData }) => {
                   onClick={(event) => event.stopPropagation()}
                 >
                   <div className="flex flex-col max-h-[85vh]">
-                    <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+                    <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
                       <div>
-                        <h2 className="text-xl font-semibold text-gray-900">Pay Per Hour Session</h2>
-                        <p className="text-xs text-gray-500">Personalised 1 : 1 guidance with {payPerHourDisplayName}</p>
+                        <h2 className="text-xl font-semibold text-white">
+                          Pay Per Hour Session
+                        </h2>
+                        <p className="text-sm text-blue-100">
+                          Personalised 1:1 guidance with {payPerHourDisplayName}
+                        </p>
                       </div>
                       <button
                         type="button"
                         onClick={() => setIsPayPerHourModalOpen(false)}
-                        className="rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+                        className="rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white"
                         aria-label="Close pay per hour details"
                       >
-                        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <svg
+                          className="h-5 w-5"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
                         </svg>
                       </button>
                     </div>
 
                     <div className="overflow-y-auto px-6 pb-6 pt-4">
-                      <div className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 p-4">
-                        <FaMoneyBillWave className="mt-1 h-5 w-5 text-blue-600" />
+                      <div className="flex items-start gap-3 rounded-xl border border-[#231fe5]/20 bg-[#231fe5]/5 p-4">
+                        <FaMoneyBillWave className="mt-1 h-5 w-5 text-[#231fe5]" />
                         <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-blue-600">Hourly rate</p>
-                          <p className="text-3xl font-bold text-gray-900">
-                            ₹{payPerHourFeeValue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#231fe5]">
+                            Hourly rate
                           </p>
-                          <p className="text-sm text-gray-600">per hour session with {payPerHourDisplayName}</p>
+                          <p className="text-3xl font-bold text-[#111118]">
+                            ₹
+                            {payPerHourFeeValue.toLocaleString("en-IN", {
+                              maximumFractionDigits: 0,
+                            })}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            per hour session with {payPerHourDisplayName}
+                          </p>
                         </div>
                       </div>
 
                       <div className="mt-6 grid gap-3">
                         {payPerHourSpecializations && (
-                          <div className="rounded-lg border border-gray-200 bg-white p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Specialisations</p>
-                            <p className="mt-1 text-sm text-gray-700">{payPerHourSpecializations}</p>
+                          <div className="rounded-xl border border-gray-200 bg-white p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              Specialisations
+                            </p>
+                            <p className="mt-1 text-sm text-gray-700">
+                              {payPerHourSpecializations}
+                            </p>
                           </div>
                         )}
                         {payPerHourSubjects && (
-                          <div className="rounded-lg border border-gray-200 bg-white p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Subjects covered</p>
-                            <p className="mt-1 text-sm text-gray-700">{payPerHourSubjects}</p>
+                          <div className="rounded-xl border border-gray-200 bg-white p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              Subjects covered
+                            </p>
+                            <p className="mt-1 text-sm text-gray-700">
+                              {payPerHourSubjects}
+                            </p>
                           </div>
                         )}
                         {educatorData?.yearsExperience && (
-                          <div className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4">
-                            <FaClock className="mt-1 h-4 w-4 text-blue-600" />
+                          <div className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-4">
+                            <FaClock className="mt-1 h-4 w-4 text-[#231fe5]" />
                             <div>
-                              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Experience</p>
-                              <p className="text-sm text-gray-700">{educatorData.yearsExperience}+ years of mentoring students</p>
+                              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                Experience
+                              </p>
+                              <p className="text-sm text-gray-700">
+                                {educatorData.yearsExperience}+ years of
+                                mentoring students
+                              </p>
                             </div>
                           </div>
                         )}
                         {payPerHourDescription && (
                           <div className="rounded-lg border border-gray-200 bg-white p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Session overview</p>
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              Session overview
+                            </p>
                             <p className="mt-1 text-sm text-gray-700 whitespace-pre-line">
                               {payPerHourDescription}
                             </p>
@@ -1277,12 +1434,14 @@ const ViewProfile = ({ educatorData }) => {
                             className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
                           >
                             <IoMailSharp className="h-5 w-5" />
-                            Email {payPerHourDisplayName.split(" ")[0] || "Educator"}
+                            Email{" "}
+                            {payPerHourDisplayName.split(" ")[0] || "Educator"}
                           </a>
                         )}
                         {!payPerHourWhatsAppLink && !payPerHourEmailLink && (
                           <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-center text-sm text-gray-500">
-                            Contact details are currently unavailable. Please try connecting via the follow button instead.
+                            Contact details are currently unavailable. Please
+                            try connecting via the follow button instead.
                           </div>
                         )}
                       </div>

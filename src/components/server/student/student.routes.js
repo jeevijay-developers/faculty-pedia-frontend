@@ -28,9 +28,11 @@ const isStudentEnrolledInCourse = (student, courseId) => {
   const expectedId =
     typeof courseId === "string"
       ? courseId
-      : typeof courseId === "object" && courseId !== null && "toString" in courseId
-        ? courseId.toString()
-        : `${courseId}`;
+      : typeof courseId === "object" &&
+        courseId !== null &&
+        "toString" in courseId
+      ? courseId.toString()
+      : `${courseId}`;
 
   return student.courses.some((enrollment) => {
     if (!enrollment) {
@@ -38,9 +40,7 @@ const isStudentEnrolledInCourse = (student, courseId) => {
     }
 
     const rawId =
-      enrollment.courseId?._id ??
-      enrollment.courseId ??
-      enrollment._id;
+      enrollment.courseId?._id ?? enrollment.courseId ?? enrollment._id;
 
     if (!rawId) {
       return false;
@@ -50,8 +50,8 @@ const isStudentEnrolledInCourse = (student, courseId) => {
       typeof rawId === "string"
         ? rawId
         : typeof rawId === "object" && rawId !== null && "toString" in rawId
-          ? rawId.toString()
-          : `${rawId}`;
+        ? rawId.toString()
+        : `${rawId}`;
 
     return normalizedId === expectedId;
   });
@@ -297,9 +297,12 @@ export const markNotificationAsRead = async (studentId, notificationId) => {
   }
 
   try {
-    const response = await API_CLIENT.put(`/api/notifications/${notificationId}/read`, {
-      studentId,
-    });
+    const response = await API_CLIENT.put(
+      `/api/notifications/${notificationId}/read`,
+      {
+        studentId,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error marking notification as read:", error);
@@ -349,10 +352,7 @@ export const getCourseForStudent = async (studentId, courseIdentifier) => {
       throw createHttpError(500, "Course response missing identifier");
     }
 
-    const isEnrolled = isStudentEnrolledInCourse(
-      student,
-      effectiveCourseId
-    );
+    const isEnrolled = isStudentEnrolledInCourse(student, effectiveCourseId);
     if (!isEnrolled) {
       throw createHttpError(403, "You are not enrolled in this course");
     }
@@ -387,10 +387,9 @@ export const getStudentsBySpecialization = async (
 
 export const getStudentsByClass = async (className, params = {}) => {
   try {
-    const response = await API_CLIENT.get(
-      `/api/students/class/${className}`,
-      { params }
-    );
+    const response = await API_CLIENT.get(`/api/students/class/${className}`, {
+      params,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching students by class:", error);
@@ -433,7 +432,9 @@ export const verifyWebinarAttendance = async (webinarId, studentId) => {
       : false;
 
     if (!isEnrolled) {
-      const err = new Error("Please enroll in the webinar before accessing links");
+      const err = new Error(
+        "Please enroll in the webinar before accessing links"
+      );
       err.response = {
         status: 400,
         data: { message: "Student not enrolled in this webinar" },
@@ -462,10 +463,10 @@ export const getUpcomingWebinars = async (_studentId, params = {}) => {
     const webinars = Array.isArray(response.data?.data)
       ? response.data.data
       : Array.isArray(response.data?.upcomingWebinars)
-        ? response.data.upcomingWebinars
-        : Array.isArray(response.data)
-          ? response.data
-          : [];
+      ? response.data.upcomingWebinars
+      : Array.isArray(response.data)
+      ? response.data
+      : [];
 
     return {
       upcomingWebinars: webinars,
@@ -499,8 +500,8 @@ export const getEnrolledLiveClasses = async (studentId, params = {}) => {
     const liveClasses = Array.isArray(rawList)
       ? rawList
       : Array.isArray(rawList.liveClasses)
-        ? rawList.liveClasses
-        : [];
+      ? rawList.liveClasses
+      : [];
 
     const enrolledLiveClasses = liveClasses
       .filter((item) => isStudentEnrolledInLiveClass(item, studentId))
@@ -525,6 +526,16 @@ export const getEnrolledLiveClasses = async (studentId, params = {}) => {
 export const getUpcomingTestSeries = async (_studentId, params = {}) => {
   try {
     const response = await API_CLIENT.get("/api/test-series", { params });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching test series:", error);
+    throw error;
+  }
+};
+
+export const getTestSeriesForStudent = async (testSeriesId) => {
+  try {
+    const response = await API_CLIENT.get(`/api/test-series/${testSeriesId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching test series:", error);

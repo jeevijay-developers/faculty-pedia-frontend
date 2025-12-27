@@ -23,16 +23,23 @@ const getBaseURL = () => {
 // Fetch a test series by ID (works in both server and client components)
 export const getTestSeriesById = async (id) => {
   try {
+    // Validate ID
+    if (!id || typeof id !== "string" || id.trim().length === 0) {
+      throw new Error("Invalid test series ID");
+    }
+
+    const trimmedId = id.trim();
+
     // Check if we're in a server component (no window object)
     const isServer = typeof window === "undefined";
 
     if (isServer) {
       // Use native fetch for server components
       const baseURL = getBaseURL();
-      const response = await fetch(`${baseURL}/api/test-series/${id}`, {
-        cache: 'no-store', // Always get fresh data
+      const response = await fetch(`${baseURL}/api/test-series/${trimmedId}`, {
+        cache: "no-store", // Always get fresh data
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -44,7 +51,7 @@ export const getTestSeriesById = async (id) => {
       return data.data || data; // Handle both {data: ...} and direct response formats
     } else {
       // Use axios for client components
-      const response = await API_CLIENT.get(`/api/test-series/${id}`);
+      const response = await API_CLIENT.get(`/api/test-series/${trimmedId}`);
       return response.data;
     }
   } catch (error) {
@@ -56,7 +63,7 @@ export const getTestSeriesById = async (id) => {
 // Fetch all test series (optionally could accept query params later)
 export const getTestSeries = async () => {
   try {
-    const response = await API_CLIENT.get(`/api/test-series`);    
+    const response = await API_CLIENT.get(`/api/test-series`);
     return response.data; // Expecting array or wrapped object { testSeries: [...] }
   } catch (error) {
     console.error("Error fetching test series:", error);
@@ -65,7 +72,8 @@ export const getTestSeries = async () => {
 };
 
 export const getTestSeriesByEducator = async (educatorId, params = {}) => {
-  if (!educatorId) return { testSeries: [], pagination: { totalTestSeries: 0 } };
+  if (!educatorId)
+    return { testSeries: [], pagination: { totalTestSeries: 0 } };
   try {
     const response = await API_CLIENT.get(
       `/api/test-series/educator/${educatorId}`,

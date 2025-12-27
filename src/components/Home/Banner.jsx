@@ -1,17 +1,15 @@
 "use client";
 
-import Image from 'next/image';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade } from 'swiper/modules';
+import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/effect-fade';
-import 'swiper/css/pagination';
-
+import "swiper/css";
+import "swiper/css/effect-fade";
+import "swiper/css/pagination";
 
 const Banner = () => {
-
   return (
     <div className="relative h-[80vh] min-h-[450px] w-full overflow-hidden ">
       {/* Swiper Carousel */}
@@ -37,11 +35,11 @@ const Banner = () => {
                 alt={banner.title}
                 height={600}
                 width={1200}
-                className='object-cover w-full h-full'
+                className="object-cover w-full h-full"
               />
               {/* Dark overlay for better text visibility */}
               {/* <div className="absolute inset-0 bg-black/40 z-5 pointer-events-none" /> */}
-                      
+
               {/* Content Overlay for each slide */}
               <div className="absolute inset-0 flex items-center justify-center px-6 md:px-12 z-10 bg-black/40">
                 <div className="text-center text-white max-w-4xl">
@@ -51,22 +49,6 @@ const Banner = () => {
                   <p className="text-lg md:text-xl mb-8 text-gray-100 leading-relaxed max-w-2xl mx-auto">
                     {banner.subtitle}
                   </p>
-                  
-                  {/* Action Buttons */}
-                  {/* <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    <Link 
-                      href="/courses" 
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
-                    >
-                      Explore Courses
-                    </Link>
-                    <Link 
-                      href="/webinars" 
-                      className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 rounded-lg font-medium transition-all duration-300"
-                    >
-                      Join Webinars
-                    </Link>
-                  </div> */}
                 </div>
               </div>
             </div>
