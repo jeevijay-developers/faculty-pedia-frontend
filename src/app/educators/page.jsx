@@ -197,7 +197,7 @@ const EducatorsPage = () => {
             </h2>
 
             {/* Search Bar */}
-            <div className="mt-6 flex w-full max-w-[600px] flex-col gap-2 md:flex-row">
+            <div className="mt-6 flex w-full max-w-150 flex-col gap-2 md:flex-row">
               <label className="flex w-full items-center rounded-full bg-white p-2 shadow-lg focus-within:ring-4 focus-within:ring-blue-500/20 transition-all">
                 <div className="flex items-center justify-center pl-4 text-gray-500">
                   <Search className="h-5 w-5" />

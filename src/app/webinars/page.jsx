@@ -4,17 +4,18 @@ import UpcomingWebinarCard from "@/components/Webinars/UpcomingWebinarCard";
 import Loading from "@/components/Common/Loading";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { Search } from "lucide-react";
 
 // API functions
 import { fetchAllWebinars } from "@/components/server/exams/iit-jee/routes";
-import Banner from "@/components/Common/Banner";
 import ShareButton from "@/components/Common/ShareButton";
 
 export default function WebinarsPage() {
   const [allWebinars, setAllWebinars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Available subjects
   const subjects = ["All", "Biology", "Chemistry", "Mathematics", "Physics"];
@@ -33,9 +34,10 @@ export default function WebinarsPage() {
         console.log("🎤 Fetching all webinars...");
         const response = await fetchAllWebinars();
         console.log("🎤 Webinars Response:", response);
-        
+
         // Extract webinars from response
-        const webinarsData = response?.data?.webinars || response?.webinars || [];
+        const webinarsData =
+          response?.data?.webinars || response?.webinars || [];
         console.log(`🎤 Found ${webinarsData.length} webinars`);
         setAllWebinars(webinarsData);
       } catch (err) {
@@ -49,6 +51,15 @@ export default function WebinarsPage() {
 
     fetchWebinars();
   }, []);
+
+  // Debounce search input to reduce filter churn
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      setSearchQuery(searchInput.trim());
+    }, 300);
+
+    return () => clearTimeout(handle);
+  }, [searchInput]);
 
   // Handle tab change
   const handleTabChange = (subject) => {
@@ -67,8 +78,8 @@ export default function WebinarsPage() {
     // Filter by subject tab
     if (activeTab !== "All") {
       filtered = filtered.filter((webinar) => {
-        const webinarSubjects = Array.isArray(webinar.subject) 
-          ? webinar.subject 
+        const webinarSubjects = Array.isArray(webinar.subject)
+          ? webinar.subject
           : [webinar.subject];
         return webinarSubjects.some(
           (sub) => sub?.toLowerCase() === activeTab.toLowerCase()
@@ -77,8 +88,8 @@ export default function WebinarsPage() {
     }
 
     // Filter by search query
-    if (search.trim()) {
-      const query = search.trim().toLowerCase();
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter((w) => {
         return (
           w.title?.toLowerCase().includes(query) ||
@@ -90,24 +101,61 @@ export default function WebinarsPage() {
     }
 
     return filtered;
-  }, [allWebinars, activeTab, search]);
+  }, [allWebinars, activeTab, searchQuery]);
+
+  const heroSection = (
+    <div className="relative w-full bg-white">
+      <div
+        className="flex flex-col gap-6 bg-cover bg-center bg-no-repeat py-16 px-4 md:py-24"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75)), url("/images/Banner/1.png")',
+        }}
+      >
+        <div className="flex flex-col gap-4 text-center items-center max-w-4xl mx-auto">
+          <h1 className="text-white text-4xl font-black leading-tight tracking-tight md:text-6xl drop-shadow-sm">
+            Webinars
+          </h1>
+          <p className="text-gray-200 text-base font-normal leading-normal md:text-lg max-w-2xl">
+            Explore upcoming webinars designed to help you learn and grow with
+            expert faculty guidance.
+          </p>
+
+          {/* Search Bar */}
+          <div className="mt-6 flex w-full max-w-150 flex-col gap-2 md:flex-row">
+            <label className="flex w-full items-center rounded-full bg-white p-2 shadow-lg focus-within:ring-4 focus-within:ring-blue-500/20 transition-all">
+              <div className="flex items-center justify-center pl-4 text-gray-500">
+                <Search className="h-5 w-5" />
+              </div>
+              <input
+                className="h-12 w-full min-w-0 flex-1 border-none bg-transparent px-4 text-base font-normal text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-0"
+                placeholder="Search for webinars, subjects, or topics..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
+              <button
+                onClick={() => setSearchQuery(searchInput.trim())}
+                className="h-12 rounded-full bg-blue-600 px-8 text-sm font-bold text-white hover:bg-blue-700 transition-colors"
+              >
+                Search
+              </button>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Banner
-          url={"/images/placeholders/1.svg"}
-          title={"Welcome to Our Webinars"}
-          subtitle={
-            "Explore a variety of webinars designed to help you learn and grow with expert faculty guidance."
-          }
-        />
+        {heroSection}
         <Loading
           variant="card-grid"
           count={6}
           message={`Loading ${activeTab} Webinars`}
-          className="min-h-[400px]"
+          className="min-h-100"
         />
       </div>
     );
@@ -117,13 +165,7 @@ export default function WebinarsPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Banner
-          url={"/images/placeholders/1.svg"}
-          title={"Welcome to Our Webinars"}
-          subtitle={
-            "Explore a variety of webinars designed to help you learn and grow with expert faculty guidance."
-          }
-        />
+        {heroSection}
         <div className="max-w-7xl mx-auto p-4 mt-8">
           <div className="text-center py-16">
             <div className="text-red-500 text-6xl mb-4">⚠️</div>
@@ -145,19 +187,10 @@ export default function WebinarsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Banner
-        url={"/images/placeholders/1.svg"}
-        title={"Welcome to Our Webinars"}
-        subtitle={
-          "Explore a variety of webinars designed to help you learn and grow with expert faculty guidance."
-        }
-      />
+      {heroSection}
       <div className="max-w-7xl mx-auto p-4 mt-8">
-        <div
-          className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"
-          data-aos="fade-up"
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+        <div className="sticky top-0 z-40 -mx-4 md:mx-0 flex flex-col gap-4 bg-gray-50/95 backdrop-blur-sm p-4 md:rounded-2xl md:bg-white md:shadow-sm lg:flex-row lg:items-center lg:justify-between border-b md:border border-gray-200 transition-all mb-6">
+          <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-3xl font-bold text-gray-900">
               Upcoming Webinars
             </h1>
@@ -168,43 +201,29 @@ export default function WebinarsPage() {
               size="sm"
             />
           </div>
-          {/* Search */}
-          <div className="w-full md:w-80 relative">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search webinars..."
-              className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-              {filteredWebinars.length}
-            </span>
-          </div>
+          <p className="text-sm text-gray-600">
+            Showing {filteredWebinars.length} of{" "}
+            {allWebinars.length || filteredWebinars.length} webinars
+          </p>
         </div>
 
         {/* Tabs */}
         <div className="mb-8" data-aos="fade-up" data-aos-delay="100">
-          <div className="border-b border-gray-200 overflow-x-auto">
-            <nav className="flex  min-w-max justify-center gap-6">
-              {subjects.map((subject) => (
-                <button
-                  key={subject}
-                  onClick={() => handleTabChange(subject)}
-                  disabled={loading}
-                  className={`py-2 px-4 border-b-2 font-medium text-sm md:text-md transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed ${
-                    activeTab === subject
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
-                >
-                  {subject}
-                  {loading && activeTab === subject && (
-                    <span className="ml-2 inline-block w-3 h-3 border border-blue-600 border-t-transparent rounded-full animate-spin"></span>
-                  )}
-                </button>
-              ))}
-            </nav>
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {subjects.map((subject) => (
+              <button
+                key={subject}
+                onClick={() => handleTabChange(subject)}
+                disabled={loading}
+                className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 text-sm font-medium transition-all whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed ${
+                  activeTab === subject
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-200"
+                    : "bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+                }`}
+              >
+                {subject}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -216,25 +235,28 @@ export default function WebinarsPage() {
         >
           {filteredWebinars.length > 0 ? (
             filteredWebinars.map((webinar) => (
-              <UpcomingWebinarCard key={webinar._id || webinar.id} item={webinar} />
+              <UpcomingWebinarCard
+                key={webinar._id || webinar.id}
+                item={webinar}
+              />
             ))
           ) : (
             <div className="col-span-full text-center py-16">
               <div className="text-gray-400 text-6xl mb-4">🔍</div>
               <p className="text-gray-500 text-lg mb-2">
-                {search.trim()
+                {searchQuery.trim()
                   ? "No webinars found matching your search."
                   : `No ${activeTab} webinars available.`}
               </p>
               <p className="text-sm text-gray-400">
-                {search.trim()
+                {searchQuery.trim()
                   ? "Try adjusting your search terms."
                   : "Check back later for new webinars."}
               </p>
             </div>
           )}
         </div>
-        
+
         {/* Results Count */}
         {filteredWebinars.length > 0 && (
           <div className="mt-8 text-center text-gray-600" data-aos="fade-up">

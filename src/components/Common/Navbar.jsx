@@ -3,8 +3,24 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@heroui/react";
-import { User as UserIcon, BookOpen, BarChart2, Settings as SettingsIcon, HelpCircle, LogOut, Bell, Loader2, RefreshCcw } from "lucide-react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Avatar,
+} from "@heroui/react";
+import {
+  User as UserIcon,
+  BookOpen,
+  BarChart2,
+  Settings as SettingsIcon,
+  HelpCircle,
+  LogOut,
+  Bell,
+  Loader2,
+  RefreshCcw,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { confirmAlert } from "../CustomAlert";
 import toast from "react-hot-toast";
@@ -26,7 +42,9 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [notificationState, setNotificationState] = useState(INITIAL_NOTIFICATION_STATE);
+  const [notificationState, setNotificationState] = useState(
+    INITIAL_NOTIFICATION_STATE
+  );
   const notificationPanelRef = useRef(null);
   const router = useRouter();
 
@@ -143,9 +161,7 @@ const Navbar = () => {
     const trimmed = name.trim();
     if (!trimmed) return "FP";
     const parts = trimmed.split(/\s+/).slice(0, 2);
-    const initials = parts
-      .map((part) => part.charAt(0).toUpperCase())
-      .join("");
+    const initials = parts.map((part) => part.charAt(0).toUpperCase()).join("");
     return initials || "FP";
   };
 
@@ -199,27 +215,26 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     const confirmed = await confirmAlert({
-      title: 'Delete Student',
-      message: 'Are you sure you want to logout ?',
-      type: 'error',
-      confirmText: 'Yes, Logout',
-      cancelText: 'Cancel'
+      title: "Delete Student",
+      message: "Are you sure you want to logout ?",
+      type: "error",
+      confirmText: "Yes, Logout",
+      cancelText: "Cancel",
     });
 
     if (confirmed) {
-      localStorage.removeItem('faculty-pedia-student-data');
-      localStorage.removeItem('faculty-pedia-auth-token');
+      localStorage.removeItem("faculty-pedia-student-data");
+      localStorage.removeItem("faculty-pedia-auth-token");
       setIsLoggedIn(false);
       setUserData(null);
       setIsNotificationOpen(false);
       setNotificationState(INITIAL_NOTIFICATION_STATE);
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new Event('student-data-updated'));
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("student-data-updated"));
       }
-      toast.success('Logged out successfully');
+      toast.success("Logged out successfully");
       // Optionally redirect to home page
-      router.push('/');
-
+      router.push("/");
     }
   };
 
@@ -279,7 +294,8 @@ const Navbar = () => {
     setIsExamDropdownOpen((prev) => !prev);
     setIsNotificationOpen(false);
   };
-  const hoverExamDropdown = "hover:bg-gray-200 transition-colors duration-200 rounded-md p-2";
+  const hoverExamDropdown =
+    "hover:bg-gray-200 transition-colors duration-200 rounded-md p-2";
   const menuItems = [
     {
       name: "Exams",
@@ -301,7 +317,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
-          <div className="flex-shrink-0 flex items-center">
+          <div className="shrink-0 flex items-center">
             <Link href="/" className="flex items-center space-x-2 group">
               <Image
                 src="/logo/logo-blue.png"
@@ -334,8 +350,9 @@ const Navbar = () => {
                       >
                         <span>{item.name}</span>
                         <svg
-                          className={`w-4 h-4 transition-transform duration-200 ${isExamDropdownOpen ? "rotate-180" : ""
-                            }`}
+                          className={`w-4 h-4 transition-transform duration-200 ${
+                            isExamDropdownOpen ? "rotate-180" : ""
+                          }`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -352,10 +369,11 @@ const Navbar = () => {
 
                       {/* Dropdown Menu */}
                       <div
-                        className={`absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-300 transform origin-top ${isExamDropdownOpen
-                          ? "opacity-100 scale-100 visible"
-                          : "opacity-0 scale-95 invisible"
-                          }`}
+                        className={`absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-300 transform origin-top ${
+                          isExamDropdownOpen
+                            ? "opacity-100 scale-100 visible"
+                            : "opacity-0 scale-95 invisible"
+                        }`}
                       >
                         <div className="py-2">
                           {item.subMenus.map((subItem) => (
@@ -398,18 +416,21 @@ const Navbar = () => {
                       className="relative inline-flex items-center justify-center rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <Bell className="h-5 w-5" />
-                      {notificationState.unreadCount > 0 && notificationState.items.length > 0 && (
-                        <span className="absolute -right-1 -top-1 flex h-2.5 w-2.5">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
-                        </span>
-                      )}
+                      {notificationState.unreadCount > 0 &&
+                        notificationState.items.length > 0 && (
+                          <span className="absolute -right-1 -top-1 flex h-2.5 w-2.5">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                          </span>
+                        )}
                     </button>
 
                     {isNotificationOpen && (
                       <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl">
                         <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-                          <span className="text-sm font-semibold text-gray-900">Notifications</span>
+                          <span className="text-sm font-semibold text-gray-900">
+                            Notifications
+                          </span>
                           <button
                             type="button"
                             onClick={handleNotificationRefresh}
@@ -432,7 +453,9 @@ const Navbar = () => {
                             </div>
                           ) : notificationState.error ? (
                             <div className="space-y-3 px-4 py-6 text-sm">
-                              <p className="text-red-500">{notificationState.error}</p>
+                              <p className="text-red-500">
+                                {notificationState.error}
+                              </p>
                               <button
                                 type="button"
                                 onClick={handleNotificationRefresh}
@@ -443,7 +466,8 @@ const Navbar = () => {
                             </div>
                           ) : notificationState.items.length === 0 ? (
                             <div className="px-4 py-6 text-sm text-gray-500">
-                              You're all caught up! Follow your favourite educators to get updates.
+                              You're all caught up! Follow your favourite
+                              educators to get updates.
                             </div>
                           ) : (
                             <ul className="divide-y divide-gray-100">
@@ -452,9 +476,11 @@ const Navbar = () => {
                                   <button
                                     type="button"
                                     className="flex w-full gap-3 px-4 py-3 text-left transition hover:bg-blue-50 focus:outline-none"
-                                    onClick={() => handleNotificationSelect(item)}
+                                    onClick={() =>
+                                      handleNotificationSelect(item)
+                                    }
                                   >
-                                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
                                       {getNameInitials(item.educatorName)}
                                     </div>
                                     <div className="flex-1">
@@ -470,7 +496,9 @@ const Navbar = () => {
                                         {item.message}
                                       </p>
                                       <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-gray-400">
-                                        <span className="text-gray-500">{item.educatorName}</span>
+                                        <span className="text-gray-500">
+                                          {item.educatorName}
+                                        </span>
                                         <span>•</span>
                                         <span>{item.type}</span>
                                       </div>
@@ -493,22 +521,41 @@ const Navbar = () => {
                         style={{ opacity: 1 }}
                         src={resolveAvatarSrc(userData)}
                         className=" border-2 border-gray-300 rounded-full transition-transform hover:scale-105"
-
                       />
                     </DropdownTrigger>
-                    <DropdownMenu aria-label="Profile Actions" variant="flat" className="w-52 shadow-lg rounded-lg bg-white p-2">
-                      <DropdownItem key="profile_settings" className={`${hoverExamDropdown}`}>
-                        <Link href={`/profile/${userData.role}/${userData._id}`} className="flex items-center">
+                    <DropdownMenu
+                      aria-label="Profile Actions"
+                      variant="flat"
+                      className="w-52 shadow-lg rounded-lg bg-white p-2"
+                    >
+                      <DropdownItem
+                        key="profile_settings"
+                        className={`${hoverExamDropdown}`}
+                      >
+                        <Link
+                          href={`/profile/${userData.role}/${userData._id}`}
+                          className="flex items-center"
+                        >
                           <UserIcon className="size-4 mr-2" /> Dashboard
                         </Link>
                       </DropdownItem>
-                      <DropdownItem key="help" className={`${hoverExamDropdown}`}>
+                      <DropdownItem
+                        key="help"
+                        className={`${hoverExamDropdown}`}
+                      >
                         <Link href="/help" className="flex items-center">
                           <HelpCircle className="size-4 mr-2" /> Help & Support
                         </Link>
                       </DropdownItem>
-                      <DropdownItem className="hover:bg-red-200 transition-colors duration-200 rounded-md" key="logout" color="danger" onClick={handleLogout}>
-                        <span className="flex items-center"><LogOut className="size-4 mr-2" /> Log Out</span>
+                      <DropdownItem
+                        className="hover:bg-red-200 transition-colors duration-200 rounded-md"
+                        key="logout"
+                        color="danger"
+                        onClick={handleLogout}
+                      >
+                        <span className="flex items-center">
+                          <LogOut className="size-4 mr-2" /> Log Out
+                        </span>
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
@@ -580,10 +627,11 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       <div
-        className={`lg:hidden transition-all duration-300 ease-in-out ${isMenuOpen
-          ? "max-h-96 opacity-100"
-          : "max-h-0 opacity-0 overflow-hidden"
-          }`}
+        className={`lg:hidden transition-all duration-300 ease-in-out ${
+          isMenuOpen
+            ? "max-h-96 opacity-100"
+            : "max-h-0 opacity-0 overflow-hidden"
+        }`}
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 border-t border-gray-200">
           {menuItems.map((item) => (
@@ -603,8 +651,9 @@ const Navbar = () => {
                       className="text-gray-700 hover:text-blue-600 hover:bg-white px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                     >
                       <svg
-                        className={`w-4 h-4 transition-transform duration-200 ${isExamDropdownOpen ? "rotate-180" : ""
-                          }`}
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          isExamDropdownOpen ? "rotate-180" : ""
+                        }`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -621,10 +670,11 @@ const Navbar = () => {
 
                   {/* Mobile Dropdown Submenu */}
                   <div
-                    className={`transition-all duration-300 ease-in-out ${isExamDropdownOpen
-                      ? "max-h-40 opacity-100"
-                      : "max-h-0 opacity-0 overflow-hidden"
-                      }`}
+                    className={`transition-all duration-300 ease-in-out ${
+                      isExamDropdownOpen
+                        ? "max-h-40 opacity-100"
+                        : "max-h-0 opacity-0 overflow-hidden"
+                    }`}
                   >
                     <div className="pl-6 py-2 space-y-1">
                       {item.subMenus.map((subItem) => (
@@ -664,7 +714,9 @@ const Navbar = () => {
                     size="sm"
                   />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{userData.name || "User"}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {userData.name || "User"}
+                    </p>
                     <p className="text-xs text-gray-500">{userData.email}</p>
                   </div>
                 </div>
@@ -673,21 +725,27 @@ const Navbar = () => {
                   className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <span className="flex items-center"><UserIcon className="size-4 mr-2" /> My Profile</span>
+                  <span className="flex items-center">
+                    <UserIcon className="size-4 mr-2" /> My Profile
+                  </span>
                 </Link>
                 <Link
                   href="/my-courses"
                   className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <span className="flex items-center"><BookOpen className="size-4 mr-2" /> My Courses</span>
+                  <span className="flex items-center">
+                    <BookOpen className="size-4 mr-2" /> My Courses
+                  </span>
                 </Link>
                 <Link
                   href="/settings"
                   className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <span className="flex items-center"><SettingsIcon className="size-4 mr-2" /> Settings</span>
+                  <span className="flex items-center">
+                    <SettingsIcon className="size-4 mr-2" /> Settings
+                  </span>
                 </Link>
                 <button
                   onClick={() => {
@@ -696,7 +754,9 @@ const Navbar = () => {
                   }}
                   className="text-red-600 hover:text-red-700 hover:bg-red-50 block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                 >
-                  <span className="flex items-center"><LogOut className="size-4 mr-2" /> Log Out</span>
+                  <span className="flex items-center">
+                    <LogOut className="size-4 mr-2" /> Log Out
+                  </span>
                 </button>
               </div>
             ) : (

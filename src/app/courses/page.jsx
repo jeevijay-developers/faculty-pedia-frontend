@@ -9,6 +9,7 @@ import { Search } from "lucide-react";
 const CoursesPage = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [allCourses, setAllCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [sortedCourses, setSortedCourses] = useState([]);
@@ -97,6 +98,15 @@ const CoursesPage = () => {
     setSortedCourses(coursesToSort);
   }, [filteredCourses, sortOption]);
 
+  // Debounce the search input before applying it to filtering
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      setSearchQuery(searchInput.trim());
+    }, 300);
+
+    return () => clearTimeout(handle);
+  }, [searchInput]);
+
   // Filter courses by search query
   const searchFilteredCourses = sortedCourses.filter((course) => {
     if (!searchQuery.trim()) return true;
@@ -171,7 +181,7 @@ const CoursesPage = () => {
             </h2>
 
             {/* Search Bar */}
-            <div className="mt-6 flex w-full max-w-[600px] flex-col gap-2 md:flex-row">
+            <div className="mt-6 flex w-full max-w-150 flex-col gap-2 md:flex-row">
               <label className="flex w-full items-center rounded-full bg-white p-2 shadow-lg focus-within:ring-4 focus-within:ring-blue-500/20 transition-all">
                 <div className="flex items-center justify-center pl-4 text-gray-500">
                   <Search className="h-5 w-5" />
@@ -179,11 +189,11 @@ const CoursesPage = () => {
                 <input
                   className="h-12 w-full min-w-0 flex-1 border-none bg-transparent px-4 text-base font-normal text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-0"
                   placeholder="Search for courses, subjects, or topics..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
                 />
                 <button
-                  onClick={() => setSearchQuery(searchQuery.trim())}
+                  onClick={() => setSearchQuery(searchInput.trim())}
                   className="h-12 rounded-full bg-blue-600 px-8 text-sm font-bold text-white hover:bg-blue-700 transition-colors"
                 >
                   Search

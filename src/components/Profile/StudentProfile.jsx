@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import ProfileSkeleton from "./ProfileSkeleton";
 import OverviewTab from "./OverviewTab";
 import CoursesTab from "./CoursesTab";
@@ -12,20 +12,12 @@ import TestSeriesTab from "./TestSeriesTab";
 import MessagesTab from "./MessagesTab";
 import EditProfileModal from "./EditProfileModal";
 import LiveClassesTab from "./LiveClassesTab";
-import {
-  FiUser,
-  FiBookOpen,
-  FiAward,
-  FiUsers,
-  FiCalendar,
-  FiFileText,
-  FiMessageSquare,
-  FiEdit3,
-} from "react-icons/fi";
 import { getCoursesByIds } from "../server/course.routes";
-import { getTestSeriesById } from "../server/test-series.route"; // Individual test series helper
-import { getResultById } from "../server/result.routes"; // Individual result helper
-import { updateStudentProfile } from "../server/student/student.routes"; // For profile updates
+import { getTestSeriesById } from "../server/test-series.route";
+import { getResultById } from "../server/result.routes";
+import { updateStudentProfile } from "../server/student/student.routes";
+import { confirmAlert } from "@/components/CustomAlert";
+import toast from "react-hot-toast";
 
 const CLASS_LABELS = {
   "class-6th": "Class 6th",
@@ -47,7 +39,6 @@ const TAB_IDS = [
   "testseries",
   "messages",
   "educators",
-  "edit",
 ];
 
 const StudentDashboard = ({
@@ -58,9 +49,34 @@ const StudentDashboard = ({
   onProfileUpdate, // Optional callback for parent component
   onRefresh,
 }) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef(null);
+
+  const handleLogout = async () => {
+    const confirmed = await confirmAlert({
+      title: "Logout",
+      message: "Are you sure you want to logout?",
+      type: "error",
+      confirmText: "Yes, logout",
+      cancelText: "Cancel",
+    });
+
+    if (!confirmed) return;
+
+    localStorage.removeItem("faculty-pedia-student-data");
+    localStorage.removeItem("faculty-pedia-auth-token");
+    setStudentState(null);
+    setActiveTab("overview");
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("student-data-updated"));
+    }
+    toast.success("Logged out successfully");
+    router.push("/");
+  };
 
   const normalizedStudent = studentData?.student || studentData;
   const [studentState, setStudentState] = useState(normalizedStudent);
@@ -82,16 +98,26 @@ const StudentDashboard = ({
   const isCourseActive = (course) => {
     if (!course) return false;
     const status = (course.status || "").toLowerCase();
-    const explicitInactive = course.isActive === false || course.active === false;
-    const flaggedDeleted = course.isDeleted || course.deletedAt || course.deleted === true;
-    return !explicitInactive && !flaggedDeleted && status !== "deleted" && status !== "inactive";
+    const explicitInactive =
+      course.isActive === false || course.active === false;
+    const flaggedDeleted =
+      course.isDeleted || course.deletedAt || course.deleted === true;
+    return (
+      !explicitInactive &&
+      !flaggedDeleted &&
+      status !== "deleted" &&
+      status !== "inactive"
+    );
   };
 
   useEffect(() => {
     const normalized = studentData?.student || studentData;
     console.log("👤 StudentDashboard received data:", studentData);
     console.log("👤 Normalized student:", normalized);
-    console.log("👤 Following educators in normalized:", normalized?.followingEducators);
+    console.log(
+      "👤 Following educators in normalized:",
+      normalized?.followingEducators
+    );
     setStudentState(normalized);
   }, [studentData]);
 
@@ -99,15 +125,34 @@ const StudentDashboard = ({
     const tabParam = searchParams?.get("tab");
     if (!tabParam) return;
 
+    const navEntry =
+      typeof performance !== "undefined"
+        ? performance.getEntriesByType("navigation")?.[0]
+        : null;
+    const isReload = navEntry?.type === "reload";
+    if (isReload) return;
+
     const normalizedTab = tabParam.toLowerCase();
     if (!TAB_IDS.includes(normalizedTab)) return;
 
-    if (normalizedTab === "edit" && !isOwnProfile) {
-      return;
-    }
-
     setActiveTab(normalizedTab);
-  }, [searchParams, isOwnProfile]);
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!isProfileMenuOpen) return;
+
+    const handleClickOutside = (event) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target)
+      ) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isProfileMenuOpen]);
 
   const student = studentState || normalizedStudent;
   const {
@@ -214,7 +259,8 @@ const StudentDashboard = ({
       .filter(Boolean);
 
     const fallbackCourses = normalizedCourses.filter(
-      (course) => typeof course === "object" && course?.title && isCourseActive(course)
+      (course) =>
+        typeof course === "object" && course?.title && isCourseActive(course)
     );
 
     let isCancelled = false;
@@ -245,7 +291,9 @@ const StudentDashboard = ({
             .filter(isCourseActive);
 
           const mergedCourses = [...fetchedActive];
-          const seen = new Set(fetchedActive.map((course) => course?._id).filter(Boolean));
+          const seen = new Set(
+            fetchedActive.map((course) => course?._id).filter(Boolean)
+          );
 
           fallbackCourses.forEach((course) => {
             if (!course) return;
@@ -477,15 +525,14 @@ const StudentDashboard = ({
   const totalResults = combinedResults.length;
 
   const tabs = [
-    { id: "overview", label: "Overview", icon: FiUser },
-    { id: "courses", label: "Courses", icon: FiBookOpen },
-    { id: "results", label: "Test Results", icon: FiAward },
-    { id: "liveclasses", label: "Live Classes", icon: FiCalendar },
-    { id: "webinars", label: "Webinars", icon: FiCalendar },
-    { id: "testseries", label: "Test Series", icon: FiFileText },
-    { id: "messages", label: "Messages", icon: FiMessageSquare },
-    { id: "educators", label: "Following", icon: FiUsers },
-    { id: "edit", label: "Edit Profile", icon: FiEdit3, disabled: !isOwnProfile },
+    { id: "overview", label: "Dashboard", icon: "dashboard" },
+    { id: "courses", label: "My Courses", icon: "menu_book" },
+    { id: "testseries", label: "Test Series", icon: "quiz" },
+    { id: "liveclasses", label: "Live Classes", icon: "videocam" },
+    { id: "webinars", label: "Webinars", icon: "calendar_month" },
+    { id: "results", label: "Results", icon: "assignment_turned_in" },
+    { id: "messages", label: "Messages", icon: "chat_bubble" },
+    { id: "educators", label: "Following", icon: "people" },
   ];
 
   const handleTabSelect = (tabId) => {
@@ -511,6 +558,7 @@ const StudentDashboard = ({
             getSeries={getSeries}
             getSeriesId={getSeriesId}
             onTabChange={handleTabSelect}
+            studentId={student?._id}
           />
         );
       case "courses":
@@ -550,83 +598,6 @@ const StudentDashboard = ({
         );
       case "educators":
         return <EducatorsTab followingEducators={followingEducators} />;
-      case "edit":
-        return (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-            <div className="flex flex-col gap-2 border-b border-gray-100 p-6 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900">Profile Settings</h2>
-                <p className="mt-1 text-sm text-gray-500">
-                  Update your personal information and keep your dashboard in sync.
-                </p>
-              </div>
-              {typeof onRefresh === "function" && (
-                <button
-                  type="button"
-                  onClick={onRefresh}
-                  className="inline-flex items-center justify-center rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:border-blue-200 hover:text-blue-600"
-                >
-                  Refresh data
-                </button>
-              )}
-            </div>
-            <div className="p-6">
-              {isOwnProfile ? (
-                <div className="space-y-6">
-                  <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-700">
-                    Tip: Upload a clear profile photo and verify your contact details so educators can recognise you across courses and sessions.
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setIsEditModalOpen(true)}
-                      className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                      <FiEdit3 className="h-4 w-4" />
-                      Open profile editor
-                    </button>
-                    {typeof onRefresh === "function" && (
-                      <button
-                        type="button"
-                        onClick={onRefresh}
-                        className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-semibold text-gray-600 transition hover:border-blue-200 hover:text-blue-600"
-                      >
-                        Sync latest data
-                      </button>
-                    )}
-                  </div>
-                  <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
-                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">
-                      Current details
-                    </h3>
-                    <dl className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <dt className="text-xs uppercase tracking-wide text-gray-400">Name</dt>
-                        <dd className="text-sm font-medium text-gray-900">{name || "—"}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs uppercase tracking-wide text-gray-400">Email</dt>
-                        <dd className="text-sm font-medium text-gray-900 break-all">{email || "—"}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs uppercase tracking-wide text-gray-400">Mobile</dt>
-                        <dd className="text-sm font-medium text-gray-900">{mobileNumber || "—"}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs uppercase tracking-wide text-gray-400">Class</dt>
-                        <dd className="text-sm font-medium text-gray-900">{CLASS_LABELS[academicClass] || academicClass || "—"}</dd>
-                      </div>
-                    </dl>
-                  </div>
-                </div>
-              ) : (
-                <div className="rounded-xl border border-gray-100 bg-gray-50 p-6 text-center text-gray-500">
-                  Profile editing is only available to the account owner.
-                </div>
-              )}
-            </div>
-          </div>
-        );
       default:
         return (
           <OverviewTab
@@ -638,67 +609,193 @@ const StudentDashboard = ({
             getSeries={getSeries}
             getSeriesId={getSeriesId}
             onTabChange={handleTabSelect}
+            studentId={student?._id}
           />
         );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="w-full px-4 py-8 sm:px-6 lg:px-10 lg:h-[calc(100vh-2rem)] lg:overflow-hidden">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start h-full">
-          <aside className="lg:w-64 lg:sticky lg:top-6 lg:self-start">
-            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-              <div className="border-b border-gray-100 px-4 py-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  Student Dashboard
-                </p>
-                <p className="text-sm font-medium text-gray-900">
-                  Navigate your learning
+    <div className="bg-gray-50 dark:bg-[#111a21] text-gray-900 font-sans h-screen overflow-hidden flex flex-col">
+      {/* Top Navigation Bar */}
+      <header className="flex-none h-20 w-full px-6 md:px-10 flex items-center justify-between z-20 bg-white dark:bg-[#1a2632] shadow-sm">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-3 text-blue-600">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+              <span className="material-symbols-outlined text-blue-600 text-2xl">
+                school
+              </span>
+            </div>
+            <h2 className="text-gray-900 dark:text-white text-xl font-bold tracking-tight">
+              FacultyPedia
+            </h2>
+          </div>
+        </div>
+        <div className="flex items-center gap-4" ref={profileMenuRef}>
+          <button className="relative p-2.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300">
+            <span className="material-symbols-outlined">notifications</span>
+            <span className="absolute top-2.5 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-900"></span>
+          </button>
+          <button className="p-2.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300">
+            <span className="material-symbols-outlined">chat_bubble</span>
+          </button>
+          <div className="pl-4 border-l border-gray-100 dark:border-gray-700 flex items-center gap-3 relative">
+            <div className="text-right hidden lg:block">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
+                {name || "Student"}
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">
+                {CLASS_LABELS[academicClass] ||
+                  academicClass ||
+                  specialization ||
+                  "Student"}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+              className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden ring-2 ring-white dark:ring-gray-700 shadow-sm cursor-pointer bg-cover bg-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={image ? { backgroundImage: `url('${image}')` } : {}}
+              aria-haspopup="menu"
+              aria-expanded={isProfileMenuOpen}
+            >
+              {!image && (
+                <div className="w-full h-full flex items-center justify-center bg-blue-100 text-blue-600 font-bold text-sm">
+                  {name?.charAt(0)?.toUpperCase() || "S"}
+                </div>
+              )}
+            </button>
+
+            {isProfileMenuOpen && (
+              <div className="absolute right-0 top-14 w-52 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1a2632] shadow-lg py-2 z-30">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsProfileMenuOpen(false);
+                    router.push(`/profile/student/${student?._id || ""}`);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-800 flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-base">
+                    space_dashboard
+                  </span>
+                  Dashboard
+                </button>
+                {isOwnProfile && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsProfileMenuOpen(false);
+                      setIsEditModalOpen(true);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-gray-800 flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-base">
+                      edit
+                    </span>
+                    Edit Profile
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsProfileMenuOpen(false);
+                    await handleLogout();
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-base">
+                    logout
+                  </span>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-1 h-[calc(100vh-80px)] overflow-hidden">
+        {/* Sidebar Navigation */}
+        <nav className="hidden lg:flex w-72 flex-col p-6 h-full">
+          <div className="flex flex-col gap-2 bg-white dark:bg-[#1a2632] h-full rounded-2xl shadow-sm p-4 overflow-y-auto hide-scrollbar">
+            <div className="mb-4 px-4 pt-2">
+              <p className="text-xs font-bold text-gray-600 dark:text-gray-500 uppercase tracking-wider">
+                Main Menu
+              </p>
+            </div>
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => handleTabSelect(tab.id)}
+                  disabled={tab.disabled}
+                  className={`group flex items-center gap-4 px-4 py-3 rounded-xl font-medium transition-all relative overflow-hidden ${
+                    isActive
+                      ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
+                  } ${
+                    tab.disabled
+                      ? "cursor-not-allowed opacity-50 hover:bg-transparent hover:text-gray-400"
+                      : ""
+                  }`}
+                >
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-600 rounded-r-full"></div>
+                  )}
+                  <span
+                    className={`material-symbols-outlined ${
+                      isActive ? "text-blue-600" : "group-hover:text-blue-600"
+                    } transition-colors`}
+                  >
+                    {tab.icon}
+                  </span>
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+
+            <div className="mt-auto px-4 pt-6 pb-2">
+              <div className="p-4 rounded-xl bg-linear-to-br from-blue-600 to-blue-400 text-white relative overflow-hidden">
+                <div className="relative z-10">
+                  <p className="text-sm font-bold mb-1">Premium Plan</p>
+                  <p className="text-xs opacity-90 mb-3">
+                    Get unlimited access to all courses.
+                  </p>
+                  <button className="text-xs bg-white text-blue-600 px-3 py-1.5 rounded-full font-bold shadow-sm hover:bg-gray-50 transition-colors">
+                    Upgrade Now
+                  </button>
+                </div>
+                <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+                <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full blur-xl"></div>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 hide-scrollbar relative">
+          <div className="max-w-8xl mx-auto flex flex-col gap-8 pb-10">
+            {/* Welcome Section */}
+            <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-2">
+                  Welcome back, {name?.split(" ")[0] || "Student"} 👋
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 text-lg">
+                  Ready to continue your learning journey today?
                 </p>
               </div>
-              <nav className="space-y-1 p-2">
-                {tabs.map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() => handleTabSelect(tab.id)}
-                      disabled={tab.disabled}
-                      className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                        isActive
-                          ? "bg-blue-600 text-white shadow-sm"
-                          : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
-                      } ${
-                        tab.disabled
-                          ? "cursor-not-allowed opacity-50 hover:bg-transparent hover:text-gray-400"
-                          : ""
-                      }`}
-                    >
-                      <Icon className={`h-4 w-4 ${isActive ? "text-white" : ""}`} />
-                      <span className="flex-1 text-left">{tab.label}</span>
-                      {isActive && <span className="h-2 w-2 rounded-full bg-white" />}
-                    </button>
-                  );
-                })}
-              </nav>
+            </section>
+
+            {/* Tab Content */}
+            <div className="bg-white dark:bg-[#1a2632] rounded-2xl shadow-sm p-6">
+              {renderTabContent()}
             </div>
-            {typeof onRefresh === "function" && (
-              <button
-                type="button"
-                onClick={onRefresh}
-                className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-600 shadow-sm transition hover:border-blue-200 hover:text-blue-600"
-              >
-                Refresh dashboard data
-              </button>
-            )}
-          </aside>
-          <main className="min-w-0 flex-1 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:pr-1">
-            <div className="mb-8">{renderTabContent()}</div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
 
       <EditProfileModal
@@ -707,6 +804,32 @@ const StudentDashboard = ({
         studentData={student}
         onSave={handleProfileSave}
       />
+
+      <style jsx global>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .material-symbols-outlined {
+          font-family: "Material Symbols Outlined";
+          font-weight: normal;
+          font-style: normal;
+          font-size: 24px;
+          line-height: 1;
+          letter-spacing: normal;
+          text-transform: none;
+          display: inline-block;
+          white-space: nowrap;
+          word-wrap: normal;
+          direction: ltr;
+          font-feature-settings: "liga";
+          -webkit-font-feature-settings: "liga";
+          -webkit-font-smoothing: antialiased;
+        }
+      `}</style>
     </div>
   );
 };

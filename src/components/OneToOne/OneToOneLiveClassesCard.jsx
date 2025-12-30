@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { IoPersonSharp } from "react-icons/io5";
-import { FaBook, FaClock, FaCalendarAlt } from "react-icons/fa";
+import { FaBook, FaClock, FaCalendarAlt, FaArrowRight } from "react-icons/fa";
 import { MdSchool } from "react-icons/md";
 
 const OneToOneLiveClassesCard = ({ classData }) => {
@@ -29,32 +29,40 @@ const OneToOneLiveClassesCard = ({ classData }) => {
     });
   };
 
+  // Calculate enrollment percentage
+  const enrollmentPercentage =
+    ((classData.enrolledStudents?.length || 0) / (classData.maxStudents || 1)) *
+    100;
+  const isNearlyFull = enrollmentPercentage > 80;
+
+  // Get educator initials for avatar fallback
+  const getInitials = (name) => {
+    if (!name) return "IN";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
-      {/* Class Image */}
-      <div className="relative h-40 bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden flex-shrink-0 rounded-xl mb-4">
-        {classData.introVideo ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-white text-center">
-              <FaBook className="w-12 h-12 mx-auto mb-2" />
-              <p className="text-sm font-medium">Live Class</p>
-            </div>
-          </div>
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-white text-center">
-              <FaBook className="w-12 h-12 mx-auto mb-2" />
-              <p className="text-sm font-medium">Live Class</p>
-            </div>
-          </div>
-        )}
+    <div className="group relative flex flex-col rounded-xl bg-white border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-blue-600/30 h-full overflow-hidden">
+      {/* Thumbnail */}
+      <div className="relative aspect-video overflow-hidden bg-gray-100">
+        <Image
+          src="/images/placeholders/1.svg"
+          alt={classData.liveClassTitle || "Live Class"}
+          fill
+          className="object-cover transform transition-transform duration-300 group-hover:scale-105"
+        />
         {/* Specialization Badges */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1">
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
           {Array.isArray(classData.liveClassSpecification) &&
             classData.liveClassSpecification.map((spec, idx) => (
               <span
                 key={idx}
-                className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium"
+                className="bg-white/90 backdrop-blur-sm text-blue-700 px-2.5 py-1 rounded-md text-xs font-semibold"
               >
                 {spec}
               </span>
@@ -62,110 +70,117 @@ const OneToOneLiveClassesCard = ({ classData }) => {
         </div>
       </div>
 
-      <div className="flex flex-col flex-grow">
-        {/* Class Title */}
-        <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight line-clamp-2">
-          {classData.liveClassTitle}
-        </h3>
-
-        {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
-          {classData.description || "Interactive live class session"}
-        </p>
-
-        {/* Class Information */}
-        <div className="space-y-2 mb-4">
-          {/* Educator */}
-          {classData.educatorID && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
-                <IoPersonSharp className="w-4 h-4 mr-2 text-blue-600" />
-                <span className="font-medium">Educator:</span>
+      <div className="flex flex-col grow p-4">
+        {/* Educator Info Section */}
+        {classData.educatorID && (
+          <div className="flex items-center gap-3 mb-4">
+            {classData.educatorID?.profilePicture ? (
+              <Image
+                src={classData.educatorID.profilePicture}
+                alt={classData.educatorID?.fullName || "Educator"}
+                width={40}
+                height={40}
+                className="w-10 h-10 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold">
+                {getInitials(
+                  classData.educatorID?.fullName ||
+                    classData.educatorID?.username
+                )}
               </div>
-              <span className="text-sm text-gray-800 font-medium truncate ml-2">
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-900 truncate">
                 {classData.educatorID?.fullName ||
                   classData.educatorID?.username ||
                   "Instructor"}
-              </span>
+              </p>
+              <p className="text-xs text-gray-500">Educator</p>
             </div>
-          )}
-
-          {/* Subject */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-600">
-              <FaBook className="mr-2 text-blue-600" />
-              <span className="font-medium">Subject:</span>
-            </div>
-            <span className="text-sm text-gray-800 font-medium capitalize">
-              {Array.isArray(classData.subject)
-                ? classData.subject.join(", ")
-                : classData.subject || "N/A"}
-            </span>
           </div>
+        )}
 
-          {/* Class Level */}
-          {classData.class && classData.class.length > 0 && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
-                <MdSchool className="w-4 h-4 mr-2 text-blue-600" />
-                <span className="font-medium">Class:</span>
+        {/* Title and Description */}
+        <div className="mb-4">
+          <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight line-clamp-2">
+            {classData.liveClassTitle}
+          </h3>
+          <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
+            {classData.description || "Interactive live class session"}
+          </p>
+        </div>
+
+        {/* Metadata Grid */}
+        <div className="border-t border-b border-gray-200 py-3 mb-4">
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            {/* Class Level */}
+            {classData.class && classData.class.length > 0 && (
+              <div className="flex items-center gap-2">
+                <MdSchool className="w-4 h-4 text-blue-600 shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs text-gray-500">Class</p>
+                  <p className="text-sm font-semibold text-gray-900 truncate">
+                    {Array.isArray(classData.class)
+                      ? classData.class.join(", ")
+                      : classData.class}
+                  </p>
+                </div>
               </div>
-              <span className="text-sm text-gray-800 font-medium">
-                {Array.isArray(classData.class)
-                  ? classData.class.join(", ")
-                  : classData.class}
-              </span>
-            </div>
-          )}
+            )}
 
-          {/* Duration */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-600">
-              <FaClock className="mr-2 text-blue-600" />
-              <span className="font-medium">Duration:</span>
+            {/* Duration */}
+            <div className="flex items-center gap-2">
+              <FaClock className="w-4 h-4 text-blue-600 shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs text-gray-500">Duration</p>
+                <p className="text-sm font-semibold text-gray-900">
+                  {classData.classDuration} mins
+                </p>
+              </div>
             </div>
-            <span className="text-sm text-gray-800 font-medium">
-              {classData.classDuration} mins
-            </span>
           </div>
 
-          {/* Class Timing */}
+          {/* Full-width Timing */}
           {classData.classTiming && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
-                <FaCalendarAlt className="mr-2 text-blue-600" />
-                <span className="font-medium">Scheduled:</span>
+            <div className="flex items-center gap-2">
+              <FaCalendarAlt className="w-4 h-4 text-blue-600 shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs text-gray-500">Scheduled</p>
+                <p className="text-sm font-semibold text-gray-900">
+                  {formatDate(classData.classTiming)} at{" "}
+                  {formatTime(classData.classTiming)}
+                </p>
               </div>
-              <span className="text-xs text-gray-800 font-medium">
-                {formatDate(classData.classTiming)} at{" "}
-                {formatTime(classData.classTiming)}
-              </span>
             </div>
           )}
         </div>
 
-        {/* Pricing Section */}
-        <div className="border-t border-gray-100 pt-4 mb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-baseline space-x-2">
-              <span className="text-xl font-bold text-gray-900">
-                ₹{(classData.liveClassesFee || 0).toLocaleString()}
-              </span>
-            </div>
-            <div className="text-xs text-gray-500">
+        {/* Footer Layout */}
+        <div className="flex items-center justify-between mt-auto">
+          <div className="flex flex-col gap-1">
+            {/* Enrollment Status */}
+            <div
+              className={`text-xs font-medium ${
+                isNearlyFull ? "text-orange-500" : "text-green-600"
+              }`}
+            >
               {classData.enrolledStudents?.length || 0}/{classData.maxStudents}{" "}
               enrolled
             </div>
+            {/* Price */}
+            <div className="text-xl font-bold text-gray-900">
+              ₹{(classData.liveClassesFee || 0).toLocaleString()}
+            </div>
           </div>
-        </div>
 
-        {/* Action Button */}
-        <div className="mt-auto">
+          {/* Details Button */}
           <Link
             href={`/1-1-live-class/${classData._id || classData.id}`}
-            className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center block"
+            className="inline-flex items-center gap-2 rounded-full bg-blue-600 h-9 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            View Details
+            Details
+            <FaArrowRight className="w-3 h-3" />
           </Link>
         </div>
       </div>

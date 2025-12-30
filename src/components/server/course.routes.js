@@ -3,19 +3,28 @@ import API_CLIENT from "./config";
 const isLikelyObjectId = (value) =>
   typeof value === "string" && /^[0-9a-fA-F]{24}$/.test(value.trim());
 
-export const getCourseById = async (identifier) => {
+export const getCourseById = async (identifier, forceSlug = false) => {
   try {
     const normalized = String(identifier).trim();
-    const useSlugLookup = !isLikelyObjectId(normalized);
     const encoded = encodeURIComponent(normalized);
+    const looksLikeId = isLikelyObjectId(normalized);
 
-    const response = useSlugLookup
-      ? await API_CLIENT.get(`/api/courses/slug/${encoded}`)
-      : await API_CLIENT.get(`/api/courses/${encoded}`);
+    // Primary lookup: by ID when it looks like an ObjectId and slug was not forced
+    if (looksLikeId && !forceSlug) {
+      try {
+        const res = await API_CLIENT.get(`/api/courses/${encoded}`);
+        return res.data?.course || res.data;
+      } catch (err) {
+        // If not found, fall through to slug lookup for robustness
+        if (err?.response?.status !== 404) throw err;
+      }
+    }
 
-    return response.data?.course || response.data;
+    // Fallback or slug-first lookup
+    const slugRes = await API_CLIENT.get(`/api/courses/slug/${encoded}`);
+    return slugRes.data?.course || slugRes.data;
   } catch (error) {
-    console.error("Error fetching course by ID:", error);
+    console.error("Error fetching course by ID or slug:", error);
     throw error;
   }
 };
@@ -30,7 +39,10 @@ export const getCourseBySubject = async (subject) => {
   }
 };
 
-export const getCoursesBySpecialization = async (specialization, params = {}) => {
+export const getCoursesBySpecialization = async (
+  specialization,
+  params = {}
+) => {
   try {
     const response = await API_CLIENT.get(
       `/api/courses/specialization/${specialization}`,
@@ -82,7 +94,9 @@ export const getCoursesByIds = async (ids = []) => {
 
 export const getAllCourses = async (params = {}) => {
   try {
-    const response = await API_CLIENT.get(`/api/courses`, { params });
+    const response = await API_CLIENT.get(`/api/courses`, {
+      params: { includePast: false, ...params },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching all courses:", error);

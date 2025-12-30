@@ -18,6 +18,7 @@ export const fetchIITJEEOnlineCourses = async (specialization, params = {}) => {
   try {
     const queryParams = {
       limit: 100,
+      includePast: false,
       ...params,
     };
 
@@ -47,18 +48,23 @@ export const fetchIITJEEWebinars = async (body) => {
 };
 
 // Fetch webinars by specialization using GET with query params
-export const fetchWebinarsBySpecialization = async (specialization, params = {}) => {
+export const fetchWebinarsBySpecialization = async (
+  specialization,
+  params = {}
+) => {
   try {
     const queryParams = {
       limit: 100,
-      ...params
+      ...params,
     };
-    
+
     if (specialization && specialization !== "All") {
       queryParams.specialization = specialization;
     }
-    
-    const response = await API_CLIENT.get("/api/webinars", { params: queryParams });
+
+    const response = await API_CLIENT.get("/api/webinars", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching webinars:", error);
@@ -71,9 +77,11 @@ export const fetchAllWebinars = async (params = {}) => {
   try {
     const queryParams = {
       limit: 100,
-      ...params
+      ...params,
     };
-    const response = await API_CLIENT.get("/api/webinars", { params: queryParams });
+    const response = await API_CLIENT.get("/api/webinars", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching webinars:", error);
@@ -104,18 +112,23 @@ export const fetchIITJEETestSeries = async (body) => {
 };
 
 // Fetch test series by specialization using GET with query params
-export const fetchTestSeriesBySpecialization = async (specialization, params = {}) => {
+export const fetchTestSeriesBySpecialization = async (
+  specialization,
+  params = {}
+) => {
   try {
     const queryParams = {
       limit: 100,
-      ...params
+      ...params,
     };
-    
+
     if (specialization && specialization !== "All") {
       queryParams.specialization = specialization;
     }
-    
-    const response = await API_CLIENT.get("/api/test-series", { params: queryParams });
+
+    const response = await API_CLIENT.get("/api/test-series", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching test series:", error);
@@ -128,9 +141,11 @@ export const fetchAllTestSeries = async (params = {}) => {
   try {
     const queryParams = {
       limit: 100,
-      ...params
+      ...params,
     };
-    const response = await API_CLIENT.get("/api/test-series", { params: queryParams });
+    const response = await API_CLIENT.get("/api/test-series", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching test series:", error);
@@ -169,14 +184,20 @@ export const fetchOneToOneCourses = async (body) => {
 };
 
 // Fetch live classes by specialization
-export const fetchLiveClassesBySpecialization = async (specialization, params = {}) => {
+export const fetchLiveClassesBySpecialization = async (
+  specialization,
+  params = {}
+) => {
   try {
     const queryParams = {
       specification: specialization,
       limit: 100,
-      ...params
+      includePast: false,
+      ...params,
     };
-    const response = await API_CLIENT.get("/api/live-classes", { params: queryParams });
+    const response = await API_CLIENT.get("/api/live-classes", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching live classes:", error);
@@ -189,9 +210,12 @@ export const fetchAllLiveClasses = async (params = {}) => {
   try {
     const queryParams = {
       limit: 100,
-      ...params
+      includePast: false,
+      ...params,
     };
-    const response = await API_CLIENT.get("/api/live-classes", { params: queryParams });
+    const response = await API_CLIENT.get("/api/live-classes", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching live classes:", error);
@@ -211,16 +235,22 @@ export const fetchLiveClassById = async (id) => {
 };
 
 // Fetch Pay Per Hour (OTO) courses by specialization
-export const fetchPPHCoursesBySpecialization = async (specialization, params = {}) => {
+export const fetchPPHCoursesBySpecialization = async (
+  specialization,
+  params = {}
+) => {
   try {
     const queryParams = {
       courseType: "OTO", // One-to-One courses (Pay Per Hour)
       specialization: specialization,
       limit: 100,
-      ...params
+      includePast: false,
+      ...params,
     };
-    
-    const response = await API_CLIENT.get("/api/courses", { params: queryParams });
+
+    const response = await API_CLIENT.get("/api/courses", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching PPH courses:", error);
@@ -229,22 +259,30 @@ export const fetchPPHCoursesBySpecialization = async (specialization, params = {
 };
 
 // Fetch educators with Pay Per Hour availability by specialization
-export const fetchPPHEducatorsBySpecialization = async (specialization, params = {}) => {
+export const fetchPPHEducatorsBySpecialization = async (
+  specialization,
+  params = {}
+) => {
   try {
-    const response = await API_CLIENT.get(`/api/educators/specialization/${specialization}`, {
-      params: {
-        limit: 100,
-        ...params
+    const response = await API_CLIENT.get(
+      `/api/educators/specialization/${specialization}`,
+      {
+        params: {
+          limit: 100,
+          ...params,
+        },
       }
-    });
-    
+    );
+
     // Filter educators who have payPerHourFee set and greater than 0
     const educators = response.data?.data?.educators || [];
-    const pphEducators = educators.filter(educator => educator.payPerHourFee && educator.payPerHourFee > 0);
-    
+    const pphEducators = educators.filter(
+      (educator) => educator.payPerHourFee && educator.payPerHourFee > 0
+    );
+
     return {
       educators: pphEducators,
-      pagination: response.data?.data?.pagination || {}
+      pagination: response.data?.data?.pagination || {},
     };
   } catch (error) {
     console.error("Error fetching PPH educators:", error);
@@ -258,9 +296,12 @@ export const fetchAllPPHCourses = async (params = {}) => {
     const queryParams = {
       courseType: "OTO",
       limit: 100,
-      ...params
+      includePast: false,
+      ...params,
     };
-    const response = await API_CLIENT.get("/api/courses", { params: queryParams });
+    const response = await API_CLIENT.get("/api/courses", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching all PPH courses:", error);
@@ -300,4 +341,3 @@ export const fetchPostById = async (id) => {
     throw error;
   }
 };
-

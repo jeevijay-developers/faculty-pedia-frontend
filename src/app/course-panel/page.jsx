@@ -1,131 +1,36 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { FiChevronDown, FiFileText } from "react-icons/fi";
 import { getCourseById } from "@/components/server/course.routes";
-import { getTestSeriesByCourse, getTestSeriesById } from "@/components/server/test-series.route";
+import {
+  getTestSeriesByCourse,
+  getTestSeriesById,
+} from "@/components/server/test-series.route";
 import { getTestsBySeries, getTestById } from "@/components/server/test.route";
 
-const sampleCoursePanel = {
-  title: "Physics Crash Course Panel",
-  subtitle: "A focused mini-course with quick concept breakdowns, bite-sized demos, and downloadable assets for revision.",
-  tags: ["IIT-JEE", "Class 11-12", "English", "Quick Prep"],
-  topics: [
-    {
-      name: "Mechanics",
-      description: "Kinematics, Newton's laws, friction, work-energy basics",
-      videos: [
-        {
-          title: "Projectile Motion in 15 minutes",
-          url: "https://youtu.be/p9pPjASnnxw?si=CMyPuXnB9DnLOFYI",
-          duration: "15:42",
-          level: "Starter",
-          description: "Quick visuals plus the 3 must-remember trajectory facts for exams.",
-        },
-        {
-          title: "Friction with Intuition",
-          url: "https://youtu.be/wUgYa5YLBbM?si=NYyld3uV2agvfCqH",
-          duration: "12:18",
-          level: "Core",
-          description: "Static vs kinetic friction with everyday analogies and exam tips.",
-        },
-        {
-          title: "Work-Energy Theorem Speedrun",
-          url: "https://youtu.be/Usu9xZfabPM?si=3eDrq7w6IRuIkzO9",
-          duration: "10:05",
-          level: "Core",
-          description: "One diagram, two formulas, and the most asked MCQ patterns.",
-        },
-      ],
-    },
-    {
-      name: "Thermodynamics",
-      description: "Heat, work, and the laws of thermodynamics in applied problems",
-      videos: [
-        {
-          title: "Zeroth & First Law in Real Life",
-          url: "https://youtu.be/Gx_T4Q3nq7g",
-          duration: "11:09",
-          level: "Starter",
-          description: "Intuitive take with coffee mugs, kettles, and quick equilibrium checks.",
-        },
-        {
-          title: "PV Graphs without Memorizing",
-          url: "https://www.youtube.com/watch?v=fuFh6w1IrwU",
-          duration: "13:27",
-          level: "Core",
-          description: "Isothermal vs adiabatic with simple slopes and shaded areas.",
-        },
-      ],
-    },
-    {
-      name: "Waves & Sound",
-      description: "Superposition, resonance, and Doppler with exam-style cases",
-      videos: [
-        {
-          title: "Beats in 8 Minutes",
-          url: "https://youtu.be/OLM6iCjq-0E",
-          duration: "08:02",
-          level: "Starter",
-          description: "Beats frequency, why headphones leak, and quick numerical tricks.",
-        },
-        {
-          title: "Doppler Effect: Moving Source vs Listener",
-          url: "https://www.youtube.com/watch?v=Z5dQh5w7y5E",
-          duration: "09:44",
-          level: "Core",
-          description: "Sirens, trains, and how to pick the right sign convention fast.",
-        },
-      ],
-    },
-  ],
-  assets: [
-    {
-      title: "Mechanics Formula Sheet",
-      type: "PDF",
-      size: "1.2 MB",
-      url: "https://example.com/mechanics-formulas.pdf",
-      description: "One-page high-yield equations for kinematics, NLM, and energy.",
-    },
-    {
-      title: "Thermo Flashcards",
-      type: "Notion Page",
-      size: "Online",
-      url: "https://example.com/thermo-cards",
-      description: "Micro flashcards covering laws, processes, and PV graph cues.",
-    },
-    {
-      title: "Wave Interference Worksheet",
-      type: "Worksheet",
-      size: "800 KB",
-      url: "https://example.com/wave-practice.pdf",
-      description: "15 MCQs with annotated solutions on beats and resonance.",
-    },
-    {
-      title: "Lab Audio Samples",
-      type: "Audio Pack",
-      size: "4.5 MB",
-      url: "https://example.com/audio-pack.zip",
-      description: "Downloadable tones to demo beats, resonance, and Doppler shifts.",
-    },
-  ],
-  testSeries: [
-    // Intentionally empty; avoid showing Test Series tab unless real data exists
-  ],
-};
-
-const getYouTubeEmbedUrl = (url) => {
+const getEmbedUrl = (url) => {
   if (!url) return null;
-  if (url.includes("youtube.com/embed/")) return url;
-  const idFromWatch = url.includes("watch?v=") ? url.split("v=")[1].split("&")[0] : null;
-  const idFromShort = url.includes("youtu.be/") ? url.split("youtu.be/")[1].split("?")[0] : null;
-  const videoId = idFromWatch || idFromShort;
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  const trimmed = url.trim();
+  if (/vimeo\.com\/\d+/.test(trimmed) && trimmed.includes("player.vimeo.com")) {
+    return trimmed;
+  }
+  if (trimmed.includes("youtube.com/embed/")) return trimmed;
+  const watchId = trimmed.includes("watch?v=")
+    ? trimmed.split("v=")[1].split("&")[0]
+    : null;
+  const shortId = trimmed.includes("youtu.be/")
+    ? trimmed.split("youtu.be/")[1].split("?")[0]
+    : null;
+  const videoId = watchId || shortId;
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : trimmed;
 };
 
-const CoursePanelPage = ({ searchParams }) => {
-  const courseId = searchParams?.courseId;
-  const [courseData, setCourseData] = useState(sampleCoursePanel);
+const CoursePanelPage = () => {
+  const searchParams = useSearchParams();
+  const courseId = searchParams?.get("courseId") || null;
+  const [courseData, setCourseData] = useState(null);
   const [activeTab, setActiveTab] = useState("videos");
   const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [showVideoDropdown, setShowVideoDropdown] = useState(false);
@@ -140,23 +45,46 @@ const CoursePanelPage = ({ searchParams }) => {
   useEffect(() => {
     const load = async () => {
       if (!courseId) {
-        setSelectedVideoId(sampleCoursePanel.topics?.[0]?.videos?.[0]?.url || null);
+        setError("Missing courseId. Open this page via a course link.");
         setCourseTests([]);
+        setCourseData(null);
         return;
       }
+
       try {
         setLoading(true);
         setError(null);
-        const data = await getCourseById(courseId);
+        let data = null;
+
+        try {
+          data = await getCourseById(courseId);
+        } catch (err) {
+          const status = err?.response?.status;
+          if (status === 404) {
+            // Fallback: treat identifier as slug even if it looked like an ObjectId
+            data = await getCourseById(courseId, true);
+          } else {
+            throw err;
+          }
+        }
+
         if (data) {
           setCourseData(data);
           const first = data?.videos?.[0];
           setSelectedVideoId(first?.link || first?.url || null);
         } else {
+          setCourseData(null);
+          setSelectedVideoId(null);
           setError("Course not found");
         }
       } catch (err) {
-        setError(err?.message || "Failed to load course");
+        setCourseData(null);
+        setSelectedVideoId(null);
+        setError(
+          err?.response?.data?.message ||
+            err?.message ||
+            "Failed to load course"
+        );
       } finally {
         setLoading(false);
       }
@@ -208,7 +136,8 @@ const CoursePanelPage = ({ searchParams }) => {
   const allVideos = useMemo(() => {
     if (Array.isArray(courseData?.videos) && courseData.videos.length > 0) {
       return courseData.videos.map((video, index) => ({
-        id: video._id || video.id || video.link || video.url || `video-${index}`,
+        id:
+          video._id || video.id || video.link || video.url || `video-${index}`,
         title: video.title || video.name || `Video ${index + 1}`,
         url: video.link || video.url,
         description: video.description,
@@ -217,23 +146,14 @@ const CoursePanelPage = ({ searchParams }) => {
         level: video.level,
       }));
     }
-    // fallback to sample topics flattened
-    const fromSample = (sampleCoursePanel.topics || []).flatMap((topic) =>
-      (topic.videos || []).map((video, index) => ({
-        id: video.url || `sample-${topic.name}-${index}`,
-        title: `${topic.name}: ${video.title}`,
-        url: video.url,
-        description: video.description,
-        duration: video.duration,
-        topic: topic.name,
-        level: video.level,
-      }))
-    );
-    return fromSample;
+    return [];
   }, [courseData]);
 
   const assets = useMemo(() => {
-    if (Array.isArray(courseData?.studyMaterials) && courseData.studyMaterials.length > 0) {
+    if (
+      Array.isArray(courseData?.studyMaterials) &&
+      courseData.studyMaterials.length > 0
+    ) {
       return courseData.studyMaterials.map((asset, index) => ({
         title: asset.title || `Asset ${index + 1}`,
         type: asset.fileType || "PDF",
@@ -242,8 +162,7 @@ const CoursePanelPage = ({ searchParams }) => {
         description: asset.description || "",
       }));
     }
-
-    return sampleCoursePanel.assets;
+    return [];
   }, [courseData]);
 
   useEffect(() => {
@@ -274,8 +193,10 @@ const CoursePanelPage = ({ searchParams }) => {
   );
 
   const getTestsCount = (series) => {
-    if (Array.isArray(series?.tests) && series.tests.length > 0) return series.tests.length;
-    if (Array.isArray(series?.liveTests) && series.liveTests.length > 0) return series.liveTests.length;
+    if (Array.isArray(series?.tests) && series.tests.length > 0)
+      return series.tests.length;
+    if (Array.isArray(series?.liveTests) && series.liveTests.length > 0)
+      return series.liveTests.length;
     if (typeof series?.numberOfTests === "number") return series.numberOfTests;
     if (typeof series?.noOfTests === "number") return series.noOfTests;
     return 0;
@@ -338,7 +259,11 @@ const CoursePanelPage = ({ searchParams }) => {
 
     try {
       const detail = await getTestSeriesById(seriesId);
-      const detailSeries = detail?.testSeries || detail?.data?.testSeries || detail?.data || detail;
+      const detailSeries =
+        detail?.testSeries ||
+        detail?.data?.testSeries ||
+        detail?.data ||
+        detail;
       const fromDetail =
         (Array.isArray(detailSeries?.tests) && detailSeries.tests) ||
         (Array.isArray(detailSeries?.liveTests) && detailSeries.liveTests) ||
@@ -411,7 +336,9 @@ const CoursePanelPage = ({ searchParams }) => {
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold text-slate-900">Test Series</h2>
-          <p className="text-sm text-slate-600">Course-specific tests and assessments.</p>
+          <p className="text-sm text-slate-600">
+            Course-specific tests and assessments.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-4">
@@ -447,7 +374,9 @@ const CoursePanelPage = ({ searchParams }) => {
                     className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-indigo-200 hover:text-indigo-700 transition-transform duration-200 shadow-sm"
                   >
                     <FiChevronDown
-                      className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : "rotate-0"}`}
+                      className={`w-5 h-5 transition-transform duration-200 ${
+                        isExpanded ? "rotate-180" : "rotate-0"
+                      }`}
                     />
                   </button>
                 </div>
@@ -462,7 +391,9 @@ const CoursePanelPage = ({ searchParams }) => {
                     ) : seriesTests && seriesTests.length > 0 ? (
                       seriesTests.map((test) => {
                         const targetSlug = test?.slug || test?._id || test?.id;
-                        const href = targetSlug ? `/test-panel/${encodeURIComponent(targetSlug)}` : "#";
+                        const href = targetSlug
+                          ? `/test-panel/${encodeURIComponent(targetSlug)}`
+                          : "#";
                         return (
                           <div
                             key={test._id || test.id || test.slug}
@@ -476,7 +407,7 @@ const CoursePanelPage = ({ searchParams }) => {
                                 {test.description || "No description provided."}
                               </p>
                             </div>
-                            <div className="flex-shrink-0 flex items-center justify-end w-full sm:w-auto">
+                            <div className="shrink-0 flex items-center justify-end w-full sm:w-auto">
                               <Link
                                 href={href}
                                 className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-semibold text-white bg-green-600 hover:bg-green-700 transition-colors"
@@ -488,7 +419,9 @@ const CoursePanelPage = ({ searchParams }) => {
                         );
                       })
                     ) : (
-                      <p className="text-sm text-slate-500">No tests available for this series.</p>
+                      <p className="text-sm text-slate-500">
+                        No tests available for this series.
+                      </p>
                     )}
                   </div>
                 )}
@@ -500,102 +433,179 @@ const CoursePanelPage = ({ searchParams }) => {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center text-text-secondary">
+        Loading course...
+      </div>
+    );
+  }
+
+  if (!courseData) {
+    return (
+      <div className="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center text-text-secondary px-4">
+        {error || "No course data available."}
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-slate-50 min-h-screen py-8 px-4 sm:px-6 lg:px-10">
-      <div className="w-full space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <aside className="lg:col-span-3 bg-white rounded-xl border border-slate-200 shadow-sm h-fit">
-            <div className="p-4 border-b border-slate-100">
-              <p className="text-sm font-semibold text-slate-800">Course Panel</p>
-              <p className="text-xs text-slate-500">Previewed as a separate page</p>
-            </div>
-            <div className="flex md:flex-col">
-              <div className="relative flex flex-1">
-                <button
-                  onClick={() => setActiveTab("videos")}
-                  className={`flex-1 text-left px-4 py-3 text-sm font-medium border-b md:border-b-0 md:border-l-4 transition-colors ${
-                    activeTab === "videos"
-                      ? "bg-indigo-50 text-indigo-700 md:border-indigo-600"
-                      : "text-slate-600 hover:text-slate-900 md:border-transparent"
-                  }`}
-                >
-                  Videos
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowVideoDropdown((prev) => !prev)}
-                  className={`px-3 border-b md:border-b-0 border-l text-xs font-semibold transition-colors ${
-                    activeTab === "videos"
-                      ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                      : "text-slate-500 hover:text-slate-900 border-slate-200"
-                  }`}
-                  aria-label="Select video"
-                >
-                  ▾
-                </button>
-                {showVideoDropdown && activeTab === "videos" && (
-                  <div className="absolute left-0 right-0 top-full z-10 mt-[1px] rounded-lg border border-slate-200 bg-white shadow-lg max-h-64 overflow-y-auto">
-                    {allVideos.map((video) => (
-                      <button
-                        key={video.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedVideoId(video.id);
-                          setShowVideoDropdown(false);
-                        }}
-                        className={`w-full text-left px-3 py-2 text-sm hover:bg-indigo-50 ${
-                          selectedVideoId === video.id ? "bg-indigo-50 text-indigo-700" : "text-slate-700"
-                        }`}
-                      >
-                        {video.title}
-                      </button>
-                    ))}
-                    {allVideos.length === 0 && (
-                      <div className="px-3 py-2 text-sm text-slate-500">No videos available</div>
-                    )}
+    <div className="bg-background-light dark:bg-background-dark min-h-screen text-text-main dark:text-white">
+      <div className="max-w-350 mx-auto px-4 md:px-8 py-8 flex flex-col gap-8">
+        {/* Breadcrumbs and Header */}
+        <header className="flex flex-col gap-6">
+          <div className="flex items-center gap-2 text-sm text-text-secondary">
+            <span className="hover:text-primary transition-colors">Home</span>
+            <span className="material-symbols-outlined text-[16px]">
+              chevron_right
+            </span>
+            <span className="hover:text-primary transition-colors">
+              My Courses
+            </span>
+            <span className="material-symbols-outlined text-[16px]">
+              chevron_right
+            </span>
+            <span className="text-primary font-medium line-clamp-1">
+              {courseData?.title || "Course"}
+            </span>
+          </div>
+
+          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+            <div className="flex-1 space-y-4">
+              <div className="flex flex-wrap items-center gap-3">
+                {courseData?.subject && (
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wide rounded-full">
+                    {Array.isArray(courseData.subject)
+                      ? courseData.subject.join(", ")
+                      : courseData.subject}
+                  </span>
+                )}
+                {courseData?.specialization && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wide rounded-full">
+                    {Array.isArray(courseData.specialization)
+                      ? courseData.specialization.join(", ")
+                      : courseData.specialization}
+                  </span>
+                )}
+                <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-100 px-3 py-1 rounded-full">
+                  <span className="size-2 rounded-full bg-green-500 animate-pulse" />
+                  In Progress
+                </span>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+                {courseData?.title || "Course"}
+              </h1>
+              <p className="text-text-secondary text-lg max-w-3xl">
+                {courseData?.subtitle || courseData?.description || ""}
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm text-text-secondary items-center pt-1">
+                {courseData?.language && (
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[20px]">
+                      language
+                    </span>
+                    <span>{courseData.language}</span>
+                  </div>
+                )}
+                <div className="w-1 h-1 bg-gray-300 rounded-full" />
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[20px]">
+                    calendar_today
+                  </span>
+                  <span>
+                    {courseData?.startDate
+                      ? new Date(courseData.startDate).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )
+                      : "Start date TBD"}
+                  </span>
+                </div>
+                <div className="w-1 h-1 bg-gray-300 rounded-full" />
+                {courseData?.courseClass && (
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[20px]">
+                      school
+                    </span>
+                    <span>Class {courseData.courseClass}</span>
                   </div>
                 )}
               </div>
-              <button
-                onClick={() => setActiveTab("assets")}
-                className={`flex-1 text-left px-4 py-3 text-sm font-medium border-b md:border-b-0 md:border-l-4 transition-colors ${
-                  activeTab === "assets"
-                    ? "bg-indigo-50 text-indigo-700 md:border-indigo-600"
-                    : "text-slate-600 hover:text-slate-900 md:border-transparent"
-                }`}
-              >
-                Assets
-              </button>
-              {hasCourseTests && (
-                <button
-                  onClick={() => setActiveTab("tests")}
-                  className={`flex-1 text-left px-4 py-3 text-sm font-medium border-b md:border-b-0 md:border-l-4 transition-colors ${
-                    activeTab === "tests"
-                      ? "bg-indigo-50 text-indigo-700 md:border-indigo-600"
-                      : "text-slate-600 hover:text-slate-900 md:border-transparent"
-                  }`}
-                >
-                  Test Series
-                </button>
-              )}
             </div>
-           
-          </aside>
 
-          <section className="lg:col-span-9 space-y-4">
-            {activeTab === "videos" ? (
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-                <div className="flex flex-col gap-2">
-                  <h2 className="text-lg font-semibold text-slate-900">Videos</h2>
-                  <p className="text-sm text-slate-600">Use the sidebar dropdown to pick a video.</p>
-                  
-                </div>
+            <div className="flex flex-col gap-4 min-w-75 bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm font-bold">Course Progress</span>
+                <span className="text-sm font-bold text-primary">
+                  {courseData?.progressPercentage ?? "45"}%
+                </span>
+              </div>
+              <div className="w-full bg-[#f1f0f4] dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                <div
+                  className="bg-primary h-2.5 rounded-full transition-all duration-500"
+                  style={{ width: `${courseData?.progressPercentage ?? 45}%` }}
+                />
+              </div>
+              <div className="text-xs text-text-secondary mb-2">
+                {courseData?.completedLessons || 12} of{" "}
+                {courseData?.totalLessons || 26} Lessons Completed
+              </div>
+              <Link
+                href="/courses"
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#f1f0f4] dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-text-main dark:text-white rounded-xl text-sm font-bold transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">
+                  arrow_back
+                </span>
+                Return to All Courses
+              </Link>
+            </div>
+          </div>
+        </header>
 
-                <div className="rounded-lg border border-slate-200 bg-slate-50/50 p-3">
-                  <div className="aspect-video rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
+        {/* Main content */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <section className="lg:col-span-12 flex flex-col gap-6">
+            {/* Tabs */}
+            <div className="border-b border-gray-200 dark:border-gray-800">
+              <div className="flex gap-8">
+                {[
+                  { id: "videos", label: "Videos" },
+                  { id: "assets", label: "Assets" },
+                  { id: "tests", label: "Tests" },
+                ].map((tab) => {
+                  const active =
+                    activeTab === tab.id ||
+                    (!hasCourseTests && tab.id === "tests" && false);
+                  return (
+                    <button
+                      key={tab.id}
+                      className={`pb-4 px-2 border-b-2 transition-all text-lg ${
+                        active
+                          ? "text-primary border-primary font-bold"
+                          : "text-text-secondary hover:text-text-main border-transparent hover:border-gray-300 font-medium"
+                      }`}
+                      onClick={() => setActiveTab(tab.id)}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Videos tab */}
+            {activeTab === "videos" && (
+              <div className="flex flex-col xl:flex-row gap-6">
+                <div className="flex-1 flex flex-col gap-4">
+                  <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-lg group">
                     {currentVideo ? (
                       <iframe
-                        src={getYouTubeEmbedUrl(currentVideo.url)}
+                        src={getEmbedUrl(currentVideo.url)}
                         title={currentVideo.title}
                         className="w-full h-full"
                         frameBorder="0"
@@ -604,46 +614,180 @@ const CoursePanelPage = ({ searchParams }) => {
                         allowFullScreen
                       />
                     ) : (
-                      <div className="h-full w-full flex items-center justify-center text-slate-500 text-sm">
-                        Pick a video to start watching.
+                      <div className="absolute inset-0 flex items-center justify-center text-white">
+                        No video selected
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            ) : activeTab === "assets" ? (
-              <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-                <div className="flex items-start justify-between gap-3 flex-wrap">
-                  <div>
-                    <h2 className="text-lg font-semibold text-slate-900">Assets</h2>
-                    <p className="text-sm text-slate-600">Downloadable resources shared for the course.</p>
-                    <p className="text-xs text-slate-500 mt-1">Provided by the educator; PDFs open in a new tab.</p>
+
+                  <div className="bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+                    <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
+                      <div>
+                        <div className="flex gap-2 mb-2 text-xs text-text-secondary">
+                          <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-white/10 font-medium">
+                            {activeTab === "videos" ? "Lesson" : ""}{" "}
+                            {allVideos.findIndex(
+                              (v) => v.id === currentVideo?.id
+                            ) + 1 || 1}
+                          </span>
+                          {currentVideo?.duration && (
+                            <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-white/10 font-medium">
+                              {currentVideo.duration}
+                            </span>
+                          )}
+                        </div>
+                        <h2 className="text-2xl font-bold leading-tight">
+                          {currentVideo?.title || "Select a lesson"}
+                        </h2>
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          className="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                          title="Previous Lesson"
+                        >
+                          <span className="material-symbols-outlined">
+                            skip_previous
+                          </span>
+                        </button>
+                        <button
+                          className="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                          title="Next Lesson"
+                        >
+                          <span className="material-symbols-outlined">
+                            skip_next
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-text-secondary text-sm leading-relaxed line-clamp-3">
+                      {courseData?.description ||
+                        "In this lecture, we dive into the selected topic. Download the attached worksheet for practice problems."}
+                    </p>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div className="w-full xl:w-90 flex flex-col gap-4">
+                  <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col h-150">
+                    <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-white/5 rounded-t-2xl">
+                      <h3 className="font-bold">Course Content</h3>
+                      <span className="text-xs font-medium text-text-secondary">
+                        {Math.min(allVideos.length, 12)}/
+                        {allVideos.length || 26} Completed
+                      </span>
+                    </div>
+                    <div className="overflow-y-auto flex-1 p-2 space-y-1 no-scrollbar">
+                      {allVideos.map((video, idx) => {
+                        const isActive = video.id === currentVideo?.id;
+                        return (
+                          <button
+                            key={video.id}
+                            type="button"
+                            onClick={() => setSelectedVideoId(video.id)}
+                            className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-colors ${
+                              isActive
+                                ? "bg-primary/5 border-l-4 border-primary"
+                                : "hover:bg-gray-50 dark:hover:bg-white/5"
+                            }`}
+                          >
+                            <div
+                              className={`mt-1 size-5 rounded-full flex items-center justify-center shrink-0 ${
+                                isActive
+                                  ? "border-2 border-primary"
+                                  : "border-2 border-gray-300 dark:border-gray-600"
+                              }`}
+                            >
+                              {isActive && (
+                                <div className="size-2 rounded-full bg-primary animate-pulse" />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div
+                                className={`text-sm font-medium line-clamp-2 ${
+                                  isActive
+                                    ? "text-primary"
+                                    : "text-text-main dark:text-white"
+                                }`}
+                              >
+                                {video.title}
+                              </div>
+                              <div
+                                className={`text-xs mt-0.5 ${
+                                  isActive
+                                    ? "text-primary/70"
+                                    : "text-text-secondary"
+                                }`}
+                              >
+                                {video.duration || "—"}
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                      {allVideos.length === 0 && (
+                        <div className="p-4 text-sm text-text-secondary">
+                          No videos available
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Assets tab */}
+            {activeTab === "assets" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold">Course Assets</h3>
+                  <span className="text-sm font-bold text-primary">
+                    View All
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {assets.map((asset, index) => (
                     <a
                       key={`${asset.title}-${index}`}
                       href={asset.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-start justify-between gap-3 p-4 rounded-lg border border-slate-200 hover:border-indigo-200 hover:bg-indigo-50/50 transition-colors"
+                      className="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-start gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
                     >
-                      <div className="space-y-1">
-                        <p className="font-semibold text-slate-900 line-clamp-2">{asset.title}</p>
-                        <p className="text-sm text-slate-600 line-clamp-2">{asset.description}</p>
-                        <p className="text-xs text-slate-500">{asset.type}{asset.size ? ` • ${asset.size}` : ""}</p>
+                      <div className="size-12 bg-gray-100 text-gray-500 rounded-lg flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined">
+                          description
+                        </span>
                       </div>
-                      <span className="text-indigo-600 text-sm font-semibold">Download</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold truncate">{asset.title}</h4>
+                        <p className="text-xs text-text-secondary mt-1 line-clamp-2">
+                          {asset.description || "Resource"}
+                        </p>
+                        <p className="text-xs text-text-secondary mt-1">
+                          {asset.size || ""}
+                        </p>
+                      </div>
                     </a>
                   ))}
                   {assets.length === 0 && (
-                    <div className="col-span-2 text-sm text-slate-500">No assets available yet.</div>
+                    <div className="col-span-3 text-sm text-text-secondary">
+                      No assets available.
+                    </div>
                   )}
                 </div>
               </div>
-            ) : (
-              renderTests()
+            )}
+
+            {/* Tests tab */}
+            {activeTab === "tests" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold">Assessments</h3>
+                  <span className="text-sm font-bold text-primary">
+                    View All
+                  </span>
+                </div>
+                {renderTests()}
+              </div>
             )}
           </section>
         </div>
