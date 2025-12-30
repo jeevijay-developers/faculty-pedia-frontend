@@ -487,7 +487,7 @@ export const getEnrolledLiveClasses = async (studentId, params = {}) => {
 
   try {
     const response = await API_CLIENT.get("/api/live-classes", {
-      params: { limit: 200, studentId, ...params },
+      params: { limit: 200, studentId, includePast: false, ...params },
     });
 
     const rawList =

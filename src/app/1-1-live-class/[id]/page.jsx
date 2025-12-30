@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { fetchLiveClassById } from "@/components/server/exams/iit-jee/routes";
 import Loading from "@/components/Common/Loading";
-import { 
-  FaBook, 
-  FaClock, 
-  FaCalendarAlt, 
-  FaUsers, 
+import {
+  FaBook,
+  FaClock,
+  FaCalendarAlt,
+  FaUsers,
   FaGraduationCap,
-  FaVideo
+  FaVideo,
 } from "react-icons/fa";
 import { MdSchool } from "react-icons/md";
 import { IoPersonSharp } from "react-icons/io5";
@@ -51,14 +51,14 @@ const LiveClassDetailsPage = ({ params }) => {
   useEffect(() => {
     const fetchLiveClassDetails = async () => {
       if (!id) return;
-      
+
       setLoading(true);
       setError(null);
       try {
         console.log("Fetching live class with ID:", id);
         const response = await fetchLiveClassById(id);
         console.log("Live Class API Response:", response);
-        
+
         // Handle response structure
         let classData = null;
         if (response?.data?.liveClass) {
@@ -70,7 +70,7 @@ const LiveClassDetailsPage = ({ params }) => {
         } else {
           classData = response;
         }
-        
+
         console.log("Live Class Data:", classData);
         setLiveClass(classData);
       } catch (error) {
@@ -92,7 +92,13 @@ const LiveClassDetailsPage = ({ params }) => {
           const entryId =
             typeof entry === "string"
               ? entry
-              : entry?.studentId || entry?.studentID || entry?.userId || entry?.user || entry?._id || entry?.id || entry?.student?._id;
+              : entry?.studentId ||
+                entry?.studentID ||
+                entry?.userId ||
+                entry?.user ||
+                entry?._id ||
+                entry?.id ||
+                entry?.student?._id;
           return entryId && entryId.toString() === studentId.toString();
         })
       : false;
@@ -133,6 +139,20 @@ const LiveClassDetailsPage = ({ params }) => {
     return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
   };
 
+  const seatsFilled = liveClass?.enrolledStudents?.length || 0;
+  const seatLimit = liveClass?.maxStudents || 0;
+  const seatFillPercent = seatLimit
+    ? Math.min(100, Math.round((seatsFilled / seatLimit) * 100))
+    : 0;
+
+  const subjectsLabel = Array.isArray(liveClass?.subject)
+    ? liveClass.subject.join(", ")
+    : liveClass?.subject || "Subject";
+  const classTags = Array.isArray(liveClass?.class) ? liveClass.class : [];
+  const specTags = Array.isArray(liveClass?.liveClassSpecification)
+    ? liveClass.liveClassSpecification
+    : [];
+
   if (loading) {
     return <Loading />;
   }
@@ -158,35 +178,30 @@ const LiveClassDetailsPage = ({ params }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <div className="flex flex-wrap gap-2 mb-4">
-            {Array.isArray(liveClass.liveClassSpecification) &&
-              liveClass.liveClassSpecification.map((spec, idx) => (
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-6xl mx-auto px-4 py-10 space-y-6">
+        {/* Header Card */}
+        <section className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div className="flex flex-wrap gap-2">
+              {specTags.map((spec, idx) => (
                 <span
                   key={idx}
-                  className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium"
+                  className="px-3 py-1 rounded-full text-xs font-semibold text-white bg-blue-600"
                 >
                   {spec}
                 </span>
               ))}
-            {Array.isArray(liveClass.class) &&
-              liveClass.class.map((cls, idx) => (
+              {classTags.map((cls, idx) => (
                 <span
                   key={idx}
-                  className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium"
+                  className="px-3 py-1 rounded-full text-xs font-semibold text-white bg-purple-600"
                 >
                   {cls}
                 </span>
               ))}
-          </div>
+            </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 mb-4">
-            <h1 className="text-3xl font-bold text-gray-900">
-              {liveClass.liveClassTitle}
-            </h1>
             <ShareButton
               title={liveClass.liveClassTitle || "Live Class"}
               text={`Join the live class "${liveClass.liveClassTitle}" on Faculty Pedia.`}
@@ -195,167 +210,189 @@ const LiveClassDetailsPage = ({ params }) => {
             />
           </div>
 
-          {/* Educator Info */}
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight mb-4">
+            {liveClass.liveClassTitle}
+          </h1>
+
           {liveClass.educatorID && (
-            <div className="flex items-center gap-3 mb-4">
-              <IoPersonSharp className="w-6 h-6 text-blue-600" />
-              <div>
-                <p className="text-sm text-gray-500">Instructor</p>
-                <p className="font-semibold text-gray-900">
-                  {liveClass.educatorID?.fullName || 
-                   liveClass.educatorID?.username || 
-                   "Instructor"}
-                </p>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+                <IoPersonSharp className="w-5 h-5" />
               </div>
-            </div>
-          )}
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <FaClock className="w-6 h-6 mx-auto text-blue-600 mb-2" />
-              <div className="text-2xl font-bold text-gray-900">
-                {liveClass.classDuration}
-              </div>
-              <div className="text-sm text-gray-600">Minutes</div>
-            </div>
-
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <FaUsers className="w-6 h-6 mx-auto text-green-600 mb-2" />
-              <div className="text-2xl font-bold text-gray-900">
-                {liveClass.maxStudents}
-              </div>
-              <div className="text-sm text-gray-600">Max Students</div>
-            </div>
-
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <FaGraduationCap className="w-6 h-6 mx-auto text-purple-600 mb-2" />
-              <div className="text-2xl font-bold text-gray-900">
-                {liveClass.enrolledStudents?.length || 0}
-              </div>
-              <div className="text-sm text-gray-600">Enrolled</div>
-            </div>
-
-            <div className="text-center p-4 bg-orange-50 rounded-lg">
-              <FaBook className="w-6 h-6 mx-auto text-orange-600 mb-2" />
-              <div className="text-sm font-bold text-gray-900 capitalize">
-                {Array.isArray(liveClass.subject) 
-                  ? liveClass.subject.join(", ") 
-                  : liveClass.subject}
-              </div>
-              <div className="text-sm text-gray-600">Subject</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            
-
-            {/* Description */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">
-                Description
-              </h2>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {liveClass.description || "Interactive live class session with expert instructor."}
+              <p className="text-slate-600 font-medium">
+                Instructor:{" "}
+                <span className="text-slate-900">
+                  {liveClass.educatorID?.fullName ||
+                    liveClass.educatorID?.username ||
+                    "Instructor"}
+                </span>
               </p>
             </div>
+          )}
+        </section>
 
-            {/* Schedule */}
+        {/* Stats Bar */}
+        <section className="bg-white rounded-2xl p-6 shadow-md border border-slate-100">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
+                <FaClock />
+              </div>
+              <div>
+                <div className="text-lg font-bold text-slate-900">
+                  {liveClass.classDuration || "-"}
+                </div>
+                <div className="text-sm text-slate-500">Minutes</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
+                <FaUsers />
+              </div>
+              <div>
+                <div className="text-lg font-bold text-slate-900">
+                  {liveClass.maxStudents || 0}
+                </div>
+                <div className="text-sm text-slate-500">Max Students</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
+                <FaGraduationCap />
+              </div>
+              <div>
+                <div className="text-lg font-bold text-slate-900">
+                  {seatsFilled}
+                </div>
+                <div className="text-sm text-slate-500">Enrolled</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
+                <FaBook />
+              </div>
+              <div>
+                <div className="text-sm font-bold text-slate-900 leading-tight">
+                  {subjectsLabel}
+                </div>
+                <div className="text-sm text-slate-500">Subjects</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-6">
+            <article className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
+              <h2 className="text-xl font-bold text-slate-900 mb-3">
+                Description
+              </h2>
+              <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">
+                {liveClass.description ||
+                  "Interactive live class session with expert instructor."}
+              </p>
+            </article>
+
             {liveClass.classTiming && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <FaCalendarAlt className="text-blue-600" />
-                  Schedule
-                </h2>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <FaCalendarAlt className="text-blue-600" />
-                    <span className="font-medium">Date:</span>
-                    <span>{formatDate(liveClass.classTiming)}</span>
+              <article className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-slate-100 flex flex-col md:flex-row gap-4 md:items-center">
+                <div className="flex items-center gap-3 md:w-48 shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
+                    <FaCalendarAlt />
                   </div>
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <FaClock className="text-blue-600" />
-                    <span className="font-medium">Time:</span>
-                    <span>{formatTime(liveClass.classTiming)}</span>
+                  <h2 className="text-xl font-bold text-slate-900">Schedule</h2>
+                </div>
+                <div className="flex flex-col md:flex-row gap-2 md:gap-8 text-slate-700 text-sm md:text-base w-full">
+                  <div>
+                    Date:{" "}
+                    <span className="font-medium">
+                      {formatDate(liveClass.classTiming)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FaClock className="text-slate-400" />
+                    <span>Time: {formatTime(liveClass.classTiming)}</span>
                   </div>
                 </div>
-              </div>
+              </article>
             )}
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-4 space-y-6">
-              {/* Pricing Card */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="text-center mb-6">
-                  <div className="text-3xl font-bold text-green-600 mb-2">
-                    ₹{(liveClass.liveClassesFee || 0).toLocaleString()}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {liveClass.enrolledStudents?.length || 0} / {liveClass.maxStudents} seats filled
-                  </p>
-                </div>
-
-                <EnrollButton
-                  type="liveClass"
-                  itemId={liveClass._id || liveClass.id}
-                  price={liveClass.liveClassesFee}
-                  joinLabel="Join Now"
-                  initialEnrolled={isEnrolled}
-                  onEnrollmentSuccess={({ alreadyEnrolled }) => {
-                    // If already enrolled, open meeting link if present, then redirect to profile live classes tab
-                    const link =
-                      liveClass?.liveClassLink ||
-                      liveClass?.classLink ||
-                      liveClass?.meetingLink ||
-                      liveClass?.recordingURL;
-
-                    if (link) {
-                      window.open(link, "_blank", "noopener,noreferrer");
-                    }
-
-                    const target = studentId
-                      ? `/profile/student/${studentId}?tab=liveclasses`
-                      : "/profile?tab=liveclasses";
-
-                    window.location.href = target;
-                    return true; // handled
-                  }}
-                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+          <aside className="lg:col-span-1">
+            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
+              <div className="text-center mb-2">
+                <span className="text-4xl font-bold text-blue-600">
+                  ₹{(liveClass.liveClassesFee || 0).toLocaleString()}
+                </span>
+              </div>
+              <div className="text-center text-sm text-slate-600 mb-3 font-medium">
+                {seatsFilled} / {seatLimit || 0} seats filled
+              </div>
+              <div className="w-full h-1.5 rounded-full bg-slate-200 mb-6 overflow-hidden">
+                <div
+                  className="h-full bg-blue-500"
+                  style={{ width: `${seatFillPercent}%` }}
                 />
+              </div>
 
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-3">
-                    This class includes:
-                  </h3>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li className="flex items-center gap-2">
-                      <span className="text-green-600">✓</span>
-                      {liveClass.classDuration} minutes live session
+              <EnrollButton
+                type="liveClass"
+                itemId={liveClass._id || liveClass.id}
+                price={liveClass.liveClassesFee}
+                joinLabel="Enroll Now"
+                initialEnrolled={isEnrolled}
+                onEnrollmentSuccess={({ alreadyEnrolled }) => {
+                  const link =
+                    liveClass?.liveClassLink ||
+                    liveClass?.classLink ||
+                    liveClass?.meetingLink ||
+                    liveClass?.recordingURL;
+
+                  if (link) {
+                    window.open(link, "_blank", "noopener,noreferrer");
+                  }
+
+                  const target = studentId
+                    ? `/profile/student/${studentId}?tab=liveclasses`
+                    : "/profile?tab=liveclasses";
+
+                  window.location.href = target;
+                  return true;
+                }}
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-full font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+              />
+
+              <div className="mt-6 pt-6 border-t border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-4">
+                  This class includes:
+                </h3>
+                <ul className="space-y-3 text-sm text-slate-700">
+                  <li className="flex items-start gap-3">
+                    <span className="text-slate-900">✓</span>
+                    <span>{liveClass.classDuration} minutes live session</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-slate-900">✓</span>
+                    <span>One-on-one interaction</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-slate-900">✓</span>
+                    <span>Q&amp;A session</span>
+                  </li>
+                  {liveClass.recordingURL && (
+                    <li className="flex items-start gap-3">
+                      <span className="text-slate-900">✓</span>
+                      <span>Recording available</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-green-600">✓</span>
-                      One-on-one interaction
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-green-600">✓</span>
-                      Q&A session
-                    </li>
-                    {liveClass.recordingURL && (
-                      <li className="flex items-center gap-2">
-                        <span className="text-green-600">✓</span>
-                        Recording available
-                      </li>
-                    )}
-                  </ul>
-                </div>
+                  )}
+                </ul>
               </div>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </div>
