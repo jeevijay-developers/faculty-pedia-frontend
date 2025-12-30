@@ -66,18 +66,32 @@ const StudentDashboard = ({
   const [studentState, setStudentState] = useState(normalizedStudent);
   const [localResults, setLocalResults] = useState([]);
 
+  // Keep offline results scoped per student so new logins don't inherit old data
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const studentId = studentState?._id || normalizedStudent?._id;
+    if (!studentId) {
+      setLocalResults([]);
+      return;
+    }
+
+    const perStudentKey = `faculty-pedia-offline-results-${studentId}`;
+    const legacyKey = "faculty-pedia-offline-results";
+
     try {
-      const stored = JSON.parse(
-        typeof window !== "undefined"
-          ? window.localStorage.getItem("faculty-pedia-offline-results") || "[]"
-          : "[]"
-      );
-      if (Array.isArray(stored)) setLocalResults(stored);
+      // Clean up legacy key to avoid leaking data across accounts
+      if (window.localStorage.getItem(legacyKey)) {
+        window.localStorage.removeItem(legacyKey);
+      }
+
+      const raw = window.localStorage.getItem(perStudentKey) || "[]";
+      const parsed = JSON.parse(raw);
+      setLocalResults(Array.isArray(parsed) ? parsed : []);
     } catch (err) {
       console.warn("Failed to read offline results", err);
+      setLocalResults([]);
     }
-  }, []);
+  }, [studentState?._id, normalizedStudent?._id]);
 
   const isCourseActive = (course) => {
     if (!course) return false;
@@ -121,12 +135,15 @@ const StudentDashboard = ({
     joinedAt,
     courses = [],
     followingEducators = [],
-    tests = [], // expected to include testSeriesId | seriesId
-    results = [], // expected to include seriesId referencing test series
+    tests: rawTests = [], // expected to include testSeriesId | seriesId
+    results: rawResults = [], // expected to include seriesId referencing test series
   } = student || {};
 
+  const tests = Array.isArray(rawTests) ? rawTests : [];
+  const apiResults = Array.isArray(rawResults) ? rawResults : [];
+
   const combinedResults = useMemo(() => {
-    const merged = [...(localResults || []), ...(results || [])];
+    const merged = [...(localResults || []), ...(apiResults || [])];
     const toTime = (val) => {
       const ms = val ? Date.parse(val) : 0;
       return Number.isNaN(ms) ? 0 : ms;
@@ -136,7 +153,7 @@ const StudentDashboard = ({
       const tsB = toTime(b?.submittedAt || b?.createdAt);
       return tsB - tsA;
     });
-  }, [localResults, results]);
+  }, [localResults, apiResults]);
 
   // Courses state
   const [resolvedCourses, setResolvedCourses] = useState([]);

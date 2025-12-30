@@ -32,7 +32,19 @@ const WebinarsTab = ({ studentId }) => {
         const webinarsList = Array.isArray(data.upcomingWebinars)
           ? data.upcomingWebinars
           : [];
-        setWebinars(webinarsList);
+
+        // Only show webinars the student is enrolled in
+        const enrolledOnly = webinarsList.filter((webinar) => {
+          const enrolled = webinar?.studentEnrolled;
+          if (Array.isArray(enrolled)) {
+            return enrolled.some((id) =>
+              (id?._id || id || "").toString() === studentId.toString()
+            );
+          }
+          return false;
+        });
+
+        setWebinars(enrolledOnly);
       } catch (err) {
         console.error("Failed to load webinars:", err);
 
