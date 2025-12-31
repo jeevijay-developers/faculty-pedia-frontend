@@ -194,8 +194,6 @@ const TestSeriesCarousel = ({
 
 // Test Series Card Component
 export const TestSeriesCard = ({ testSeries }) => {
-  console.log("Test series: ", testSeries);
-
   // Format validity date
   const validityDate = testSeries.validity
     ? new Date(testSeries.validity).toLocaleDateString("en-IN", {
