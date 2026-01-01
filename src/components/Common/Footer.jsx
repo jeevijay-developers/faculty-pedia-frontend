@@ -25,7 +25,7 @@ const Footer = () => {
   ];
 
   const examCategories = [
-    { name: "IIT JEE", href: "/exams/iitjee" },
+    { name: "IIT JEE", href: "/exams/iit-jee" },
     { name: "NEET", href: "/exams/neet" },
     { name: "CBSE", href: "/exams/cbse" },
   ];
