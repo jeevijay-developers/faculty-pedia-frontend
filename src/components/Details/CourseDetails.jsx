@@ -63,7 +63,8 @@ const CourseDetails = ({ id }) => {
     const groups = {};
     if (course?.videos && Array.isArray(course.videos)) {
       course.videos.forEach((video) => {
-        const topic = (video?.topic || video?.subject || "General").trim() || "General";
+        const topic =
+          (video?.topic || video?.subject || "General").trim() || "General";
         if (!groups[topic]) {
           groups[topic] = [];
         }
@@ -79,7 +80,7 @@ const CourseDetails = ({ id }) => {
     () => Array.isArray(courseTests) && courseTests.length > 0,
     [courseTests]
   );
-  
+
   useEffect(() => {
     // Extract current student id from localStorage (browser only)
     if (typeof window !== "undefined") {
@@ -95,14 +96,11 @@ const CourseDetails = ({ id }) => {
 
     setLoading(true);
     setError(null);
-    
+
     const fetchCourseDetails = async () => {
       try {
-        console.log("Fetching course with ID:", id);
-        
         const data = await getCourseById(id);
-        console.log("Course data received:", data);
-        
+
         if (data) {
           setCourse(data);
         } else {
@@ -150,7 +148,9 @@ const CourseDetails = ({ id }) => {
       return;
     }
 
-    const nextTopic = topics.includes(selectedTopic) ? selectedTopic : topics[0];
+    const nextTopic = topics.includes(selectedTopic)
+      ? selectedTopic
+      : topics[0];
     const nextVideo = groupedVideos[nextTopic]?.[0] || null;
 
     if (nextTopic !== selectedTopic) {
@@ -206,7 +206,10 @@ const CourseDetails = ({ id }) => {
   }, [course?.testSeries, course?._id, course?.id, id]);
 
   const assets = useMemo(() => {
-    if (Array.isArray(course?.studyMaterials) && course.studyMaterials.length > 0) {
+    if (
+      Array.isArray(course?.studyMaterials) &&
+      course.studyMaterials.length > 0
+    ) {
       return course.studyMaterials;
     }
     if (Array.isArray(course?.assetsLinks) && course.assetsLinks.length > 0) {
@@ -424,18 +427,21 @@ const CourseDetails = ({ id }) => {
                 </div> */}
 
                 {/* Course Objectives */}
-                {course.courseObjectives && course.courseObjectives.length > 0 && (
-                  <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                      Course Feature
-                    </h3>
-                    <ul className="list-disc list-inside space-y-2">
-                      {course.courseObjectives.map((objective, index) => (
-                        <li key={index} className="text-gray-700">{objective}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {course.courseObjectives &&
+                  course.courseObjectives.length > 0 && (
+                    <div className="bg-white rounded-lg border border-gray-200 p-6">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                        Course Feature
+                      </h3>
+                      <ul className="list-disc list-inside space-y-2">
+                        {course.courseObjectives.map((objective, index) => (
+                          <li key={index} className="text-gray-700">
+                            {objective}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                 {/* Prerequisites */}
                 {course.prerequisites && course.prerequisites.length > 0 && (
@@ -445,13 +451,13 @@ const CourseDetails = ({ id }) => {
                     </h3>
                     <ul className="list-disc list-inside space-y-2">
                       {course.prerequisites.map((prerequisite, index) => (
-                        <li key={index} className="text-gray-700">{prerequisite}</li>
+                        <li key={index} className="text-gray-700">
+                          {prerequisite}
+                        </li>
                       ))}
                     </ul>
                   </div>
                 )}
-
-                
               </div>
             )}
 
@@ -468,12 +474,17 @@ const CourseDetails = ({ id }) => {
                 {course.liveClass && course.liveClass.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {course.liveClass.map((classItem, index) => (
-                      <ClassCard key={classItem._id || index} classData={classItem} />
+                      <ClassCard
+                        key={classItem._id || index}
+                        classData={classItem}
+                      />
                     ))}
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">No live classes scheduled yet.</p>
+                    <p className="text-gray-500">
+                      No live classes scheduled yet.
+                    </p>
                   </div>
                 )}
               </div>
@@ -556,7 +567,9 @@ const CourseDetails = ({ id }) => {
                   {course.rating > 0 && (
                     <div className="flex items-center justify-center mb-4">
                       <span className="text-yellow-500 mr-1">★</span>
-                      <span className="font-medium">{course.rating.toFixed(1)}</span>
+                      <span className="font-medium">
+                        {course.rating.toFixed(1)}
+                      </span>
                       <span className="text-gray-500 text-sm ml-1">
                         ({course.ratingCount || 0} reviews)
                       </span>
@@ -623,13 +636,19 @@ const CourseDetails = ({ id }) => {
             <div className="md:col-span-3 p-6 space-y-4">
               {panelTab === "videos" ? (
                 topics.length === 0 ? (
-                  <div className="text-center text-gray-500">No course videos available.</div>
+                  <div className="text-center text-gray-500">
+                    No course videos available.
+                  </div>
                 ) : (
                   <div className="space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Course Videos</h3>
-                        <p className="text-sm text-gray-600">Select a topic to browse its videos.</p>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Course Videos
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Select a topic to browse its videos.
+                        </p>
                       </div>
                       <select
                         value={selectedTopic}
@@ -649,8 +668,14 @@ const CourseDetails = ({ id }) => {
                         {selectedVideo ? (
                           <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 border">
                             <iframe
-                              src={getYouTubeEmbedUrl(selectedVideo.link || selectedVideo.url)}
-                              title={selectedVideo.title || selectedVideo.name || "Course Video"}
+                              src={getYouTubeEmbedUrl(
+                                selectedVideo.link || selectedVideo.url
+                              )}
+                              title={
+                                selectedVideo.title ||
+                                selectedVideo.name ||
+                                "Course Video"
+                              }
                               className="w-full h-full"
                               frameBorder="0"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -666,10 +691,13 @@ const CourseDetails = ({ id }) => {
                       </div>
 
                       <div className="lg:col-span-2 space-y-3">
-                        <p className="text-sm font-semibold text-gray-800">Videos in this topic</p>
+                        <p className="text-sm font-semibold text-gray-800">
+                          Videos in this topic
+                        </p>
                         <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
                           {groupedVideos[selectedTopic]?.map((video, idx) => {
-                            const videoTitle = video.title || video.name || `Video ${idx + 1}`;
+                            const videoTitle =
+                              video.title || video.name || `Video ${idx + 1}`;
                             return (
                               <button
                                 key={`${selectedTopic}-${idx}-${videoTitle}`}
@@ -680,9 +708,13 @@ const CourseDetails = ({ id }) => {
                                     : "border-gray-200 hover:border-blue-200 hover:bg-blue-50/60"
                                 }`}
                               >
-                                <p className="text-sm font-medium line-clamp-1">{videoTitle}</p>
+                                <p className="text-sm font-medium line-clamp-1">
+                                  {videoTitle}
+                                </p>
                                 {video.topic && (
-                                  <p className="text-xs text-gray-500 line-clamp-1">{video.topic}</p>
+                                  <p className="text-xs text-gray-500 line-clamp-1">
+                                    {video.topic}
+                                  </p>
                                 )}
                               </button>
                             );
@@ -693,12 +725,18 @@ const CourseDetails = ({ id }) => {
                   </div>
                 )
               ) : assets.length === 0 ? (
-                <div className="text-center text-gray-500">No assets shared for this course yet.</div>
+                <div className="text-center text-gray-500">
+                  No assets shared for this course yet.
+                </div>
               ) : (
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Course Assets</h3>
-                    <p className="text-sm text-gray-600">Downloadable resources shared by the instructor.</p>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Course Assets
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Downloadable resources shared by the instructor.
+                    </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {assets.map((asset, index) => (
@@ -710,7 +748,9 @@ const CourseDetails = ({ id }) => {
                         className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-blue-200 hover:bg-blue-50/60 transition-colors"
                       >
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900 line-clamp-1">{asset.title || asset.name || `Asset ${index + 1}`}</p>
+                          <p className="font-medium text-gray-900 line-clamp-1">
+                            {asset.title || asset.name || `Asset ${index + 1}`}
+                          </p>
                           <p className="text-sm text-gray-500 line-clamp-2">
                             {asset.fileType || asset.type || "Resource"}
                           </p>

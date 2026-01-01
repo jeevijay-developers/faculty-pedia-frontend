@@ -37,13 +37,11 @@ const UpcomingWebinarCarousel = ({
       setLoading(true);
       setError(null);
       try {
-        console.log(`🎤 Fetching webinars for ${specialization}...`);
         const response = await fetchWebinarsBySpecialization(specialization);
-        console.log("🎤 Webinars API Response:", response);
-        
+
         // Extract webinars from response
-        const webinarsData = response?.data?.webinars || response?.webinars || [];
-        console.log(`🎤 Found ${webinarsData.length} webinars`);
+        const webinarsData =
+          response?.data?.webinars || response?.webinars || [];
         setData(webinarsData);
       } catch (error) {
         console.error("Failed to fetch webinars:", error);
@@ -53,7 +51,7 @@ const UpcomingWebinarCarousel = ({
         setLoading(false);
       }
     };
-    
+
     if (specialization) {
       fetchWebinars();
     }

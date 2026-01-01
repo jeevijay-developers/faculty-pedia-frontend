@@ -34,18 +34,7 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
       setLoading(true);
       setError(null);
       try {
-        console.log(
-          `📚 Fetching educators for specialization: ${specialization}`
-        );
         const response = await getEducatorsBySpecialization(specialization);
-        console.log("📚 Educators API Full Response:", response);
-        console.log("📚 Response structure:", {
-          hasData: !!response?.data,
-          hasEducators: !!response?.data?.educators,
-          isArray: Array.isArray(response?.data?.educators),
-          type: typeof response,
-        });
-
         // Handle different response structures
         let educators = [];
         if (
@@ -59,12 +48,6 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
           educators = response;
         }
 
-        console.log(
-          `📚 Found ${educators.length} educators for ${specialization}`
-        );
-        if (educators.length > 0) {
-          console.log("📚 First educator sample:", educators[0]);
-        }
         setFilteredEducators(educators);
       } catch (error) {
         console.error("Failed to fetch educators:", error);

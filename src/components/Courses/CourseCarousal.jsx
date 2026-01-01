@@ -68,10 +68,7 @@ const CourseCarousel = ({
   const deriveEducatorName = (educatorObj, course) => {
     if (educatorObj && typeof educatorObj === "object") {
       const nameFromObj =
-        educatorObj.fullName ||
-        educatorObj.name ||
-        educatorObj.username ||
-        "";
+        educatorObj.fullName || educatorObj.name || educatorObj.username || "";
       if (nameFromObj) {
         return nameFromObj;
       }
@@ -206,10 +203,7 @@ const CourseCarousel = ({
         try {
           const response = await getEducatorProfile(id);
           const educatorData =
-            response?.data?.educator ||
-            response?.educator ||
-            response ||
-            null;
+            response?.data?.educator || response?.educator || response || null;
 
           if (educatorData) {
             educatorCache.set(id, educatorData);
@@ -268,8 +262,7 @@ const CourseCarousel = ({
       setError(null);
       try {
         const response = await getCoursesBySpecialization(specialization);
-        console.log("📚 Courses API Response:", response);
-        
+
         // Handle different response structures
         let courses = [];
         if (response?.data?.courses && Array.isArray(response.data.courses)) {
@@ -279,11 +272,13 @@ const CourseCarousel = ({
         } else if (Array.isArray(response)) {
           courses = response;
         }
-        
+
         const activeCourses = courses.filter((course) => {
           const status = (course?.status || "").toLowerCase();
-          const explicitInactive = course?.isActive === false || course?.active === false;
-          const flaggedDeleted = course?.isDeleted || course?.deletedAt || course?.deleted === true;
+          const explicitInactive =
+            course?.isActive === false || course?.active === false;
+          const flaggedDeleted =
+            course?.isDeleted || course?.deletedAt || course?.deleted === true;
           return (
             !!course &&
             !!(course._id || course.id || course.slug) &&
@@ -294,7 +289,6 @@ const CourseCarousel = ({
           );
         });
 
-        console.log(`📚 Found ${courses.length} courses, rendering ${activeCourses.length} active for ${specialization}`);
         const enrichedCourses = await enrichCoursesWithEducators(
           activeCourses,
           specialization
@@ -308,7 +302,7 @@ const CourseCarousel = ({
         setLoading(false);
       }
     };
-    
+
     if (specialization) {
       fetchOnlineCourse();
     }
@@ -353,7 +347,7 @@ const CourseCarousel = ({
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
             {title}
           </h2>
-          
+
           <Link
             href={viewMoreLink}
             className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"

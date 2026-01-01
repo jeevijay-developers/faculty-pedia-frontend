@@ -20,7 +20,7 @@ const Page = ({ params }) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     if (!resolvedParams?.id) {
       setError("No educator ID provided");
@@ -39,43 +39,37 @@ const Page = ({ params }) => {
     setError(null);
     const fetchEducators = async () => {
       try {
-        console.log("Fetching educator with ID:", resolvedParams.id);
         const apiResponse = await getEducatorProfile(resolvedParams.id);
-        console.log("Full API Response:", apiResponse);
-        
+
         // Backend returns: { success: true, data: { educator: {...} } }
         // getEducatorProfile returns response.data which gives us the full response object
         let educator = null;
-        
+
         if (apiResponse?.data?.educator) {
           // Standard backend response: data.educator
           educator = apiResponse.data.educator;
-          console.log("✓ Found educator in apiResponse.data.educator");
         } else if (apiResponse?.educator) {
           // Direct access to educator
           educator = apiResponse.educator;
-          console.log("✓ Found educator in apiResponse.educator");
         } else if (apiResponse?._id) {
           // Sometimes the educator data is returned directly
           educator = apiResponse;
-          console.log("✓ Found educator as direct response");
         } else {
           console.error("✗ Could not extract educator from response");
-          console.log("Response structure:", Object.keys(apiResponse || {}));
           throw new Error("Educator data not found in response");
         }
-        
-        console.log("✓ Successfully loaded educator:", educator.fullName || educator.name);
+
         setEducatorData(educator);
       } catch (error) {
         console.error("✗ Error fetching educator:", error);
         console.error("Error response:", error.response?.data);
         console.error("Error status:", error.response?.status);
-        
+
         let errorMessage = "Failed to load educator profile";
-        
+
         if (error.response?.status === 404) {
-          errorMessage = "Educator not found. This profile may have been removed.";
+          errorMessage =
+            "Educator not found. This profile may have been removed.";
         } else if (error.response?.status === 500) {
           errorMessage = "Server error. Please try again later.";
         } else if (error.response?.data?.message) {
@@ -83,7 +77,7 @@ const Page = ({ params }) => {
         } else if (error.message) {
           errorMessage = error.message;
         }
-        
+
         setError(errorMessage);
       } finally {
         setLoading(false);
@@ -105,9 +99,7 @@ const Page = ({ params }) => {
           <p className="text-lg font-semibold text-gray-800 mb-2">
             Error Loading Profile
           </p>
-          <p className="text-sm text-gray-500 mt-2">
-            {error}
-          </p>
+          <p className="text-sm text-gray-500 mt-2">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -127,8 +119,8 @@ const Page = ({ params }) => {
             Educator profile unavailable
           </p>
           <p className="text-sm text-gray-500 mt-2">
-            We could not load the requested educator. Please verify the
-            profile link and try again.
+            We could not load the requested educator. Please verify the profile
+            link and try again.
           </p>
         </div>
       </div>

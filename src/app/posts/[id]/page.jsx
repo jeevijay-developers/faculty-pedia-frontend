@@ -5,12 +5,12 @@ import { fetchPostById } from "@/components/server/exams/iit-jee/routes";
 import Loading from "@/components/Common/Loading";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  FaCalendarAlt, 
-  FaUser, 
+import {
+  FaCalendarAlt,
+  FaUser,
   FaTag,
   FaBook,
-  FaArrowLeft
+  FaArrowLeft,
 } from "react-icons/fa";
 
 const PostDetailsPage = ({ params }) => {
@@ -30,14 +30,12 @@ const PostDetailsPage = ({ params }) => {
   useEffect(() => {
     const fetchPostDetails = async () => {
       if (!id) return;
-      
+
       setLoading(true);
       setError(null);
       try {
-        console.log("Fetching post with ID:", id);
         const response = await fetchPostById(id);
-        console.log("Post API Response:", response);
-        
+
         // Handle response structure
         let postData = null;
         if (response?.data?.post) {
@@ -49,8 +47,7 @@ const PostDetailsPage = ({ params }) => {
         } else {
           postData = response;
         }
-        
-        console.log("Post Data:", postData);
+
         setPost(postData);
       } catch (error) {
         console.error("Error fetching post:", error);
@@ -104,7 +101,8 @@ const PostDetailsPage = ({ params }) => {
             {error || "Post Not Found"}
           </h1>
           <p className="text-gray-600 mb-6">
-            Unable to load post details. The post may have been removed or doesn't exist.
+            Unable to load post details. The post may have been removed or
+            doesn't exist.
           </p>
           <Link
             href="/posts"
@@ -152,14 +150,18 @@ const PostDetailsPage = ({ params }) => {
           <div className="p-8 border-b border-gray-200">
             {/* Categories/Tags */}
             <div className="flex flex-wrap gap-2 mb-4">
-              {specializations && Array.isArray(specializations) && specializations.map((spec, idx) => (
-                <span
-                  key={idx}
-                  className={`px-4 py-2 rounded-full text-sm font-medium border ${getCategoryColor(spec)}`}
-                >
-                  {spec}
-                </span>
-              ))}
+              {specializations &&
+                Array.isArray(specializations) &&
+                specializations.map((spec, idx) => (
+                  <span
+                    key={idx}
+                    className={`px-4 py-2 rounded-full text-sm font-medium border ${getCategoryColor(
+                      spec
+                    )}`}
+                  >
+                    {spec}
+                  </span>
+                ))}
             </div>
 
             {/* Title */}
@@ -173,7 +175,11 @@ const PostDetailsPage = ({ params }) => {
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                   <Image
-                    src={educator?.profilePicture || educator?.image?.url || '/images/placeholders/1.svg'}
+                    src={
+                      educator?.profilePicture ||
+                      educator?.image?.url ||
+                      "/images/placeholders/1.svg"
+                    }
                     alt={educator?.fullName || "Educator"}
                     fill
                     className="object-cover"
@@ -187,7 +193,9 @@ const PostDetailsPage = ({ params }) => {
                     </span>
                   </div>
                   {educator?.username && (
-                    <div className="text-xs text-gray-500">@{educator.username}</div>
+                    <div className="text-xs text-gray-500">
+                      @{educator.username}
+                    </div>
                   )}
                 </div>
               </div>
@@ -207,7 +215,9 @@ const PostDetailsPage = ({ params }) => {
               <div className="mb-8 p-4 bg-blue-50 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <FaBook className="text-blue-600" />
-                  <h3 className="font-semibold text-gray-900">Subjects Covered</h3>
+                  <h3 className="font-semibold text-gray-900">
+                    Subjects Covered
+                  </h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {subjects.map((subject, idx) => (
@@ -238,7 +248,7 @@ const PostDetailsPage = ({ params }) => {
                   <span>Last updated: {formatDate(updatedAt)}</span>
                 )}
               </div>
-              
+
               {/* Author Info */}
               {educator && (
                 <Link
@@ -255,18 +265,20 @@ const PostDetailsPage = ({ params }) => {
 
         {/* Related Info */}
         <div className="mt-8 bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">About the Post</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">
+            About the Post
+          </h3>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="p-4 bg-gray-50 rounded-lg">
               <div className="text-sm text-gray-600 mb-1">Specialization</div>
               <div className="font-semibold text-gray-900">
-                {specializations?.join(', ') || 'General'}
+                {specializations?.join(", ") || "General"}
               </div>
             </div>
             <div className="p-4 bg-gray-50 rounded-lg">
               <div className="text-sm text-gray-600 mb-1">Subjects</div>
               <div className="font-semibold text-gray-900 capitalize">
-                {subjects?.join(', ') || 'Multiple'}
+                {subjects?.join(", ") || "Multiple"}
               </div>
             </div>
           </div>

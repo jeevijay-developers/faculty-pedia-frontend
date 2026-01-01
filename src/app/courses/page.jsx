@@ -26,7 +26,6 @@ const CoursesPage = () => {
       setError(null);
       try {
         const data = await getAllCourses({ limit: 100 }); // Fetch more courses
-        console.log("📚 All Courses Response:", data);
 
         let courses = [];
         if (data?.courses && Array.isArray(data.courses)) {
@@ -35,7 +34,6 @@ const CoursesPage = () => {
           courses = data;
         }
 
-        console.log(`📚 Loaded ${courses.length} total courses`);
         setAllCourses(courses);
         setFilteredCourses(courses); // Show all courses initially
       } catch (error) {
@@ -63,7 +61,6 @@ const CoursesPage = () => {
         }
         return course.subject?.toLowerCase() === activeTab.toLowerCase();
       });
-      console.log(`📚 Filtered ${filtered.length} courses for ${activeTab}`);
       setFilteredCourses(filtered);
     }
   }, [activeTab, allCourses]);

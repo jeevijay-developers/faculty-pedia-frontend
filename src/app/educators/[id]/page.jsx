@@ -5,16 +5,16 @@ import { fetchEducatorById } from "@/components/server/exams/iit-jee/routes";
 import Loading from "@/components/Common/Loading";
 import Link from "next/link";
 import Image from "next/image";
-import { 
-  FaBook, 
-  FaClock, 
-  FaCalendarAlt, 
-  FaUsers, 
+import {
+  FaBook,
+  FaClock,
+  FaCalendarAlt,
+  FaUsers,
   FaGraduationCap,
   FaStar,
   FaChalkboardTeacher,
   FaAward,
-  FaBriefcase
+  FaBriefcase,
 } from "react-icons/fa";
 import { MdSchool, MdEmail, MdPhone } from "react-icons/md";
 import { IoPersonSharp } from "react-icons/io5";
@@ -38,14 +38,12 @@ const EducatorDetailsPage = ({ params }) => {
   useEffect(() => {
     const fetchEducatorDetails = async () => {
       if (!id) return;
-      
+
       setLoading(true);
       setError(null);
       try {
-        console.log("Fetching educator with ID:", id);
         const response = await fetchEducatorById(id);
-        console.log("Educator API Response:", response);
-        
+
         // Handle response structure
         let educatorData = null;
         if (response?.data?.educator) {
@@ -57,8 +55,7 @@ const EducatorDetailsPage = ({ params }) => {
         } else {
           educatorData = response;
         }
-        
-        console.log("Educator Data:", educatorData);
+
         setEducator(educatorData);
       } catch (error) {
         console.error("Error fetching educator:", error);
@@ -136,8 +133,10 @@ const EducatorDetailsPage = ({ params }) => {
             <div className="lg:col-span-1 flex justify-center">
               <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-2xl">
                 <Image
-                  src={profilePicture || image?.url || '/images/placeholders/1.svg'}
-                  alt={fullName || 'Educator'}
+                  src={
+                    profilePicture || image?.url || "/images/placeholders/1.svg"
+                  }
+                  alt={fullName || "Educator"}
                   fill
                   className="object-cover"
                 />
@@ -157,13 +156,18 @@ const EducatorDetailsPage = ({ params }) => {
                 />
               </div>
               <p className="text-xl text-blue-100 mb-4">@{username}</p>
-              
+
               <div className="flex flex-wrap gap-2 justify-center lg:justify-start mb-6">
-                {specialization && Array.isArray(specialization) && specialization.map((spec, idx) => (
-                  <span key={idx} className="px-4 py-2 bg-white/20 rounded-full text-sm font-medium">
-                    {spec}
-                  </span>
-                ))}
+                {specialization &&
+                  Array.isArray(specialization) &&
+                  specialization.map((spec, idx) => (
+                    <span
+                      key={idx}
+                      className="px-4 py-2 bg-white/20 rounded-full text-sm font-medium"
+                    >
+                      {spec}
+                    </span>
+                  ))}
               </div>
 
               {rating && (
@@ -192,7 +196,9 @@ const EducatorDetailsPage = ({ params }) => {
               {payPerHourFee && payPerHourFee > 0 && (
                 <div className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg shadow-lg">
                   <div className="text-sm font-medium">Pay Per Hour</div>
-                  <div className="text-3xl font-bold">₹{payPerHourFee.toLocaleString('en-IN')}</div>
+                  <div className="text-3xl font-bold">
+                    ₹{payPerHourFee.toLocaleString("en-IN")}
+                  </div>
                   <div className="text-sm">per hour</div>
                 </div>
               )}
@@ -224,14 +230,16 @@ const EducatorDetailsPage = ({ params }) => {
                 Teaching Subjects
               </h2>
               <div className="flex flex-wrap gap-3">
-                {subject && Array.isArray(subject) && subject.map((sub, idx) => (
-                  <div
-                    key={idx}
-                    className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-medium capitalize"
-                  >
-                    {sub}
-                  </div>
-                ))}
+                {subject &&
+                  Array.isArray(subject) &&
+                  subject.map((sub, idx) => (
+                    <div
+                      key={idx}
+                      className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-medium capitalize"
+                    >
+                      {sub}
+                    </div>
+                  ))}
               </div>
             </div>
 
@@ -248,7 +256,7 @@ const EducatorDetailsPage = ({ params }) => {
                       key={idx}
                       className="px-4 py-2 bg-green-50 text-green-700 rounded-lg font-medium"
                     >
-                      {cls.replace('class-', 'Class ').toUpperCase()}
+                      {cls.replace("class-", "Class ").toUpperCase()}
                     </div>
                   ))}
                 </div>
@@ -256,7 +264,9 @@ const EducatorDetailsPage = ({ params }) => {
             )}
 
             {/* Courses, Webinars, Test Series */}
-            {(courses?.length > 0 || webinars?.length > 0 || testSeries?.length > 0) && (
+            {(courses?.length > 0 ||
+              webinars?.length > 0 ||
+              testSeries?.length > 0) && (
               <div className="bg-white rounded-xl shadow-md p-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                   <FaGraduationCap className="text-blue-600" />
@@ -265,19 +275,25 @@ const EducatorDetailsPage = ({ params }) => {
                 <div className="grid sm:grid-cols-3 gap-4">
                   {courses && courses.length > 0 && (
                     <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <div className="text-3xl font-bold text-blue-600">{courses.length}</div>
+                      <div className="text-3xl font-bold text-blue-600">
+                        {courses.length}
+                      </div>
                       <div className="text-sm text-gray-600">Courses</div>
                     </div>
                   )}
                   {webinars && webinars.length > 0 && (
                     <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <div className="text-3xl font-bold text-purple-600">{webinars.length}</div>
+                      <div className="text-3xl font-bold text-purple-600">
+                        {webinars.length}
+                      </div>
                       <div className="text-sm text-gray-600">Webinars</div>
                     </div>
                   )}
                   {testSeries && testSeries.length > 0 && (
                     <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <div className="text-3xl font-bold text-green-600">{testSeries.length}</div>
+                      <div className="text-3xl font-bold text-green-600">
+                        {testSeries.length}
+                      </div>
                       <div className="text-sm text-gray-600">Test Series</div>
                     </div>
                   )}
@@ -290,14 +306,18 @@ const EducatorDetailsPage = ({ params }) => {
           <div className="lg:col-span-1 space-y-6">
             {/* Quick Stats */}
             <div className="bg-white rounded-xl shadow-md p-6 space-y-4">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Stats</h3>
-              
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Quick Stats
+              </h3>
+
               {yoe && (
                 <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
                   <FaBriefcase className="text-blue-600 text-xl" />
                   <div>
                     <div className="text-sm text-gray-600">Experience</div>
-                    <div className="font-semibold text-gray-900">{yoe} years</div>
+                    <div className="font-semibold text-gray-900">
+                      {yoe} years
+                    </div>
                   </div>
                 </div>
               )}
@@ -332,7 +352,9 @@ const EducatorDetailsPage = ({ params }) => {
               <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
                 <h3 className="text-xl font-bold mb-3">Book a Session</h3>
                 <div className="mb-4">
-                  <div className="text-3xl font-bold">₹{payPerHourFee.toLocaleString('en-IN')}</div>
+                  <div className="text-3xl font-bold">
+                    ₹{payPerHourFee.toLocaleString("en-IN")}
+                  </div>
                   <div className="text-sm text-blue-100">per hour</div>
                 </div>
                 <button className="w-full bg-white text-blue-600 py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors">
@@ -347,7 +369,7 @@ const EducatorDetailsPage = ({ params }) => {
             {/* Contact Info */}
             <div className="bg-white rounded-xl shadow-md p-6 space-y-3">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Contact</h3>
-              
+
               {email && (
                 <div className="flex items-center gap-3 text-gray-700">
                   <MdEmail className="text-blue-600 text-xl" />

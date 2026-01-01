@@ -46,17 +46,10 @@ API_CLIENT.interceptors.request.use(
 API_CLIENT.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("API Error:", error.response?.status, error.message);
-
     if (typeof window !== "undefined") {
       const currentPath = window.location.pathname;
       const isOnLoginPage =
         currentPath.includes("/login") || currentPath.includes("/signup");
-
-      // Only redirect on 401 if:
-      // 1. We're not already on a login page, AND
-      // 2. This is NOT an enrollment-specific auth error (those are handled by EnrollButton)
-      // 3. This is a critical auth failure (like token expired during an authenticated session)
       const isEnrollmentAuth = error.response?.data?.requiresAuth;
       const isCriticalAuthFailure =
         error.response?.status === 401 &&

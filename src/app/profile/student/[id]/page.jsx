@@ -8,7 +8,7 @@ import { getStudentById } from "@/components/server/student/student.routes";
 const StudentDashboardPage = () => {
   const params = useParams();
   const { id } = params; // Get ID from URL parameter
-  
+
   const [studentData, setStudentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,8 +42,6 @@ const StudentDashboardPage = () => {
         setError(null);
 
         const profileData = await getStudentById(studentId);
-        console.log("📊 Fetched student profile data:", profileData);
-        console.log("📊 Following educators:", profileData?.followingEducators);
         setStudentData(profileData);
       } catch (err) {
         console.error("Error loading student profile:", err);
@@ -71,7 +69,7 @@ const StudentDashboardPage = () => {
 
     // Check if it's own profile
     const isOwn = hydrateFromStorage();
-    
+
     // Always fetch from API to get populated data (courses, educators, etc.)
     fetchStudentProfile(id);
   }, [id]);
@@ -85,7 +83,7 @@ const StudentDashboardPage = () => {
 
     try {
       setError(null);
-      
+
       // If it's own profile, refresh from localStorage
       if (isOwnProfile) {
         const raw = localStorage.getItem("faculty-pedia-student-data");
