@@ -10,17 +10,16 @@ import {
   LuGraduationCap,
   LuShare2,
   LuCheck,
-  LuPlusCircle,
-  LuArrowLeft,
-  LuArrowRight,
+  LuCirclePlus,
   LuHistory,
-  LuBuilding2,
+  LuSchool,
 } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FiTrash2, FiVideo } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { signupAsEducator } from "../server/auth/auth.routes";
 import API_CLIENT from "../server/config";
+import MonthPicker from "./MonthPicker";
 
 const SUBJECT_OPTIONS = [
   "biology",
@@ -499,10 +498,10 @@ const EducatorSignup = () => {
         response?.data?.educator || response?.educator || response?.data;
       const educatorId = createdEducator?._id || createdEducator?.id;
 
-      alert("Registration successful! Redirecting to your profile.");
+      toast.success("Registration successful! Redirecting to your profile.");
 
       if (educatorId) {
-        router.push(`/profile/educator/${educatorId}`);
+        router.push(`${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/`);
       } else {
         router.push("/login");
       }
@@ -858,7 +857,7 @@ const EducatorSignup = () => {
                 School / Institution
               </label>
               <div className="relative">
-                <LuBuilding2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
+                <LuSchool className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
                 <input
                   type="text"
                   value={exp.company}
@@ -890,18 +889,17 @@ const EducatorSignup = () => {
               <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
                 Start Date
               </label>
-              <input
-                type="month"
+              <MonthPicker
                 value={exp.startDate}
-                onChange={(e) =>
+                onChange={(value) =>
                   handleNestedChange(
                     "workExperience",
                     index,
                     "startDate",
-                    e.target.value
+                    value
                   )
                 }
-                className="w-full h-12 px-4 rounded-lg bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all"
+                placeholder="Select start month"
               />
             </div>
 
@@ -910,57 +908,36 @@ const EducatorSignup = () => {
               <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
                 End Date
               </label>
-              <div className="relative">
-                <input
-                  type="month"
+              <div className="space-y-2">
+                <MonthPicker
                   value={exp.isCurrentRole ? "" : exp.endDate}
-                  onChange={(e) =>
+                  onChange={(value) =>
                     handleNestedChange(
                       "workExperience",
                       index,
                       "endDate",
-                      e.target.value
+                      value
                     )
                   }
                   disabled={exp.isCurrentRole}
-                  className="w-full h-12 px-4 rounded-lg bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all disabled:bg-slate-50 disabled:text-slate-400"
+                  placeholder="Select end month"
                 />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id={`currentRole${index}`}
                     checked={exp.isCurrentRole}
                     onChange={() => toggleCurrentRole(index)}
-                    className="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    className="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
                   />
                   <label
                     htmlFor={`currentRole${index}`}
                     className="text-sm text-slate-600 font-medium cursor-pointer select-none"
                   >
-                    Present
+                    Currently working here
                   </label>
                 </div>
               </div>
-            </div>
-
-            {/* Description */}
-            <div className="col-span-1 md:col-span-2">
-              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
-                Key Responsibilities (Optional)
-              </label>
-              <textarea
-                value={exp.description || ""}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "workExperience",
-                    index,
-                    "description",
-                    e.target.value
-                  )
-                }
-                className="w-full p-4 rounded-lg bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all resize-none h-24"
-                placeholder="Briefly describe your role and achievements..."
-              />
             </div>
           </div>
         </div>
@@ -972,7 +949,7 @@ const EducatorSignup = () => {
         onClick={addExperience}
         className="w-full py-4 border-2 border-dashed border-blue-500/30 rounded-xl flex items-center justify-center gap-2 text-blue-500 font-semibold hover:bg-blue-500/5 hover:border-blue-500/50 transition-all group"
       >
-        <LuPlusCircle className="h-5 w-5 group-hover:scale-110 transition-transform" />
+        <LuCirclePlus className="h-5 w-5 group-hover:scale-110 transition-transform" />
         Add Another Position
       </button>
     </div>
@@ -1039,7 +1016,7 @@ const EducatorSignup = () => {
                 Institute / University
               </label>
               <div className="relative">
-                <LuBuilding2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none h-5 w-5" />
+                <LuSchool className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none h-5 w-5" />
                 <input
                   type="text"
                   value={qual.institute}
@@ -1071,18 +1048,13 @@ const EducatorSignup = () => {
               <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
                 Start Date
               </label>
-              <input
-                type="month"
+              <MonthPicker
                 value={qual.startDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "qualification",
-                    index,
-                    "startDate",
-                    e.target.value
-                  )
+                onChange={(value) =>
+                  handleNestedChange("qualification", index, "startDate", value)
                 }
-                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all"
+                placeholder="Select start month"
+                className="h-11 rounded-xl"
               />
             </div>
 
@@ -1091,18 +1063,13 @@ const EducatorSignup = () => {
               <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
                 End Date (or Expected)
               </label>
-              <input
-                type="month"
+              <MonthPicker
                 value={qual.endDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "qualification",
-                    index,
-                    "endDate",
-                    e.target.value
-                  )
+                onChange={(value) =>
+                  handleNestedChange("qualification", index, "endDate", value)
                 }
-                className="w-full h-11 px-4 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all"
+                placeholder="Select end month"
+                className="h-11 rounded-xl"
               />
             </div>
           </div>
@@ -1115,7 +1082,7 @@ const EducatorSignup = () => {
         onClick={addQualification}
         className="w-full border-2 border-dashed border-gray-300 rounded-2xl p-4 text-blue-500 font-semibold hover:bg-blue-50 hover:border-blue-500 transition-all duration-200 flex justify-center items-center gap-2 group"
       >
-        <LuPlusCircle className="h-5 w-5 group-hover:scale-110 transition-transform" />
+        <LuCirclePlus className="h-5 w-5 group-hover:scale-110 transition-transform" />
         Add More Education
       </button>
     </div>
