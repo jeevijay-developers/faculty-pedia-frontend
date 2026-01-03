@@ -193,7 +193,7 @@ export default function WebinarsPage() {
             </h1>
             <ShareButton
               title="Upcoming Webinars"
-              text="Discover upcoming webinars on Faculty Pedia."
+              text="Discover upcoming webinars on Facultypedia."
               path="/webinars"
               size="sm"
             />

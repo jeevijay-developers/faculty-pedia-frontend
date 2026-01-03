@@ -14,31 +14,33 @@ export default function GlobalError({ error, reset }) {
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4 py-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 px-4 py-8">
       {/* Main Error Content */}
       <div className="flex flex-col items-center space-y-8 max-w-2xl text-center">
         {/* Logo/Brand Area */}
         <div className="flex flex-col items-center space-y-4">
           {/* Professional Logo */}
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
-            <svg 
-              className="w-8 h-8 text-white" 
-              fill="none" 
-              stroke="currentColor" 
+          <div className="w-16 h-16 bg-linear-to-r from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg">
+            <svg
+              className="w-8 h-8 text-white"
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
               />
             </svg>
           </div>
-          
+
           {/* Brand Name */}
-          <h1 className="text-2xl font-bold text-gray-900">Faculty Pedia</h1>
-          <p className="text-sm text-gray-600 font-medium">Educational Excellence Platform</p>
+          <h1 className="text-2xl font-bold text-gray-900">Facultypedia</h1>
+          <p className="text-sm text-gray-600 font-medium">
+            Educational Excellence Platform
+          </p>
         </div>
 
         {/* Error Icon and Message */}
@@ -52,7 +54,8 @@ export default function GlobalError({ error, reset }) {
                 Oops! Something went wrong
               </h2>
               <p className="text-gray-600">
-                We encountered an unexpected error. Don't worry, it's been logged and we'll fix it.
+                We encountered an unexpected error. Don't worry, it's been
+                logged and we'll fix it.
               </p>
             </div>
           </div>
@@ -60,9 +63,11 @@ export default function GlobalError({ error, reset }) {
           {/* Error Details Card */}
           {error?.message && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-left max-w-md w-full">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Error Details:</h3>
+              <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                Error Details:
+              </h3>
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <code className="text-sm text-red-600 font-mono break-words">
+                <code className="text-sm text-red-600 font-mono wrap-break-word">
                   {error.message}
                 </code>
               </div>
@@ -77,7 +82,9 @@ export default function GlobalError({ error, reset }) {
               <FiRefreshCw className="w-6 h-6 text-blue-600" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">Try Again</h3>
-            <p className="text-sm text-gray-600">Sometimes a simple refresh can resolve the issue.</p>
+            <p className="text-sm text-gray-600">
+              Sometimes a simple refresh can resolve the issue.
+            </p>
           </div>
 
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
@@ -85,7 +92,9 @@ export default function GlobalError({ error, reset }) {
               <FiHome className="w-6 h-6 text-green-600" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">Go Home</h3>
-            <p className="text-sm text-gray-600">Return to the homepage and start fresh.</p>
+            <p className="text-sm text-gray-600">
+              Return to the homepage and start fresh.
+            </p>
           </div>
 
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
@@ -93,7 +102,9 @@ export default function GlobalError({ error, reset }) {
               <FiArrowLeft className="w-6 h-6 text-purple-600" />
             </div>
             <h3 className="font-semibold text-gray-900 mb-2">Go Back</h3>
-            <p className="text-sm text-gray-600">Return to the previous page you were viewing.</p>
+            <p className="text-sm text-gray-600">
+              Return to the previous page you were viewing.
+            </p>
           </div>
         </div>
 
@@ -106,7 +117,7 @@ export default function GlobalError({ error, reset }) {
             <FiRefreshCw className="w-4 h-4 mr-2" />
             Try Again
           </button>
-          
+
           <Link
             href="/"
             className="flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
@@ -120,10 +131,11 @@ export default function GlobalError({ error, reset }) {
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 w-full max-w-md">
           <h3 className="font-semibold text-blue-900 mb-2">Need More Help?</h3>
           <p className="text-sm text-blue-700 mb-4">
-            If this problem continues, please contact our support team with details about what you were doing when this error occurred.
+            If this problem continues, please contact our support team with
+            details about what you were doing when this error occurred.
           </p>
-          <Link 
-            href="/help" 
+          <Link
+            href="/help"
             className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
           >
             Contact Support →

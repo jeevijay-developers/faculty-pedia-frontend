@@ -18,7 +18,7 @@ const sections = [
     icon: FiCheckCircle,
     title: "1. Acceptance",
     body: [
-      "By creating an account or using Faculty Pedia, you agree to follow these Terms & Conditions.",
+      "By creating an account or using Facultypedia, you agree to follow these Terms & Conditions.",
       "If you do not agree, please stop using the platform.",
     ],
   },
@@ -27,7 +27,7 @@ const sections = [
     icon: FiUsers,
     title: "2. Who Can Use the Platform",
     body: [
-      "Faculty Pedia is designed for CBSE students (Classes 6-12), IIT JEE and NEET aspirants (including droppers), and educators teaching these categories.",
+      "Facultypedia is designed for CBSE students (Classes 6-12), IIT JEE and NEET aspirants (including droppers), and educators teaching these categories.",
       "Users under 18 should use the platform with parental guidance.",
     ],
   },
@@ -39,7 +39,7 @@ const sections = [
       "Provide accurate information during registration.",
       "Keep login details private.",
       "Avoid sharing passwords or account access.",
-      "Faculty Pedia may suspend accounts showing suspicious or unsafe activity.",
+      "Facultypedia may suspend accounts showing suspicious or unsafe activity.",
     ],
   },
   {
@@ -99,7 +99,7 @@ const sections = [
     icon: FiShield,
     title: "9. Limitation of Liability",
     body: [
-      "Faculty Pedia is not responsible for user-side network or device issues, third-party service interruptions, or exam results and academic performance.",
+      "Facultypedia is not responsible for user-side network or device issues, third-party service interruptions, or exam results and academic performance.",
       "We provide learning support — actual outcomes depend on individual effort.",
     ],
   },
@@ -108,7 +108,7 @@ const sections = [
     icon: FiRepeat,
     title: "10. Updates to Terms",
     body: [
-      "These Terms may be updated periodically. The \"Last Updated\" date will always reflect the latest version.",
+      'These Terms may be updated periodically. The "Last Updated" date will always reflect the latest version.',
       "Continued use of the platform indicates acceptance of updated terms.",
     ],
   },
@@ -118,25 +118,28 @@ const lastUpdated = "January 2025";
 
 const PrivacyPage = () => {
   return (
-    <div className="bg-gradient-to-b from-white via-blue-50/40 to-white">
+    <div className="bg-linear-to-b from-white via-blue-50/40 to-white">
       <header className="relative overflow-hidden bg-white py-20">
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-white to-indigo-100" />
+          <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-white to-indigo-100" />
           <div className="absolute -top-24 left-[-12%] h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
-          <div className="absolute bottom-[-4rem] right-[-3rem] h-96 w-96 rounded-full bg-purple-200/30 blur-3xl" />
+          <div className="absolute -bottom-16 -right-12 h-96 w-96 rounded-full bg-purple-200/30 blur-3xl" />
         </div>
         <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
           <span className="inline-flex items-center rounded-full bg-blue-100 px-5 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-blue-700">
-            Faculty Pedia – Terms & Conditions
+            Facultypedia – Terms & Conditions
           </span>
           <h1 className="mt-6 text-4xl font-extrabold text-gray-900 sm:text-5xl lg:text-[54px]">
             Designed for a Safe and Fair Learning Community
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-gray-600">
-            These Terms & Conditions outline the rules every student and educator agrees to when using Faculty Pedia. We keep the platform respectful, secure, and focused on meaningful learning.
+            These Terms & Conditions outline the rules every student and
+            educator agrees to when using Facultypedia. We keep the platform
+            respectful, secure, and focused on meaningful learning.
           </p>
           <p className="mt-4 text-base text-gray-600">
-            Last Updated: <span className="font-semibold text-blue-700">{lastUpdated}</span>
+            Last Updated:{" "}
+            <span className="font-semibold text-blue-700">{lastUpdated}</span>
           </p>
         </div>
       </header>
@@ -155,7 +158,9 @@ const PrivacyPage = () => {
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-xl font-semibold text-gray-900">{section.title}</h2>
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      {section.title}
+                    </h2>
                     <div className="mt-4 space-y-3 text-sm leading-relaxed text-gray-600">
                       {section.body.map((paragraph, idx) => (
                         <p key={idx}>{paragraph}</p>
@@ -169,9 +174,12 @@ const PrivacyPage = () => {
         </div>
 
         <section className="mt-16 rounded-3xl border border-blue-100 bg-blue-50/80 p-8 text-center shadow-sm">
-          <h2 className="text-2xl font-semibold text-blue-900">Need help or have questions?</h2>
+          <h2 className="text-2xl font-semibold text-blue-900">
+            Need help or have questions?
+          </h2>
           <p className="mt-3 text-sm text-blue-800">
-            Email support@facultypedia.com and our team will respond as quickly as possible.
+            Email support@facultypedia.com and our team will respond as quickly
+            as possible.
           </p>
         </section>
       </main>

@@ -450,7 +450,7 @@ export const ManualPaymentFlow = ({ course, studentId }) => {
       amount: orderData.amount * 100,
       currency: "INR",
       order_id: orderData.orderId,
-      name: "Faculty Pedia",
+      name: "Facultypedia",
       handler: async (response) => {
         await handleVerifyPayment(response);
       },

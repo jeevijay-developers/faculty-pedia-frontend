@@ -201,7 +201,7 @@ const LiveClassDetailsPage = ({ params }) => {
 
             <ShareButton
               title={liveClass.liveClassTitle || "Live Class"}
-              text={`Join the live class "${liveClass.liveClassTitle}" on Faculty Pedia.`}
+              text={`Join the live class "${liveClass.liveClassTitle}" on Facultypedia.`}
               useCurrentUrl
               size="sm"
             />

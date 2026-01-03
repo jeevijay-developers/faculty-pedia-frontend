@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -28,9 +28,7 @@ const WebinarDetails = ({ webinar }) => {
       const enrollmentList =
         webinar?.studentEnrolled || webinar?.enrolledStudents || [];
 
-      const normalized = Array.isArray(enrollmentList)
-        ? enrollmentList
-        : [];
+      const normalized = Array.isArray(enrollmentList) ? enrollmentList : [];
 
       const alreadyEnrolled = normalized.some((entry) => {
         if (!entry) return false;
@@ -60,20 +58,20 @@ const WebinarDetails = ({ webinar }) => {
   const duration = webinar.duration || 1; // duration in hours
   const seatLimit = webinar.seatLimit || 0;
   const fees = webinar.fees || 0;
-  const subject = Array.isArray(webinar.subject) 
-    ? webinar.subject.join(", ") 
+  const subject = Array.isArray(webinar.subject)
+    ? webinar.subject.join(", ")
     : webinar.subject || "General";
   const webinarType = webinar.webinarType || "one-to-all";
   const specialization = Array.isArray(webinar.specialization)
     ? webinar.specialization.join(", ")
     : webinar.specialization || "General";
-  const enrolledCount = webinar.enrolledCount || webinar.studentEnrolled?.length || 0;
-  const seatsAvailable = webinar.seatsAvailable || (seatLimit - enrolledCount);
-  const shareText = `Join the webinar "${title}" on Faculty Pedia.`;
+  const enrolledCount =
+    webinar.enrolledCount || webinar.studentEnrolled?.length || 0;
+  const seatsAvailable = webinar.seatsAvailable || seatLimit - enrolledCount;
+  const shareText = `Join the webinar "${title}" on Facultypedia.`;
 
   return (
     <div>
-      
       <div className="max-w-7xl mx-auto p-4 space-y-8">
         {/* Header Section */}
         <div
@@ -95,7 +93,7 @@ const WebinarDetails = ({ webinar }) => {
                 {subject.charAt(0).toUpperCase() + subject.slice(1)}
               </span>
               <span className="px-3 py-1 text-xs font-medium text-white bg-green-600 rounded-full capitalize">
-                {webinarType.replace('-', ' ')}
+                {webinarType.replace("-", " ")}
               </span>
             </div>
           </div>
@@ -226,9 +224,7 @@ const WebinarDetails = ({ webinar }) => {
               <h3 className="font-semibold text-gray-800 mb-2">
                 Specialization
               </h3>
-              <p className="text-gray-600">
-                {specialization}
-              </p>
+              <p className="text-gray-600">{specialization}</p>
             </div>
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">Subject</h3>
@@ -237,7 +233,7 @@ const WebinarDetails = ({ webinar }) => {
             <div>
               <h3 className="font-semibold text-gray-800 mb-2">Type</h3>
               <p className="text-gray-600 capitalize">
-                {webinarType.replace('-', ' ')}
+                {webinarType.replace("-", " ")}
               </p>
             </div>
             <div>
@@ -271,7 +267,9 @@ const WebinarDetails = ({ webinar }) => {
                     <FaBook className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">Material {index + 1}</p>
+                    <p className="font-medium text-gray-900">
+                      Material {index + 1}
+                    </p>
                     <p className="text-sm text-gray-500">Study Resource</p>
                   </div>
                 </a>

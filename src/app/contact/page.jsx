@@ -19,16 +19,33 @@ import {
 } from "react-icons/fa";
 
 const socialLinks = [
-  { icon: FaFacebookF, label: "Facebook", href: "https://facebook.com/facultypedia" },
-  { icon: FaInstagram, label: "Instagram", href: "https://instagram.com/facultypedia" },
-  { icon: FaYoutube, label: "YouTube", href: "https://youtube.com/facultypedia" },
-  { icon: FaLinkedinIn, label: "LinkedIn", href: "https://linkedin.com/company/facultypedia" },
+  {
+    icon: FaFacebookF,
+    label: "Facebook",
+    href: "https://facebook.com/facultypedia",
+  },
+  {
+    icon: FaInstagram,
+    label: "Instagram",
+    href: "https://instagram.com/facultypedia",
+  },
+  {
+    icon: FaYoutube,
+    label: "YouTube",
+    href: "https://youtube.com/facultypedia",
+  },
+  {
+    icon: FaLinkedinIn,
+    label: "LinkedIn",
+    href: "https://linkedin.com/company/facultypedia",
+  },
 ];
 
 const contactCards = [
   {
     title: "Email Support",
-    description: "For general inquiries, technical issues, or course information.",
+    description:
+      "For general inquiries, technical issues, or course information.",
     detail: "support@facultypedia.com",
     icon: FiMail,
     actions: [
@@ -61,7 +78,8 @@ const contactCards = [
   },
   {
     title: "Office Address",
-    description: "Visit us for counselling sessions or partnership discussions.",
+    description:
+      "Visit us for counselling sessions or partnership discussions.",
     detail: "C304 Om Enclave, Anantpura, Kota, Rajasthan, 324005",
     icon: FiMapPin,
     actions: [
@@ -75,7 +93,8 @@ const contactCards = [
   },
   {
     title: "Follow and Connect",
-    description: "Stay connected with updates, announcements, and educator activities.",
+    description:
+      "Stay connected with updates, announcements, and educator activities.",
     detail: "www.facultypedia.com",
     icon: FiGlobe,
     actions: [
@@ -107,12 +126,12 @@ const supportTopics = [
 
 const ContactPage = () => {
   return (
-    <div className="bg-gradient-to-b from-white via-blue-50/30 to-white">
+    <div className="bg-linear-to-b from-white via-blue-50/30 to-white">
       <section className="relative overflow-hidden bg-white py-20">
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-100" />
+          <div className="absolute inset-0 bg-linear-to-br from-blue-50 via-white to-indigo-100" />
           <div className="absolute -top-28 left-[-10%] h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
-          <div className="absolute bottom-[-3rem] right-[-2rem] h-96 w-96 rounded-full bg-purple-300/20 blur-3xl" />
+          <div className="absolute -bottom-12 -right-8 h-96 w-96 rounded-full bg-purple-300/20 blur-3xl" />
         </div>
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 text-gray-900 sm:px-6 lg:flex-row lg:items-start lg:px-8">
           <div className="space-y-6 lg:w-3/5">
@@ -120,13 +139,18 @@ const ContactPage = () => {
               We are here to help
             </span>
             <h1 className="text-4xl font-extrabold leading-tight text-gray-900 sm:text-5xl lg:text-[52px]">
-              Have a question, need guidance, or want to know more about our courses?
+              Have a question, need guidance, or want to know more about our
+              courses?
             </h1>
             <p className="max-w-2xl text-lg leading-relaxed text-gray-600">
-              We are here to help you every step of the way. At Faculty Pedia, we believe communication should be simple and quick, just like learning.
+              We are here to help you every step of the way. At Facultypedia, we
+              believe communication should be simple and quick, just like
+              learning.
             </p>
             <p className="max-w-3xl text-base leading-relaxed text-gray-600">
-              Whether you are a student preparing for IIT JEE, NEET, or CBSE (Classes 6-12), or an educator looking to join our platform, feel free to reach out to us anytime.
+              Whether you are a student preparing for IIT JEE, NEET, or CBSE
+              (Classes 6-12), or an educator looking to join our platform, feel
+              free to reach out to us anytime.
             </p>
             <div className="flex flex-wrap gap-3 text-sm font-medium text-gray-600">
               <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-sm shadow-blue-100">
@@ -154,9 +178,13 @@ const ContactPage = () => {
                 <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">{card.title}</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {card.title}
+                </h3>
                 <p className="mt-2 text-sm text-gray-500">{card.description}</p>
-                <p className="mt-4 text-sm font-semibold text-blue-700">{card.detail}</p>
+                <p className="mt-4 text-sm font-semibold text-blue-700">
+                  {card.detail}
+                </p>
                 <div className="mt-5 flex flex-wrap gap-3 text-sm font-semibold">
                   {card.actions?.map((action) => {
                     const ActionIcon = action.icon;
@@ -169,7 +197,9 @@ const ContactPage = () => {
                         key={action.label}
                         href={action.href}
                         target={action.external ? "_blank" : undefined}
-                        rel={action.external ? "noopener noreferrer" : undefined}
+                        rel={
+                          action.external ? "noopener noreferrer" : undefined
+                        }
                         className={baseClasses}
                       >
                         {ActionIcon && <ActionIcon className="h-4 w-4" />}
@@ -215,8 +245,12 @@ const ContactPage = () => {
                       <Icon className="h-5 w-5" />
                     </div>
                     <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-gray-900">{topic.title}</h3>
-                      <p className="text-sm leading-relaxed text-gray-600">{topic.description}</p>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {topic.title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-gray-600">
+                        {topic.description}
+                      </p>
                     </div>
                   </div>
                 );
@@ -228,10 +262,12 @@ const ContactPage = () => {
 
       <section className="mx-auto max-w-6xl px-4 pb-16 text-center sm:px-6 lg:px-8">
         <h2 className="text-2xl font-semibold text-gray-900 sm:text-3xl">
-          Faculty Pedia is here to make your journey simpler, smarter, and more connected.
+          Facultypedia is here to make your journey simpler, smarter, and more
+          connected.
         </h2>
         <p className="mt-4 text-gray-600">
-          Reach out to us, follow our updates, and let us know how we can support your learning or teaching goals.
+          Reach out to us, follow our updates, and let us know how we can
+          support your learning or teaching goals.
         </p>
       </section>
     </div>

@@ -161,7 +161,7 @@ export const initiatePayment = async (paymentData, onSuccess, onFailure) => {
       amount: orderData.amount * 100, // Convert to paise
       currency: orderData.currency,
       order_id: orderData.orderId,
-      name: "Faculty Pedia",
+      name: "Facultypedia",
       description: `${paymentData.resourceType} Purchase`,
       image: "/logo.png", // Add your logo path
       prefill: {

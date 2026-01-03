@@ -110,7 +110,7 @@ const OneToOnePPHPage = () => {
           variant="card-grid"
           count={6}
           message={`Loading ${activeTab} Educators`}
-          className="min-h-[400px]"
+          className="min-h-100"
         />
       </div>
     );
@@ -162,7 +162,7 @@ const OneToOnePPHPage = () => {
             </h1>
             <ShareButton
               title="1-1 Pay Per Hour Educators"
-              text="Browse pay per hour educators on Faculty Pedia."
+              text="Browse pay per hour educators on Facultypedia."
               path="/one-to-one-pph"
               size="sm"
             />

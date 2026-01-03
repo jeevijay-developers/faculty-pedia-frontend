@@ -120,13 +120,13 @@ const EducatorDetailsPage = ({ params }) => {
   } = educator;
 
   const shareText = fullName
-    ? `Discover educator ${fullName} on Faculty Pedia.`
-    : "Check out this educator on Faculty Pedia.";
+    ? `Discover educator ${fullName} on Facultypedia.`
+    : "Check out this educator on Facultypedia.";
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <div className="bg-linear-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-8 items-center">
             {/* Educator Image */}
@@ -349,7 +349,7 @@ const EducatorDetailsPage = ({ params }) => {
 
             {/* Book Session Button */}
             {payPerHourFee && payPerHourFee > 0 && (
-              <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
+              <div className="bg-linear-to-br from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
                 <h3 className="text-xl font-bold mb-3">Book a Session</h3>
                 <div className="mb-4">
                   <div className="text-3xl font-bold">

@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Faculty Pedia - Educational Platform",
+  title: "Facultypedia - Educational Platform",
   description:
     "Comprehensive educational platform for exams, classes, courses, webinars, and educators",
 };

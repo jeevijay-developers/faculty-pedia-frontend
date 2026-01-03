@@ -16,6 +16,14 @@ import {
 } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FiTrash2, FiVideo } from "react-icons/fi";
+import {
+  FaLinkedin,
+  FaTwitter,
+  FaYoutube,
+  FaInstagram,
+  FaFacebook,
+} from "react-icons/fa";
+import { LuGlobe } from "react-icons/lu";
 import toast from "react-hot-toast";
 import { signupAsEducator } from "../server/auth/auth.routes";
 import API_CLIENT from "../server/config";
@@ -1089,98 +1097,156 @@ const EducatorSignup = () => {
   );
 
   const renderSocialLinks = () => (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">
-        Social Media Profiles (Optional)
-      </h3>
-      <p className="text-gray-600 mb-6">
-        Connect your social media profiles to build trust with students
-      </p>
+    <div className="space-y-6">
+      {/* Info Banner */}
+      <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+        <div className="flex items-start gap-3 text-slate-600">
+          <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-0.5">
+            <LuCirclePlus className="h-3 w-3 text-blue-600" />
+          </div>
+          <p className="text-sm font-medium">
+            Adding social links is optional but helps build trust with students
+            and showcases your online presence.
+          </p>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+      {/* Social Links Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* LinkedIn */}
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="linkedin"
-            className="block text-sm font-medium text-gray-700"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
           >
             LinkedIn Profile
           </label>
-          <input
-            type="url"
-            id="linkedin"
-            value={formData.socials.linkedin}
-            onChange={(e) => handleSocialChange("linkedin", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://linkedin.com/in/yourprofile"
-          />
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0077b5] transition-colors">
+              <FaLinkedin className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="linkedin"
+              value={formData.socials.linkedin}
+              onChange={(e) => handleSocialChange("linkedin", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://linkedin.com/in/yourprofile"
+            />
+          </div>
         </div>
 
-        <div>
+        {/* Twitter / X */}
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="twitter"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+          >
+            Twitter / X Profile
+          </label>
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-black transition-colors">
+              <FaTwitter className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="twitter"
+              value={formData.socials.twitter}
+              onChange={(e) => handleSocialChange("twitter", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://twitter.com/yourusername"
+            />
+          </div>
+        </div>
+
+        {/* YouTube */}
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="youtube"
-            className="block text-sm font-medium text-gray-700"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
           >
             YouTube Channel
           </label>
-          <input
-            type="url"
-            id="youtube"
-            value={formData.socials.youtube}
-            onChange={(e) => handleSocialChange("youtube", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://youtube.com/c/yourchannel"
-          />
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF0000] transition-colors">
+              <FaYoutube className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="youtube"
+              value={formData.socials.youtube}
+              onChange={(e) => handleSocialChange("youtube", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://youtube.com/@channel"
+            />
+          </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="twitter"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Twitter Profile
-          </label>
-          <input
-            type="url"
-            id="twitter"
-            value={formData.socials.twitter}
-            onChange={(e) => handleSocialChange("twitter", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://twitter.com/yourusername"
-          />
-        </div>
-
-        <div>
+        {/* Instagram */}
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="instagram"
-            className="block text-sm font-medium text-gray-700"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
           >
-            Instagram Profile
+            Instagram Handle
           </label>
-          <input
-            type="url"
-            id="instagram"
-            value={formData.socials.instagram}
-            onChange={(e) => handleSocialChange("instagram", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://instagram.com/yourusername"
-          />
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#E1306C] transition-colors">
+              <FaInstagram className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="instagram"
+              value={formData.socials.instagram}
+              onChange={(e) => handleSocialChange("instagram", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://instagram.com/yourusername"
+            />
+          </div>
         </div>
 
-        <div className="md:col-span-2">
+        {/* Facebook */}
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="facebook"
-            className="block text-sm font-medium text-gray-700"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
           >
-            Facebook Profile
+            Facebook Page
           </label>
-          <input
-            type="url"
-            id="facebook"
-            value={formData.socials.facebook}
-            onChange={(e) => handleSocialChange("facebook", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://facebook.com/yourprofile"
-          />
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1877F2] transition-colors">
+              <FaFacebook className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="facebook"
+              value={formData.socials.facebook}
+              onChange={(e) => handleSocialChange("facebook", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://facebook.com/yourprofile"
+            />
+          </div>
+        </div>
+
+        {/* Personal Website */}
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="website"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+          >
+            Personal Website
+          </label>
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">
+              <LuGlobe className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="website"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://yourwebsite.com"
+            />
+          </div>
         </div>
       </div>
     </div>

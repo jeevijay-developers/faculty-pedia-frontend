@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isAuthenticated } from "@/utils/auth";
 import { toast } from "react-hot-toast";
-import {
-  createPaymentOrder,
-  verifyPayment,
-} from "../server/payment.routes";
+import { createPaymentOrder, verifyPayment } from "../server/payment.routes";
 
 /**
  * Authentication-aware enrollment button component
@@ -86,7 +83,9 @@ const EnrollButton = ({
     let actualStudentId = studentId;
     if (!actualStudentId) {
       try {
-        const userData = JSON.parse(localStorage.getItem("faculty-pedia-student-data") || "{}");
+        const userData = JSON.parse(
+          localStorage.getItem("faculty-pedia-student-data") || "{}"
+        );
         actualStudentId = userData._id || userData.id;
       } catch (error) {
         console.error("Error parsing student data:", error);
@@ -143,7 +142,9 @@ const EnrollButton = ({
         productType,
       }).catch((err) => {
         const alreadyEnrolled =
-          err?.response?.data?.message?.toLowerCase?.().includes("already enrolled") ||
+          err?.response?.data?.message
+            ?.toLowerCase?.()
+            .includes("already enrolled") ||
           err?.response?.data?.errors?.some?.((e) =>
             String(e?.msg || e?.message || "")
               .toLowerCase()
@@ -194,7 +195,7 @@ const EnrollButton = ({
         key: orderData.razorpayKey,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Faculty Pedia",
+        name: "Facultypedia",
         description: orderData.product?.title || "Checkout",
         order_id: orderData.orderId,
         prefill: {
@@ -216,7 +217,9 @@ const EnrollButton = ({
             });
 
             if (!verifyRes?.success) {
-              throw new Error(verifyRes?.message || "Payment verification failed");
+              throw new Error(
+                verifyRes?.message || "Payment verification failed"
+              );
             }
 
             toast.success("Enrollment successful!");
