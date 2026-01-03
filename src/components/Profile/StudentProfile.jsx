@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ProfileSkeleton from "./ProfileSkeleton";
 import OverviewTab from "./OverviewTab";
@@ -16,8 +16,13 @@ import { getCoursesByIds } from "../server/course.routes";
 import { getTestSeriesById } from "../server/test-series.route";
 import { getResultById } from "../server/result.routes";
 import { updateStudentProfile } from "../server/student/student.routes";
+import {
+  getStudentNotifications,
+  markNotificationAsRead,
+} from "../server/student/student.routes";
 import { confirmAlert } from "@/components/CustomAlert";
 import toast from "react-hot-toast";
+import { Bell, Loader2, RefreshCcw } from "lucide-react";
 
 const CLASS_LABELS = {
   "class-6th": "Class 6th",
@@ -41,6 +46,13 @@ const TAB_IDS = [
   "educators",
 ];
 
+const INITIAL_NOTIFICATION_STATE = {
+  items: [],
+  loading: false,
+  error: null,
+  unreadCount: 0,
+};
+
 const StudentDashboard = ({
   studentData,
   loading = false,
@@ -54,7 +66,12 @@ const StudentDashboard = ({
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const profileMenuRef = useRef(null);
+  const notificationPanelRef = useRef(null);
+  const [notificationState, setNotificationState] = useState(
+    INITIAL_NOTIFICATION_STATE
+  );
 
   const handleLogout = async () => {
     const confirmed = await confirmAlert({
@@ -81,6 +98,8 @@ const StudentDashboard = ({
   const normalizedStudent = studentData?.student || studentData;
   const [studentState, setStudentState] = useState(normalizedStudent);
   const [localResults, setLocalResults] = useState([]);
+  const student = studentState || normalizedStudent;
+  const studentId = student?._id;
 
   // Keep offline results scoped per student so new logins don't inherit old data
   useEffect(() => {
@@ -168,7 +187,6 @@ const StudentDashboard = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isProfileMenuOpen]);
 
-  const student = studentState || normalizedStudent;
   const {
     name,
     email,
@@ -183,6 +201,40 @@ const StudentDashboard = ({
     tests: rawTests = [], // expected to include testSeriesId | seriesId
     results: rawResults = [], // expected to include seriesId referencing test series
   } = student || {};
+
+  const formatRelativeTime = (value) => {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+
+    const diffMs = Date.now() - date.getTime();
+    if (diffMs <= 0) return "Just now";
+
+    const diffSeconds = Math.floor(diffMs / 1000);
+    if (diffSeconds < 60) return `${diffSeconds}s ago`;
+
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    if (diffMinutes < 60) return `${diffMinutes}m ago`;
+
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) return `${diffDays}d ago`;
+
+    return date.toLocaleDateString(undefined, {
+      day: "2-digit",
+      month: "short",
+    });
+  };
+
+  const getNameInitials = (fullName = "") => {
+    const trimmed = fullName.trim();
+    if (!trimmed) return "FP";
+    const parts = trimmed.split(/\s+/).slice(0, 2);
+    const initials = parts.map((part) => part.charAt(0).toUpperCase()).join("");
+    return initials || "FP";
+  };
 
   const tests = Array.isArray(rawTests) ? rawTests : [];
   const apiResults = Array.isArray(rawResults) ? rawResults : [];
@@ -199,6 +251,117 @@ const StudentDashboard = ({
       return tsB - tsA;
     });
   }, [localResults, apiResults]);
+
+  const fetchNotifications = useCallback(
+    async ({ suppressUnread = false } = {}) => {
+      if (!studentId) return;
+
+      setNotificationState((prev) => ({
+        ...prev,
+        loading: true,
+        error: null,
+      }));
+
+      try {
+        const result = await getStudentNotifications(studentId, {
+          limit: 20,
+          unreadOnly: true,
+        });
+        const items = Array.isArray(result?.notifications)
+          ? result.notifications
+          : [];
+        const unreadCount = result?.unreadCount ?? items.length;
+
+        setNotificationState((prev) => ({
+          ...prev,
+          items,
+          loading: false,
+          error: null,
+          unreadCount,
+        }));
+      } catch (error) {
+        console.error("Error loading notifications:", error);
+        setNotificationState((prev) => ({
+          ...prev,
+          loading: false,
+          error: "Unable to load notifications right now.",
+        }));
+      }
+    },
+    [studentId]
+  );
+
+  const handleNotificationRefresh = () => {
+    fetchNotifications({ suppressUnread: isNotificationOpen });
+  };
+
+  const handleNotificationToggle = () => {
+    setIsNotificationOpen((prev) => !prev);
+    setIsProfileMenuOpen(false);
+  };
+
+  const closeNotifications = () => setIsNotificationOpen(false);
+
+  const handleNotificationSelect = useCallback(
+    (item) => {
+      if (!item) return;
+      closeNotifications();
+
+      const notificationId = item.id || item._id;
+      if (notificationId && studentId) {
+        setNotificationState((prev) => {
+          const filteredItems = prev.items.filter(
+            (entry) => entry.id !== notificationId
+          );
+          const nextUnread = Math.max(prev.unreadCount - 1, 0);
+          return {
+            ...prev,
+            items: filteredItems,
+            unreadCount: nextUnread,
+          };
+        });
+
+        markNotificationAsRead(studentId, notificationId).catch((error) => {
+          console.error("Failed to mark notification as read:", error);
+          fetchNotifications({ suppressUnread: true });
+        });
+      }
+
+      if (item.link) {
+        router.push(item.link);
+      }
+    },
+    [studentId, router, fetchNotifications]
+  );
+
+  useEffect(() => {
+    if (!studentId) {
+      setNotificationState(INITIAL_NOTIFICATION_STATE);
+      setIsNotificationOpen(false);
+      return;
+    }
+
+    fetchNotifications();
+  }, [studentId, fetchNotifications]);
+
+  useEffect(() => {
+    if (!isNotificationOpen || !studentId) return;
+    fetchNotifications({ suppressUnread: true });
+  }, [isNotificationOpen, studentId, fetchNotifications]);
+
+  useEffect(() => {
+    if (!isNotificationOpen) return;
+    const handleClickOutside = (event) => {
+      if (
+        notificationPanelRef.current &&
+        !notificationPanelRef.current.contains(event.target)
+      ) {
+        setIsNotificationOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isNotificationOpen]);
 
   // Courses state
   const [resolvedCourses, setResolvedCourses] = useState([]);
@@ -649,13 +812,106 @@ const StudentDashboard = ({
           </div>
         </div>
         <div className="flex items-center gap-4" ref={profileMenuRef}>
-          <button className="relative p-2.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300">
-            <span className="material-symbols-outlined">notifications</span>
-            <span className="absolute top-2.5 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-900"></span>
-          </button>
-          <button className="p-2.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-600 dark:text-gray-300">
-            <span className="material-symbols-outlined">chat_bubble</span>
-          </button>
+          <div className="relative" ref={notificationPanelRef}>
+            <button
+              type="button"
+              aria-label="Notifications"
+              aria-expanded={isNotificationOpen}
+              onClick={handleNotificationToggle}
+              className="relative inline-flex items-center justify-center rounded-full p-2.5 text-gray-600 transition hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <Bell className="h-5 w-5" />
+              {notificationState.unreadCount > 0 &&
+                notificationState.items.length > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-2.5 w-2.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                  </span>
+                )}
+            </button>
+
+            {isNotificationOpen && (
+              <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl z-30">
+                <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                  <span className="text-sm font-semibold text-gray-900">
+                    Notifications
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleNotificationRefresh}
+                    disabled={notificationState.loading}
+                    className="flex items-center justify-center rounded-full p-1 text-blue-600 transition hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                    aria-label="Refresh notifications"
+                  >
+                    {notificationState.loading ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <RefreshCcw className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                </div>
+                <div className="max-h-80 overflow-y-auto">
+                  {notificationState.loading ? (
+                    <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-gray-500">
+                      <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                      <span>Loading notifications...</span>
+                    </div>
+                  ) : notificationState.error ? (
+                    <div className="space-y-3 px-4 py-6 text-sm">
+                      <p className="text-red-500">{notificationState.error}</p>
+                      <button
+                        type="button"
+                        onClick={handleNotificationRefresh}
+                        className="text-blue-600 hover:text-blue-700"
+                      >
+                        Try again
+                      </button>
+                    </div>
+                  ) : notificationState.items.length === 0 ? (
+                    <div className="px-4 py-6 text-sm text-gray-500">
+                      You're all caught up! Follow your favourite educators to
+                      get updates.
+                    </div>
+                  ) : (
+                    <ul className="divide-y divide-gray-100">
+                      {notificationState.items.map((item) => (
+                        <li key={item.id || item._id}>
+                          <button
+                            type="button"
+                            className="flex w-full gap-3 px-4 py-3 text-left transition hover:bg-blue-50 focus:outline-none"
+                            onClick={() => handleNotificationSelect(item)}
+                          >
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
+                              {getNameInitials(item.educatorName)}
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-sm font-semibold text-gray-900 line-clamp-1">
+                                  {item.title}
+                                </span>
+                                <span className="text-xs text-gray-400">
+                                  {formatRelativeTime(item.createdAt)}
+                                </span>
+                              </div>
+                              <p className="mt-1 text-xs text-gray-600">
+                                {item.message}
+                              </p>
+                              <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-gray-400">
+                                <span className="text-gray-500">{item.educatorName}</span>
+                                <span>•</span>
+                                <span>{item.type}</span>
+                              </div>
+                            </div>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          
           <div className="pl-4 border-l border-gray-100 dark:border-gray-700 flex items-center gap-3 relative">
             <div className="text-right hidden lg:block">
               <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
@@ -774,21 +1030,7 @@ const StudentDashboard = ({
               );
             })}
 
-            <div className="mt-auto px-4 pt-6 pb-2">
-              <div className="p-4 rounded-xl bg-linear-to-br from-blue-600 to-blue-400 text-white relative overflow-hidden">
-                <div className="relative z-10">
-                  <p className="text-sm font-bold mb-1">Premium Plan</p>
-                  <p className="text-xs opacity-90 mb-3">
-                    Get unlimited access to all courses.
-                  </p>
-                  <button className="text-xs bg-white text-blue-600 px-3 py-1.5 rounded-full font-bold shadow-sm hover:bg-gray-50 transition-colors">
-                    Upgrade Now
-                  </button>
-                </div>
-                <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
-                <div className="absolute -top-4 -right-4 w-16 h-16 bg-white/10 rounded-full blur-xl"></div>
-              </div>
-            </div>
+           
           </div>
         </nav>
 
