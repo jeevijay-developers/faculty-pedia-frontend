@@ -27,9 +27,7 @@ export default function TestSeriesDetailsPage({ params }) {
       setIsLoading(true);
       setError(null);
 
-      console.log(`📚 Fetching test series with ID: ${id}`);
       const response = await fetchTestSeriesById(id);
-      console.log("📚 Test Series API Response:", response);
 
       // Handle different response structures
       const testSeriesData = response.testSeries || response.data || response;
@@ -38,7 +36,6 @@ export default function TestSeriesDetailsPage({ params }) {
         throw new Error("Test series not found");
       }
 
-      console.log("📚 Test Series Data:", testSeriesData);
       setTestSeries(testSeriesData);
     } catch (err) {
       console.error("Error fetching test series:", err);
@@ -134,7 +131,8 @@ export default function TestSeriesDetailsPage({ params }) {
               Test Series Not Found
             </h1>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              The test series you're looking for doesn't exist or has been removed.
+              The test series you're looking for doesn't exist or has been
+              removed.
             </p>
             <Link
               href="/test-series"
@@ -153,7 +151,9 @@ export default function TestSeriesDetailsPage({ params }) {
       <Banner
         url={testSeries.image || "/images/placeholders/1.svg"}
         title={testSeries.title || "Test Series"}
-        subtitle={`Master your preparation with ${testSeries.numberOfTests || testSeries.noOfTests || 0} comprehensive tests`}
+        subtitle={`Master your preparation with ${
+          testSeries.numberOfTests || testSeries.noOfTests || 0
+        } comprehensive tests`}
       />
       <TestSeriesDetails testSeriesData={testSeries} />
     </div>

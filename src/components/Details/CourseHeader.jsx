@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import {
@@ -36,8 +36,8 @@ const CourseHeader = ({ course }) => {
   }
 
   const shareText = course?.title
-    ? `Explore the course "${course.title}" on Faculty Pedia.`
-    : "Check out this course on Faculty Pedia.";
+    ? `Explore the course "${course.title}" on Facultypedia.`
+    : "Check out this course on Facultypedia.";
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -47,7 +47,11 @@ const CourseHeader = ({ course }) => {
           {/* Course Image */}
           <div className="lg:col-span-1">
             <img
-              src={course.image || course.courseThumbnail || "/images/placeholders/1.svg"}
+              src={
+                course.image ||
+                course.courseThumbnail ||
+                "/images/placeholders/1.svg"
+              }
               alt={course.title}
               className="w-full h-64 lg:h-48 object-cover rounded-lg border-2 border-white/20"
             />
@@ -56,16 +60,24 @@ const CourseHeader = ({ course }) => {
           {/* Course Info */}
           <div className="lg:col-span-2">
             <div className="flex flex-wrap gap-2 mb-3">
-              {course.specialization && course.specialization.map((spec, idx) => (
-                <span key={idx} className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
-                  {spec}
-                </span>
-              ))}
-              {course.class && course.class.map((cls, idx) => (
-                <span key={idx} className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
-                  {cls}
-                </span>
-              ))}
+              {course.specialization &&
+                course.specialization.map((spec, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium"
+                  >
+                    {spec}
+                  </span>
+                ))}
+              {course.class &&
+                course.class.map((cls, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium"
+                  >
+                    {cls}
+                  </span>
+                ))}
               <span className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
                 {course.courseType === "OTA" ? "One to All" : "One to One"}
               </span>
@@ -90,7 +102,9 @@ const CourseHeader = ({ course }) => {
               <div className="text-sm">
                 <span className="text-black/80">Instructor: </span>
                 <span className="font-semibold">
-                  {course.educatorID?.fullName || course.educatorID?.username || "Instructor"}
+                  {course.educatorID?.fullName ||
+                    course.educatorID?.username ||
+                    "Instructor"}
                 </span>
               </div>
             </div>
@@ -116,7 +130,9 @@ const CourseHeader = ({ course }) => {
                 <div className="text-black/80 text-sm">Videos</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold">{course.maxStudents || 0}</div>
+                <div className="text-2xl font-bold">
+                  {course.maxStudents || 0}
+                </div>
                 <div className="text-black/80 text-sm">Max Students</div>
               </div>
             </div>
@@ -182,10 +198,14 @@ const CourseHeader = ({ course }) => {
               </span>
             </div>
             <div className="text-lg font-bold text-orange-800">
-              {Array.isArray(course.subject) ? course.subject.join(", ") : course.subject}
+              {Array.isArray(course.subject)
+                ? course.subject.join(", ")
+                : course.subject}
             </div>
             <div className="text-sm text-orange-600">
-              {Array.isArray(course.specialization) ? course.specialization.join(", ") : course.specialization}
+              {Array.isArray(course.specialization)
+                ? course.specialization.join(", ")
+                : course.specialization}
             </div>
           </div>
         </div>

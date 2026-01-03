@@ -2,19 +2,16 @@ import API_CLIENT from "./config";
 
 // Helper function to get base URL for server-side fetch
 const getBaseURL = () => {
-  // Production URL
-  const PRODUCTION_URL =
-    process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL;
-
-  // Development URL
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
   const DEVELOPMENT_URL = "http://localhost:5000";
-
-  // Check if we're in production
   const isProduction = process.env.NODE_ENV === "production";
 
-  // Return appropriate URL
-  if (isProduction && PRODUCTION_URL) {
-    return PRODUCTION_URL;
+  if (BASE_URL) return BASE_URL;
+
+  if (isProduction) {
+    console.warn(
+      "NEXT_PUBLIC_BASE_URL is not set in production; defaulting to localhost"
+    );
   }
 
   return DEVELOPMENT_URL;

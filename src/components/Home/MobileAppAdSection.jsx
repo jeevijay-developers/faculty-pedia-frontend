@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { RiAppleFill, RiAndroidFill, RiDownload2Line } from 'react-icons/ri';
-import { motion } from 'framer-motion';
+import Link from "next/link";
+import Image from "next/image";
+import { RiAppleFill, RiAndroidFill, RiDownload2Line } from "react-icons/ri";
+import { motion } from "framer-motion";
 
 const MobileAppAdSection = () => {
   return (
@@ -19,18 +19,20 @@ const MobileAppAdSection = () => {
             transition={{ duration: 0.7 }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 leading-tight">
-              Faculty Pedia connects students and educators in one powerful platform
+              Facultypedia connects students and educators in one powerful
+              platform
             </h2>
-            
+
             <p className="text-lg text-gray-600 leading-relaxed">
-              Enabling seamless learning, resource sharing, communication, and collaboration anytime, anywhere. 
-              Smart tools for smarter classrooms and growth.
+              Enabling seamless learning, resource sharing, communication, and
+              collaboration anytime, anywhere. Smart tools for smarter
+              classrooms and growth.
             </p>
-            
+
             <div className="pt-4">
               <div className="flex flex-col sm:flex-row gap-4 items-center">
-                <Link 
-                  href="#" 
+                <Link
+                  href="#"
                   className="bg-black text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-gray-800 transition-colors duration-300 w-full sm:w-auto justify-center"
                 >
                   <RiAppleFill className="text-xl" />
@@ -39,9 +41,9 @@ const MobileAppAdSection = () => {
                     <span className="font-semibold">App Store</span>
                   </div>
                 </Link>
-                
-                <Link 
-                  href="#" 
+
+                <Link
+                  href="#"
                   className="bg-black text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-gray-800 transition-colors duration-300 w-full sm:w-auto justify-center"
                 >
                   <RiAndroidFill className="text-xl" />
@@ -51,7 +53,7 @@ const MobileAppAdSection = () => {
                   </div>
                 </Link>
               </div>
-              
+
               <div className="mt-6">
                 <div className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
                   <span>Coming Soon...</span>
@@ -59,7 +61,7 @@ const MobileAppAdSection = () => {
               </div>
             </div>
           </motion.div>
-          
+
           {/* Right column - App Image */}
           <motion.div
             className="order-1 lg:order-2 flex justify-center items-center relative"
@@ -69,10 +71,10 @@ const MobileAppAdSection = () => {
             transition={{ duration: 0.7 }}
           >
             <div className="w-full max-w-md">
-              <div className="relative h-[26rem] w-full overflow-hidden">
-                <Image 
-                  src="/images/Home/MobileApp.png" 
-                  alt="Faculty Pedia Mobile App" 
+              <div className="relative h-104 w-full overflow-hidden">
+                <Image
+                  src="/images/Home/MobileApp.png"
+                  alt="Facultypedia Mobile App"
                   fill
                   className="object-contain bg-transparent"
                   priority

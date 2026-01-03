@@ -15,7 +15,7 @@ const infoSections = [
     title: "1. Information We Collect",
     icon: FiUsers,
     description:
-      "At Faculty Pedia, we collect only the information we need to deliver a personalised learning experience.",
+      "At Facultypedia, we collect only the information we need to deliver a personalised learning experience.",
     subSections: [
       {
         label: "A. Information You Provide",
@@ -56,7 +56,7 @@ const infoSections = [
     description:
       "Your data helps us keep your teaching and learning journey seamless and effective.",
     bullets: [
-      "Create and manage your Faculty Pedia account",
+      "Create and manage your Facultypedia account",
       "Provide access to live classes, courses, and study materials",
       "Help educators connect with students and vice versa",
       "Improve teaching quality and platform performance",
@@ -85,13 +85,14 @@ const infoSections = [
       "With service providers who help us run the platform",
       "When required by law or authorised government requests",
     ],
-    footer: "We do not share your information for marketing purposes outside Faculty Pedia.",
+    footer:
+      "We do not share your information for marketing purposes outside Facultypedia.",
   },
   {
     title: "6. Children’s Data",
     icon: FiUsers,
     description:
-      "Faculty Pedia is open to students from Class 6 to 12, IIT JEE, NEET, and droppers.",
+      "Facultypedia is open to students from Class 6 to 12, IIT JEE, NEET, and droppers.",
     bullets: [
       "Students under 18 should use the platform with parental guidance, as required by Indian law.",
     ],
@@ -101,7 +102,7 @@ const infoSections = [
     icon: FiClock,
     bullets: [
       "We may update this Privacy Policy as our platform evolves.",
-      "Whenever we make changes, we will update the \"Last Updated\" date at the top.",
+      'Whenever we make changes, we will update the "Last Updated" date at the top.',
     ],
   },
 ];
@@ -110,25 +111,30 @@ const TermsPage = () => {
   const lastUpdated = "December 11, 2025";
 
   return (
-    <div className="bg-gradient-to-b from-white via-blue-50/40 to-white">
+    <div className="bg-linear-to-b from-white via-blue-50/40 to-white">
       <header className="relative overflow-hidden bg-white py-20">
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-white to-indigo-100" />
+          <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-white to-indigo-100" />
           <div className="absolute -top-24 left-[-12%] h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
-          <div className="absolute bottom-[-4rem] right-[-3rem] h-96 w-96 rounded-full bg-purple-200/30 blur-3xl" />
+          <div className="absolute -bottom-16 -right-12 h-96 w-96 rounded-full bg-purple-200/30 blur-3xl" />
         </div>
         <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
           <span className="inline-flex items-center rounded-full bg-blue-100 px-5 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-blue-700">
             Privacy Policy
           </span>
           <h1 className="mt-6 text-4xl font-extrabold text-gray-900 sm:text-5xl lg:text-[56px]">
-            Faculty Pedia Terms & Privacy Commitment
+            Facultypedia Terms & Privacy Commitment
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-gray-600">
-            At Faculty Pedia, we are committed to protecting your personal information and ensuring that your experience on our platform is safe, transparent, and trustworthy. This Privacy Policy explains how we collect, use, store, and protect the data of students, educators, and visitors who use our services.
+            At Facultypedia, we are committed to protecting your personal
+            information and ensuring that your experience on our platform is
+            safe, transparent, and trustworthy. This Privacy Policy explains how
+            we collect, use, store, and protect the data of students, educators,
+            and visitors who use our services.
           </p>
           <p className="mt-4 text-base text-gray-600">
-            By signing up, logging in, or accessing any part of Faculty Pedia, you agree to the practices described in this policy.
+            By signing up, logging in, or accessing any part of Facultypedia,
+            you agree to the practices described in this policy.
           </p>
           <p className="mt-6 text-sm font-semibold uppercase tracking-wide text-gray-500">
             Last Updated: {lastUpdated}
@@ -164,7 +170,9 @@ const TermsPage = () => {
                   <div className="mt-6 space-y-5">
                     {section.subSections.map((sub) => (
                       <div key={sub.label}>
-                        <p className="text-sm font-semibold text-gray-900">{sub.label}</p>
+                        <p className="text-sm font-semibold text-gray-900">
+                          {sub.label}
+                        </p>
                         <ul className="mt-2 space-y-1 text-sm text-gray-600">
                           {sub.bullets.map((item) => (
                             <li key={item} className="flex items-start gap-2">
@@ -202,7 +210,8 @@ const TermsPage = () => {
             Questions about our policy?
           </h2>
           <p className="mt-3 text-sm text-blue-800">
-            Reach out to support@facultypedia.com and our compliance team will be happy to help.
+            Reach out to support@facultypedia.com and our compliance team will
+            be happy to help.
           </p>
         </section>
       </main>

@@ -7,7 +7,7 @@ const GenericLoginPage = () => {
   const router = useRouter();
 
   const handleLoginSuccess = async (userData, userType) => {
-    // Handle successful login based on user type    
+    // Handle successful login based on user type
     if (userType === "student") {
       router.push("/exams");
     } else if (userType === "educator") {
@@ -19,7 +19,7 @@ const GenericLoginPage = () => {
     <Login
       title="Welcome Back"
       forgotPasswordLink="/forgot-password"
-      signupLink="/signup"
+      signupLink="/join-as-student"
       onLoginSuccess={handleLoginSuccess}
     />
   );

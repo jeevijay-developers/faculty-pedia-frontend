@@ -32,10 +32,7 @@ const LiveClassesPage = () => {
       setLoading(true);
       setError(null);
       try {
-        console.log("🔥 Fetching all live classes...");
         const response = await fetchAllLiveClasses();
-        console.log("🔥 Live Classes Response:", response);
-
         // Handle different response structures
         let classes = [];
         if (
@@ -59,7 +56,6 @@ const LiveClassesPage = () => {
           classes = response;
         }
 
-        console.log(`🔥 Found ${classes.length} live classes`);
         setLiveClasses(classes);
       } catch (error) {
         console.error("Failed to fetch live classes:", error);

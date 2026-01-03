@@ -8,6 +8,7 @@ import { HeroUIProvider } from "@heroui/react";
 import { AlertContainer } from "@/components/CustomAlert";
 import ModernToaster from "@/components/LiveTest/ModernToaster";
 import Script from "next/script";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Faculty Pedia - Educational Platform",
+  title: "Facultypedia - Educational Platform",
   description:
     "Comprehensive educational platform for exams, classes, courses, webinars, and educators",
 };
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
           </ChromeVisibility>
           <AlertContainer />
           <ModernToaster />
+          <Toaster />
           <Script
             src="https://checkout.razorpay.com/v1/checkout.js"
             strategy="beforeInteractive"

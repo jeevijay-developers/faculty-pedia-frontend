@@ -20,14 +20,15 @@ export const isDevelopment = () => {
  * Get the appropriate API URL based on environment
  */
 export const getApiUrl = () => {
-  // Check for production API URL first
-  if (isProduction() && process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
-  }
-
-  // Fall back to base URL
+  // Single source of truth: NEXT_PUBLIC_BASE_URL
   if (process.env.NEXT_PUBLIC_BASE_URL) {
     return process.env.NEXT_PUBLIC_BASE_URL;
+  }
+
+  if (isProduction()) {
+    console.warn(
+      "NEXT_PUBLIC_BASE_URL is not set in production; defaulting to localhost"
+    );
   }
 
   // Default fallback for development
@@ -83,7 +84,6 @@ export const getDebugInfo = () => {
     platform: getDeploymentPlatform(),
     apiUrl: getApiUrl(),
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-    apiUrlEnv: process.env.NEXT_PUBLIC_API_URL,
     nodeEnv: process.env.NODE_ENV,
   };
 };

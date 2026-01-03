@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 const StudentRegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -105,12 +106,7 @@ const StudentRegistrationForm = () => {
 
       // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      console.log(
-        "Form submitted successfully:",
-        Object.fromEntries(submitData)
-      );
-      alert("Student registered successfully!");
+      toast.success("Student registered successfully!");
 
       // Reset form
       setFormData({
@@ -127,16 +123,16 @@ const StudentRegistrationForm = () => {
       if (fileInput) fileInput.value = "";
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Error registering student. Please try again.");
+      toast.error("Error registering student. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+        <div className="bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-4">
           <h2 className="text-2xl font-bold text-white text-center">
             Student Registration
           </h2>

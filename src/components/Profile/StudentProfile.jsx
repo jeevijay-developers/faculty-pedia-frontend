@@ -145,12 +145,6 @@ const StudentDashboard = ({
 
   useEffect(() => {
     const normalized = studentData?.student || studentData;
-    console.log("👤 StudentDashboard received data:", studentData);
-    console.log("👤 Normalized student:", normalized);
-    console.log(
-      "👤 Following educators in normalized:",
-      normalized?.followingEducators
-    );
     setStudentState(normalized);
   }, [studentData]);
 

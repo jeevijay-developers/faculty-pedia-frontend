@@ -37,28 +37,33 @@ const OneToOneLiveClassesCarousel = ({
       setLoading(true);
       setError(null);
       try {
-        console.log(`📚 Fetching live classes for ${specialization}...`);
         const response = await fetchLiveClassesBySpecialization(specialization);
-        console.log("📚 Live Classes API Response:", response);
-        
+
         // Handle different response structures
         let liveClasses = [];
-        
+
         // Backend returns: { success: true, data: { liveClasses: [...] } }
-        if (response?.data?.data?.liveClasses && Array.isArray(response.data.data.liveClasses)) {
+        if (
+          response?.data?.data?.liveClasses &&
+          Array.isArray(response.data.data.liveClasses)
+        ) {
           liveClasses = response.data.data.liveClasses;
-        } else if (response?.data?.liveClasses && Array.isArray(response.data.liveClasses)) {
+        } else if (
+          response?.data?.liveClasses &&
+          Array.isArray(response.data.liveClasses)
+        ) {
           liveClasses = response.data.liveClasses;
-        } else if (response?.liveClasses && Array.isArray(response.liveClasses)) {
+        } else if (
+          response?.liveClasses &&
+          Array.isArray(response.liveClasses)
+        ) {
           liveClasses = response.liveClasses;
         } else if (Array.isArray(response?.data)) {
           liveClasses = response.data;
         } else if (Array.isArray(response)) {
           liveClasses = response;
         }
-        
-        console.log(`📚 Found ${liveClasses.length} live classes for ${specialization}`);
-        console.log("📚 Live Classes Data:", liveClasses);
+
         setClassesToRender(liveClasses);
       } catch (error) {
         console.error("Failed to fetch live classes:", error);

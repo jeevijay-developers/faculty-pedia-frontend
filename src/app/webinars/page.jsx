@@ -31,14 +31,11 @@ export default function WebinarsPage() {
       try {
         setLoading(true);
         setError(null);
-        console.log("🎤 Fetching all webinars...");
         const response = await fetchAllWebinars();
-        console.log("🎤 Webinars Response:", response);
 
         // Extract webinars from response
         const webinarsData =
           response?.data?.webinars || response?.webinars || [];
-        console.log(`🎤 Found ${webinarsData.length} webinars`);
         setAllWebinars(webinarsData);
       } catch (err) {
         console.error("Failed to fetch webinars:", err);
@@ -196,7 +193,7 @@ export default function WebinarsPage() {
             </h1>
             <ShareButton
               title="Upcoming Webinars"
-              text="Discover upcoming webinars on Faculty Pedia."
+              text="Discover upcoming webinars on Facultypedia."
               path="/webinars"
               size="sm"
             />

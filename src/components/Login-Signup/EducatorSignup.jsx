@@ -10,10 +10,24 @@ import {
   LuGraduationCap,
   LuShare2,
   LuCheck,
+  LuCirclePlus,
+  LuHistory,
+  LuSchool,
 } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { FiTrash2 } from "react-icons/fi";
+import { FiTrash2, FiVideo } from "react-icons/fi";
+import {
+  FaLinkedin,
+  FaTwitter,
+  FaYoutube,
+  FaInstagram,
+  FaFacebook,
+} from "react-icons/fa";
+import { LuGlobe } from "react-icons/lu";
+import toast from "react-hot-toast";
 import { signupAsEducator } from "../server/auth/auth.routes";
+import API_CLIENT from "../server/config";
+import MonthPicker from "./MonthPicker";
 
 const SUBJECT_OPTIONS = [
   "biology",
@@ -23,6 +37,12 @@ const SUBJECT_OPTIONS = [
   "english",
   "hindi",
 ];
+
+const EXAM_SUBJECTS = {
+  "IIT-JEE": ["chemistry", "physics", "mathematics"],
+  NEET: ["chemistry", "physics", "biology"],
+  CBSE: ["chemistry", "physics", "mathematics", "biology", "hindi", "english"],
+};
 
 const SUBJECT_LIST_DISPLAY = SUBJECT_OPTIONS.map(
   (subject) => subject.charAt(0).toUpperCase() + subject.slice(1)
@@ -57,6 +77,8 @@ const EducatorSignup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [introVideoFile, setIntroVideoFile] = useState(null);
+  const [isUploadingIntroVideo, setIsUploadingIntroVideo] = useState(false);
 
   const [formData, setFormData] = useState({
     // Personal Information
@@ -78,6 +100,8 @@ const EducatorSignup = () => {
         company: "",
         startDate: "",
         endDate: "",
+        description: "",
+        isCurrentRole: false,
       },
     ],
 
@@ -108,13 +132,38 @@ const EducatorSignup = () => {
     { id: 4, title: "Social Links", icon: LuShare2 },
   ];
 
+  const progressWidth = `${((currentStep - 1) / (steps.length - 1)) * 100}%`;
+
+  const inputClass = (hasError = false) =>
+    `w-full h-12 px-4 rounded-xl border bg-white shadow-sm text-[#0e121b] placeholder-slate-400 focus:outline-none focus:ring-2 transition-colors ${
+      hasError
+        ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+        : "border-slate-200 focus:border-indigo-500 focus:ring-indigo-100"
+    }`;
+
+  const textareaClass = (hasError = false) =>
+    `w-full p-4 rounded-xl border bg-white shadow-sm text-[#0e121b] placeholder-slate-400 focus:outline-none focus:ring-2 transition-colors resize-none ${
+      hasError
+        ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+        : "border-slate-200 focus:border-indigo-500 focus:ring-indigo-100"
+    }`;
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        [name]: value,
+      };
+
+      // Reset subject if exam category changes
+      if (name === "specialization") {
+        updated.subject = "";
+      }
+
+      return updated;
+    });
 
     // Clear error when user starts typing
     if (errors[name]) {
@@ -144,6 +193,72 @@ const EducatorSignup = () => {
     }));
   };
 
+  const handleIntroVideoFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("video/")) {
+      toast.error("Please select a valid video file");
+      return;
+    }
+
+    if (file.size > 500 * 1024 * 1024) {
+      toast.error("Video must be under 500MB");
+      return;
+    }
+
+    setIntroVideoFile(file);
+    setFormData((prev) => ({ ...prev, introVideoLink: "" }));
+    toast.success(`Selected: ${file.name}`);
+  };
+
+  const uploadIntroVideo = async () => {
+    if (!introVideoFile) {
+      toast.error("Select a video file first");
+      return;
+    }
+
+    setIsUploadingIntroVideo(true);
+    const toastId = toast.loading("Uploading intro video...");
+
+    try {
+      const payload = new FormData();
+      payload.append("video", introVideoFile);
+      const videoTitle = `${formData.firstName || "Educator"} Intro Video`;
+      payload.append("title", videoTitle.trim() || "Intro Video");
+
+      const response = await API_CLIENT.post(
+        "/api/videos/upload-to-vimeo",
+        payload,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          timeout: 600000,
+        }
+      );
+
+      const embedUrl =
+        response?.data?.data?.vimeo?.embedUrl ||
+        response?.data?.data?.video?.links?.[0];
+
+      if (!embedUrl) {
+        throw new Error("No video URL returned from server");
+      }
+
+      setFormData((prev) => ({ ...prev, introVideoLink: embedUrl }));
+      setIntroVideoFile(null);
+      toast.success("Intro Video uploaded", { id: toastId });
+    } catch (error) {
+      console.error("Intro video upload failed:", error);
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to upload intro video";
+      toast.error(message, { id: toastId });
+    } finally {
+      setIsUploadingIntroVideo(false);
+    }
+  };
+
   const addExperience = () => {
     setFormData((prev) => ({
       ...prev,
@@ -154,6 +269,8 @@ const EducatorSignup = () => {
           company: "",
           startDate: "",
           endDate: "",
+          description: "",
+          isCurrentRole: false,
         },
       ],
     }));
@@ -163,6 +280,21 @@ const EducatorSignup = () => {
     setFormData((prev) => ({
       ...prev,
       workExperience: prev.workExperience.filter((_, i) => i !== index),
+    }));
+  };
+
+  const toggleCurrentRole = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      workExperience: prev.workExperience.map((item, i) =>
+        i === index
+          ? {
+              ...item,
+              isCurrentRole: !item.isCurrentRole,
+              endDate: !item.isCurrentRole ? "" : item.endDate,
+            }
+          : item
+      ),
     }));
   };
 
@@ -199,20 +331,17 @@ const EducatorSignup = () => {
         const mobile = formData.mobileNumber.trim();
         const bio = formData.bio.trim();
 
-        if (!firstName)
-          stepErrors.firstName = "First name is required";
+        if (!firstName) stepErrors.firstName = "First name is required";
         else if (firstName.length < 2)
           stepErrors.firstName = "First name must be at least 2 characters";
 
-        if (!lastName)
-          stepErrors.lastName = "Last name is required";
+        if (!lastName) stepErrors.lastName = "Last name is required";
 
         if (!email) stepErrors.email = "Email is required";
         else if (!/\S+@\S+\.\S+/.test(email))
           stepErrors.email = "Invalid email format";
 
-        if (!formData.password)
-          stepErrors.password = "Password is required";
+        if (!formData.password) stepErrors.password = "Password is required";
         else if (!STRONG_PASSWORD_REGEX.test(formData.password))
           stepErrors.password =
             "Password must include uppercase, lowercase, and a number";
@@ -232,15 +361,13 @@ const EducatorSignup = () => {
         if (!formData.specialization)
           stepErrors.specialization = "Specialization is required";
 
-        const { valid: validSubjects, invalid: invalidSubjects } =
-          parseSubjectInput(formData.subject);
-
-        if (invalidSubjects.length) {
-          stepErrors.subject = `Unsupported subjects: ${invalidSubjects.join(
-            ", "
-          )}. Allowed subjects: ${SUBJECT_LIST_DISPLAY}.`;
-        } else if (!validSubjects.length) {
-          stepErrors.subject = `Please enter at least one supported subject (${SUBJECT_LIST_DISPLAY}).`;
+        if (!formData.subject || !formData.subject.trim()) {
+          stepErrors.subject = "Please select a subject";
+        } else {
+          const allowedSubjects = EXAM_SUBJECTS[formData.specialization] || [];
+          if (!allowedSubjects.includes(formData.subject.toLowerCase())) {
+            stepErrors.subject = `Invalid subject for ${formData.specialization}`;
+          }
         }
         break;
       }
@@ -347,7 +474,9 @@ const EducatorSignup = () => {
     const trimmedEmail = formData.email.trim().toLowerCase();
     const trimmedMobile = formData.mobileNumber.trim();
     const trimmedBio = formData.bio.trim();
-    const { valid: normalizedSubjects } = parseSubjectInput(formData.subject);
+    const normalizedSubjects = formData.subject
+      ? [formData.subject.toLowerCase()]
+      : [];
 
     const submitData = {
       firstName: trimmedFirstName,
@@ -377,10 +506,10 @@ const EducatorSignup = () => {
         response?.data?.educator || response?.educator || response?.data;
       const educatorId = createdEducator?._id || createdEducator?.id;
 
-      alert("Registration successful! Redirecting to your profile.");
+      toast.success("Registration successful! Redirecting to your profile.");
 
       if (educatorId) {
-        router.push(`/profile/educator/${educatorId}`);
+        router.push(`${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/`);
       } else {
         router.push("/login");
       }
@@ -405,260 +534,271 @@ const EducatorSignup = () => {
   };
 
   const renderPersonalInfo = () => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* First Name */}
-        <div>
-          <label
-            htmlFor="firstName"
-            className="block text-sm font-medium text-gray-700"
-          >
-            First Name *
-          </label>
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            First Name
+          </span>
           <input
             type="text"
             id="firstName"
             name="firstName"
             value={formData.firstName}
             onChange={handleInputChange}
-            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              errors.firstName ? "border-red-300" : "border-gray-300"
-            }`}
-            placeholder="Arav"
+            className={inputClass(Boolean(errors.firstName))}
+            placeholder="e.g. Arav"
           />
           {errors.firstName && (
-            <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
+            <span className="text-xs text-red-500 font-medium mt-1">
+              {errors.firstName}
+            </span>
           )}
-        </div>
+        </label>
 
-        {/* Last Name */}
-        <div>
-          <label
-            htmlFor="lastName"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Last Name *
-          </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Last Name
+          </span>
           <input
             type="text"
             id="lastName"
             name="lastName"
             value={formData.lastName}
             onChange={handleInputChange}
-            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              errors.lastName ? "border-red-300" : "border-gray-300"
-            }`}
-            placeholder="Sinha"
+            className={inputClass(Boolean(errors.lastName))}
+            placeholder="e.g. Sinha"
           />
           {errors.lastName && (
-            <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+            <span className="text-xs text-red-500 font-medium mt-1">
+              {errors.lastName}
+            </span>
           )}
-        </div>
+        </label>
       </div>
 
-      <div className="flex flex-col justify-between md:flex-row gap-4">
-        {/* Email */}
-        <div className="flex-1">
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Email Address *
-          </label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Email Address
+          </span>
           <input
             type="email"
             id="email"
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              errors.email ? "border-red-300" : "border-gray-300"
-            }`}
+            className={inputClass(Boolean(errors.email))}
             placeholder="arav@example.com"
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+            <span className="text-xs text-red-500 font-medium mt-1">
+              {errors.email}
+            </span>
           )}
-        </div>
+        </label>
 
-        {/* Mobile Number */}
-        <div className="flex-1">
-          <label
-            htmlFor="mobileNumber"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Mobile Number *
-          </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Mobile Number
+          </span>
           <input
             type="tel"
             id="mobileNumber"
             name="mobileNumber"
             value={formData.mobileNumber}
             onChange={handleInputChange}
-            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              errors.mobileNumber ? "border-red-300" : "border-gray-300"
-            }`}
+            className={inputClass(Boolean(errors.mobileNumber))}
             placeholder="XXXXXX9658"
           />
           {errors.mobileNumber && (
-            <p className="mt-1 text-sm text-red-600">{errors.mobileNumber}</p>
+            <span className="text-xs text-red-500 font-medium mt-1">
+              {errors.mobileNumber}
+            </span>
           )}
-        </div>
+        </label>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Password */}
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Password *
-          </label>
-          <div className="mt-1 relative">
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Password
+          </span>
+          <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`block w-full px-3 py-2 pr-10 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.password ? "border-red-300" : "border-gray-300"
-              }`}
-              placeholder="******"
+              className={`${inputClass(Boolean(errors.password))} pr-12`}
+              placeholder="Min. 8 characters"
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             </button>
           </div>
           {errors.password && (
-            <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+            <span className="text-xs text-red-500 font-medium mt-1">
+              {errors.password}
+            </span>
           )}
-        </div>
+        </label>
 
-        {/* Confirm Password */}
-        <div>
-          <label
-            htmlFor="confirmPassword"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Confirm Password *
-          </label>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Confirm Password
+          </span>
           <input
             type="password"
             id="confirmPassword"
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleInputChange}
-            className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              errors.confirmPassword ? "border-red-300" : "border-gray-300"
-            }`}
-            placeholder="******"
+            className={inputClass(Boolean(errors.confirmPassword))}
+            placeholder="Re-enter password"
           />
           {errors.confirmPassword && (
-            <p className="mt-1 text-sm text-red-600">
+            <span className="text-xs text-red-500 font-medium mt-1">
               {errors.confirmPassword}
-            </p>
+            </span>
           )}
-        </div>
+        </label>
       </div>
 
-      {/* Specialization */}
-      <div>
-        <label
-          htmlFor="specialization"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Specialization *
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Exam Category
+          </span>
+          <select
+            id="specialization"
+            name="specialization"
+            value={formData.specialization}
+            onChange={handleInputChange}
+            className={`${inputClass(
+              Boolean(errors.specialization)
+            )} appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%236b7280\' viewBox=\'0 0 20 20\'%3E%3Cpath d=\'M5.23 7.21a.75.75 0 011.06.02L10 11.177l3.71-3.946a.75.75 0 111.08 1.04l-4.243 4.51a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z\'/%3E%3C/svg%3E')] bg-no-repeat bg-position-[right_0.75rem_center]`}
+          >
+            <option value="IIT-JEE">IIT-JEE</option>
+            <option value="NEET">NEET</option>
+            <option value="CBSE">CBSE</option>
+          </select>
+          {errors.specialization && (
+            <span className="text-xs text-red-500 font-medium mt-1">
+              {errors.specialization}
+            </span>
+          )}
         </label>
-        <select
-          id="specialization"
-          name="specialization"
-          value={formData.specialization}
-          onChange={handleInputChange}
-          className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-            errors.specialization ? "border-red-300" : "border-gray-300"
-          }`}
-        >
-          <option value="IIT-JEE">IIT-JEE</option>
-          <option value="NEET">NEET</option>
-          <option value="CBSE">CBSE</option>
-        </select>
-        {errors.specialization && (
-          <p className="mt-1 text-sm text-red-600">{errors.specialization}</p>
-        )}
+
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            Specialised Subject
+          </span>
+          <select
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={handleInputChange}
+            className={`${inputClass(
+              Boolean(errors.subject)
+            )} appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%236b7280\' viewBox=\'0 0 20 20\'%3E%3Cpath d=\'M5.23 7.21a.75.75 0 011.06.02L10 11.177l3.71-3.946a.75.75 0 111.08 1.04l-4.243 4.51a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z\'/%3E%3C/svg%3E')] bg-no-repeat bg-position-[right_0.75rem_center]`}
+          >
+            <option value="">Select a subject</option>
+            {EXAM_SUBJECTS[formData.specialization]?.map((subj) => (
+              <option key={subj} value={subj}>
+                {subj.charAt(0).toUpperCase() + subj.slice(1)}
+              </option>
+            ))}
+          </select>
+          {errors.subject && (
+            <span className="text-xs text-red-500 font-medium mt-1">
+              {errors.subject}
+            </span>
+          )}
+        </label>
       </div>
 
-      {/* Subject */}
-      <div>
-        <label
-          htmlFor="subject"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Subject *
-        </label>
-        <input
-          type="text"
-          id="subject"
-          name="subject"
-          value={formData.subject}
-          onChange={handleInputChange}
-          placeholder="e.g., Physics, Mathematics, Chemistry"
-          className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-            errors.subject ? "border-red-300" : "border-gray-300"
-          }`}
-        />
-        {errors.subject && (
-          <p className="mt-1 text-sm text-red-600">{errors.subject}</p>
-        )}
-      </div>
-
-      {/* Bio */}
-      <div>
-        <label
-          htmlFor="bio"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Bio *
-        </label>
+      <label className="flex flex-col gap-1.5">
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          Professional Bio
+        </span>
         <textarea
           id="bio"
           name="bio"
           rows={4}
           value={formData.bio}
           onChange={handleInputChange}
-          className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-            errors.bio ? "border-red-300" : "border-gray-300"
-          }`}
-          placeholder="Tell us about yourself, your teaching philosophy, and experience..."
+          className={textareaClass(Boolean(errors.bio))}
+          placeholder="Briefly describe your teaching philosophy and experience..."
         />
         {errors.bio && (
-          <p className="mt-1 text-sm text-red-600">{errors.bio}</p>
+          <span className="text-xs text-red-500 font-medium mt-1">
+            {errors.bio}
+          </span>
         )}
-      </div>
+      </label>
 
-      {/* Intro Video Link */}
-      <div>
-        <label
-          htmlFor="introVideoLink"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Introduction Video Link (Optional)
-        </label>
-        <input
-          type="url"
-          id="introVideoLink"
-          name="introVideoLink"
-          value={formData.introVideoLink}
-          onChange={handleInputChange}
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          placeholder="https://youtube.com/watch?v=..."
-        />
-        <p className="mt-1 text-sm text-gray-500">
-          Share a video introducing yourself to potential students
+      <div className="space-y-2">
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          Introduction Video
+        </span>
+        <div className="border-2 border-dashed rounded-xl border-slate-200 bg-slate-50 p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between hover:bg-slate-100 transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-blue-500">
+              <FiVideo className="h-5 w-5" />
+            </div>
+            <div className="flex flex-col">
+              <p className="text-sm font-semibold text-slate-900">
+                Upload introduction video
+              </p>
+              <p className="text-xs text-slate-500">MP4/MOV up to 500MB</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
+            <input
+              type="file"
+              id="introVideoFile"
+              accept="video/*"
+              onChange={handleIntroVideoFileChange}
+              className="hidden"
+            />
+            <label
+              htmlFor="introVideoFile"
+              className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors"
+            >
+              Browse Files
+            </label>
+            <button
+              type="button"
+              onClick={uploadIntroVideo}
+              disabled={isUploadingIntroVideo || !introVideoFile}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+            >
+              {isUploadingIntroVideo ? "Uploading..." : "Upload"}
+            </button>
+            {introVideoFile && (
+              <span className="text-xs text-slate-600 truncate max-w-60">
+                {introVideoFile.name}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {formData.introVideoLink && (
+          <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">
+            Intro video ready. Video will be added with your form.
+          </p>
+        )}
+
+        <p className="text-sm text-slate-500">
+          Upload your introduction video. After upload we store the Vimeo link
+          for your profile.
         </p>
       </div>
     </div>
@@ -666,41 +806,33 @@ const EducatorSignup = () => {
 
   const renderWorkExperience = () => (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium text-gray-900">Work Experience</h3>
-        <button
-          type="button"
-          onClick={addExperience}
-          className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Add More Experience
-        </button>
-      </div>
-
       {formData.workExperience.map((exp, index) => (
         <div
           key={index}
-          className="border border-gray-200 rounded-lg p-4 space-y-4"
+          className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <div className="flex justify-between items-center">
-            <h4 className="font-medium text-gray-700">
+          <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <LuHistory className="text-blue-500 h-5 w-5" />
               Experience #{index + 1}
-            </h4>
+            </h3>
             {formData.workExperience.length > 1 && (
               <button
                 type="button"
                 onClick={() => removeExperience(index)}
-                className="text-red-600 hover:text-red-800 text-sm"
+                className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
+                title="Remove Experience"
               >
-                <FiTrash2 className="h-5 w-5 cursor-pointer" />
+                <FiTrash2 className="h-5 w-5" />
               </button>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Job Title *
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Job Title */}
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
+                Job Title
               </label>
               <input
                 type="text"
@@ -713,134 +845,153 @@ const EducatorSignup = () => {
                     e.target.value
                   )
                 }
-                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                className={`w-full h-12 px-4 rounded-lg bg-white border text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 transition-all ${
                   errors[`workExperience.${index}.title`]
-                    ? "border-red-300"
-                    : "border-gray-300"
+                    ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                    : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
                 }`}
-                placeholder="e.g., Senior Physics Teacher"
+                placeholder="e.g. Senior Mathematics Teacher"
               />
               {errors[`workExperience.${index}.title`] && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-2 text-xs text-red-500 font-medium">
                   {errors[`workExperience.${index}.title`]}
                 </p>
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Company/Institution *
+            {/* Company/Institution */}
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
+                School / Institution
               </label>
-              <input
-                type="text"
-                value={exp.company}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "workExperience",
-                    index,
-                    "company",
-                    e.target.value
-                  )
-                }
-                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors[`workExperience.${index}.company`]
-                    ? "border-red-300"
-                    : "border-gray-300"
-                }`}
-                placeholder="e.g., ABC Coaching Institute"
-              />
+              <div className="relative">
+                <LuSchool className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
+                <input
+                  type="text"
+                  value={exp.company}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      "workExperience",
+                      index,
+                      "company",
+                      e.target.value
+                    )
+                  }
+                  className={`w-full h-12 pl-11 pr-4 rounded-lg bg-white border text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 transition-all ${
+                    errors[`workExperience.${index}.company`]
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                      : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
+                  }`}
+                  placeholder="e.g. Springfield High School"
+                />
+              </div>
               {errors[`workExperience.${index}.company`] && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-2 text-xs text-red-500 font-medium">
                   {errors[`workExperience.${index}.company`]}
                 </p>
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
+            {/* Start Date */}
+            <div className="col-span-1">
+              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
                 Start Date
               </label>
-              <input
-                type="date"
+              <MonthPicker
                 value={exp.startDate}
-                onChange={(e) =>
+                onChange={(value) =>
                   handleNestedChange(
                     "workExperience",
                     index,
                     "startDate",
-                    e.target.value
+                    value
                   )
                 }
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Select start month"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
+            {/* End Date */}
+            <div className="col-span-1">
+              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
                 End Date
               </label>
-              <input
-                type="date"
-                value={exp.endDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "workExperience",
-                    index,
-                    "endDate",
-                    e.target.value
-                  )
-                }
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              <p className="mt-1 text-sm text-gray-500">
-                Leave empty if currently working here
-              </p>
+              <div className="space-y-2">
+                <MonthPicker
+                  value={exp.isCurrentRole ? "" : exp.endDate}
+                  onChange={(value) =>
+                    handleNestedChange(
+                      "workExperience",
+                      index,
+                      "endDate",
+                      value
+                    )
+                  }
+                  disabled={exp.isCurrentRole}
+                  placeholder="Select end month"
+                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id={`currentRole${index}`}
+                    checked={exp.isCurrentRole}
+                    onChange={() => toggleCurrentRole(index)}
+                    className="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                  />
+                  <label
+                    htmlFor={`currentRole${index}`}
+                    className="text-sm text-slate-600 font-medium cursor-pointer select-none"
+                  >
+                    Currently working here
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       ))}
+
+      {/* Add More Button */}
+      <button
+        type="button"
+        onClick={addExperience}
+        className="w-full py-4 border-2 border-dashed border-blue-500/30 rounded-xl flex items-center justify-center gap-2 text-blue-500 font-semibold hover:bg-blue-500/5 hover:border-blue-500/50 transition-all group"
+      >
+        <LuCirclePlus className="h-5 w-5 group-hover:scale-110 transition-transform" />
+        Add Another Position
+      </button>
     </div>
   );
 
   const renderQualifications = () => (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium text-gray-900">
-          Educational Qualifications
-        </h3>
-        <button
-          type="button"
-          onClick={addQualification}
-          className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Add More Qualification
-        </button>
-      </div>
-
       {formData.qualification.map((qual, index) => (
         <div
           key={index}
-          className="border border-gray-200 rounded-lg p-4 space-y-4"
+          className="group border border-gray-200 bg-white rounded-2xl p-6 transition-all hover:border-blue-500/30 hover:shadow-sm"
         >
-          <div className="flex justify-between items-center">
-            <h4 className="font-medium text-gray-700">
-              Qualification #{index + 1}
-            </h4>
+          <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+            <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <LuGraduationCap className="text-blue-500 h-5 w-5" />
+              Education #{index + 1}
+            </h3>
             {formData.qualification.length > 1 && (
               <button
                 type="button"
                 onClick={() => removeQualification(index)}
-                className="text-red-600 hover:text-red-800 text-sm"
+                className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
+                title="Remove Entry"
               >
-                <FiTrash2 className="h-5 w-5 cursor-pointer" />
+                <FiTrash2 className="h-5 w-5" />
               </button>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Degree/Qualification *
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Degree/Qualification */}
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
+                Degree / Qualification
               </label>
               <input
                 type="text"
@@ -853,306 +1004,379 @@ const EducatorSignup = () => {
                     e.target.value
                   )
                 }
-                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                className={`w-full h-11 px-4 rounded-xl border bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
                   errors[`qualification.${index}.title`]
-                    ? "border-red-300"
-                    : "border-gray-300"
+                    ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                    : "border-gray-200 focus:ring-blue-500 focus:border-transparent"
                 }`}
-                placeholder="e.g., M.Sc. Physics"
+                placeholder="e.g. Master of Science in Physics"
               />
               {errors[`qualification.${index}.title`] && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-2 text-xs text-red-500 font-medium">
                   {errors[`qualification.${index}.title`]}
                 </p>
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Institute/University *
+            {/* Institute/University */}
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
+                Institute / University
               </label>
-              <input
-                type="text"
-                value={qual.institute}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "qualification",
-                    index,
-                    "institute",
-                    e.target.value
-                  )
-                }
-                className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                  errors[`qualification.${index}.institute`]
-                    ? "border-red-300"
-                    : "border-gray-300"
-                }`}
-                placeholder="e.g., Delhi University"
-              />
+              <div className="relative">
+                <LuSchool className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none h-5 w-5" />
+                <input
+                  type="text"
+                  value={qual.institute}
+                  onChange={(e) =>
+                    handleNestedChange(
+                      "qualification",
+                      index,
+                      "institute",
+                      e.target.value
+                    )
+                  }
+                  className={`w-full h-11 pl-10 pr-4 rounded-xl border bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
+                    errors[`qualification.${index}.institute`]
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-100"
+                      : "border-gray-200 focus:ring-blue-500 focus:border-transparent"
+                  }`}
+                  placeholder="e.g. Indian Institute of Technology, Bombay"
+                />
+              </div>
               {errors[`qualification.${index}.institute`] && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-2 text-xs text-red-500 font-medium">
                   {errors[`qualification.${index}.institute`]}
                 </p>
               )}
             </div>
 
+            {/* Start Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
                 Start Date
               </label>
-              <input
-                type="date"
+              <MonthPicker
                 value={qual.startDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "qualification",
-                    index,
-                    "startDate",
-                    e.target.value
-                  )
+                onChange={(value) =>
+                  handleNestedChange("qualification", index, "startDate", value)
                 }
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Select start month"
+                className="h-11 rounded-xl"
               />
             </div>
 
+            {/* End Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                End Date
+              <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
+                End Date (or Expected)
               </label>
-              <input
-                type="date"
+              <MonthPicker
                 value={qual.endDate}
-                onChange={(e) =>
-                  handleNestedChange(
-                    "qualification",
-                    index,
-                    "endDate",
-                    e.target.value
-                  )
+                onChange={(value) =>
+                  handleNestedChange("qualification", index, "endDate", value)
                 }
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Select end month"
+                className="h-11 rounded-xl"
               />
-              <p className="mt-1 text-sm text-gray-500">
-                Leave empty if currently pursuing
-              </p>
             </div>
           </div>
         </div>
       ))}
+
+      {/* Add More Button */}
+      <button
+        type="button"
+        onClick={addQualification}
+        className="w-full border-2 border-dashed border-gray-300 rounded-2xl p-4 text-blue-500 font-semibold hover:bg-blue-50 hover:border-blue-500 transition-all duration-200 flex justify-center items-center gap-2 group"
+      >
+        <LuCirclePlus className="h-5 w-5 group-hover:scale-110 transition-transform" />
+        Add More Education
+      </button>
     </div>
   );
 
   const renderSocialLinks = () => (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">
-        Social Media Profiles (Optional)
-      </h3>
-      <p className="text-gray-600 mb-6">
-        Connect your social media profiles to build trust with students
-      </p>
+    <div className="space-y-6">
+      {/* Info Banner */}
+      <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
+        <div className="flex items-start gap-3 text-slate-600">
+          <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-0.5">
+            <LuCirclePlus className="h-3 w-3 text-blue-600" />
+          </div>
+          <p className="text-sm font-medium">
+            Adding social links is optional but helps build trust with students
+            and showcases your online presence.
+          </p>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+      {/* Social Links Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* LinkedIn */}
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="linkedin"
-            className="block text-sm font-medium text-gray-700"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
           >
             LinkedIn Profile
           </label>
-          <input
-            type="url"
-            id="linkedin"
-            value={formData.socials.linkedin}
-            onChange={(e) => handleSocialChange("linkedin", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://linkedin.com/in/yourprofile"
-          />
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0077b5] transition-colors">
+              <FaLinkedin className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="linkedin"
+              value={formData.socials.linkedin}
+              onChange={(e) => handleSocialChange("linkedin", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://linkedin.com/in/yourprofile"
+            />
+          </div>
         </div>
 
-        <div>
+        {/* Twitter / X */}
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="twitter"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+          >
+            Twitter / X Profile
+          </label>
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-black transition-colors">
+              <FaTwitter className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="twitter"
+              value={formData.socials.twitter}
+              onChange={(e) => handleSocialChange("twitter", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://twitter.com/yourusername"
+            />
+          </div>
+        </div>
+
+        {/* YouTube */}
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="youtube"
-            className="block text-sm font-medium text-gray-700"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
           >
             YouTube Channel
           </label>
-          <input
-            type="url"
-            id="youtube"
-            value={formData.socials.youtube}
-            onChange={(e) => handleSocialChange("youtube", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://youtube.com/c/yourchannel"
-          />
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF0000] transition-colors">
+              <FaYoutube className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="youtube"
+              value={formData.socials.youtube}
+              onChange={(e) => handleSocialChange("youtube", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://youtube.com/@channel"
+            />
+          </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="twitter"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Twitter Profile
-          </label>
-          <input
-            type="url"
-            id="twitter"
-            value={formData.socials.twitter}
-            onChange={(e) => handleSocialChange("twitter", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://twitter.com/yourusername"
-          />
-        </div>
-
-        <div>
+        {/* Instagram */}
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="instagram"
-            className="block text-sm font-medium text-gray-700"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
           >
-            Instagram Profile
+            Instagram Handle
           </label>
-          <input
-            type="url"
-            id="instagram"
-            value={formData.socials.instagram}
-            onChange={(e) => handleSocialChange("instagram", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://instagram.com/yourusername"
-          />
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#E1306C] transition-colors">
+              <FaInstagram className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="instagram"
+              value={formData.socials.instagram}
+              onChange={(e) => handleSocialChange("instagram", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://instagram.com/yourusername"
+            />
+          </div>
         </div>
 
-        <div className="md:col-span-2">
+        {/* Facebook */}
+        <div className="flex flex-col gap-2">
           <label
             htmlFor="facebook"
-            className="block text-sm font-medium text-gray-700"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
           >
-            Facebook Profile
+            Facebook Page
           </label>
-          <input
-            type="url"
-            id="facebook"
-            value={formData.socials.facebook}
-            onChange={(e) => handleSocialChange("facebook", e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://facebook.com/yourprofile"
-          />
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1877F2] transition-colors">
+              <FaFacebook className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="facebook"
+              value={formData.socials.facebook}
+              onChange={(e) => handleSocialChange("facebook", e.target.value)}
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://facebook.com/yourprofile"
+            />
+          </div>
+        </div>
+
+        {/* Personal Website */}
+        <div className="flex flex-col gap-2">
+          <label
+            htmlFor="website"
+            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+          >
+            Personal Website
+          </label>
+          <div className="relative group">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">
+              <LuGlobe className="h-5 w-5" />
+            </div>
+            <input
+              type="url"
+              id="website"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              placeholder="https://yourwebsite.com"
+            />
+          </div>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Join as Educator
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Shape minds, inspire futures, and build your teaching legacy
-          </p>
-
-          {/* Progress Steps */}
-          <div className="flex justify-center space-x-8 mb-8">
-            {steps.map((step) => {
-              const Icon = step.icon;
-              return (
-                <div
-                  key={step.id}
-                  className={`flex items-center space-x-2 ${
-                    currentStep >= step.id ? "text-blue-600" : "text-gray-400"
-                  }`}
-                >
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
-                      currentStep >= step.id
-                        ? "bg-blue-600 border-blue-600 text-white"
-                        : "border-gray-300 text-gray-400"
-                    }`}
-                  >
-                    {currentStep > step.id ? (
-                      <LuCheck className="w-5 h-5" />
-                    ) : (
-                      <Icon className="w-5 h-5" />
-                    )}
-                  </div>
-                  <span className="hidden sm:block font-medium">
-                    {step.title}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div>
-            {/* Step Content */}
-            <div className="mb-8">
-              {currentStep === 1 && renderPersonalInfo()}
-              {currentStep === 2 && renderWorkExperience()}
-              {currentStep === 3 && renderQualifications()}
-              {currentStep === 4 && renderSocialLinks()}
+    <div className="min-h-screen text-[#0e121b]">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header className="flex items-center justify-between flex-wrap gap-4 pb-6">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
+              <LuUser className="h-5 w-5" />
             </div>
+            <div>
+              <p className="text-sm text-slate-500">Educator Onboarding</p>
+              <h1 className="text-2xl font-semibold text-slate-900">
+                Join as Educator
+              </h1>
+            </div>
+          </div>
+          <div className="text-sm text-slate-600">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-semibold text-blue-500 hover:text-blue-700"
+            >
+              Log in
+            </Link>
+          </div>
+        </header>
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between">
+        <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8">
+          <div className="mb-10">
+            <div className="relative mb-6 h-1 bg-slate-200 rounded-full">
+              <div
+                className="absolute inset-y-0 left-0 bg-blue-500 rounded-full transition-all"
+                style={{ width: progressWidth }}
+              />
+            </div>
+            <div className="grid grid-cols-4 gap-3 text-sm">
+              {steps.map((step) => {
+                const Icon = step.icon;
+                const isActive = currentStep === step.id;
+                const isDone = currentStep > step.id;
+                return (
+                  <div
+                    key={step.id}
+                    className="flex flex-col items-center gap-2"
+                  >
+                    <div
+                      className={`h-10 w-10 rounded-full flex items-center justify-center border-2 font-semibold shadow-sm ${
+                        isDone
+                          ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                          : isActive
+                          ? "bg-blue-500 border-blue-500 text-white"
+                          : "bg-white border-slate-200 text-slate-400"
+                      }`}
+                    >
+                      {isDone ? (
+                        <LuCheck className="h-5 w-5" />
+                      ) : (
+                        <Icon className="h-5 w-5" />
+                      )}
+                    </div>
+                    <span
+                      className={`text-center ${
+                        isActive
+                          ? "text-blue-700 font-semibold"
+                          : isDone
+                          ? "text-slate-600 font-medium"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      {step.title}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="mb-8">
+            {currentStep === 1 && renderPersonalInfo()}
+            {currentStep === 2 && renderWorkExperience()}
+            {currentStep === 3 && renderQualifications()}
+            {currentStep === 4 && renderSocialLinks()}
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={prevStep}
+              disabled={currentStep === 1}
+              className="w-full sm:w-auto px-5 h-11 rounded-xl font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Previous
+            </button>
+
+            {currentStep < 4 ? (
               <button
                 type="button"
-                onClick={prevStep}
-                disabled={currentStep === 1}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                onClick={nextStep}
+                className="w-full sm:w-auto px-6 h-11 rounded-xl bg-blue-500 text-white font-semibold shadow-lg shadow-indigo-500/20 hover:bg-blue-700 transition-colors"
               >
-                Previous
+                Continue to {steps[currentStep]?.title || "Experience"}
               </button>
-
-              {currentStep < 4 ? (
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  Next
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={isLoading}
-                  className="px-8 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
-                >
-                  {isLoading ? (
-                    <>
-                      <LuLoaderCircle className="animate-spin w-5 h-5" />
-                      <span>Creating Account...</span>
-                    </>
-                  ) : (
-                    <span>Complete Registration</span>
-                  )}
-                </button>
-              )}
-            </div>
-
-            {errors.submit && (
-              <p className="mt-4 text-sm text-red-600 text-center">
-                {errors.submit}
-              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isLoading}
+                className="w-full sm:w-auto px-8 h-11 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <LuLoaderCircle className="animate-spin w-5 h-5" />
+                    <span>Creating Account...</span>
+                  </>
+                ) : (
+                  <span>Complete Registration</span>
+                )}
+              </button>
             )}
           </div>
 
-          {/* Login Link */}
-          <div className="mt-8 text-center">
-            <p className="text-gray-600">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
-              >
-                Sign in here
-              </Link>
+          {errors.submit && (
+            <p className="mt-4 text-sm text-red-600 text-center">
+              {errors.submit}
             </p>
-          </div>
+          )}
         </div>
       </div>
     </div>

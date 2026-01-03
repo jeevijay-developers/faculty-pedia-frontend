@@ -55,9 +55,7 @@ const LiveClassDetailsPage = ({ params }) => {
       setLoading(true);
       setError(null);
       try {
-        console.log("Fetching live class with ID:", id);
         const response = await fetchLiveClassById(id);
-        console.log("Live Class API Response:", response);
 
         // Handle response structure
         let classData = null;
@@ -71,7 +69,6 @@ const LiveClassDetailsPage = ({ params }) => {
           classData = response;
         }
 
-        console.log("Live Class Data:", classData);
         setLiveClass(classData);
       } catch (error) {
         console.error("Error fetching live class:", error);
@@ -204,7 +201,7 @@ const LiveClassDetailsPage = ({ params }) => {
 
             <ShareButton
               title={liveClass.liveClassTitle || "Live Class"}
-              text={`Join the live class "${liveClass.liveClassTitle}" on Faculty Pedia.`}
+              text={`Join the live class "${liveClass.liveClassTitle}" on Facultypedia.`}
               useCurrentUrl
               size="sm"
             />

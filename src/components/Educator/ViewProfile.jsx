@@ -91,8 +91,6 @@ const ViewProfile = ({ educatorData }) => {
   const [visibleWebinars, setVisibleWebinars] = useState(6);
   const [visibleTestSeries, setVisibleTestSeries] = useState(6);
 
-  console.log("Educator data: ", educatorData);
-
   // Vimeo player refs
   const vimeoContainerRef = useRef(null);
   const vimeoIframeRef = useRef(null);
@@ -578,9 +576,6 @@ const ViewProfile = ({ educatorData }) => {
     }
 
     const playerInstance = vimeoPlayerRef.current;
-    const handlePlay = () => {
-      console.log("Played the intro video");
-    };
 
     playerInstance.on("play", handlePlay);
 

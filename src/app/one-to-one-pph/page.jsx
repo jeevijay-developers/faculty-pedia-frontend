@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import React, { useMemo, useState, useEffect } from 'react';
-import Banner from '@/components/Common/Banner';
-import OneToOnePPHCard from '@/components/OneToOne/OneToOnePPHCard';
-import Loading from '@/components/Common/Loading';
-import ShareButton from '@/components/Common/ShareButton';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import React, { useMemo, useState, useEffect } from "react";
+import Banner from "@/components/Common/Banner";
+import OneToOnePPHCard from "@/components/OneToOne/OneToOnePPHCard";
+import Loading from "@/components/Common/Loading";
+import ShareButton from "@/components/Common/ShareButton";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 // API functions
-import { getAllEducators } from '@/components/server/educators.routes';
+import { getAllEducators } from "@/components/server/educators.routes";
 
 const OneToOnePPHPage = () => {
   const [allEducators, setAllEducators] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
 
   // Available subjects
-  const subjects = ['All', 'Biology', 'Chemistry', 'Mathematics', 'Physics'];
-  const [activeTab, setActiveTab] = useState('All');
+  const subjects = ["All", "Biology", "Chemistry", "Mathematics", "Physics"];
+  const [activeTab, setActiveTab] = useState("All");
 
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
@@ -31,23 +31,21 @@ const OneToOnePPHPage = () => {
       try {
         setLoading(true);
         setError(null);
-        console.log('💼 Fetching all educators...');
         const response = await getAllEducators({ limit: 100 });
-        console.log('💼 Educators Response:', response);
-        
+
         // Extract educators from response
-        const educatorsData = response?.data?.educators || response?.educators || [];
-        
+        const educatorsData =
+          response?.data?.educators || response?.educators || [];
+
         // Filter only educators with Pay Per Hour fee
         const pphEducators = educatorsData.filter(
-          educator => educator.payPerHourFee && educator.payPerHourFee > 0
+          (educator) => educator.payPerHourFee && educator.payPerHourFee > 0
         );
-        
-        console.log(`💼 Found ${pphEducators.length} PPH educators out of ${educatorsData.length} total`);
+
         setAllEducators(pphEducators);
       } catch (err) {
-        console.error('Failed to fetch educators:', err);
-        setError(err.message || 'Failed to fetch educators');
+        console.error("Failed to fetch educators:", err);
+        setError(err.message || "Failed to fetch educators");
         setAllEducators([]);
       } finally {
         setLoading(false);
@@ -72,10 +70,10 @@ const OneToOnePPHPage = () => {
     let filtered = allEducators;
 
     // Filter by subject tab
-    if (activeTab !== 'All') {
+    if (activeTab !== "All") {
       filtered = filtered.filter((educator) => {
-        const educatorSubjects = Array.isArray(educator.subject) 
-          ? educator.subject 
+        const educatorSubjects = Array.isArray(educator.subject)
+          ? educator.subject
           : [educator.subject];
         return educatorSubjects.some(
           (sub) => sub?.toLowerCase() === activeTab.toLowerCase()
@@ -112,7 +110,7 @@ const OneToOnePPHPage = () => {
           variant="card-grid"
           count={6}
           message={`Loading ${activeTab} Educators`}
-          className="min-h-[400px]"
+          className="min-h-100"
         />
       </div>
     );
@@ -164,7 +162,7 @@ const OneToOnePPHPage = () => {
             </h1>
             <ShareButton
               title="1-1 Pay Per Hour Educators"
-              text="Browse pay per hour educators on Faculty Pedia."
+              text="Browse pay per hour educators on Facultypedia."
               path="/one-to-one-pph"
               size="sm"
             />
@@ -195,8 +193,8 @@ const OneToOnePPHPage = () => {
                   disabled={loading}
                   className={`py-2 px-4 border-b-2 font-medium text-sm md:text-md transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed ${
                     activeTab === subject
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? "border-blue-500 text-blue-600"
+                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                   }`}
                 >
                   {subject}
@@ -228,23 +226,23 @@ const OneToOnePPHPage = () => {
               <div className="text-gray-400 text-6xl mb-4">🔍</div>
               <p className="text-gray-500 text-lg mb-2">
                 {search.trim()
-                  ? 'No educators found matching your search.'
+                  ? "No educators found matching your search."
                   : `No ${activeTab} educators available.`}
               </p>
               <p className="text-sm text-gray-400">
                 {search.trim()
-                  ? 'Try adjusting your search terms.'
-                  : 'Check back later for new educators.'}
+                  ? "Try adjusting your search terms."
+                  : "Check back later for new educators."}
               </p>
             </div>
           )}
         </div>
-        
+
         {/* Results Count */}
         {filteredEducators.length > 0 && (
           <div className="mt-8 text-center text-gray-600" data-aos="fade-up">
             Showing {filteredEducators.length} of {allEducators.length} educator
-            {allEducators.length !== 1 ? 's' : ''}
+            {allEducators.length !== 1 ? "s" : ""}
           </div>
         )}
       </div>

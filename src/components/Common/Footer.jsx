@@ -25,7 +25,7 @@ const Footer = () => {
   ];
 
   const examCategories = [
-    { name: "IIT JEE", href: "/exams/iitjee" },
+    { name: "IIT JEE", href: "/exams/iit-jee" },
     { name: "NEET", href: "/exams/neet" },
     { name: "CBSE", href: "/exams/cbse" },
   ];
@@ -179,7 +179,7 @@ const Footer = () => {
       <div className="bg-gray-50 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-sm text-center text-gray-500 mb-4 md:mb-0">
-            © {currentYear} Faculty Pedia. All rights reserved.
+            © {currentYear} Facultypedia. All rights reserved.
           </div>
         </div>
       </div>

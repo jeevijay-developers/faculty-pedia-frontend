@@ -5,8 +5,6 @@ import { FaUser, FaClock } from "react-icons/fa";
 import { MdSchool, MdCalendarToday } from "react-icons/md";
 
 const UpcomingWebinarCard = ({ item }) => {
-  console.log("Webinar item: ", item);
-
   // Format timing date
   const webinarDate = item.timing
     ? new Date(item.timing).toLocaleDateString("en-IN", {

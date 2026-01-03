@@ -24,7 +24,6 @@ const EducatorsPage = () => {
       setError(null);
       try {
         const response = await getAllEducators({ limit: 200 });
-        console.log("Educators API Response:", response);
 
         let educators = [];
         if (

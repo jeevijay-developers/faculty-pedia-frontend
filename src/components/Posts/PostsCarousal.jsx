@@ -33,19 +33,16 @@ const PostCarousel = ({ subject = "All", specialization }) => {
     }
     return "IIT-JEE";
   }, [subject, specialization]);
-  
+
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       setError(null);
       try {
-        console.log(`📝 Fetching posts for ${effectiveSpecialization}...`);
         const response = await fetchIITJEEBlogs(effectiveSpecialization);
-        console.log("📝 Posts API Response:", response);
-        
+
         // Extract posts from response
         const postsData = response?.data?.posts || response?.posts || [];
-        console.log(`📝 Found ${postsData.length} posts`);
         setData(postsData);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
@@ -55,7 +52,7 @@ const PostCarousel = ({ subject = "All", specialization }) => {
         setLoading(false);
       }
     };
-    
+
     if (effectiveSpecialization) {
       fetchPosts();
     }
@@ -68,8 +65,8 @@ const PostCarousel = ({ subject = "All", specialization }) => {
   // Show error state if there was an error
   if (error) {
     return (
-      <CarouselFallback 
-        type="posts" 
+      <CarouselFallback
+        type="posts"
         title={subject === "All" ? "Latest Posts" : `${subject} Posts`}
         message={error}
       />
@@ -79,9 +76,9 @@ const PostCarousel = ({ subject = "All", specialization }) => {
   // Show fallback if no posts found
   if (filteredPosts.length === 0) {
     return (
-      <CarouselFallback 
-        type="posts" 
-        title={subject === "All" ? "Latest Posts" : `${subject} Posts`} 
+      <CarouselFallback
+        type="posts"
+        title={subject === "All" ? "Latest Posts" : `${subject} Posts`}
       />
     );
   }
@@ -157,7 +154,10 @@ const PostCarousel = ({ subject = "All", specialization }) => {
           >
             {filteredPosts.map((post) => (
               <SwiperSlide key={post._id || post.id}>
-                <PostCard post={post} activeSpecialization={effectiveSpecialization} />
+                <PostCard
+                  post={post}
+                  activeSpecialization={effectiveSpecialization}
+                />
               </SwiperSlide>
             ))}
           </Swiper>

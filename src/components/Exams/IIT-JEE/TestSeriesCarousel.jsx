@@ -33,9 +33,7 @@ const TestSeriesCarousel = ({
       setLoading(true);
       setError(null);
       try {
-        console.log(`📚 Fetching test series for ${specialization}...`);
         const response = await fetchTestSeriesBySpecialization(specialization);
-        console.log("📚 Test Series API Response:", response);
 
         // Extract test series from response and keep only independent ones
         const testSeriesData = (response?.testSeries || []).filter((ts) => {
@@ -45,9 +43,6 @@ const TestSeriesCarousel = ({
           return !hasCourse && !isCourseSpecific;
         });
 
-        console.log(
-          `📚 Found ${testSeriesData.length} independent test series`
-        );
         setData(testSeriesData);
       } catch (error) {
         console.error("Failed to fetch test series:", error);
@@ -194,8 +189,6 @@ const TestSeriesCarousel = ({
 
 // Test Series Card Component
 export const TestSeriesCard = ({ testSeries }) => {
-  console.log("Test series: ", testSeries);
-
   // Format validity date
   const validityDate = testSeries.validity
     ? new Date(testSeries.validity).toLocaleDateString("en-IN", {
