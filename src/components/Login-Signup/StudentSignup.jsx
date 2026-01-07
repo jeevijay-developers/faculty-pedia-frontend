@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createStudent } from "@/components/server/student/student.routes";
+import { signupStudent } from "@/components/server/auth/auth.routes";
 import {
   LuLoaderCircle,
   LuUser,
@@ -153,7 +153,7 @@ const StudentSignup = () => {
         class: formData.classLevel,
       };
 
-      const response = await createStudent(submitData);
+      const response = await signupStudent(submitData);
       const createdStudent = response?.data ?? response?.student ?? response;
 
       setSuccessMessage(

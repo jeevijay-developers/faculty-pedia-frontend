@@ -11,7 +11,14 @@ const GenericLoginPage = () => {
     if (userType === "student") {
       router.push("/exams");
     } else if (userType === "educator") {
-      router.push(`/profile/educator/${userData._id}`);
+      const dashboardUrl =
+        process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL || "/educator/dashboard";
+      // If external domain, push via location to ensure cookie/localStorage are usable
+      if (dashboardUrl.startsWith("http")) {
+        window.location.href = dashboardUrl;
+      } else {
+        router.push(dashboardUrl);
+      }
     }
   };
 
