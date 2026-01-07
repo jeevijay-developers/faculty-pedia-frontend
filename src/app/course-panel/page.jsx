@@ -537,33 +537,7 @@ const CoursePanelPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4 min-w-75 bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-bold">Course Progress</span>
-                <span className="text-sm font-bold text-primary">
-                  {courseData?.progressPercentage ?? "45"}%
-                </span>
-              </div>
-              <div className="w-full bg-[#f1f0f4] dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
-                <div
-                  className="bg-primary h-2.5 rounded-full transition-all duration-500"
-                  style={{ width: `${courseData?.progressPercentage ?? 45}%` }}
-                />
-              </div>
-              <div className="text-xs text-text-secondary mb-2">
-                {courseData?.completedLessons || 12} of{" "}
-                {courseData?.totalLessons || 26} Lessons Completed
-              </div>
-              <Link
-                href="/courses"
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-[#f1f0f4] dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-text-main dark:text-white rounded-xl text-sm font-bold transition-colors"
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  arrow_back
-                </span>
-                Return to All Courses
-              </Link>
-            </div>
+          
           </div>
         </header>
 

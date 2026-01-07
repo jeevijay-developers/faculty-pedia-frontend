@@ -59,6 +59,44 @@ const CourseDetails = ({ id }) => {
   const [courseTests, setCourseTests] = useState([]);
   const [testsLoading, setTestsLoading] = useState(false);
 
+  const resolveAssetUrl = (asset) => {
+    if (!asset) return null;
+    const direct =
+      asset.link || asset.url || asset.secure_url || asset.path || asset.fileUrl;
+    if (direct) return direct;
+
+    const publicId = asset.publicId || asset.public_id;
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    if (publicId && cloudName) {
+      const resourceType =
+        (asset.resourceType || asset.resource_type || "raw").toLowerCase();
+      const resTypePath = ["raw", "image", "video"].includes(resourceType)
+        ? resourceType
+        : "raw";
+      const hasExtension = publicId.includes(".");
+      const normalizedType = (asset.fileType || "pdf").toString().toLowerCase();
+      const typeToExt = {
+        pdf: "pdf",
+        doc: "doc",
+        docx: "docx",
+        ppt: "ppt",
+        pptx: "pptx",
+        excel: "xlsx",
+        xls: "xls",
+        xlsx: "xlsx",
+      };
+      const extension = hasExtension
+        ? ""
+        : `.${typeToExt[normalizedType] || normalizedType}`;
+      const normalizedId = publicId.startsWith("/")
+        ? publicId.slice(1)
+        : publicId;
+      return `https://res.cloudinary.com/${cloudName}/${resTypePath}/upload/${normalizedId}${extension}`;
+    }
+
+    return null;
+  };
+
   const groupedVideos = useMemo(() => {
     const groups = {};
     if (course?.videos && Array.isArray(course.videos)) {
@@ -739,37 +777,52 @@ const CourseDetails = ({ id }) => {
                     </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {assets.map((asset, index) => (
-                      <a
-                        key={`${asset.title || asset.name || "asset"}-${index}`}
-                        href={asset.link || asset.url || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-blue-200 hover:bg-blue-50/60 transition-colors"
-                      >
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900 line-clamp-1">
-                            {asset.title || asset.name || `Asset ${index + 1}`}
-                          </p>
-                          <p className="text-sm text-gray-500 line-clamp-2">
-                            {asset.fileType || asset.type || "Resource"}
-                          </p>
-                        </div>
-                        <svg
-                          className="w-5 h-5 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                    {assets.map((asset, index) => {
+                      const assetUrl = resolveAssetUrl(asset);
+                      return (
+                        <a
+                          key={`${asset.title || asset.name || "asset"}-${index}`}
+                          href={assetUrl || "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
+                            assetUrl
+                              ? "border-gray-200 hover:border-blue-200 hover:bg-blue-50/60"
+                              : "border-red-200 bg-red-50/50 text-red-600 cursor-not-allowed"
+                          }`}
+                          onClick={(e) => {
+                            if (!assetUrl) e.preventDefault();
+                          }}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M7 10l5 5m0 0l5-5m-5 5V3"
-                          />
-                        </svg>
-                      </a>
-                    ))}
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-900 line-clamp-1">
+                              {asset.title || asset.name || `Asset ${index + 1}`}
+                            </p>
+                            <p className="text-sm text-gray-500 line-clamp-2">
+                              {asset.fileType || asset.type || asset.mimeType || "Resource"}
+                            </p>
+                            {!assetUrl && (
+                              <p className="text-xs text-red-500 mt-1">
+                                Missing file link. Please re-upload.
+                              </p>
+                            )}
+                          </div>
+                          <svg
+                            className="w-5 h-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M7 10l5 5m0 0l5-5m-5 5V3"
+                            />
+                          </svg>
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               )}

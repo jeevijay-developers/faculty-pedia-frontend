@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   FiPlayCircle,
@@ -9,6 +9,7 @@ import {
   FiArrowRight,
   FiWifi,
 } from "react-icons/fi";
+import { getCourseById } from "../server/course.routes";
 
 const DEFAULT_IMAGE = "/images/placeholders/1.svg";
 
@@ -44,6 +45,7 @@ const getEducatorName = (course) => {
   const candidate =
     educator?.fullName ||
     educator?.name ||
+    course?.educatorFullName ||
     course?.educatorName ||
     course?.creatorName ||
     course?.educatorUsername ||
@@ -65,29 +67,157 @@ const formatDate = (value) => {
   });
 };
 
+const toCount = (value) => {
+  const num = Number(value);
+  return Number.isFinite(num) ? num : null;
+};
+
+const getVideosCount = (course, meta) => {
+  const candidates = [
+    course?.totalVideos,
+    course?.videoCount,
+    course?.videosCount,
+    course?.numberOfVideos,
+    course?.noOfVideos,
+    course?.mediaCounts?.videos,
+    course?.contentCount?.videos,
+    course?.statistics?.videoCount,
+    course?.stats?.videoCount,
+    course?.courseStatistics?.videoCount,
+    Array.isArray(course?.videos) ? course.videos.length : null,
+    meta?.videos,
+  ];
+
+  const first = candidates.find((val) => toCount(val) !== null);
+  return toCount(first) ?? 0;
+};
+
+const getTestsFromSeries = (testSeries) => {
+  if (!Array.isArray(testSeries)) return null;
+
+  const total = testSeries.reduce((sum, series) => {
+    const count =
+      toCount(series?.numberOfTests) ??
+      toCount(series?.testCount) ??
+      (Array.isArray(series?.tests) ? series.tests.length : 0);
+    return sum + (count || 0);
+  }, 0);
+
+  if (total > 0) return total;
+  return testSeries.length || null;
+};
+
+const getTestsCount = (course, meta) => {
+  const primaryCandidates = [
+    course?.totalTests,
+    course?.testCount,
+    course?.numberOfTests,
+    course?.noOfTests,
+    course?.testsCount,
+    course?.mediaCounts?.tests,
+    course?.statistics?.testCount,
+    course?.stats?.testCount,
+    course?.courseStatistics?.testCount,
+    Array.isArray(course?.tests) ? course.tests.length : null,
+  ];
+
+  const base = primaryCandidates.find((val) => toCount(val) !== null);
+  const baseVal = toCount(base);
+  const metaTests = toCount(meta?.tests);
+  const seriesVal =
+    toCount(course?.testSeriesCount) ??
+    toCount(getTestsFromSeries(course?.testSeries));
+
+  if (baseVal !== null && baseVal > 0) return baseVal;
+  if (seriesVal !== null && seriesVal > 0) return seriesVal;
+  if (metaTests !== null && metaTests > 0) return metaTests;
+
+  return (
+    baseVal ??
+    seriesVal ??
+    metaTests ??
+    0
+  );
+};
+
+const getStartDate = (course, meta) =>
+  meta?.startDate ||
+  course?.startDate ||
+  course?.startsAt ||
+  course?.beginDate ||
+  course?.validDate ||
+  course?.enrollmentMeta?.enrolledAt ||
+  null;
+
 const CourseCard = ({ course, meta }) => {
   if (!course) return null;
+  const [hydratedCourse, setHydratedCourse] = useState(null);
 
-  const courseId = course?._id || course?.id || course?.slug;
+  const baseCourseId = course?._id || course?.id || course?.slug;
+  const courseId = hydratedCourse?._id || hydratedCourse?.id || hydratedCourse?.slug || baseCourseId;
   const courseHref = courseId ? `/course-panel?courseId=${courseId}` : null;
+
+  const shouldHydrate = () => {
+    const current = hydratedCourse || course;
+    const videos = getVideosCount(current, meta);
+    const tests = getTestsCount(current, meta);
+    const educator = getEducatorName(current);
+    const hasEducator = educator && educator !== "Instructor";
+    return !hasEducator || videos === 0 || tests === 0;
+  };
+
+  useEffect(() => {
+    if (!courseId) return;
+    if (!shouldHydrate()) {
+      setHydratedCourse(null);
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await getCourseById(courseId);
+        const fetched = res?.course || res;
+        if (!cancelled && fetched) {
+          setHydratedCourse(fetched);
+        }
+      } catch (err) {
+        console.warn("Failed to hydrate course", err);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [courseId]);
+
+  const courseSource = hydratedCourse || course;
 
   const progress = clampPercent(
     meta?.progress ??
-      course?.enrollmentMeta?.progressPercentage ??
-      course?.progressPercentage ??
-      course?.progress ??
+      courseSource?.enrollmentMeta?.progressPercentage ??
+      courseSource?.progressPercentage ??
+      courseSource?.progress ??
       0
   );
 
-  const lessons = meta?.lessons ?? course?.totalLessons ?? 0;
-  const videos = meta?.videos ?? course?.totalVideos ?? 0;
-  const liveClasses = meta?.liveClasses ?? course?.liveClassesCount ?? 0;
-  const tests = meta?.tests ?? course?.totalTests ?? 0;
+  const lessons =
+    meta?.lessons ??
+    courseSource?.totalLessons ??
+    courseSource?.lessonCount ??
+    (Array.isArray(courseSource?.lessons) ? courseSource.lessons.length : 0);
+  const videos = getVideosCount(courseSource, meta);
+  const liveClasses =
+    meta?.liveClasses ??
+    courseSource?.liveClassesCount ??
+    courseSource?.liveClassCount ??
+    (Array.isArray(courseSource?.liveClass) ? courseSource.liveClass.length : 0);
+  const tests = getTestsCount(courseSource, meta);
   const status = meta?.status || "ongoing";
-  const startDate = formatDate(meta?.startDate || course?.startDate);
+  const startDate = formatDate(getStartDate(courseSource, meta));
 
-  const heroImage = getHeroImage(course);
-  const educatorName = getEducatorName(course);
+  const heroImage = getHeroImage(courseSource);
+  const educatorName = getEducatorName(courseSource);
 
   const statusStyles = {
     ongoing: "bg-white/90 text-blue-700 border border-blue-200",
@@ -152,7 +282,7 @@ const CourseCard = ({ course, meta }) => {
           <p className="text-sm text-gray-500">By {educatorName}</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 text-sm text-gray-700">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm text-gray-700">
           <div className="flex items-center gap-2">
             <FiPlayCircle className="text-blue-600" />
             <span>{videos || lessons || 0} Videos</span>
@@ -161,10 +291,8 @@ const CourseCard = ({ course, meta }) => {
             <FiFileText className="text-amber-600" />
             <span>{tests} Tests</span>
           </div>
-          <div className="flex items-center gap-2">
-            <FiWifi className="text-emerald-600" />
-            <span>{liveClasses} Live</span>
-          </div>
+          
+         
           <div className="flex items-center gap-2">
             <FiCalendar className="text-gray-500" />
             <span>{startDate || "Started"}</span>
