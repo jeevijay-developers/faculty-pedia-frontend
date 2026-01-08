@@ -12,21 +12,25 @@ const page = () => {
   return (
     <>
       <Banner
-        url="/images/placeholders/1.svg"
+        url="/images/Banner/NEET 1.jpg"
         title="NEET"
         subtitle="Excel in your NEET preparation with specialized medical curriculum, expert coaching, and comprehensive study resources designed for future medical professionals."
         btnTitle={" Join as Educator"}
         btnUrl={"/join-as-educator"}
       />
-      <EducatorsCarousel specialization='NEET' />
-      <CourseCarousel title='Courses for NEET' viewMoreLink='/courses' specialization='NEET' />
-      <OneToOneLiveClassesCarousel specialization='NEET' />
-      <OneToOnePPHCarousel specialization='NEET' />
-      <UpcomingWebinarCarousel specialization='NEET' />
-      <TestSeriesCarousel specialization='NEET' />
-      <PostCarousel subject='NEET' />
+      <EducatorsCarousel specialization="NEET" />
+      <CourseCarousel
+        title="Courses for NEET"
+        viewMoreLink="/courses"
+        specialization="NEET"
+      />
+      <OneToOneLiveClassesCarousel specialization="NEET" />
+      <OneToOnePPHCarousel specialization="NEET" />
+      <UpcomingWebinarCarousel specialization="NEET" />
+      <TestSeriesCarousel specialization="NEET" />
+      <PostCarousel subject="NEET" />
     </>
-  )
+  );
 }
 
 export default page

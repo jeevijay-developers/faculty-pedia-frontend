@@ -17,7 +17,7 @@ const page = () => {
   return (
     <>
       <Banner
-        url="/images/placeholders/1.svg"
+        url="/images/Banner/cbse.png"
         title="CBSE"
         subtitle="Prepare for your CBSE exams with comprehensive study materials, expert guidance, and personalized coaching."
         btnTitle={" Join as Educator"}
