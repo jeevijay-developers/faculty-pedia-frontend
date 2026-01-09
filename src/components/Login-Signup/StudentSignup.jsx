@@ -155,7 +155,7 @@ const StudentSignup = () => {
         class: formData.classLevel,
       };
 
-      const response = await createStudent(submitData);
+      const response = await signupStudent(submitData);
       const createdStudent = response?.data ?? response?.student ?? response;
 
       setSuccessMessage(

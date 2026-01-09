@@ -85,6 +85,25 @@ const Login = ({
       localStorage.setItem(storageKey, JSON.stringify(response.userData));
       localStorage.setItem("user-role", response.userType);
 
+      // Persist educator token for dashboard (both localStorage keys + cookie)
+      if (response.userType === "educator") {
+        const educatorToken =
+          response.TOKEN || response?.tokens?.accessToken || "";
+        if (educatorToken) {
+          localStorage.setItem("token", educatorToken);
+          localStorage.setItem("authToken", educatorToken);
+
+          // Drop a cookie for potential cross-domain access (best-effort)
+          try {
+            const maxAgeSeconds = 7 * 24 * 60 * 60; // 7 days
+            // SameSite=Lax keeps most flows working without requiring Secure on localhost
+            document.cookie = `fp_edu_token=${educatorToken}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax`;
+          } catch (cookieErr) {
+            console.warn("Could not set educator token cookie", cookieErr);
+          }
+        }
+      }
+
       if (typeof window !== "undefined") {
         window.dispatchEvent(
           new Event(
@@ -113,7 +132,8 @@ const Login = ({
           ? decodeURIComponent(redirectUrl)
           : response.userType === "student"
           ? "/exams"
-          : "/educator/dashboard";
+          : process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL ||
+            "/educator/dashboard";
 
         router.replace(destination);
       }

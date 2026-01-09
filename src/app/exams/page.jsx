@@ -8,7 +8,7 @@ const page = () => {
   return (
     <>
       <Banner
-        url="/images/placeholders/1.svg"
+        url="/images/Banner/exam-Front.jpg"
         title="Welcome to Our Exams"
         subtitle="Explore a variety of exams designed to help you learn and grow with expert faculty guidance."
       />
@@ -16,7 +16,7 @@ const page = () => {
       <NEETExamSection />
       <CBSESection />
     </>
-  )
+  );
 }
 
 export default page
