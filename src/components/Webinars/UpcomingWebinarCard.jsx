@@ -1,8 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaUser, FaClock } from "react-icons/fa";
 import { MdSchool, MdCalendarToday } from "react-icons/md";
+import { fetchEducatorById } from "@/components/server/webinars.routes";
+
+const deriveEducatorName = (webinar) => {
+  const educatorObject =
+    (webinar?.educatorID && typeof webinar.educatorID === "object"
+      ? webinar.educatorID
+      : null) ||
+    (webinar?.educatorId && typeof webinar.educatorId === "object"
+      ? webinar.educatorId
+      : null) ||
+    (webinar?.educator && typeof webinar.educator === "object"
+      ? webinar.educator
+      : null) ||
+    (webinar?.creator && typeof webinar.creator === "object"
+      ? webinar.creator
+      : null);
+
+  const candidate =
+    [
+      webinar?.educatorName,
+      webinar?.educatorFullName,
+      educatorObject?.fullName,
+          educatorObject?.name,
+      [educatorObject?.firstName, educatorObject?.lastName]
+        .filter(Boolean)
+        .join(" "),
+      educatorObject?.username,
+      webinar?.creatorName,
+    ].find((val) => typeof val === "string" && val.trim()) ||
+    (typeof webinar?.educatorID === "string" && webinar.educatorID.trim()
+      ? webinar.educatorID.trim()
+      : null) ||
+    (typeof webinar?.educatorId === "string" && webinar.educatorId.trim()
+      ? webinar.educatorId.trim()
+      : null);
+
+  return candidate || "Educator";
+};
 
 const UpcomingWebinarCard = ({ item }) => {
   // Format timing date
@@ -20,6 +58,41 @@ const UpcomingWebinarCard = ({ item }) => {
         minute: "2-digit",
       })
     : "N/A";
+
+  const initialEducatorName = deriveEducatorName(item);
+  const [educatorName, setEducatorName] = useState(initialEducatorName);
+
+  useEffect(() => {
+    const educatorIdString =
+      (typeof item?.educatorID === "string" && item.educatorID) ||
+      (typeof item?.educatorId === "string" && item.educatorId) ||
+      null;
+
+    if (!educatorIdString) return;
+    if (educatorName && educatorName !== "Educator") return;
+
+    let isMounted = true;
+
+    const loadEducator = async () => {
+      const educator = await fetchEducatorById(educatorIdString);
+      if (!educator || !isMounted) return;
+      const nameCandidates = [
+        educator.fullName,
+        [educator.firstName, educator.lastName].filter(Boolean).join(" "),
+        educator.username,
+      ].filter((val) => typeof val === "string" && val.trim());
+
+      if (nameCandidates.length) {
+        setEducatorName(nameCandidates[0]);
+      }
+    };
+
+    loadEducator();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [item?.educatorID, item?.educatorId, educatorName]);
 
   return (
     <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
@@ -59,17 +132,15 @@ const UpcomingWebinarCard = ({ item }) => {
         )}
 
         <div className="space-y-2 mb-4">
-          {item.educatorID && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
-                <FaUser className="w-4 h-4 mr-2 text-blue-600" />
-                <span className="font-medium">Educator:</span>
-              </div>
-              <span className="text-sm text-gray-800 font-medium truncate ml-2">
-                {item.educatorID.fullName || item.educatorID.username || "N/A"}
-              </span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-sm text-gray-600">
+              <FaUser className="w-4 h-4 mr-2 text-blue-600" />
+              <span className="font-medium">Educator:</span>
             </div>
-          )}
+            <span className="text-sm text-gray-800 font-medium truncate ml-2">
+              {educatorName}
+            </span>
+          </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center text-sm text-gray-600">

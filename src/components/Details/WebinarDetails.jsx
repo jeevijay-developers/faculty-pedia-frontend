@@ -14,9 +14,80 @@ import {
 import Banner from "../Common/Banner";
 import EnrollButton from "../Common/EnrollButton";
 import ShareButton from "@/components/Common/ShareButton";
+import { fetchEducatorById } from "@/components/server/webinars.routes";
+
+const deriveEducatorName = (webinar) => {
+  const educatorObject =
+    (webinar?.educatorID && typeof webinar.educatorID === "object"
+      ? webinar.educatorID
+      : null) ||
+    (webinar?.educatorId && typeof webinar.educatorId === "object"
+      ? webinar.educatorId
+      : null) ||
+    (webinar?.educator && typeof webinar.educator === "object"
+      ? webinar.educator
+      : null) ||
+    (webinar?.creator && typeof webinar.creator === "object"
+      ? webinar.creator
+      : null);
+
+  const candidate =
+    [
+      webinar?.educatorName,
+      webinar?.educatorFullName,
+      educatorObject?.fullName,
+      educatorObject?.name,
+      [educatorObject?.firstName, educatorObject?.lastName]
+        .filter(Boolean)
+        .join(" "),
+      educatorObject?.username,
+      webinar?.creatorName,
+    ].find((val) => typeof val === "string" && val.trim()) ||
+    (typeof webinar?.educatorID === "string" && webinar.educatorID.trim()
+      ? webinar.educatorID.trim()
+      : null) ||
+    (typeof webinar?.educatorId === "string" && webinar.educatorId.trim()
+      ? webinar.educatorId.trim()
+      : null);
+
+  return candidate || "Educator";
+};
 
 const WebinarDetails = ({ webinar }) => {
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
+  const [educatorName, setEducatorName] = useState(deriveEducatorName(webinar));
+
+  useEffect(() => {
+    const educatorIdString =
+      (typeof webinar?.educatorID === "string" && webinar.educatorID) ||
+      (typeof webinar?.educatorId === "string" && webinar.educatorId) ||
+      null;
+
+    if (!educatorIdString) return;
+    if (educatorName && educatorName !== "Educator") return;
+
+    let isMounted = true;
+
+    const loadEducator = async () => {
+      const educator = await fetchEducatorById(educatorIdString);
+      if (!educator || !isMounted) return;
+      const nameCandidates = [
+        educator.fullName,
+        [educator.firstName, educator.lastName].filter(Boolean).join(" "),
+        educator.username,
+      ].filter((val) => typeof val === "string" && val.trim());
+
+      if (nameCandidates.length) {
+        setEducatorName(nameCandidates[0]);
+      }
+    };
+
+    loadEducator();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [educatorName, webinar?.educatorID, webinar?.educatorId]);
 
   useEffect(() => {
     try {
@@ -106,6 +177,7 @@ const WebinarDetails = ({ webinar }) => {
                   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                   .join(" ")}
               </h1>
+              <p className="text-sm text-gray-600">By {educatorName}</p>
               <ShareButton
                 title={title || "Webinar"}
                 text={shareText}
@@ -116,6 +188,14 @@ const WebinarDetails = ({ webinar }) => {
             <p className="text-gray-600 mb-6 leading-relaxed">{description}</p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="flex items-center text-gray-700">
+                <FaChalkboardTeacher className="w-5 h-5 mr-3 text-blue-500" />
+                <div>
+                  <p className="text-sm font-medium text-gray-500">Educator</p>
+                  <p className="font-semibold">{educatorName}</p>
+                </div>
+              </div>
+
               <div className="flex items-center text-gray-700">
                 <FaCalendarAlt className="w-5 h-5 mr-3 text-blue-500" />
                 <div>

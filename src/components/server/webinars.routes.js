@@ -15,6 +15,17 @@ export const getWebinarById = async (id) => {
   }
 };
 
+export const fetchEducatorById = async (id) => {
+  if (!id) return null;
+  try {
+    const response = await API_CLIENT.get(`/api/educators/${id}`);
+    return response.data?.data?.educator || response.data?.educator || null;
+  } catch (error) {
+    console.error("Error fetching educator by ID:", error);
+    return null;
+  }
+};
+
 export const getWebinarsByEducator = async (educatorId, params = {}) => {
   if (!educatorId) return { data: { webinars: [], pagination: { totalWebinars: 0 } } };
   try {

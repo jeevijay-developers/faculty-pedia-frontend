@@ -12,6 +12,10 @@ export default function TestSeriesPage() {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
+  const [activeTab, setActiveTab] = useState("All");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const handle = setTimeout(() => {
       setSearchQuery(searchInput.trim());
@@ -25,10 +29,6 @@ export default function TestSeriesPage() {
     const set = new Set(testData.map((test) => test.specialization));
     return ["All", ...Array.from(set)];
   }, []);
-
-  const [activeTab, setActiveTab] = useState("All");
-  const [searchInput, setSearchInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
 
   const filteredTests = useMemo(() => {
     return testData.filter((test) => {
