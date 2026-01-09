@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 const offerings = [
@@ -30,6 +32,28 @@ const offerings = [
 ];
 
 const AboutPage = () => {
+  const [showCtas, setShowCtas] = useState(true);
+
+  useEffect(() => {
+    const syncVisibility = () => {
+      if (typeof window === "undefined") return;
+      const role = localStorage.getItem("user-role");
+      const hasStudent = localStorage.getItem("faculty-pedia-student-data");
+      const hasEducator = localStorage.getItem("faculty-pedia-educator-data");
+      setShowCtas(!(role === "student" && hasStudent) && !(role === "educator" && hasEducator));
+    };
+
+    syncVisibility();
+    window.addEventListener("storage", syncVisibility);
+    window.addEventListener("student-data-updated", syncVisibility);
+    window.addEventListener("educator-data-updated", syncVisibility);
+    return () => {
+      window.removeEventListener("storage", syncVisibility);
+      window.removeEventListener("student-data-updated", syncVisibility);
+      window.removeEventListener("educator-data-updated", syncVisibility);
+    };
+  }, []);
+
   return (
     <div className="bg-linear-to-b from-white via-blue-50/40 to-white">
       <section className="relative overflow-hidden bg-white">
@@ -55,20 +79,22 @@ const AboutPage = () => {
                 vibrant academic community that keeps you motivated every step
                 of the way.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/join-as-student"
-                  className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-700"
-                >
-                  Join as Student
-                </Link>
-                <Link
-                  href="/join-as-educator"
-                  className="inline-flex items-center justify-center rounded-xl border border-blue-200 px-6 py-3 text-sm font-semibold text-blue-700 transition hover:border-blue-400 hover:text-blue-900"
-                >
-                  Become an Educator
-                </Link>
-              </div>
+              {showCtas && (
+                <div className="flex flex-wrap gap-3">
+                  <Link
+                    href="/join-as-student"
+                    className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-700"
+                  >
+                    Join as Student
+                  </Link>
+                  <Link
+                    href="/join-as-educator"
+                    className="inline-flex items-center justify-center rounded-xl border border-blue-200 px-6 py-3 text-sm font-semibold text-blue-700 transition hover:border-blue-400 hover:text-blue-900"
+                  >
+                    Become an Educator
+                  </Link>
+                </div>
+              )}
             </div>
             <div className="rounded-3xl border border-white/60 bg-white p-8 shadow-2xl shadow-blue-100">
               <div className="grid gap-5 sm:grid-cols-2">
@@ -133,9 +159,7 @@ const AboutPage = () => {
             <ul className="mt-6 space-y-5">
               {offerings.map((item) => (
                 <li key={item.title} className="flex gap-4">
-                  <span className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
-                    *
-                  </span>
+                  
                   <div>
                     <p className="text-base font-semibold text-blue-900">
                       {item.title}

@@ -1,17 +1,25 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Login from "@/components/Login-Signup/Login";
+import { getDashboardUrl, isUserLoggedIn } from "@/utils/userRole";
 
 const GenericLoginPage = () => {
   const router = useRouter();
 
+  useEffect(() => {
+    if (isUserLoggedIn()) {
+      router.replace(getDashboardUrl());
+    }
+  }, [router]);
+
   const handleLoginSuccess = async (userData, userType) => {
     // Handle successful login based on user type
     if (userType === "student") {
-      router.push("/exams");
+      router.replace("/exams");
     } else if (userType === "educator") {
-      router.push(`/profile/educator/${userData._id}`);
+      router.replace(`/profile/educator/${userData._id}`);
     }
   };
 

@@ -48,6 +48,7 @@ const SUBJECT_LIST_DISPLAY = SUBJECT_OPTIONS.map(
   (subject) => subject.charAt(0).toUpperCase() + subject.slice(1)
 ).join(", ");
 
+const GMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
 const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 const MOBILE_REGEX = /^[6-9]\d{9}$/;
 const MIN_BIO_LENGTH = 20;
@@ -170,6 +171,16 @@ const EducatorSignup = () => {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
+      }));
+    }
+  };
+
+  const handleEmailBlur = (e) => {
+    const value = e.target.value.trim();
+    if (!value || !GMAIL_REGEX.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Please filled the valid email ID",
       }));
     }
   };
@@ -337,9 +348,9 @@ const EducatorSignup = () => {
 
         if (!lastName) stepErrors.lastName = "Last name is required";
 
-        if (!email) stepErrors.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(email))
-          stepErrors.email = "Invalid email format";
+        if (!email) stepErrors.email = "Please filled the valid email ID";
+        else if (!GMAIL_REGEX.test(email))
+          stepErrors.email = "Please filled the valid email ID";
 
         if (!formData.password) stepErrors.password = "Password is required";
         else if (!STRONG_PASSWORD_REGEX.test(formData.password))
@@ -588,6 +599,7 @@ const EducatorSignup = () => {
             name="email"
             value={formData.email}
             onChange={handleInputChange}
+            onBlur={handleEmailBlur}
             className={inputClass(Boolean(errors.email))}
             placeholder="arav@example.com"
           />

@@ -115,7 +115,7 @@ const Login = ({
           ? "/exams"
           : "/educator/dashboard";
 
-        router.push(destination);
+        router.replace(destination);
       }
     } catch (error) {
       // Error is already logged in auth.routes.js if it's a network/server error

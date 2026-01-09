@@ -17,7 +17,7 @@ const Footer = () => {
 
   const quickLinks = [
     { name: "Exams", href: "/exams" },
-    { name: "Classes", href: "/classes" },
+    { name: "One to one live Classes", href: "/1-1-live-class" },
     { name: "Courses", href: "/courses" },
     { name: "Webinars", href: "/webinars" },
     { name: "Educators", href: "/educators" },
@@ -81,7 +81,7 @@ const Footer = () => {
 
             {/* Contact Information */}
             <div className="space-y-3 mb-8">
-              <div className="flex items-start space-x-3">
+              <div className="flex items-start space-x-3">  
                 <FiMapPin className="text-blue-600 mt-1 shrink-0" />
 
                 <span className="text-sm">

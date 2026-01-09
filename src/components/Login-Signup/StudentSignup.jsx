@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createStudent } from "@/components/server/student/student.routes";
+import toast from "react-hot-toast";
 import {
   LuLoaderCircle,
   LuUser,
@@ -38,6 +39,7 @@ const StudentSignup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   const [formData, setFormData] = useState({
@@ -181,15 +183,44 @@ const StudentSignup = () => {
 
       setTimeout(() => {
         if (createdStudent?._id) {
-          router.push(`/profile/student/${createdStudent._id}`);
+          router.replace(`/profile/student/${createdStudent._id}`);
         } else {
-          router.push(
+          router.replace(
             "/login?message=Registration successful! Please login to continue."
           );
         }
       }, 1500);
     } catch (error) {
       console.error("Registration error:", error);
+
+      const duplicateMessage = "User is Already exist with these credential";
+      const backendMessage = error.response?.data?.message || "";
+      const keyPattern = error.response?.data?.keyPattern || {};
+      const isDuplicateError =
+        error.response?.status === 409 ||
+        error.response?.data?.code === 11000 ||
+        /duplicate|already exists|already registered|user exists/i.test(
+          backendMessage
+        );
+
+      // Surface duplicate/unique errors clearly
+      if (isDuplicateError) {
+        const duplicateErrors = {
+          submit: duplicateMessage,
+        };
+
+        if (keyPattern.username || error.response?.data?.field === "username") {
+          duplicateErrors.username = "Username is already taken";
+        }
+
+        if (keyPattern.email || error.response?.data?.field === "email") {
+          duplicateErrors.email = "Email is already registered";
+        }
+
+        setErrors(duplicateErrors);
+        toast.error(duplicateMessage);
+        return;
+      }
 
       // Handle API errors based on the validation chain structure
       if (error.response?.status === 400) {
@@ -202,19 +233,26 @@ const StudentSignup = () => {
             serverErrors[mappedField] = err.msg;
           });
           setErrors(serverErrors);
+          toast.error("Please fix the highlighted fields and try again.");
         } else if (error.response.data?.message) {
           setErrors({ submit: error.response.data.message });
+          toast.error(error.response.data.message);
         } else {
           setErrors({ submit: "Please check your input and try again." });
+          toast.error("Please check your input and try again.");
         }
       } else if (error.response?.status === 500) {
         setErrors({ submit: "Server error. Please try again later." });
+        toast.error("Server error. Please try again later.");
       } else if (error.response?.data?.message) {
         setErrors({ submit: error.response.data.message });
+        toast.error(error.response.data.message);
       } else if (error.message) {
         setErrors({ submit: error.message });
+        toast.error(error.message);
       } else {
         setErrors({ submit: "Registration failed. Please try again." });
+        toast.error("Registration failed. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -571,18 +609,32 @@ const StudentSignup = () => {
                   <div className="relative group">
                     <LuLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-600 transition-colors" />
                     <input
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       id="confirmPassword"
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
+                      className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-10 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
                         errors.confirmPassword
                           ? "border-red-300"
                           : "border-[#d0d7e7]"
                       }`}
                       placeholder="••••••••"
                     />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      aria-label={
+                        showConfirmPassword ? "Hide confirm password" : "Show confirm password"
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <AiOutlineEyeInvisible className="h-5 w-5" />
+                      ) : (
+                        <AiOutlineEye className="h-5 w-5" />
+                      )}
+                    </button>
                   </div>
                   {errors.confirmPassword && (
                     <p className="text-xs text-red-500 font-medium mt-1">
