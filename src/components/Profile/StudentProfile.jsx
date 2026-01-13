@@ -114,14 +114,37 @@ const StudentDashboard = ({
     const legacyKey = "faculty-pedia-offline-results";
 
     try {
-      // Clean up legacy key to avoid leaking data across accounts
-      if (window.localStorage.getItem(legacyKey)) {
-        window.localStorage.removeItem(legacyKey);
-      }
+      const legacyRaw = window.localStorage.getItem(legacyKey);
+      const legacyResults = (() => {
+        if (!legacyRaw) return [];
+        try {
+          const parsed = JSON.parse(legacyRaw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (err) {
+          console.warn("Failed to parse legacy offline results", err);
+          return [];
+        } finally {
+          window.localStorage.removeItem(legacyKey);
+        }
+      })();
 
       const raw = window.localStorage.getItem(perStudentKey) || "[]";
       const parsed = JSON.parse(raw);
-      setLocalResults(Array.isArray(parsed) ? parsed : []);
+      const existingResults = Array.isArray(parsed) ? parsed : [];
+
+      const mergedMap = new Map();
+      [...existingResults, ...legacyResults].forEach((item) => {
+        if (!item) return;
+        const key = item.testId || item._id || item.id || `${mergedMap.size}`;
+        if (!mergedMap.has(key)) mergedMap.set(key, item);
+      });
+
+      const mergedResults = Array.from(mergedMap.values());
+      if (legacyResults.length && mergedResults.length) {
+        window.localStorage.setItem(perStudentKey, JSON.stringify(mergedResults));
+      }
+
+      setLocalResults(mergedResults);
     } catch (err) {
       console.warn("Failed to read offline results", err);
       setLocalResults([]);

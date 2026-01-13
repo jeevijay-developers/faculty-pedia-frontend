@@ -104,6 +104,8 @@ export const getTestSeriesBySlug = async (slug) => {
     const response = await API_CLIENT.get(`/api/test-series/slug/${slug}`);
     return response.data?.testSeries || response.data;
   } catch (error) {
+    const status = error?.response?.status;
+    if (status === 404) return null; // treat missing series as null instead of throwing
     console.error("Error fetching test series by slug:", error);
     throw error;
   }

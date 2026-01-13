@@ -62,18 +62,79 @@ const resolveOptions = (source) => {
   return [];
 };
 
+const parseCorrectOptions = (raw) => {
+  if (raw === undefined || raw === null) return undefined;
+
+  const addValue = (val, into) => {
+    if (val === undefined || val === null) return;
+    if (typeof val === "number") {
+      into.push(String(val));
+      return;
+    }
+    if (typeof val === "string") {
+      const trimmed = val.trim();
+      if (trimmed) into.push(trimmed.toUpperCase());
+      return;
+    }
+  };
+
+  // Array of primitives or objects
+  if (Array.isArray(raw)) {
+    const collected = [];
+    raw.forEach((entry) => {
+      if (
+        entry === undefined ||
+        entry === null ||
+        (typeof entry === "object" && Object.keys(entry || {}).length === 0)
+      )
+        return;
+
+      if (typeof entry === "object") {
+        const { text, label, option, value, key, idx, index, isCorrect } = entry;
+        // If explicit isCorrect flag is false, skip; otherwise include.
+        if (isCorrect === false) return;
+        addValue(key ?? option ?? text ?? label ?? value, collected);
+        if (typeof index === "number" || typeof index === "string")
+          addValue(index, collected);
+        if (typeof idx === "number" || typeof idx === "string")
+          addValue(idx, collected);
+        return;
+      }
+
+      addValue(entry, collected);
+    });
+
+    return collected.length ? collected : undefined;
+  }
+
+  // Numeric or string scalar
+  if (typeof raw === "number" || typeof raw === "string") {
+    const trimmed = String(raw).trim();
+    return trimmed ? [trimmed.toUpperCase()] : undefined;
+  }
+
+  // Object map like {A:true,B:false,C:true} or {0:true} or {A:"Option text"}
+  if (typeof raw === "object") {
+    const entries = [];
+    Object.entries(raw).forEach(([k, v]) => {
+      if (!v) return;
+      entries.push(String(k).toUpperCase());
+      if (typeof v === "string" || typeof v === "number") {
+        const str = String(v).trim();
+        if (str) entries.push(str.toUpperCase());
+      }
+    });
+    return entries.length ? entries : undefined;
+  }
+
+  return undefined;
+};
+
 const normalizeQuestions = (testData) => {
   if (Array.isArray(testData?.questions) && testData.questions.length > 0) {
     return testData.questions.map((q, idx) => {
       const baseOptions = resolveOptions(q.options || q.choices || q.answers);
-      const normalizeCorrect = (() => {
-        const raw = q.correctOptions ?? q.correctOption;
-        if (raw === undefined || raw === null) return undefined;
-        if (Array.isArray(raw)) return raw.map((r) => String(r).toUpperCase());
-        if (typeof raw === "number" || typeof raw === "string")
-          return [String(raw).toUpperCase()];
-        return undefined;
-      })();
+      const normalizeCorrect = parseCorrectOptions(q.correctOptions ?? q.correctOption);
 
       return {
         id: q._id || q.id || `q-${idx}`,
@@ -81,7 +142,10 @@ const normalizeQuestions = (testData) => {
         type: q.questionType || q.type || "single-select",
         options: baseOptions,
         correctOptions: normalizeCorrect,
-        marks: q.marks || { positive: 1, negative: 0 },
+        marks:
+          typeof q.marks === "number"
+            ? { positive: q.marks, negative: q.negativeMarks || 0 }
+            : q.marks || { positive: 1, negative: 0 },
       };
     });
   }
@@ -92,14 +156,7 @@ const normalizeQuestions = (testData) => {
       text: t.title || t.question || `Question ${idx + 1}`,
       type: t.questionType || t.type || "single-select",
       options: resolveOptions(t.options || t.answers),
-      correctOptions: (() => {
-        const raw = t.correctOptions ?? t.correctOption;
-        if (raw === undefined || raw === null) return undefined;
-        if (Array.isArray(raw)) return raw.map((r) => String(r).toUpperCase());
-        if (typeof raw === "number" || typeof raw === "string")
-          return [String(raw).toUpperCase()];
-        return undefined;
-      })(),
+      correctOptions: parseCorrectOptions(t.correctOptions ?? t.correctOption),
       marks: t.marks || { positive: 1, negative: 0 },
     }));
   }
@@ -110,7 +167,10 @@ const normalizeQuestions = (testData) => {
 const hydrateMissingOptions = async (questions = []) => {
   const hydrated = await Promise.all(
     questions.map(async (q) => {
-      if (q.options && q.options.length > 0 && q.correctOptions) return q;
+      const hasOptions = Array.isArray(q.options) && q.options.length > 0;
+      const hasCorrect = q.correctOptions && q.correctOptions.length > 0;
+      if (hasOptions && hasCorrect) return q;
+      // If options exist but correctOptions are missing, or vice versa, fetch full question details
       const questionId = q.id;
       if (!questionId)
         return { ...q, options: [], correctOptions: q.correctOptions };
@@ -164,6 +224,7 @@ const TestPanelPage = () => {
   const { slug } = useParams();
   const router = useRouter();
   const [resultsPath, setResultsPath] = useState("/profile?tab=results");
+  const [studentId, setStudentId] = useState(null);
   const [testData, setTestData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -186,15 +247,17 @@ const TestPanelPage = () => {
           : null;
       if (raw) {
         const parsed = JSON.parse(raw);
-        const studentId = parsed?._id || parsed?.id;
-        if (studentId) {
-          setResultsPath(`/profile/student/${studentId}?tab=results`);
+        const parsedStudentId = parsed?._id || parsed?.id;
+        if (parsedStudentId) {
+          setStudentId(parsedStudentId);
+          setResultsPath(`/profile/student/${parsedStudentId}?tab=results`);
           return;
         }
       }
     } catch (err) {
       console.warn("Unable to derive profile results path", err);
     }
+    setStudentId(null);
     setResultsPath("/profile?tab=results");
   }, []);
 
@@ -365,6 +428,12 @@ const TestPanelPage = () => {
 
   const currentQuestion = filteredQuestions[effectiveIndex] || null;
 
+  const isLastQuestion = useMemo(() => {
+    if (!currentQuestion) return false;
+    const fullIdx = questions.findIndex((q) => q.id === currentQuestion.id);
+    return fullIdx === questions.length - 1;
+  }, [currentQuestion, questions]);
+
   const handleNext = () => {
     if (effectiveIndex < filteredQuestions.length - 1) {
       const nextId = filteredQuestions[effectiveIndex + 1]?.id;
@@ -401,6 +470,13 @@ const TestPanelPage = () => {
 
         const questionBreakdown = questions.map((q) => {
           const answer = answers[q.id];
+
+          const normalizeVal = (val) => {
+            if (val === undefined || val === null) return null;
+            if (typeof val === "number" && Number.isFinite(val))
+              return String(val).trim();
+            return String(val).trim();
+          };
 
           if (q.type === "integer") {
             const studentVal =
@@ -452,43 +528,47 @@ const TestPanelPage = () => {
             };
           }
 
-          const letter = String.fromCharCode(65 + Number(selectedIndex));
+          const selectedIdxNum = Number(selectedIndex);
+          const letterZeroBased = String.fromCharCode(65 + selectedIdxNum);
+          const letterOneBased = String.fromCharCode(64 + selectedIdxNum); // supports 1-based keys
           const optionText = Array.isArray(q.options)
-            ? q.options[Number(selectedIndex)]
+            ? q.options[selectedIdxNum]
             : undefined;
-
-          const normalizeVal = (val) => {
-            if (val === undefined || val === null) return null;
-            if (typeof val === "number" && Number.isFinite(val))
-              return String(val);
-            return String(val).trim().toUpperCase();
-          };
 
           const correctSet = new Set();
           const addOptionTextByIndex = (idx) => {
             if (!Array.isArray(q.options)) return;
+            if (!Number.isFinite(idx)) return;
             if (idx < 0 || idx >= q.options.length) return;
             const text = q.options[idx];
             const normalized = normalizeVal(text);
-            if (normalized) correctSet.add(normalized);
+            if (normalized) correctSet.add(normalized.toUpperCase());
+          };
+
+          const addIndexLetters = (idx) => {
+            if (!Number.isFinite(idx)) return;
+            // zero-based letter (0 -> A)
+            correctSet.add(String.fromCharCode(65 + idx).toUpperCase());
+            addOptionTextByIndex(idx);
+            // also treat 1-based to tolerate authoring styles (1 -> A)
+            const oneBasedIdx = idx - 1;
+            if (oneBasedIdx >= 0) {
+              correctSet.add(String.fromCharCode(65 + oneBasedIdx).toUpperCase());
+              addOptionTextByIndex(oneBasedIdx);
+            }
           };
 
           const addFromValue = (val) => {
-            const normalized = normalizeVal(val);
-            if (normalized) correctSet.add(normalized);
+            const normalizedRaw = normalizeVal(val);
+            if (normalizedRaw) correctSet.add(normalizedRaw.toUpperCase());
 
             const num = Number(val);
             if (!Number.isNaN(num) && Number.isFinite(num)) {
-              const letterFromIndex = String.fromCharCode(65 + num);
-              correctSet.add(letterFromIndex.toUpperCase());
-              addOptionTextByIndex(num);
-            } else if (
-              typeof normalized === "string" &&
-              normalized.length === 1
-            ) {
-              const idxFromLetter = normalized.charCodeAt(0) - 65;
+              addIndexLetters(num);
+            } else if (typeof normalizedRaw === "string" && normalizedRaw.length === 1) {
+              const idxFromLetter = normalizedRaw.toUpperCase().charCodeAt(0) - 65;
               if (idxFromLetter >= 0 && idxFromLetter < 26) {
-                addOptionTextByIndex(idxFromLetter);
+                addIndexLetters(idxFromLetter);
               }
             }
           };
@@ -502,36 +582,53 @@ const TestPanelPage = () => {
             addFromValue(q.correctOptions);
           }
 
-          const normalizedSelectedOptionText = normalizeVal(optionText);
-          const isCorrect = correctSet.has(letter.toUpperCase());
-          const altMatch =
-            normalizedSelectedOptionText &&
-            correctSet.has(normalizedSelectedOptionText);
+          const normalizedSelectedOptionText = normalizeVal(optionText)?.toUpperCase();
+          const isCorrectByLetter =
+            correctSet.has(letterZeroBased.toUpperCase()) ||
+            correctSet.has(letterOneBased.toUpperCase());
+          const isCorrectByText =
+            normalizedSelectedOptionText && correctSet.has(normalizedSelectedOptionText);
 
-          if (isCorrect || altMatch) correct += 1;
+          const isCorrect = Boolean(isCorrectByLetter || isCorrectByText);
+
+          if (isCorrect) correct += 1;
           else incorrect += 1;
 
           return {
             questionId: q.id,
             type: q.type,
-            selected: letter,
+            selected: letterZeroBased,
             correct: q.correctOptions || [],
-            isCorrect: isCorrect || altMatch,
+            isCorrect,
           };
         });
 
         const total = questions.length || 0;
         const totalMarks = questions.reduce(
-          (sum, q) => sum + Number(q?.marks?.positive || 1),
+          (sum, q) => sum + Number(
+            typeof q?.marks === "number"
+              ? q.marks
+              : q?.marks?.positive || 1
+          ),
           0
         );
         const obtained = questions.reduce((sum, q, idx) => {
           const breakdown = questionBreakdown[idx];
           if (!breakdown) return sum;
-          if (breakdown.isCorrect) return sum + Number(q?.marks?.positive || 1);
+          const posMarks = Number(
+            typeof q?.marks === "number"
+              ? q.marks
+              : q?.marks?.positive || 1
+          );
+          const negMarks = Number(
+            typeof q?.marks === "number"
+              ? q.negativeMarks || 0
+              : q?.marks?.negative || 0
+          );
+          if (breakdown.isCorrect) return sum + posMarks;
           if (breakdown.selected === null || breakdown.selected === undefined)
             return sum;
-          return sum - Number(q?.marks?.negative || 0);
+          return sum - negMarks;
         }, 0);
         const percentage = totalMarks
           ? Math.max(0, Math.round((obtained / totalMarks) * 100))
@@ -551,10 +648,24 @@ const TestPanelPage = () => {
 
       const summary = computeSummary();
 
+      const durationSeconds = getDurationSeconds(testData);
+      const timeTakenSeconds =
+        typeof durationSeconds === "number" && durationSeconds > 0
+          ? Math.max(0, durationSeconds - secondsLeft)
+          : null;
+      const timeTakenMinutes =
+        timeTakenSeconds !== null
+          ? Math.round(timeTakenSeconds / 60)
+          : undefined;
+
       const resultPayload = {
+        studentId: studentId || undefined,
         testId: testData?._id || testData?.id || slug,
+        testSeriesId: testData?.testSeriesID || testData?.testSeriesId,
         testTitle: headerTitle,
+        testSlug: testData?.slug || slug,
         submittedAt: new Date().toISOString(),
+        timeTaken: timeTakenMinutes,
         ...summary,
       };
 
@@ -572,7 +683,9 @@ const TestPanelPage = () => {
       }
 
       try {
-        const storageKey = "faculty-pedia-offline-results";
+        const storageKey = studentId
+          ? `faculty-pedia-offline-results-${studentId}`
+          : "faculty-pedia-offline-results";
         const existing = JSON.parse(localStorage.getItem(storageKey) || "[]");
         const filtered = Array.isArray(existing)
           ? existing.filter((item) => item?.testId !== resultPayload.testId)
@@ -629,13 +742,15 @@ const TestPanelPage = () => {
                   />
                 </div>
               </div>
-              <button
-                onClick={submitTest}
-                disabled={submitting}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                {submitting ? "Submitting..." : "Submit Test"}
-              </button>
+              {isLastQuestion && (
+                <button
+                  onClick={submitTest}
+                  disabled={submitting}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-colors shadow-sm disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {submitting ? "Submitting..." : "Submit Test"}
+                </button>
+              )}
             </div>
           </div>
 
@@ -796,22 +911,26 @@ const TestPanelPage = () => {
                       Previous
                     </button>
                     <div className="flex items-center gap-3">
-                      <button
-                        onClick={handleNext}
-                        disabled={
-                          effectiveIndex >= filteredQuestions.length - 1
-                        }
-                        className="px-4 py-2 rounded-md text-sm font-semibold border border-slate-200 text-slate-700 disabled:opacity-50 hover:border-indigo-200"
-                      >
-                        Next
-                      </button>
-                      <button
-                        onClick={submitTest}
-                        disabled={submitting}
-                        className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
-                      >
-                        {submitting ? "Submitting..." : "Submit Test"}
-                      </button>
+                      {!isLastQuestion && (
+                        <button
+                          onClick={handleNext}
+                          disabled={
+                            effectiveIndex >= filteredQuestions.length - 1
+                          }
+                          className="px-4 py-2 rounded-md text-sm font-semibold border border-slate-200 text-slate-700 disabled:opacity-50 hover:border-indigo-200"
+                        >
+                          Next
+                        </button>
+                      )}
+                      {isLastQuestion && (
+                        <button
+                          onClick={submitTest}
+                          disabled={submitting}
+                          className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
+                        >
+                          {submitting ? "Submitting..." : "Submit Test"}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </>

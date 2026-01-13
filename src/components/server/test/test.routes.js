@@ -17,49 +17,38 @@ export const getLiveTestById = async (testId) => {
 
 // Submit test results
 export const submitTestResult = async (resultData) => {
-  const attemptNextFallback = async (originalError) => {
-    // Fallback to Next.js route (same-origin) when backend route is missing
-    if (typeof window === "undefined") throw originalError;
-    try {
-      const res = await fetch("/api/results/submit-test", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(resultData),
-      });
+  const submitViaNextApi = async () => {
+    const res = await fetch("/api/results/submit-test", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(resultData),
+    });
 
-      if (!res.ok) {
-        throw new Error(`Fallback submit failed with status ${res.status}`);
-      }
-
-      const data = await res.json().catch(() => ({}));
-      return data;
-    } catch (fallbackErr) {
-      console.error("Fallback submit (Next API) failed:", fallbackErr);
-      throw originalError;
+    if (!res.ok) {
+      throw new Error(`Next API submit failed with status ${res.status}`);
     }
+
+    return res.json().catch(() => ({}));
   };
 
-  try {
-    const response = await API_CLIENT.post(
-      "/api/results/submit-test",
-      resultData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error submitting test result:", error);
-    // If backend route is missing (404) or any network failure, try the local Next.js API route
-    const status = error?.response?.status;
-    if (status === 404 || status === 400 || status === 500 || !status) {
-      return attemptNextFallback(error);
+  // Prefer the Next.js API route first to avoid backend 404s
+  if (typeof window !== "undefined") {
+    try {
+      return await submitViaNextApi();
+    } catch (nextErr) {
+      console.warn("Next API submit failed, retrying backend:", nextErr);
     }
-    throw error;
   }
+
+  // Fallback to backend API; if it still fails, bubble up the original error
+  const response = await API_CLIENT.post("/api/results/submit-test", resultData);
+  return response.data;
 };
 
 // Get test results by student ID
 export const getTestResults = async (studentId) => {
   try {
-    const response = await API_CLIENT.get(`/api/test/results/${studentId}`);
+    const response = await API_CLIENT.get(`/api/results/student/${studentId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching test results:", error);

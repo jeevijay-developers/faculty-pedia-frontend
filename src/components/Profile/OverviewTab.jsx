@@ -153,6 +153,12 @@ const OverviewTab = ({
     })
     .slice(0, 5);
 
+  // Only show tests that belong to a series we can identify
+  const seriesTests = (tests || []).filter((test) => {
+    const seriesId = getSeriesId?.(test);
+    return Boolean(seriesId);
+  });
+
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     const ts = Date.parse(dateStr);
@@ -269,11 +275,11 @@ const OverviewTab = ({
                 </div>
               </div>
             )}
-            {tests.length > 0 ? (
+            {seriesTests.length > 0 ? (
               <div className="space-y-4">
-                {tests.slice(0, 5).map((test, index) => {
-                  const seriesId = getSeriesId(test);
-                  const series = getSeries(seriesId);
+                {seriesTests.slice(0, 5).map((test, index) => {
+                  const seriesId = getSeriesId?.(test);
+                  const series = seriesId ? getSeries?.(seriesId) : null;
 
                   return (
                     <div
@@ -288,8 +294,15 @@ const OverviewTab = ({
                           {(() => {
                             const title =
                               series?.title ||
-                              `Test Series #${seriesId || "N/A"}`;
+                              (seriesId ? `Test Series #${seriesId}` : null);
                             const slug = series?.slug;
+                            if (!title) {
+                              return (
+                                <p className="text-sm font-semibold text-gray-900" title="Test series unavailable">
+                                  Test series unavailable
+                                </p>
+                              );
+                            }
                             return slug ? (
                               <Link
                                 href={`/live-test/series/${slug}`}
