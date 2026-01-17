@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { IoStarSharp, IoCallSharp, IoMailSharp } from "react-icons/io5";
@@ -73,6 +76,7 @@ const safeYear = (value, fallback = new Date().getFullYear()) => {
 };
 
 const ViewProfile = ({ educatorData }) => {
+  const router = useRouter();
   // Add safety check at the top
   if (!educatorData) {
     console.error("ViewProfile: educatorData is null or undefined");
@@ -178,6 +182,10 @@ const ViewProfile = ({ educatorData }) => {
     testSeries: 0,
   });
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
+  const postCount = safeNumber(
+    educatorData?.posts?.length ?? educatorData?.postCount,
+    0
+  );
   const canRate = Boolean(currentUser?._id);
   const payPerHourSubjects = Array.isArray(educatorData?.subject)
     ? educatorData.subject.filter(Boolean).join(", ")
@@ -854,7 +862,11 @@ const ViewProfile = ({ educatorData }) => {
 
             {/* Teaching Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors">
+              <button
+                type="button"
+                onClick={() => router.push(`/courses?educator=${educatorId}`)}
+                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
+              >
                 <div className="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-1">
                   <BookOpen className="w-5 h-5" />
                 </div>
@@ -869,9 +881,15 @@ const ViewProfile = ({ educatorData }) => {
                 <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
                   Courses
                 </p>
-              </div>
+              </button>
 
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors">
+              <button
+                type="button"
+                onClick={() =>
+                  router.push(`/test-series?educator=${educatorId}`)
+                }
+                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
+              >
                 <div className="w-10 h-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-1">
                   <TestTube className="w-5 h-5" />
                 </div>
@@ -886,9 +904,15 @@ const ViewProfile = ({ educatorData }) => {
                 <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
                   Test Series
                 </p>
-              </div>
+              </button>
 
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors">
+              <button
+                type="button"
+                onClick={() =>
+                  router.push(`/webinars?educator=${educatorId}`)
+                }
+                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
+              >
                 <div className="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center mb-1">
                   <Calendar className="w-5 h-5" />
                 </div>
@@ -903,19 +927,25 @@ const ViewProfile = ({ educatorData }) => {
                 <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
                   Webinars
                 </p>
-              </div>
+              </button>
 
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors">
+              <button
+                type="button"
+                onClick={() =>
+                  router.push(`/educators/${educatorId}/posts`)
+                }
+                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
+              >
                 <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1">
                   <FileQuestion className="w-5 h-5" />
                 </div>
                 <p className="text-2xl font-bold text-[#111118]">
-                  {safeNumber(followerCount, 0).toLocaleString()}
+                  {safeNumber(postCount, 0).toLocaleString()}
                 </p>
                 <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
-                  Followers
+                  Posts
                 </p>
-              </div>
+              </button>
             </div>
 
             {/* Experience & Qualifications Grid */}
