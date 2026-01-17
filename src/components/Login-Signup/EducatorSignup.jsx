@@ -28,6 +28,7 @@ import toast from "react-hot-toast";
 import { signupAsEducator } from "../server/auth/auth.routes";
 import API_CLIENT from "../server/config";
 import MonthPicker from "./MonthPicker";
+import EmailVerificationModal from "./EmailVerificationModal";
 
 const SUBJECT_OPTIONS = [
   "biology",
@@ -80,6 +81,8 @@ const EducatorSignup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [introVideoFile, setIntroVideoFile] = useState(null);
   const [isUploadingIntroVideo, setIsUploadingIntroVideo] = useState(false);
+  const [pendingUser, setPendingUser] = useState(null);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const [formData, setFormData] = useState({
     // Personal Information
@@ -516,14 +519,22 @@ const EducatorSignup = () => {
       const createdEducator =
         response?.data?.educator || response?.educator || response?.data;
       const educatorId = createdEducator?._id || createdEducator?.id;
+      const token =
+        response?.TOKEN ||
+        response?.token ||
+        response?.data?.tokens?.accessToken ||
+        response?.data?.token ||
+        response?.data?.accessToken;
 
-      toast.success("Registration successful! Redirecting to your profile.");
+      setPendingUser({
+        email: trimmedEmail,
+        userType: "educator",
+        user: createdEducator,
+        token,
+      });
 
-      if (educatorId) {
-        router.push(`${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/`);
-      } else {
-        router.push("/login");
-      }
+      setShowVerificationModal(true);
+      toast.success("Account created. Verify your email to continue.");
     } catch (error) {
       console.error("Registration error:", error);
       const backendErrors = error.response?.data?.errors;
@@ -542,6 +553,29 @@ const EducatorSignup = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleVerificationSuccess = () => {
+    if (pendingUser?.token) {
+      localStorage.setItem("faculty-pedia-auth-token", pendingUser.token);
+    }
+
+    if (pendingUser?.user) {
+      localStorage.setItem(
+        "faculty-pedia-educator-data",
+        JSON.stringify(pendingUser.user)
+      );
+      localStorage.setItem("user-role", "educator");
+    }
+
+    const educatorId = pendingUser?.user?._id || pendingUser?.user?.id;
+    setShowVerificationModal(false);
+    setPendingUser(null);
+    router.push(
+      educatorId
+        ? `${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL || "/educator/dashboard"}/`
+        : "/login"
+    );
   };
 
   const renderPersonalInfo = () => (
@@ -1265,133 +1299,142 @@ const EducatorSignup = () => {
   );
 
   return (
-    <div className="min-h-screen text-[#0e121b]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <header className="flex items-center justify-between flex-wrap gap-4 pb-6">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
-              <LuUser className="h-5 w-5" />
+    <>
+      <div className="min-h-screen text-[#0e121b]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <header className="flex items-center justify-between flex-wrap gap-4 pb-6">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
+                <LuUser className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-500">Educator Onboarding</p>
+                <h1 className="text-2xl font-semibold text-slate-900">
+                  Join as Educator
+                </h1>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-slate-500">Educator Onboarding</p>
-              <h1 className="text-2xl font-semibold text-slate-900">
-                Join as Educator
-              </h1>
+            <div className="text-sm text-slate-600">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="font-semibold text-blue-500 hover:text-blue-700"
+              >
+                Log in
+              </Link>
             </div>
-          </div>
-          <div className="text-sm text-slate-600">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-semibold text-blue-500 hover:text-blue-700"
-            >
-              Log in
-            </Link>
-          </div>
-        </header>
+          </header>
 
-        <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8">
-          <div className="mb-10">
-            <div className="relative mb-6 h-1 bg-slate-200 rounded-full">
-              <div
-                className="absolute inset-y-0 left-0 bg-blue-500 rounded-full transition-all"
-                style={{ width: progressWidth }}
-              />
-            </div>
-            <div className="grid grid-cols-4 gap-3 text-sm">
-              {steps.map((step) => {
-                const Icon = step.icon;
-                const isActive = currentStep === step.id;
-                const isDone = currentStep > step.id;
-                return (
-                  <div
-                    key={step.id}
-                    className="flex flex-col items-center gap-2"
-                  >
+          <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8">
+            <div className="mb-10">
+              <div className="relative mb-6 h-1 bg-slate-200 rounded-full">
+                <div
+                  className="absolute inset-y-0 left-0 bg-blue-500 rounded-full transition-all"
+                  style={{ width: progressWidth }}
+                />
+              </div>
+              <div className="grid grid-cols-4 gap-3 text-sm">
+                {steps.map((step) => {
+                  const Icon = step.icon;
+                  const isActive = currentStep === step.id;
+                  const isDone = currentStep > step.id;
+                  return (
                     <div
-                      className={`h-10 w-10 rounded-full flex items-center justify-center border-2 font-semibold shadow-sm ${
-                        isDone
-                          ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                          : isActive
-                          ? "bg-blue-500 border-blue-500 text-white"
-                          : "bg-white border-slate-200 text-slate-400"
-                      }`}
+                      key={step.id}
+                      className="flex flex-col items-center gap-2"
                     >
-                      {isDone ? (
-                        <LuCheck className="h-5 w-5" />
-                      ) : (
-                        <Icon className="h-5 w-5" />
-                      )}
+                      <div
+                        className={`h-10 w-10 rounded-full flex items-center justify-center border-2 font-semibold shadow-sm ${
+                          isDone
+                            ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                            : isActive
+                              ? "bg-blue-500 border-blue-500 text-white"
+                              : "bg-white border-slate-200 text-slate-400"
+                        }`}
+                      >
+                        {isDone ? (
+                          <LuCheck className="h-5 w-5" />
+                        ) : (
+                          <Icon className="h-5 w-5" />
+                        )}
+                      </div>
+                      <span
+                        className={`text-center ${
+                          isActive
+                            ? "text-blue-700 font-semibold"
+                            : isDone
+                              ? "text-slate-600 font-medium"
+                              : "text-slate-400"
+                        }`}
+                      >
+                        {step.title}
+                      </span>
                     </div>
-                    <span
-                      className={`text-center ${
-                        isActive
-                          ? "text-blue-700 font-semibold"
-                          : isDone
-                          ? "text-slate-600 font-medium"
-                          : "text-slate-400"
-                      }`}
-                    >
-                      {step.title}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          <div className="mb-8">
-            {currentStep === 1 && renderPersonalInfo()}
-            {currentStep === 2 && renderWorkExperience()}
-            {currentStep === 3 && renderQualifications()}
-            {currentStep === 4 && renderSocialLinks()}
-          </div>
+            <div className="mb-8">
+              {currentStep === 1 && renderPersonalInfo()}
+              {currentStep === 2 && renderWorkExperience()}
+              {currentStep === 3 && renderQualifications()}
+              {currentStep === 4 && renderSocialLinks()}
+            </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={prevStep}
-              disabled={currentStep === 1}
-              className="w-full sm:w-auto px-5 h-11 rounded-xl font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Previous
-            </button>
-
-            {currentStep < 4 ? (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100">
               <button
                 type="button"
-                onClick={nextStep}
-                className="w-full sm:w-auto px-6 h-11 rounded-xl bg-blue-500 text-white font-semibold shadow-lg shadow-indigo-500/20 hover:bg-blue-700 transition-colors"
+                onClick={prevStep}
+                disabled={currentStep === 1}
+                className="w-full sm:w-auto px-5 h-11 rounded-xl font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Continue to {steps[currentStep]?.title || "Experience"}
+                Previous
               </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className="w-full sm:w-auto px-8 h-11 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <>
-                    <LuLoaderCircle className="animate-spin w-5 h-5" />
-                    <span>Creating Account...</span>
-                  </>
-                ) : (
-                  <span>Complete Registration</span>
-                )}
-              </button>
+
+              {currentStep < 4 ? (
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="w-full sm:w-auto px-6 h-11 rounded-xl bg-blue-500 text-white font-semibold shadow-lg shadow-indigo-500/20 hover:bg-blue-700 transition-colors"
+                >
+                  Continue to {steps[currentStep]?.title || "Experience"}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  className="w-full sm:w-auto px-8 h-11 rounded-xl bg-emerald-600 text-white font-semibold shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                >
+                  {isLoading ? (
+                    <>
+                      <LuLoaderCircle className="animate-spin w-5 h-5" />
+                      <span>Creating Account...</span>
+                    </>
+                  ) : (
+                    <span>Complete Registration</span>
+                  )}
+                </button>
+              )}
+            </div>
+
+            {errors.submit && (
+              <p className="mt-4 text-sm text-red-600 text-center">
+                {errors.submit}
+              </p>
             )}
           </div>
-
-          {errors.submit && (
-            <p className="mt-4 text-sm text-red-600 text-center">
-              {errors.submit}
-            </p>
-          )}
         </div>
       </div>
-    </div>
+      <EmailVerificationModal
+        isOpen={showVerificationModal}
+        onClose={() => setShowVerificationModal(false)}
+        email={pendingUser?.email}
+        userType="educator"
+        onVerified={handleVerificationSuccess}
+      />
+    </>
   );
 };
 

@@ -82,6 +82,27 @@ export const signupAsEducator = async (data) => {
   }
 };
 
+export const requestEmailVerification = async (data) => {
+  const response = await API_CLIENT.post(
+    "/api/auth/request-email-verification",
+    data
+  );
+  return response.data;
+};
+
+export const resendEmailVerification = async (data) => {
+  const response = await API_CLIENT.post(
+    "/api/auth/resend-email-verification",
+    data
+  );
+  return response.data;
+};
+
+export const verifyEmailCode = async (data) => {
+  const response = await API_CLIENT.post("/api/auth/verify-email", data);
+  return response.data;
+};
+
 // Generic login function that can handle both students and educators
 export const loginUser = async (email, password) => {
   try {
