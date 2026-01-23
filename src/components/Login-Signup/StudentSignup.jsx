@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import EmailVerificationModal from "./EmailVerificationModal";
@@ -43,7 +43,10 @@ const StudentSignup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [pendingUser, setPendingUser] = useState(null);
+  const [pendingSubmitData, setPendingSubmitData] = useState(null);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [verifiedEmail, setVerifiedEmail] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -100,8 +103,8 @@ const StudentSignup = () => {
 
     if (!formData.email) {
       newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
+    } else if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(formData.email)) {
+      newErrors.email = "Only @gmail.com emails are eligible";
     }
 
     if (!formData.specialization) {
@@ -135,30 +138,44 @@ const StudentSignup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
       return;
     }
 
-    setIsLoading(true);
     setErrors({});
     setSuccessMessage("");
+    setIsEmailVerified(false);
+    setVerifiedEmail("");
+
+    // Prepare data for signup after OTP verification
+    const submitData = {
+      name: formData.name.trim(),
+      username: formData.username.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      mobileNumber: formData.mobileNumber.trim(),
+      specialization: formData.specialization,
+      class: formData.classLevel,
+    };
+
+    setPendingSubmitData(submitData);
+    setPendingUser({ email: submitData.email, userType: "student" });
+    setShowVerificationModal(true);
+  };
+
+  const handleEmailVerificationSuccess = async () => {
+    if (!pendingSubmitData) {
+      setShowVerificationModal(false);
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
-      // Create JSON object (exclude confirmPassword as it's not in schema)
-      const submitData = {
-        name: formData.name.trim(),
-        username: formData.username.trim(),
-        email: formData.email.trim(),
-        password: formData.password,
-        mobileNumber: formData.mobileNumber.trim(),
-        specialization: formData.specialization,
-        class: formData.classLevel,
-      };
-
-      const response = await signupStudent(submitData);
+      const response = await signupStudent(pendingSubmitData);
       const createdStudent = response?.data ?? response?.student ?? response;
       const token =
         response?.TOKEN ||
@@ -167,31 +184,27 @@ const StudentSignup = () => {
         response?.data?.token ||
         response?.data?.accessToken;
 
-      setPendingUser({
-        email: submitData.email,
-        userType: "student",
-        user: createdStudent,
-        token,
-      });
+      if (token) {
+        localStorage.setItem("faculty-pedia-auth-token", token);
+      }
 
-      setSuccessMessage(
-        response?.message ||
-          "Account created. Verify your email to complete signup."
-      );
-      setShowVerificationModal(true);
+      if (createdStudent) {
+        localStorage.setItem(
+          "faculty-pedia-student-data",
+          JSON.stringify(createdStudent)
+        );
+        localStorage.setItem("user-role", "student");
+      }
 
-      setFormData({
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        mobileNumber: "",
-        specialization: "",
-        classLevel: "",
-      });
+      setIsEmailVerified(true);
+      setVerifiedEmail(pendingSubmitData.email);
+      setSuccessMessage(response?.message || "Account created successfully!");
+      toast.success("Account created successfully!");
 
-      toast.success("Verification code sent. Check your email.");
+      const studentId = createdStudent?._id || createdStudent?.id;
+      setTimeout(() => {
+        router.replace(studentId ? `/profile/student/${studentId}` : "/");
+      }, 1000);
     } catch (error) {
       console.error("Registration error:", error);
 
@@ -205,7 +218,6 @@ const StudentSignup = () => {
           backendMessage
         );
 
-      // Surface duplicate/unique errors clearly
       if (isDuplicateError) {
         const duplicateErrors = {
           submit: duplicateMessage,
@@ -224,9 +236,7 @@ const StudentSignup = () => {
         return;
       }
 
-      // Handle API errors based on the validation chain structure
       if (error.response?.status === 400) {
-        // Handle validation errors from express-validator
         if (error.response.data?.errors) {
           const serverErrors = {};
           error.response.data.errors.forEach((err) => {
@@ -258,26 +268,9 @@ const StudentSignup = () => {
       }
     } finally {
       setIsLoading(false);
+      setShowVerificationModal(false);
+      setPendingSubmitData(null);
     }
-  };
-
-  const handleVerificationSuccess = () => {
-    if (pendingUser?.token) {
-      localStorage.setItem("faculty-pedia-auth-token", pendingUser.token);
-    }
-
-    if (pendingUser?.user) {
-      localStorage.setItem(
-        "faculty-pedia-student-data",
-        JSON.stringify(pendingUser.user)
-      );
-      localStorage.setItem("user-role", "student");
-    }
-
-    const studentId = pendingUser?.user?._id || pendingUser?.user?.id;
-    setShowVerificationModal(false);
-    setPendingUser(null);
-    router.replace(studentId ? `/profile/student/${studentId}` : "/");
   };
 
   return (
@@ -464,7 +457,7 @@ const StudentSignup = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className="flex flex-col gap-1.5">
                     <span className="text-[#0e121b] text-sm font-medium">
-                      Email Address
+                      Email Address (Gmail only)
                     </span>
                     <div className="relative group">
                       <LuMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-600 transition-colors" />
@@ -475,10 +468,22 @@ const StudentSignup = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
-                          errors.email ? "border-red-300" : "border-[#d0d7e7]"
+                          isEmailVerified
+                            ? "border-green-400"
+                            : errors.email
+                            ? "border-red-300"
+                            : "border-[#d0d7e7]"
                         }`}
-                        placeholder="john@example.com"
+                        placeholder="john@gmail.com"
                       />
+                      {isEmailVerified && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-600 text-xs font-medium flex items-center gap-1">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          Verified
+                        </div>
+                      )}
                     </div>
                     {errors.email && (
                       <p className="text-xs text-red-500 font-medium mt-1">
@@ -519,7 +524,7 @@ const StudentSignup = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className="flex flex-col gap-1.5">
                     <span className="text-[#0e121b] text-sm font-medium">
-                      Specialization
+                      Exam
                     </span>
                     <div className="relative group">
                       <LuSchool className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 group-focus-within:text-blue-600 transition-colors z-10" />
@@ -535,7 +540,7 @@ const StudentSignup = () => {
                         }`}
                       >
                         <option value="" disabled>
-                          Select Area
+                          Select Exam
                         </option>
                         {SPECIALIZATION_OPTIONS.map((option) => (
                           <option key={option} value={option}>
@@ -543,7 +548,6 @@ const StudentSignup = () => {
                           </option>
                         ))}
                       </select>
-                      <LuUsers className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" />
                     </div>
                     {errors.specialization && (
                       <p className="text-xs text-red-500 font-medium mt-1">
@@ -578,7 +582,6 @@ const StudentSignup = () => {
                           </option>
                         ))}
                       </select>
-                      <LuBookOpen className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" />
                     </div>
                     {errors.classLevel && (
                       <p className="text-xs text-red-500 font-medium mt-1">
@@ -739,7 +742,8 @@ const StudentSignup = () => {
           onClose={() => setShowVerificationModal(false)}
           email={pendingUser?.email}
           userType="student"
-          onVerified={handleVerificationSuccess}
+          onVerified={handleEmailVerificationSuccess}
+          isPreSignup={true}
         />
       </div>
     </>

@@ -90,6 +90,14 @@ export const requestEmailVerification = async (data) => {
   return response.data;
 };
 
+export const requestPreSignupVerification = async (data) => {
+  const response = await API_CLIENT.post(
+    "/api/auth/request-presignup-verification",
+    data
+  );
+  return response.data;
+};
+
 export const resendEmailVerification = async (data) => {
   const response = await API_CLIENT.post(
     "/api/auth/resend-email-verification",

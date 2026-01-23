@@ -5,6 +5,7 @@ import { LuX, LuCheck, LuLoaderCircle, LuRefreshCw } from "react-icons/lu";
 import toast from "react-hot-toast";
 import {
   requestEmailVerification,
+  requestPreSignupVerification,
   resendEmailVerification,
   verifyEmailCode,
 } from "../server/auth/auth.routes";
@@ -17,6 +18,7 @@ const EmailVerificationModal = ({
   email,
   userType,
   onVerified,
+  isPreSignup = false,
 }) => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -120,10 +122,12 @@ const EmailVerificationModal = ({
   const handleRequestInitial = async () => {
     if (!email || !userType) return;
     try {
-      await requestEmailVerification({ email, userType });
+      // Use pre-signup endpoint if this is before account creation
+      const requestFn = isPreSignup ? requestPreSignupVerification : requestEmailVerification;
+      await requestFn({ email, userType });
       setCooldown(RESEND_COOLDOWN_SECONDS);
     } catch (err) {
-      // Handle 429 (rate limit) gracefully - OTP was already sent during signup
+      // Handle 429 (rate limit) gracefully - OTP was already sent
       if (err?.response?.status === 429) {
         const retryAfterMs = err?.response?.data?.retryAfterMs;
         if (retryAfterMs && typeof retryAfterMs === "number") {
@@ -133,11 +137,45 @@ const EmailVerificationModal = ({
           // Fallback to default cooldown
           setCooldown(RESEND_COOLDOWN_SECONDS);
         }
-        // Don't show error - OTP was already sent during signup
+        // Don't show error - OTP was already sent
         return;
       }
-      // Silently ignore other errors; backend auto-sends on signup.
+      // Handle 409 (email already exists) for pre-signup
+      if (err?.response?.status === 409) {
+        const message = err?.response?.data?.message || "An account with this email already exists";
+        setError(message);
+        toast.error(message);
+        return;
+      }
+      // Log other errors but don't show to user (backend may auto-send on signup)
       console.error("Initial verification send failed:", err?.message || err);
+    }
+  };
+
+  const triggerResendForPreSignup = async () => {
+    if (!email || !userType) return;
+    setIsResending(true);
+    setError("");
+
+    try {
+      await requestPreSignupVerification({ email, userType });
+      setCooldown(RESEND_COOLDOWN_SECONDS);
+      toast.success("A new code has been sent to your email.");
+    } catch (err) {
+      if (err?.response?.status === 429) {
+        const retryAfterMs = err?.response?.data?.retryAfterMs;
+        if (retryAfterMs && typeof retryAfterMs === "number") {
+          setCooldown(Math.ceil(retryAfterMs / 1000));
+        }
+        toast.error("Please wait before requesting another code.");
+        return;
+      }
+      const message =
+        err?.response?.data?.message || err?.message || "Failed to resend code";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -165,14 +203,14 @@ const EmailVerificationModal = ({
               Code sent to {email}
             </p>
           </div>
-          <button
+          {/* <button
             type="button"
             onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
             aria-label="Close"
           >
             <LuX className="h-5 w-5" />
-          </button>
+          </button> */}
         </div>
 
         <div className="px-5 py-4 space-y-4">
@@ -210,7 +248,7 @@ const EmailVerificationModal = ({
             <button
               type="button"
               disabled={cooldown > 0 || isResending}
-              onClick={triggerResend}
+              onClick={isPreSignup ? triggerResendForPreSignup : triggerResend}
               className="inline-flex items-center gap-1 text-blue-600 font-semibold disabled:opacity-50"
             >
               {isResending ? (
@@ -224,13 +262,13 @@ const EmailVerificationModal = ({
         </div>
 
         <div className="flex items-center justify-end gap-2 border-t px-5 py-3 bg-slate-50">
-          <button
+          {/* <button
             type="button"
             onClick={onClose}
             className="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-white"
           >
             Cancel
-          </button>
+          </button> */}
           <button
             type="button"
             disabled={isSubmitting}
