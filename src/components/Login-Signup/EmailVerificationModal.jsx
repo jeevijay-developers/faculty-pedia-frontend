@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { LuX, LuCheck, LuLoaderCircle, LuRefreshCw } from "react-icons/lu";
 import toast from "react-hot-toast";
 import {
@@ -23,6 +23,7 @@ const EmailVerificationModal = ({
   const [isResending, setIsResending] = useState(false);
   const [error, setError] = useState("");
   const [cooldown, setCooldown] = useState(0);
+  const inputRefs = useRef([]);
 
   // Reset state when opened/closed
   useEffect(() => {
@@ -52,6 +53,18 @@ const EmailVerificationModal = ({
       next[index] = sanitized;
       return next;
     });
+
+    // Auto-focus next input if a digit was entered
+    if (sanitized && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    // Move to previous input on backspace if current is empty
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
   };
 
   const handleVerify = async () => {
@@ -110,7 +123,20 @@ const EmailVerificationModal = ({
       await requestEmailVerification({ email, userType });
       setCooldown(RESEND_COOLDOWN_SECONDS);
     } catch (err) {
-      // Silently ignore; backend auto-sends on signup. Show toast only if explicit resend is triggered.
+      // Handle 429 (rate limit) gracefully - OTP was already sent during signup
+      if (err?.response?.status === 429) {
+        const retryAfterMs = err?.response?.data?.retryAfterMs;
+        if (retryAfterMs && typeof retryAfterMs === "number") {
+          // Set cooldown based on backend response
+          setCooldown(Math.ceil(retryAfterMs / 1000));
+        } else {
+          // Fallback to default cooldown
+          setCooldown(RESEND_COOLDOWN_SECONDS);
+        }
+        // Don't show error - OTP was already sent during signup
+        return;
+      }
+      // Silently ignore other errors; backend auto-sends on signup.
       console.error("Initial verification send failed:", err?.message || err);
     }
   };
@@ -159,8 +185,10 @@ const EmailVerificationModal = ({
             {otp.map((digit, index) => (
               <input
                 key={index}
+                ref={(el) => (inputRefs.current[index] = el)}
                 value={digit}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
                 inputMode="numeric"
                 pattern="[0-9]*"
                 maxLength={1}

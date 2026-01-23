@@ -118,7 +118,7 @@ const CustomAlert = ({ alert, onClose }) => {
   // Custom UI rendering
   if (alert.customUI) {
     return createPortal(
-      <div className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-200 ${
+      <div className={`fixed inset-0 z-9999 flex items-center justify-center p-4 transition-all duration-200 ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}>
         {/* Backdrop */}
@@ -141,7 +141,7 @@ const CustomAlert = ({ alert, onClose }) => {
   const colors = getColors();
 
   return createPortal(
-    <div className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-all duration-200 ${
+    <div className={`fixed inset-0 z-9999 flex items-center justify-center p-4 transition-all duration-200 ${
       isVisible ? 'opacity-100' : 'opacity-0'
     }`}>
       {/* Backdrop */}
@@ -168,7 +168,7 @@ const CustomAlert = ({ alert, onClose }) => {
         <div className="p-6">
           {/* Icon and Title */}
           <div className="flex items-start space-x-4 mb-4">
-            <div className={`flex-shrink-0 p-2 rounded-full ${colors.bg} ${colors.border} border`}>
+            <div className={`shrink-0 p-2 rounded-full ${colors.bg} ${colors.border} border`}>
               {getIcon()}
             </div>
             <div className="flex-1">

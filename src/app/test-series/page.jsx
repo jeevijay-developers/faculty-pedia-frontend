@@ -1,13 +1,23 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Search } from "lucide-react";
 import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
-import { testData } from "@/Data/Tests/test.data";
+import Loading from "@/components/Common/Loading";
+import { getTestSeries, getTestSeriesByEducator } from "@/components/server/test-series.route";
 
 export default function TestSeriesPage() {
+  const searchParams = useSearchParams();
+  const educatorId = searchParams.get("educator");
+
+  const [allTestSeries, setAllTestSeries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [educatorName, setEducatorName] = useState("");
+
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
@@ -15,6 +25,45 @@ export default function TestSeriesPage() {
   const [activeTab, setActiveTab] = useState("All");
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch test series on mount (optionally filtered by educator)
+  useEffect(() => {
+    const fetchTestSeriesData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        let testSeriesData = [];
+
+        if (educatorId) {
+          // Fetch test series by specific educator
+          const response = await getTestSeriesByEducator(educatorId, { limit: 100 });
+          testSeriesData = response?.testSeries || response?.data?.testSeries || [];
+          // Try to extract educator name from first test series
+          const firstTestSeries = testSeriesData[0];
+          if (firstTestSeries?.educatorName || firstTestSeries?.educator?.name) {
+            setEducatorName(firstTestSeries.educatorName || firstTestSeries.educator?.name || "");
+          }
+        } else {
+          // Fetch all test series
+          const response = await getTestSeries();
+          testSeriesData = response?.testSeries || response?.data?.testSeries || [];
+          if (Array.isArray(response)) {
+            testSeriesData = response;
+          }
+        }
+
+        setAllTestSeries(testSeriesData);
+      } catch (err) {
+        console.error("Failed to fetch test series:", err);
+        setError(err.message || "Failed to fetch test series");
+        setAllTestSeries([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestSeriesData();
+  }, [educatorId]);
 
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -26,23 +75,23 @@ export default function TestSeriesPage() {
 
   // Get unique specializations
   const specializations = useMemo(() => {
-    const set = new Set(testData.map((test) => test.specialization));
+    const set = new Set(allTestSeries.map((test) => test.specialization).filter(Boolean));
     return ["All", ...Array.from(set)];
-  }, []);
+  }, [allTestSeries]);
 
   const filteredTests = useMemo(() => {
-    return testData.filter((test) => {
+    return allTestSeries.filter((test) => {
       const matchesSpec =
         activeTab === "All" || test.specialization === activeTab;
       const query = searchQuery.trim().toLowerCase();
       if (!query) return matchesSpec;
       const inText =
-        test.title.toLowerCase().includes(query) ||
-        test.educatorName.toLowerCase().includes(query) ||
-        test.subject.toLowerCase().includes(query);
+        (test.title || "").toLowerCase().includes(query) ||
+        (test.educatorName || "").toLowerCase().includes(query) ||
+        (test.subject || "").toLowerCase().includes(query);
       return matchesSpec && inText;
     });
-  }, [activeTab, searchQuery]);
+  }, [activeTab, searchQuery, allTestSeries]);
 
   const heroSection = (
     <div className="relative w-full bg-white">
@@ -55,11 +104,12 @@ export default function TestSeriesPage() {
       >
         <div className="flex flex-col gap-4 text-center items-center max-w-4xl mx-auto">
           <h1 className="text-white text-4xl font-black leading-tight tracking-tight md:text-6xl drop-shadow-sm">
-            Test Series
+            {educatorId ? (educatorName ? `${educatorName}'s Test Series` : "Educator's Test Series") : "Test Series"}
           </h1>
           <p className="text-gray-200 text-base font-normal leading-normal md:text-lg max-w-2xl">
-            Practice with comprehensive test series designed to boost your exam
-            preparation and performance.
+            {educatorId
+              ? `Explore test series by ${educatorName || "this educator"}. Practice and improve your skills.`
+              : "Practice with comprehensive test series designed to boost your exam preparation and performance."}
           </p>
 
           {/* Search Bar */}
@@ -87,6 +137,43 @@ export default function TestSeriesPage() {
     </div>
   );
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {heroSection}
+        <Loading
+          variant="card-grid"
+          count={6}
+          message="Loading Test Series"
+          className="min-h-100"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {heroSection}
+        <div className="max-w-7xl mx-auto p-4 mt-8">
+          <div className="text-center py-16">
+            <div className="text-red-500 text-6xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Failed to Load Test Series
+            </h2>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {heroSection}
@@ -97,7 +184,7 @@ export default function TestSeriesPage() {
         >
           <h1 className="text-3xl font-bold text-gray-900">Test Series</h1>
           <p className="text-sm text-gray-600">
-            Showing {filteredTests.length} of {testData.length} test series
+            Showing {filteredTests.length} of {allTestSeries.length} test series
           </p>
         </div>
 
@@ -128,7 +215,7 @@ export default function TestSeriesPage() {
         >
           {filteredTests.length > 0 ? (
             filteredTests.map((test) => (
-              <TestSeriesCard key={test.id} testSeries={test} />
+              <TestSeriesCard key={test._id || test.id} testSeries={test} />
             ))
           ) : (
             <div className="col-span-full text-center py-16">

@@ -3,14 +3,15 @@
 import React, { useState, useEffect } from "react";
 import Banner from "../Common/Banner";
 import PostCard from "./PostCard";
-import { fetchPosts } from "../server/posts.route";
+import { fetchPosts, getPostsByEducator } from "../server/posts.route";
 
-const AllPostsSection = () => {
+const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
   const [selectedCategory, setSelectedCategory] = useState("All Posts");
   const [displayedPosts, setDisplayedPosts] = useState(9);
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [educatorName, setEducatorName] = useState(propEducatorName || "");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -24,15 +25,34 @@ const AllPostsSection = () => {
       setLoading(true);
       setError("");
       try {
-        const specialization =
-          selectedCategory === "All Posts" ? undefined : selectedCategory;
-        const { posts, pagination: paginationData } = await fetchPosts({
-          page: 1,
-          limit: 100,
-          specialization,
-          sortBy: "createdAt",
-          sortOrder: "desc",
-        });
+        let posts = [];
+        let paginationData = { currentPage: 1, totalPages: 1, totalPosts: 0 };
+
+        if (educatorId) {
+          // Fetch posts by specific educator
+          const result = await getPostsByEducator(educatorId, { limit: 100 });
+          posts = result.posts || [];
+          paginationData = result.pagination || paginationData;
+          // Try to extract educator name from first post
+          const firstPost = posts[0];
+          if (firstPost?.educatorName || firstPost?.educator?.name) {
+            setEducatorName(firstPost.educatorName || firstPost.educator?.name || "");
+          }
+        } else {
+          // Fetch all posts with optional category filter
+          const specialization =
+            selectedCategory === "All Posts" ? undefined : selectedCategory;
+          const result = await fetchPosts({
+            page: 1,
+            limit: 100,
+            specialization,
+            sortBy: "createdAt",
+            sortOrder: "desc",
+          });
+          posts = result.posts || [];
+          paginationData = result.pagination || paginationData;
+        }
+
         setAllPosts(posts);
         setPagination(paginationData);
       } catch (err) {
@@ -46,7 +66,7 @@ const AllPostsSection = () => {
 
     loadPosts();
     setDisplayedPosts(9);
-  }, [selectedCategory]);
+  }, [selectedCategory, educatorId]);
 
   const allFilteredPosts = allPosts;
   const postsToShow = allFilteredPosts.slice(0, displayedPosts);
@@ -66,8 +86,10 @@ const AllPostsSection = () => {
       {/* Banner Section */}
       <Banner
         url="/images/Banner/1.png"
-        title="Latest Posts & Articles"
-        subtitle="Stay updated with the latest educational content, tips, and insights from our expert faculty"
+        title={educatorId ? (educatorName ? `${educatorName}'s Posts` : "Educator's Posts") : "Latest Posts & Articles"}
+        subtitle={educatorId
+          ? `Explore posts and articles by ${educatorName || "this educator"}.`
+          : "Stay updated with the latest educational content, tips, and insights from our expert faculty"}
       />
 
       {/* Posts Section */}
@@ -77,7 +99,7 @@ const AllPostsSection = () => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Educational Posts
+                {educatorId ? (educatorName ? `Posts by ${educatorName}` : "Educator Posts") : "Educational Posts"}
               </h2>
               <p className="text-gray-600">
                 Showing {postsToShow.length} of {allFilteredPosts.length}{" "}

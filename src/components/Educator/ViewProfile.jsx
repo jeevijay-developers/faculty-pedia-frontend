@@ -932,7 +932,7 @@ const ViewProfile = ({ educatorData }) => {
               <button
                 type="button"
                 onClick={() =>
-                  router.push(`/educators/${educatorId}/posts`)
+                  router.push(`/posts?educator=${educatorId}`)
                 }
                 className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
               >
@@ -962,7 +962,7 @@ const ViewProfile = ({ educatorData }) => {
                     educatorData.workExperience.map((exp, index) => (
                       <div key={index} className="relative pl-6">
                         <div
-                          className={`absolute -left-[9px] top-1.5 w-4 h-4 rounded-full ${
+                          className={`absolute -left-2.25 top-1.5 w-4 h-4 rounded-full ${
                             index === 0 ? "bg-[#231fe5]" : "bg-gray-300"
                           } border-4 border-white shadow-sm`}
                         ></div>

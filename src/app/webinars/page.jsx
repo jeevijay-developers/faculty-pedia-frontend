@@ -1,5 +1,6 @@
 "use client";
 import React, { useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import UpcomingWebinarCard from "@/components/Webinars/UpcomingWebinarCard";
 import Loading from "@/components/Common/Loading";
 import AOS from "aos";
@@ -8,14 +9,19 @@ import { Search } from "lucide-react";
 
 // API functions
 import { fetchAllWebinars } from "@/components/server/exams/iit-jee/routes";
+import { getWebinarsByEducator } from "@/components/server/webinars.routes";
 import ShareButton from "@/components/Common/ShareButton";
 
 export default function WebinarsPage() {
+  const searchParams = useSearchParams();
+  const educatorId = searchParams.get("educator");
+
   const [allWebinars, setAllWebinars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [educatorName, setEducatorName] = useState("");
 
   // Available subjects
   const subjects = ["All", "Biology", "Chemistry", "Mathematics", "Physics"];
@@ -25,17 +31,29 @@ export default function WebinarsPage() {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
-  // Fetch all webinars on mount
+  // Fetch webinars on mount (optionally filtered by educator)
   useEffect(() => {
     const fetchWebinars = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetchAllWebinars();
+        let webinarsData = [];
 
-        // Extract webinars from response
-        const webinarsData =
-          response?.data?.webinars || response?.webinars || [];
+        if (educatorId) {
+          // Fetch webinars by specific educator
+          const response = await getWebinarsByEducator(educatorId, { limit: 100 });
+          webinarsData = response?.data?.webinars || response?.webinars || [];
+          // Try to extract educator name from first webinar
+          const firstWebinar = webinarsData[0];
+          if (firstWebinar?.educatorName || firstWebinar?.educator?.name) {
+            setEducatorName(firstWebinar.educatorName || firstWebinar.educator?.name || "");
+          }
+        } else {
+          // Fetch all webinars
+          const response = await fetchAllWebinars();
+          webinarsData = response?.data?.webinars || response?.webinars || [];
+        }
+
         setAllWebinars(webinarsData);
       } catch (err) {
         console.error("Failed to fetch webinars:", err);
@@ -47,7 +65,7 @@ export default function WebinarsPage() {
     };
 
     fetchWebinars();
-  }, []);
+  }, [educatorId]);
 
   // Debounce search input to reduce filter churn
   useEffect(() => {
@@ -111,11 +129,12 @@ export default function WebinarsPage() {
       >
         <div className="flex flex-col gap-4 text-center items-center max-w-4xl mx-auto">
           <h1 className="text-white text-4xl font-black leading-tight tracking-tight md:text-6xl drop-shadow-sm">
-            Webinars
+            {educatorId ? (educatorName ? `${educatorName}'s Webinars` : "Educator's Webinars") : "Webinars"}
           </h1>
           <p className="text-gray-200 text-base font-normal leading-normal md:text-lg max-w-2xl">
-            Explore upcoming webinars designed to help you learn and grow with
-            expert faculty guidance.
+            {educatorId
+              ? `Explore webinars by ${educatorName || "this educator"}. Learn from their expert sessions.`
+              : "Explore upcoming webinars designed to help you learn and grow with expert faculty guidance."}
           </p>
 
           {/* Search Bar */}

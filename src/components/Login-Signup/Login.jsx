@@ -114,13 +114,6 @@ const Login = ({
         );
       }
 
-      // Show success toast
-      toast.success(
-        `Welcome back, ${
-          response.userData.firstName || response.userData.name || "User"
-        }!`
-      );
-
       // Handle navigation
       if (onLoginSuccess) {
         await onLoginSuccess(response.userData, response.userType);

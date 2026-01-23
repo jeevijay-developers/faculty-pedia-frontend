@@ -112,6 +112,29 @@ const EducatorsTab = ({ followingEducators }) => {
       setUnfollowing((prev) => ({ ...prev, [educatorId]: true }));
       await unfollowEducator(studentId, educatorId);
       setDisplayEducators((prev) => prev.filter((e) => e._id !== educatorId));
+
+      // Update localStorage to sync with educator profile view
+      try {
+        const raw = window.localStorage.getItem("faculty-pedia-student-data");
+        if (raw) {
+          const studentData = JSON.parse(raw);
+          if (studentData.followingEducators) {
+            studentData.followingEducators = studentData.followingEducators.filter(
+              (follow) => {
+                const followedId = follow.educatorId?._id || follow.educatorId;
+                return followedId !== educatorId;
+              }
+            );
+            window.localStorage.setItem(
+              "faculty-pedia-student-data",
+              JSON.stringify(studentData)
+            );
+          }
+        }
+      } catch (storageErr) {
+        console.warn("Failed to update localStorage after unfollow:", storageErr);
+      }
+
       toast.success("Unfollowed successfully");
     } catch (err) {
       console.error("Failed to unfollow", err);

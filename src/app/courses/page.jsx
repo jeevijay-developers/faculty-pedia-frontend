@@ -1,12 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import CourseCard from "@/components/Courses/CourseCard";
 import Loading from "@/components/Common/Loading";
-import { getAllCourses } from "@/components/server/course.routes";
+import { getAllCourses, getCoursesByEducator } from "@/components/server/course.routes";
 import { Search } from "lucide-react";
 
 const CoursesPage = () => {
+  const searchParams = useSearchParams();
+  const educatorId = searchParams.get("educator");
+
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -16,16 +20,29 @@ const CoursesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("none");
+  const [educatorName, setEducatorName] = useState("");
 
   const subjects = ["All", "Physics", "Chemistry", "Biology", "Mathematics"];
 
-  // Fetch all courses on component mount
+  // Fetch courses on component mount (optionally filtered by educator)
   useEffect(() => {
-    const fetchAllCourses = async () => {
+    const fetchCourses = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getAllCourses({ limit: 100 }); // Fetch more courses
+        let data;
+        if (educatorId) {
+          // Fetch courses by specific educator
+          data = await getCoursesByEducator(educatorId, { limit: 100 });
+          // Try to extract educator name from first course
+          const firstCourse = data?.courses?.[0] || data?.[0];
+          if (firstCourse?.educatorName || firstCourse?.educator?.name) {
+            setEducatorName(firstCourse.educatorName || firstCourse.educator?.name || "");
+          }
+        } else {
+          // Fetch all courses
+          data = await getAllCourses({ limit: 100 });
+        }
 
         let courses = [];
         if (data?.courses && Array.isArray(data.courses)) {
@@ -44,8 +61,8 @@ const CoursesPage = () => {
       }
     };
 
-    fetchAllCourses();
-  }, []);
+    fetchCourses();
+  }, [educatorId]);
 
   // Filter courses when active tab changes
   useEffect(() => {
@@ -170,11 +187,12 @@ const CoursesPage = () => {
         >
           <div className="flex flex-col gap-4 text-center items-center max-w-4xl mx-auto">
             <h1 className="text-white text-4xl font-black leading-tight tracking-tight md:text-6xl drop-shadow-sm">
-              Our Courses
+              {educatorId ? (educatorName ? `${educatorName}'s Courses` : "Educator's Courses") : "Our Courses"}
             </h1>
             <h2 className="text-gray-200 text-base font-normal leading-normal md:text-lg max-w-2xl">
-              Explore comprehensive courses across multiple subjects. Learn from
-              structured curriculum designed for success.
+              {educatorId
+                ? `Browse courses by ${educatorName || "this educator"}. Discover their specialized curriculum.`
+                : "Explore comprehensive courses across multiple subjects. Learn from structured curriculum designed for success."}
             </h2>
 
             {/* Search Bar */}

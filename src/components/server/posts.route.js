@@ -54,3 +54,24 @@ export const fetchPostById = async (id) => {
   const response = await API_CLIENT.get(`/api/posts/${id}`);
   return response.data?.data || response.data;
 };
+
+export const getPostsByEducator = async (educatorId, params = {}) => {
+  if (!educatorId) return { posts: [], pagination: { totalPosts: 0 } };
+  try {
+    const response = await API_CLIENT.get(`/api/posts/educator/${educatorId}`, {
+      params,
+    });
+    const payload = response.data?.data || response.data;
+    return {
+      posts: payload?.posts || [],
+      pagination: payload?.pagination || {
+        currentPage: 1,
+        totalPages: 1,
+        totalPosts: (payload?.posts || []).length,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching posts by educator:", error);
+    throw error;
+  }
+};

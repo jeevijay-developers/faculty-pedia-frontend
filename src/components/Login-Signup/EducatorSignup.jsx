@@ -393,6 +393,44 @@ const EducatorSignup = () => {
           if (!exp.company)
             stepErrors[`workExperience.${index}.company`] =
               "Company is required";
+
+          // Validate start date is not in the future
+          if (exp.startDate) {
+            const startDate = new Date(exp.startDate);
+            const today = new Date();
+            // Set today to end of month for fair comparison with month picker
+            today.setDate(1);
+            today.setMonth(today.getMonth() + 1);
+            today.setDate(0);
+            if (startDate > today) {
+              stepErrors[`workExperience.${index}.startDate`] =
+                "Start date cannot be in the future";
+            }
+          }
+
+          // Validate end date is not in the future for work experience
+          if (exp.endDate && !exp.isCurrentRole) {
+            const endDate = new Date(exp.endDate);
+            const today = new Date();
+            // Set today to end of month for fair comparison with month picker
+            today.setDate(1);
+            today.setMonth(today.getMonth() + 1);
+            today.setDate(0);
+            if (endDate > today) {
+              stepErrors[`workExperience.${index}.endDate`] =
+                "End date cannot be in the future";
+            }
+          }
+
+          // Validate end date is after start date
+          if (exp.startDate && exp.endDate && !exp.isCurrentRole) {
+            const startDate = new Date(exp.startDate);
+            const endDate = new Date(exp.endDate);
+            if (endDate < startDate) {
+              stepErrors[`workExperience.${index}.endDate`] =
+                "End date must be after start date";
+            }
+          }
         });
         break;
       case 3:
@@ -518,19 +556,11 @@ const EducatorSignup = () => {
       const response = await signupAsEducator(submitData);
       const createdEducator =
         response?.data?.educator || response?.educator || response?.data;
-      const educatorId = createdEducator?._id || createdEducator?.id;
-      const token =
-        response?.TOKEN ||
-        response?.token ||
-        response?.data?.tokens?.accessToken ||
-        response?.data?.token ||
-        response?.data?.accessToken;
 
       setPendingUser({
         email: trimmedEmail,
         userType: "educator",
         user: createdEducator,
-        token,
       });
 
       setShowVerificationModal(true);
@@ -556,26 +586,16 @@ const EducatorSignup = () => {
   };
 
   const handleVerificationSuccess = () => {
-    if (pendingUser?.token) {
-      localStorage.setItem("faculty-pedia-auth-token", pendingUser.token);
-    }
-
-    if (pendingUser?.user) {
-      localStorage.setItem(
-        "faculty-pedia-educator-data",
-        JSON.stringify(pendingUser.user)
-      );
-      localStorage.setItem("user-role", "educator");
-    }
-
-    const educatorId = pendingUser?.user?._id || pendingUser?.user?.id;
+    // Educator signup does NOT store tokens - educator must login to dashboard after verification
     setShowVerificationModal(false);
     setPendingUser(null);
-    router.push(
-      educatorId
-        ? `${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL || "/educator/dashboard"}/`
-        : "/login"
-    );
+    
+    // Redirect to educator dashboard login page
+    const dashboardLoginUrl = `${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL || "/educator/dashboard"}/login`;
+    toast.success("Email verified! Please login to access your dashboard.");
+    
+    // Use window.location.href for cross-origin redirect to the dashboard app
+    window.location.href = dashboardLoginUrl;
   };
 
   const renderPersonalInfo = () => (
@@ -954,7 +974,13 @@ const EducatorSignup = () => {
                   )
                 }
                 placeholder="Select start month"
+                maxDate={new Date()}
               />
+              {errors[`workExperience.${index}.startDate`] && (
+                <p className="mt-2 text-xs text-red-500 font-medium">
+                  {errors[`workExperience.${index}.startDate`]}
+                </p>
+              )}
             </div>
 
             {/* End Date */}
@@ -975,6 +1001,7 @@ const EducatorSignup = () => {
                   }
                   disabled={exp.isCurrentRole}
                   placeholder="Select end month"
+                  maxDate={new Date()}
                 />
                 <div className="flex items-center gap-2">
                   <input
@@ -1314,15 +1341,15 @@ const EducatorSignup = () => {
                 </h1>
               </div>
             </div>
-            <div className="text-sm text-slate-600">
+            {/* <div className="text-sm text-slate-600">
               Already have an account?{" "}
               <Link
-                href="/login"
+                href={`${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/login `}
                 className="font-semibold text-blue-500 hover:text-blue-700"
               >
                 Log in
               </Link>
-            </div>
+            </div> */}
           </header>
 
           <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8">

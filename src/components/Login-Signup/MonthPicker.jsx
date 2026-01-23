@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { LuCalendar, LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
-const MonthPicker = ({ value, onChange, disabled, placeholder, className }) => {
+const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(() => {
     if (value) {
@@ -33,6 +33,11 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className }) => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
+
+  // Use maxDate if provided, otherwise use current date
+  const maxAllowedDate = maxDate || currentDate;
+  const maxMonth = maxAllowedDate.getMonth();
+  const maxYear = maxAllowedDate.getFullYear();
 
   // Parse the current value
   const [selectedYearValue, selectedMonthValue] = value
@@ -130,14 +135,22 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className }) => {
                 index + 1 === selectedMonthValue;
               const isCurrent =
                 selectedYear === currentYear && index === currentMonth;
+              
+              // Disable future months
+              const isFutureMonth =
+                selectedYear > maxYear ||
+                (selectedYear === maxYear && index > maxMonth);
 
               return (
                 <button
                   key={month}
                   type="button"
                   onClick={() => handleMonthSelect(index)}
+                  disabled={isFutureMonth}
                   className={`py-3 px-4 rounded-lg text-sm font-medium transition-all ${
-                    isSelected
+                    isFutureMonth
+                      ? "bg-slate-100 text-slate-300 cursor-not-allowed"
+                      : isSelected
                       ? "bg-blue-500 text-white shadow-md"
                       : isCurrent
                       ? "bg-blue-50 text-blue-700 border border-blue-200"
