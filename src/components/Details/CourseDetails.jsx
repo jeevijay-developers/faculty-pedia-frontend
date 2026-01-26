@@ -722,7 +722,7 @@ const CourseDetails = ({ id }) => {
                             />
                           </div>
                         ) : (
-                          <div className="h-full min-h-[240px] flex items-center justify-center text-gray-500 border rounded-lg">
+                          <div className="h-full min-h-60 flex items-center justify-center text-gray-500 border rounded-lg">
                             Select a video to start watching.
                           </div>
                         )}
@@ -732,7 +732,7 @@ const CourseDetails = ({ id }) => {
                         <p className="text-sm font-semibold text-gray-800">
                           Videos in this topic
                         </p>
-                        <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+                        <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
                           {groupedVideos[selectedTopic]?.map((video, idx) => {
                             const videoTitle =
                               video.title || video.name || `Video ${idx + 1}`;

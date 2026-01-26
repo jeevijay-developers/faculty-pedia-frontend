@@ -265,12 +265,20 @@ const EnrollButton = ({
     }
   };
 
+  const getJoinLabel = () => {
+    if (joinLabel) return joinLabel;
+    
+    const normalizedType = String(type).toLowerCase();
+    if (normalizedType === "course") return "Go to Course";
+    if (normalizedType === "testseries" || normalizedType === "test") return "Go to Test Series";
+    if (normalizedType === "webinar") return "Join the Webinar";
+    if (normalizedType.includes("live")) return "Join Class";
+    
+    return "Access Content";
+  };
+
   const displayTitle = price > 0 ? `${title} - ₹${price}` : title;
-  const joinCopy =
-    joinLabel ||
-    (type && String(type).toLowerCase().includes("live")
-      ? "Join Class"
-      : "Join the Webinar");
+  const joinCopy = getJoinLabel();
   const finalTitle = hasEnrolled ? joinCopy : displayTitle;
 
   return (
