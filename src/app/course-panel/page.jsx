@@ -300,10 +300,11 @@ const CoursePanelPage = () => {
   };
 
   useEffect(() => {
-    if (!hasCourseTests && activeTab === "tests") {
+    // Only redirect if tests loading is complete AND no tests exist
+    if (!testsLoading && !hasCourseTests && activeTab === "tests") {
       setActiveTab("videos");
     }
-  }, [hasCourseTests, activeTab]);
+  }, [hasCourseTests, activeTab, testsLoading]);
 
   // Preload tests/counts for all series so course-specific sets are hydrated without manual toggle
   useEffect(() => {
