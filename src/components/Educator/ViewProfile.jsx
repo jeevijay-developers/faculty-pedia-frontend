@@ -75,6 +75,38 @@ const safeYear = (value, fallback = new Date().getFullYear()) => {
   return Number.isFinite(year) ? year : fallback;
 };
 
+const RATING_STORAGE_KEY = "faculty-pedia-educator-ratings";
+
+const getStoredEducatorRating = (educatorId, studentId) => {
+  try {
+    if (!educatorId || !studentId || typeof window === "undefined") {
+      return null;
+    }
+    const raw = localStorage.getItem(RATING_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    const key = `${studentId}::${educatorId}`;
+    const value = parsed?.[key];
+    return Number.isFinite(value) ? value : null;
+  } catch (error) {
+    console.warn("Unable to read stored rating:", error);
+    return null;
+  }
+};
+
+const setStoredEducatorRating = (educatorId, studentId, rating) => {
+  try {
+    if (!educatorId || !studentId || !Number.isFinite(rating)) return;
+    const key = `${studentId}::${educatorId}`;
+    const raw = localStorage.getItem(RATING_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    parsed[key] = rating;
+    localStorage.setItem(RATING_STORAGE_KEY, JSON.stringify(parsed));
+  } catch (error) {
+    console.warn("Unable to persist rating locally:", error);
+  }
+};
+
 const ViewProfile = ({ educatorData }) => {
   const router = useRouter();
   // Add safety check at the top
@@ -152,7 +184,15 @@ const ViewProfile = ({ educatorData }) => {
         0
     ),
   }));
-  const [userRating, setUserRating] = useState(0);
+  const [userRating, setUserRating] = useState(() => {
+    const userData = getUserData();
+    const eduId = educatorData?._id;
+    if (userData?._id && eduId) {
+      const existing = getStoredEducatorRating(eduId, userData._id);
+      return Number.isFinite(existing) ? existing : 0;
+    }
+    return 0;
+  });
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmittingRating, setIsSubmittingRating] = useState(false);
 
@@ -174,7 +214,7 @@ const ViewProfile = ({ educatorData }) => {
     educatorData?.followers?.length || 0
   );
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => getUserData());
   const educatorId = educatorData?._id;
   const [summaryCounts, setSummaryCounts] = useState({
     courses: 0,
@@ -222,7 +262,6 @@ const ViewProfile = ({ educatorData }) => {
           0
       ),
     });
-    setUserRating(0);
     setHoverRating(0);
   }, [educatorData]);
 
@@ -243,6 +282,20 @@ const ViewProfile = ({ educatorData }) => {
           follow.educatorId?._id === educatorData._id
       );
       setIsFollowing(following);
+    }
+
+    if (educatorData?._id && userData?._id) {
+      const existingRating = getStoredEducatorRating(
+        educatorData._id,
+        userData._id
+      );
+      if (Number.isFinite(existingRating)) {
+        setUserRating(existingRating);
+      } else {
+        setUserRating(0);
+      }
+    } else {
+      setUserRating(0);
     }
   }, [educatorData?._id]);
 
@@ -538,6 +591,7 @@ const ViewProfile = ({ educatorData }) => {
         });
       }
       setUserRating(value);
+      setStoredEducatorRating(educatorData._id, currentUser._id, value);
       setHoverRating(0);
       toast.success("Thanks for rating this educator!");
     } catch (error) {

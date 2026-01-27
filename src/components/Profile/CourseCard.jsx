@@ -10,8 +10,13 @@ import {
   FiWifi,
 } from "react-icons/fi";
 import { getCourseById } from "../server/course.routes";
+import { getVideos } from "../server/video.routes";
+import { getTestSeriesByCourse } from "../server/test-series.route";
 
 const DEFAULT_IMAGE = "/images/placeholders/1.svg";
+
+const isLikelyObjectId = (value) =>
+  typeof value === "string" && /^[0-9a-fA-F]{24}$/.test(value.trim());
 
 const clampPercent = (value) => {
   const num = Number(value);
@@ -107,6 +112,25 @@ const getTestsFromSeries = (testSeries) => {
   return testSeries.length || null;
 };
 
+const getTestsFromCourseSeries = (payload) => {
+  const seriesList =
+    payload?.testSeries ||
+    payload?.data?.testSeries ||
+    payload?.data?.data?.testSeries ||
+    payload?.data ||
+    [];
+
+  if (!Array.isArray(seriesList)) return null;
+
+  return seriesList.reduce((sum, series) => {
+    const count =
+      toCount(series?.tests?.length) ??
+      toCount(series?.numberOfTests) ??
+      0;
+    return sum + (count || 0);
+  }, 0);
+};
+
 const getTestsCount = (course, meta) => {
   const primaryCandidates = [
     course?.totalTests,
@@ -152,10 +176,18 @@ const getStartDate = (course, meta) =>
 const CourseCard = ({ course, meta }) => {
   if (!course) return null;
   const [hydratedCourse, setHydratedCourse] = useState(null);
+  const [remoteCounts, setRemoteCounts] = useState({
+    videos: null,
+    tests: null,
+  });
 
   const baseCourseId = course?._id || course?.id || course?.slug;
   const courseId = hydratedCourse?._id || hydratedCourse?.id || hydratedCourse?.slug || baseCourseId;
   const courseHref = courseId ? `/course-panel?courseId=${courseId}` : null;
+  const courseObjectId =
+    [hydratedCourse?._id, course?._id, course?.id, courseId].find((val) =>
+      isLikelyObjectId(val)
+    ) || null;
 
   const shouldHydrate = () => {
     const current = hydratedCourse || course;
@@ -191,6 +223,52 @@ const CourseCard = ({ course, meta }) => {
     };
   }, [courseId]);
 
+  useEffect(() => {
+    if (!courseId) return;
+
+    let cancelled = false;
+
+    const fetchCounts = async () => {
+      try {
+        const seriesPromise = courseObjectId
+          ? getTestSeriesByCourse(courseObjectId, { limit: 200 })
+          : Promise.resolve(null);
+
+        const [videosRes, seriesRes] = await Promise.allSettled([
+          getVideos({ courseId, isCourseSpecific: true, limit: 200 }),
+          seriesPromise,
+        ]);
+
+        const nextCounts = { videos: null, tests: null };
+
+        if (videosRes.status === "fulfilled") {
+          const list = Array.isArray(videosRes.value) ? videosRes.value : [];
+          nextCounts.videos = toCount(list.length) ?? null;
+        }
+
+        if (seriesRes.status === "fulfilled" && seriesRes.value) {
+          const testTotal = getTestsFromCourseSeries(seriesRes.value);
+          nextCounts.tests = toCount(testTotal) ?? null;
+        }
+
+        if (!cancelled && (nextCounts.videos !== null || nextCounts.tests !== null)) {
+          setRemoteCounts((prev) => ({
+            videos: nextCounts.videos ?? prev.videos,
+            tests: nextCounts.tests ?? prev.tests,
+          }));
+        }
+      } catch (err) {
+        console.warn("Failed to fetch course media counts", err);
+      }
+    };
+
+    fetchCounts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [courseId]);
+
   const courseSource = hydratedCourse || course;
 
   const progress = clampPercent(
@@ -201,18 +279,22 @@ const CourseCard = ({ course, meta }) => {
       0
   );
 
-  const lessons =
+  const baseLessons =
     meta?.lessons ??
     courseSource?.totalLessons ??
     courseSource?.lessonCount ??
     (Array.isArray(courseSource?.lessons) ? courseSource.lessons.length : 0);
-  const videos = getVideosCount(courseSource, meta);
+  const baseVideos = getVideosCount(courseSource, meta);
+  const baseTests = getTestsCount(courseSource, meta);
+
+  const displayVideos = remoteCounts.videos ?? baseVideos;
+  const displayTests = remoteCounts.tests ?? baseTests;
+  const displayLessons = baseLessons || displayVideos || 0;
   const liveClasses =
     meta?.liveClasses ??
     courseSource?.liveClassesCount ??
     courseSource?.liveClassCount ??
     (Array.isArray(courseSource?.liveClass) ? courseSource.liveClass.length : 0);
-  const tests = getTestsCount(courseSource, meta);
   const status = meta?.status || "ongoing";
   const startDate = formatDate(getStartDate(courseSource, meta));
 
@@ -285,11 +367,11 @@ const CourseCard = ({ course, meta }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm text-gray-700">
           <div className="flex items-center gap-2">
             <FiPlayCircle className="text-blue-600" />
-            <span>{videos || lessons || 0} Videos</span>
+            <span>{displayVideos || displayLessons || 0} Videos</span>
           </div>
           <div className="flex items-center gap-2">
             <FiFileText className="text-amber-600" />
-            <span>{tests} Tests</span>
+            <span>{displayTests ?? 0} Tests</span>
           </div>
           
          
@@ -302,7 +384,7 @@ const CourseCard = ({ course, meta }) => {
         <div className="space-y-2 mt-auto">
           <div className="flex items-center justify-between text-xs text-gray-600">
             <span>{progress}% Completed</span>
-            <span>{lessons || videos || 0} Lessons</span>
+            <span>{displayLessons || displayVideos || 0} Lessons</span>
           </div>
           <div className="h-2 w-full rounded-full bg-gray-100 overflow-hidden">
             <div
