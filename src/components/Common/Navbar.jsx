@@ -299,7 +299,6 @@ const Navbar = () => {
   const menuItems = [
     {
       name: "Exams",
-      href: "/exams",
       hasDropdown: true,
       subMenus: [
         { name: "IIT-JEE", href: "/exams/iit-jee" },
@@ -344,7 +343,7 @@ const Navbar = () => {
                       onMouseEnter={() => setIsExamDropdownOpen(true)}
                       onMouseLeave={() => setIsExamDropdownOpen(false)}
                     >
-                      <Link
+                      <div
                         href={item.href}
                         className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-blue-50 relative group flex items-center space-x-1"
                       >
@@ -365,7 +364,7 @@ const Navbar = () => {
                           />
                         </svg>
                         <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
-                      </Link>
+                      </div>
 
                       {/* Dropdown Menu */}
                       <div
@@ -639,13 +638,12 @@ const Navbar = () => {
               {item.hasDropdown ? (
                 <div>
                   <div className="flex items-center">
-                    <Link
-                      href={item.href}
+                    <div
                       className="text-gray-700 hover:text-blue-600 hover:bg-white flex-1 px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {item.name}
-                    </Link>
+                    </div>
                     <button
                       onClick={toggleExamDropdown}
                       className="text-gray-700 hover:text-blue-600 hover:bg-white px-3 py-2 rounded-md text-base font-medium transition-all duration-200"

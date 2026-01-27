@@ -85,12 +85,12 @@ const EducatorsTab = ({ followingEducators }) => {
     setDisplayEducators(educators);
   }, [educators]);
 
-  const handleMessage = (educatorId) => {
-    const targetPath = studentId
-      ? `/profile/student/${studentId}?tab=messages`
-      : "/profile?tab=messages";
-    router.push(targetPath);
-  };
+  // const handleMessage = (educatorId) => {
+  //   const targetPath = studentId
+  //     ? `/profile/student/${studentId}?tab=messages`
+  //     : "/profile?tab=messages";
+  //   router.push(targetPath);
+  // };
 
   const handleUnfollow = async (educatorId) => {
     if (!studentId || !educatorId) {
@@ -237,13 +237,13 @@ const EducatorsTab = ({ followingEducators }) => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => handleMessage(educatorId)}
                     className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:border-blue-300 hover:text-blue-600 transition"
                   >
                     Message
-                  </button>
+                  </button> */}
                   <button
                     type="button"
                     onClick={() => handleUnfollow(educatorId)}
