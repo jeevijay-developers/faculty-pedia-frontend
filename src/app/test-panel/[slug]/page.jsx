@@ -14,11 +14,20 @@ import { submitTestResult } from "@/components/server/test/test.routes";
 import API_CLIENT from "@/components/server/config";
 
 const formatTime = (seconds) => {
-  const m = Math.floor(seconds / 60)
+  const total = Math.max(0, Number.isFinite(seconds) ? seconds : 0);
+  const hours = Math.floor(total / 3600)
     .toString()
     .padStart(2, "0");
-  const s = (seconds % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
+  const minutes = Math.floor((total % 3600) / 60)
+    .toString()
+    .padStart(2, "0");
+  const secs = Math.floor(total % 60)
+    .toString()
+    .padStart(2, "0");
+
+  // Show hours when at least 1 hour remains; otherwise show minutes:seconds.
+  if (total >= 3600) return `${hours}:${minutes}:${secs}`;
+  return `${minutes}:${secs}`;
 };
 
 const resolveOptions = (source) => {

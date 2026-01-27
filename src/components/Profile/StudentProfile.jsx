@@ -216,6 +216,7 @@ const StudentDashboard = ({
     courses = [],
     followingEducators = [],
     tests: rawTests = [], // expected to include testSeriesId | seriesId
+    testSeries: rawTestSeries = [],
     results: rawResults = [], // expected to include seriesId referencing test series
   } = student || {};
 
@@ -254,6 +255,9 @@ const StudentDashboard = ({
   };
 
   const tests = Array.isArray(rawTests) ? rawTests : [];
+  const testSeriesEnrollments = Array.isArray(rawTestSeries)
+    ? rawTestSeries
+    : [];
   const apiResults = Array.isArray(rawResults) ? rawResults : [];
 
   const combinedResults = useMemo(() => {
@@ -752,6 +756,7 @@ const StudentDashboard = ({
             followingEducatorsLength={followingEducators.length}
             results={combinedResults}
             tests={tests}
+            testSeriesEnrollments={testSeriesEnrollments}
             getSeries={getSeries}
             getSeriesId={getSeriesId}
             onTabChange={handleTabSelect}
@@ -803,6 +808,7 @@ const StudentDashboard = ({
             followingEducatorsLength={followingEducators.length}
             results={combinedResults}
             tests={tests}
+            testSeriesEnrollments={testSeriesEnrollments}
             getSeries={getSeries}
             getSeriesId={getSeriesId}
             onTabChange={handleTabSelect}

@@ -20,6 +20,7 @@ const OverviewTab = ({
   followingEducatorsLength,
   results = [],
   tests,
+  testSeriesEnrollments,
   getSeries,
   getSeriesId,
   onTabChange,
@@ -142,7 +143,7 @@ const OverviewTab = ({
         if (entryTime > currentTime) {
           map.set(key, entry);
         }
-        return map;
+        return map; 
       }, new Map())
       .values()
   )
@@ -154,7 +155,12 @@ const OverviewTab = ({
     .slice(0, 5);
 
   // Only show tests that belong to a series we can identify
-  const seriesTests = (tests || []).filter((test) => {
+  const enrolledTests = Array.isArray(tests) ? tests : [];
+  const hasEnrolledTests =
+    enrolledTests.length > 0 ||
+    (Array.isArray(testSeriesEnrollments) && testSeriesEnrollments.length > 0);
+
+  const seriesTests = enrolledTests.filter((test) => {
     const seriesId = getSeriesId?.(test);
     return Boolean(seriesId);
   });
@@ -208,7 +214,7 @@ const OverviewTab = ({
               <h3 className="text-xl font-semibold text-gray-900">
                 Recent Tests
               </h3>
-              {tests.length > 5 && (
+              {enrolledTests.length > 5 && (
                 <button
                   onClick={() => onTabChange("results")}
                   className="text-sm text-blue-600 hover:text-blue-700 font-medium"
@@ -368,16 +374,33 @@ const OverviewTab = ({
                 })}
               </div>
             ) : recentResults.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <div className="text-center py-12 space-y-3">
+                <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
                   <FiAward className="w-8 h-8 text-gray-400" />
                 </div>
-                <p className="text-gray-500 font-medium">
-                  No tests enrolled yet
-                </p>
-                <p className="text-sm text-gray-400 mt-1">
-                  Enroll in test series to see them here
-                </p>
+                {hasEnrolledTests ? (
+                  <div className="space-y-2">
+                    <p className="text-gray-600 font-semibold">
+                      You have enrolled tests ready to start.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => onTabChange?.("testseries")}
+                      className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold shadow-sm hover:bg-blue-700 transition-colors"
+                    >
+                      Start Test
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-gray-500 font-medium">
+                      No tests enrolled yet
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      Enroll in test series to see them here
+                    </p>
+                  </>
+                )}
               </div>
             ) : null}
           </div>

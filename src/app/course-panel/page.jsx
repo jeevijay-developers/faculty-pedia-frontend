@@ -9,6 +9,8 @@ import {
   getTestSeriesById,
 } from "@/components/server/test-series.route";
 import { getTestsBySeries, getTestById } from "@/components/server/test.route";
+import { getVideos } from "@/components/server/video.routes";
+import { getStudyMaterialsByCourse } from "@/components/server/study-material.routes";
 
 const getEmbedUrl = (url) => {
   if (!url) return null;
@@ -41,6 +43,10 @@ const CoursePanelPage = () => {
   const [expandedSeriesId, setExpandedSeriesId] = useState(null);
   const [testsBySeries, setTestsBySeries] = useState({});
   const [seriesTestsLoading, setSeriesTestsLoading] = useState({});
+  const [courseVideos, setCourseVideos] = useState([]);
+  const [courseVideosLoading, setCourseVideosLoading] = useState(false);
+  const [courseMaterials, setCourseMaterials] = useState([]);
+  const [courseMaterialsLoading, setCourseMaterialsLoading] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -133,37 +139,172 @@ const CoursePanelPage = () => {
     };
   }, [courseData?._id, courseData?.id, courseData?.testSeries, courseId]);
 
+  useEffect(() => {
+    const resolvedCourseId = courseData?._id || courseData?.id || courseId;
+    if (!resolvedCourseId) {
+      setCourseVideos([]);
+      return;
+    }
+
+    let cancelled = false;
+    const loadVideos = async () => {
+      try {
+        setCourseVideosLoading(true);
+        const videos = await getVideos({
+          courseId: resolvedCourseId,
+          isCourseSpecific: true,
+          limit: 200,
+        });
+        if (!cancelled) setCourseVideos(Array.isArray(videos) ? videos : []);
+      } catch (err) {
+        console.error("Failed to load course videos", err);
+        if (!cancelled) setCourseVideos([]);
+      } finally {
+        if (!cancelled) setCourseVideosLoading(false);
+      }
+    };
+
+    loadVideos();
+    return () => {
+      cancelled = true;
+    };
+  }, [courseData?._id, courseData?.id, courseId]);
+
+  useEffect(() => {
+    const resolvedCourseId = courseData?._id || courseData?.id || courseId;
+    if (!resolvedCourseId) {
+      setCourseMaterials([]);
+      return;
+    }
+
+    let cancelled = false;
+    const loadMaterials = async () => {
+      try {
+        setCourseMaterialsLoading(true);
+        const materials = await getStudyMaterialsByCourse(resolvedCourseId, {
+          limit: 200,
+        });
+        if (!cancelled) setCourseMaterials(Array.isArray(materials) ? materials : []);
+      } catch (err) {
+        console.error("Failed to load course study materials", err);
+        if (!cancelled) setCourseMaterials([]);
+      } finally {
+        if (!cancelled) setCourseMaterialsLoading(false);
+      }
+    };
+
+    loadMaterials();
+    return () => {
+      cancelled = true;
+    };
+  }, [courseData?._id, courseData?.id, courseId]);
+
   const allVideos = useMemo(() => {
-    if (Array.isArray(courseData?.videos) && courseData.videos.length > 0) {
-      return courseData.videos.map((video, index) => ({
-        id:
-          video._id || video.id || video.link || video.url || `video-${index}`,
+    const embedded = Array.isArray(courseData?.videos)
+      ? courseData.videos
+      : [];
+    const assigned = Array.isArray(courseVideos) ? courseVideos : [];
+
+    const normalizeEntry = (video, index) => {
+      if (!video) return null;
+      const links = Array.isArray(video.links)
+        ? video.links
+        : video.link
+        ? [video.link]
+        : video.url
+        ? [video.url]
+        : [];
+      const primaryUrl = links[0];
+      const id =
+        video._id ||
+        video.id ||
+        primaryUrl ||
+        video.link ||
+        video.url ||
+        `video-${index}`;
+      if (!primaryUrl || !id) return null;
+      return {
+        id,
         title: video.title || video.name || `Video ${index + 1}`,
-        url: video.link || video.url,
+        url: primaryUrl,
         description: video.description,
         duration: video.duration,
         topic: video.topic || video.subject,
         level: video.level,
-      }));
-    }
-    return [];
-  }, [courseData]);
+      };
+    };
+
+    const combined = [...embedded, ...assigned]
+      .map(normalizeEntry)
+      .filter(Boolean);
+
+    // Deduplicate by id/url to avoid showing the same video twice
+    const unique = [];
+    const seen = new Set();
+    combined.forEach((v) => {
+      const key = v.id || v.url;
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      unique.push(v);
+    });
+
+    return unique;
+  }, [courseData, courseVideos]);
 
   const assets = useMemo(() => {
-    if (
-      Array.isArray(courseData?.studyMaterials) &&
-      courseData.studyMaterials.length > 0
-    ) {
-      return courseData.studyMaterials.map((asset, index) => ({
-        title: asset.title || `Asset ${index + 1}`,
-        type: asset.fileType || "PDF",
-        size: asset.size || "",
-        url: asset.link,
-        description: asset.description || "",
-      }));
-    }
-    return [];
-  }, [courseData]);
+    const embedded = Array.isArray(courseData?.studyMaterials)
+      ? courseData.studyMaterials
+      : [];
+    const assigned = Array.isArray(courseMaterials) ? courseMaterials : [];
+
+    const normalizeFromMaterial = (material, index) => {
+      if (!material) return [];
+      const materialTitle = material.title || `Asset ${index + 1}`;
+      const docs = Array.isArray(material.docs) ? material.docs : [];
+      // If material itself has link/url fallback
+      const topLevelLink = material.link || material.url;
+      const topLevelEntry = topLevelLink
+        ? [{
+            title: materialTitle,
+            type: material.fileType || material.type || "PDF",
+            size: material.size || material.sizeInBytes || "",
+            url: topLevelLink,
+            description: material.description || "",
+          }]
+        : [];
+
+      const docEntries = docs.map((doc, docIdx) => {
+        if (!doc?.url) return null;
+        return {
+          title:
+            doc.originalName ||
+            doc.name ||
+            `${materialTitle} (${docIdx + 1})`,
+          type: doc.fileType || doc.mimeType || "FILE",
+          size: doc.sizeInBytes || "",
+          url: doc.url,
+          description: material.description || "",
+        };
+      }).filter(Boolean);
+
+      return [...topLevelEntry, ...docEntries];
+    };
+
+    const combined = [...embedded, ...assigned]
+      .flatMap(normalizeFromMaterial)
+      .filter(Boolean);
+
+    const unique = [];
+    const seen = new Set();
+    combined.forEach((a) => {
+      const key = `${a.url}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      unique.push(a);
+    });
+
+    return unique;
+  }, [courseData, courseMaterials]);
 
   useEffect(() => {
     if (!allVideos || allVideos.length === 0) return;
@@ -588,6 +729,10 @@ const CoursePanelPage = () => {
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
                       />
+                    ) : courseVideosLoading ? (
+                      <div className="absolute inset-0 flex items-center justify-center text-white">
+                        Loading videos...
+                      </div>
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center text-white">
                         No video selected
@@ -651,6 +796,11 @@ const CoursePanelPage = () => {
                       </span>
                     </div>
                     <div className="overflow-y-auto flex-1 p-2 space-y-1 no-scrollbar">
+                      {courseVideosLoading && allVideos.length === 0 && (
+                        <div className="p-4 text-sm text-text-secondary">
+                          Loading videos...
+                        </div>
+                      )}
                       {allVideos.map((video, idx) => {
                         const isActive = video.id === currentVideo?.id;
                         return (
@@ -719,6 +869,11 @@ const CoursePanelPage = () => {
                   </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {courseMaterialsLoading && assets.length === 0 && (
+                    <div className="col-span-3 text-sm text-text-secondary">
+                      Loading study materials...
+                    </div>
+                  )}
                   {assets.map((asset, index) => (
                     <a
                       key={`${asset.title}-${index}`}
