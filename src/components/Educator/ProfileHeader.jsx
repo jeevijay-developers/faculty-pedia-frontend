@@ -1,23 +1,26 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { 
-  FaStar, 
-  FaRegStar, 
-  FaStarHalfAlt, 
-  FaPlay, 
-  FaFacebook, 
-  FaInstagram, 
-  FaLinkedin, 
-  FaYoutube, 
-  FaTwitter, 
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import {
+  FaStar,
+  FaRegStar,
+  FaStarHalfAlt,
+  FaPlay,
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+  FaTwitter,
   FaWhatsapp,
   FaFlag,
   FaGraduationCap,
   FaBriefcase,
   FaBook,
-  FaUsers
-} from 'react-icons/fa';
+  FaUsers,
+} from "react-icons/fa";
+
+const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
 
 const ProfileHeader = ({ 
   firstName, 
@@ -36,6 +39,19 @@ const ProfileHeader = ({
   introVideoLink, 
   demoVideoLink 
 }) => {
+  const resolveImage = () => {
+    if (image && typeof image === "object") {
+      return image.url || EDUCATOR_FALLBACK_IMAGE;
+    }
+    return image || EDUCATOR_FALLBACK_IMAGE;
+  };
+
+  const [profileImageSrc, setProfileImageSrc] = useState(resolveImage);
+
+  useEffect(() => {
+    setProfileImageSrc(resolveImage());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [image]);
   // Generate star rating display
   const renderStars = (rating) => {
     const stars = [];
@@ -128,10 +144,11 @@ const ProfileHeader = ({
           {/* Profile Image */}
           <div className="relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-gray-200 shadow-lg mb-4">
             <Image 
-              src={image || "/images/placeholders/1.svg"} 
+              src={profileImageSrc} 
               alt="Educator Profile" 
               fill 
               className="object-cover"
+              onError={() => setProfileImageSrc(EDUCATOR_FALLBACK_IMAGE)}
             />
           </div>
           

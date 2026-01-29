@@ -1,14 +1,26 @@
-import OneToOneLiveClassesCarousel from '@/components/OneToOne/OneToOneLiveClassesCarousel'
-import Banner from '@/components/Common/Banner'
-import CourseCarousel from '@/components/Courses/CourseCarousal'
-import EducatorsCarousel from '@/components/Educator/EducatorsCarousel'
-import OneToOnePPHCarousel from '@/components/OneToOne/OneToOnePPHCarousel'
-import PostCarousel from '@/components/Posts/PostsCarousal'
-import React from 'react'
-import UpcomingWebinarCarousel from '@/components/Webinars/UpcomingWebinarCarousel'
-import TestSeriesCarousel from '@/components/Exams/IIT-JEE/TestSeriesCarousel'
+"use client";
 
-const page = () => {
+import { useEffect, useState } from "react";
+import OneToOneLiveClassesCarousel from "@/components/OneToOne/OneToOneLiveClassesCarousel";
+import Banner from "@/components/Common/Banner";
+import CourseCarousel from "@/components/Courses/CourseCarousal";
+import EducatorsCarousel from "@/components/Educator/EducatorsCarousel";
+import OneToOnePPHCarousel from "@/components/OneToOne/OneToOnePPHCarousel";
+import PostCarousel from "@/components/Posts/PostsCarousal";
+import UpcomingWebinarCarousel from "@/components/Webinars/UpcomingWebinarCarousel";
+import TestSeriesCarousel from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
+import ExamLoader from "@/components/others/examLoader";
+
+const NeetPage = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) return <ExamLoader />;
+
   return (
     <>
       <Banner
@@ -31,6 +43,6 @@ const page = () => {
       <PostCarousel subject="NEET" />
     </>
   );
-}
+};
 
-export default page
+export default NeetPage;

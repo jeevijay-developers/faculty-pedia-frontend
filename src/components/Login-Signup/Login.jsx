@@ -124,7 +124,7 @@ const Login = ({
         const destination = redirectUrl
           ? decodeURIComponent(redirectUrl)
           : response.userType === "student"
-          ? "/exams"
+          ? "/"
           : process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL ||
             "/educator/dashboard";
 

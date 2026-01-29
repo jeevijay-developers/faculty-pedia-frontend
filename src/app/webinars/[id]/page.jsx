@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import WebinarDetails from "@/components/Details/WebinarDetails";
-import Loading from "@/components/Common/Loading";
+import WebinarLoader from "@/components/others/webinarLoader";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { getWebinarById } from "@/components/server/webinars.routes";
@@ -62,21 +62,7 @@ export default function WebinarDetailsPage({ params }) {
 
   // Loading state
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Banner
-          url={"/images/placeholders/1.svg"}
-          title={"Webinar Details"}
-          subtitle={"Loading webinar information..."}
-        />
-        <Loading
-          variant="spinner"
-          message="Loading webinar details..."
-          className="min-h-[400px]"
-          spinnerSize={72}
-        />
-      </div>
-    );
+    return <WebinarLoader />;
   }
 
   // Error state

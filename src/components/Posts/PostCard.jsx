@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
+const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
+
 const PostCard = ({ post, activeSpecialization }) => {
   // Map backend fields to frontend
   const title = post?.title || "Untitled Post";
@@ -101,6 +103,16 @@ const PostCard = ({ post, activeSpecialization }) => {
     post?.image?.url ||
     null;
 
+  const [avatarSrc, setAvatarSrc] = useState(
+    educator?.profilePicture || educator?.image?.url || EDUCATOR_FALLBACK_IMAGE
+  );
+
+  useEffect(() => {
+    setAvatarSrc(
+      educator?.profilePicture || educator?.image?.url || EDUCATOR_FALLBACK_IMAGE
+    );
+  }, [educator?.profilePicture, educator?.image?.url]);
+
   return (
     <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Content */}
@@ -139,14 +151,11 @@ const PostCard = ({ post, activeSpecialization }) => {
           <div className="flex items-center space-x-3">
             <div className="relative h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
               <Image
-                src={
-                  educator?.profilePicture ||
-                  educator?.image?.url ||
-                  "/images/placeholders/1.svg"
-                }
+                src={avatarSrc}
                 alt={educator?.fullName || "Educator"}
                 fill
                 className="object-cover"
+                onError={() => setAvatarSrc(EDUCATOR_FALLBACK_IMAGE)}
               />
             </div>
             <div className="flex flex-col">

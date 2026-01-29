@@ -13,7 +13,7 @@ import {
   FaGraduationCap,
 } from "react-icons/fa";
 import { getCourseById } from "../server/course.routes";
-import Loading from "../Common/Loading";
+import CourseLoader from "../others/courseLoader";
 import EnrollButton from "../Common/EnrollButton";
 
 const CourseDetails = ({ id }) => {
@@ -53,7 +53,7 @@ const CourseDetails = ({ id }) => {
   };
 
   const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [studentId, setStudentId] = useState(null);
   const [courseTests, setCourseTests] = useState([]);
@@ -257,7 +257,7 @@ const CourseDetails = ({ id }) => {
   }, [course?.studyMaterials, course?.assetsLinks]);
 
   if (loading) {
-    return <Loading />;
+    return <CourseLoader />;
   }
 
   if (error) {

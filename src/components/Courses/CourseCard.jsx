@@ -6,7 +6,7 @@ import { IoStarSharp } from "react-icons/io5";
 import { FaBook } from "react-icons/fa";
 
 const DEFAULT_COURSE_IMAGE = "/images/placeholders/1.svg";
-const DEFAULT_EDUCATOR_IMAGE = "/images/placeholders/square.svg";
+const DEFAULT_EDUCATOR_IMAGE = "/images/placeholders/educator-fallback.svg";
 const HEX_OBJECT_ID_REGEX = /^[a-f\d]{24}$/i;
 
 const sanitizeImageUrl = (value, fallback) => {

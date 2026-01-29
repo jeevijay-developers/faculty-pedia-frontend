@@ -3,7 +3,7 @@ import { use, useEffect, useState } from "react";
 import ViewProfile from "@/components/Educator/ViewProfile";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import Loading from "@/components/Common/Loading";
+import ViewProfileLoader from "@/components/others/viewProfileLoader";
 import { getEducatorProfile } from "@/components/server/educators.routes";
 
 const Page = ({ params }) => {
@@ -18,12 +18,13 @@ const Page = ({ params }) => {
 
   const [educatorData, setEducatorData] = useState(null);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!resolvedParams?.id) {
       setError("No educator ID provided");
+      setLoading(false);
       return;
     }
 
@@ -88,7 +89,7 @@ const Page = ({ params }) => {
   }, [resolvedParams?.id]);
 
   if (loading) {
-    return <Loading />;
+    return <ViewProfileLoader />;
   }
 
   if (error) {

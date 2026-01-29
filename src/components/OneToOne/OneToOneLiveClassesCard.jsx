@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { IoPersonSharp } from "react-icons/io5";
 import { FaBook, FaClock, FaCalendarAlt, FaArrowRight } from "react-icons/fa";
 import { MdSchool } from "react-icons/md";
+
+const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
 
 const OneToOneLiveClassesCard = ({ classData }) => {
   // Format the date
@@ -35,16 +36,20 @@ const OneToOneLiveClassesCard = ({ classData }) => {
     100;
   const isNearlyFull = enrollmentPercentage > 80;
 
-  // Get educator initials for avatar fallback
-  const getInitials = (name) => {
-    if (!name) return "IN";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
+  const educatorName =
+    classData.educatorID?.fullName ||
+    classData.educatorID?.username ||
+    "Instructor";
+
+  const [avatarSrc, setAvatarSrc] = useState(
+    classData.educatorID?.profilePicture || EDUCATOR_FALLBACK_IMAGE
+  );
+
+  useEffect(() => {
+    setAvatarSrc(
+      classData.educatorID?.profilePicture || EDUCATOR_FALLBACK_IMAGE
+    );
+  }, [classData.educatorID?.profilePicture, classData.educatorID]);
 
   return (
     <div className="group relative flex flex-col rounded-xl bg-white border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-blue-600/30 h-full overflow-hidden">
@@ -74,27 +79,17 @@ const OneToOneLiveClassesCard = ({ classData }) => {
         {/* Educator Info Section */}
         {classData.educatorID && (
           <div className="flex items-center gap-3 mb-4">
-            {classData.educatorID?.profilePicture ? (
-              <Image
-                src={classData.educatorID.profilePicture}
-                alt={classData.educatorID?.fullName || "Educator"}
-                width={40}
-                height={40}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold">
-                {getInitials(
-                  classData.educatorID?.fullName ||
-                    classData.educatorID?.username
-                )}
-              </div>
-            )}
+            <Image
+              src={avatarSrc}
+              alt={educatorName}
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full object-cover"
+              onError={() => setAvatarSrc(EDUCATOR_FALLBACK_IMAGE)}
+            />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-gray-900 truncate">
-                {classData.educatorID?.fullName ||
-                  classData.educatorID?.username ||
-                  "Instructor"}
+                {educatorName}
               </p>
               <p className="text-xs text-gray-500">Educator</p>
             </div>

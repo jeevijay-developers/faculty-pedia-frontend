@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import TestSeriesDetails from "@/components/TestSeries/TestSeriesDetails";
-import Loading from "@/components/Common/Loading";
+import TestSeriesLoader from "@/components/others/testSeriesLoader";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { fetchTestSeriesById } from "@/components/server/exams/iit-jee/routes";
@@ -62,21 +62,7 @@ export default function TestSeriesDetailsPage({ params }) {
 
   // Loading state
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Banner
-          url={"/images/placeholders/1.svg"}
-          title={"Test Series Details"}
-          subtitle={"Loading test series information..."}
-        />
-        <Loading
-          variant="spinner"
-          message="Loading test series details..."
-          className="min-h-[400px]"
-          spinnerSize={72}
-        />
-      </div>
-    );
+    return <TestSeriesLoader />;
   }
 
   // Error state

@@ -1,15 +1,23 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
 
 // Props: { item: { title, educatorName, postImage, qualification, subject, fee }, detailsHref?: string }
-const OneToOnePPHCard = ({ item, detailsHref = '#' }) => {
-  // Handle empty or missing image
-  const imageSrc = item.postImage && item.postImage.trim() !== '' 
-    ? item.postImage 
-    : '/images/placeholders/1.svg';
+const OneToOnePPHCard = ({ item, detailsHref = "#" }) => {
+  const computeImageSrc = () =>
+    item.postImage && item.postImage.trim() !== ""
+      ? item.postImage
+      : EDUCATOR_FALLBACK_IMAGE;
+
+  const [imageSrc, setImageSrc] = useState(computeImageSrc);
+
+  useEffect(() => {
+    setImageSrc(computeImageSrc());
+  }, [item.postImage]);
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
@@ -19,9 +27,7 @@ const OneToOnePPHCard = ({ item, detailsHref = '#' }) => {
           alt={item.educatorName || 'Educator'} 
           fill 
           className="object-cover"
-          onError={(e) => {
-            e.currentTarget.src = '/images/placeholders/1.svg';
-          }}
+          onError={() => setImageSrc(EDUCATOR_FALLBACK_IMAGE)}
         />
       </div>
       <div className="p-5 flex flex-col flex-grow">

@@ -13,6 +13,8 @@ import OneToOnePPHCard from "./OneToOnePPHCard";
 import CarouselFallback from "../Common/CarouselFallback";
 import Loading from "../Common/Loading";
 
+const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
+
 /**
  * Props:
  * - title?: string
@@ -47,7 +49,10 @@ const OneToOnePPHCarousel = ({
           _id: educator._id,
           title: `1-1 Session with ${educator.fullName}`,
           educatorName: educator.fullName,
-          postImage: educator.profilePicture || educator.image?.url || "",
+          postImage:
+            educator.profilePicture ||
+            educator.image?.url ||
+            EDUCATOR_FALLBACK_IMAGE,
           qualification: educator.qualifications || "Not specified",
           subject: Array.isArray(educator.subject)
             ? educator.subject.join(", ")

@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
 
 const EducatorCard = ({ educator }) => {
   const {
@@ -90,11 +92,15 @@ const EducatorCard = ({ educator }) => {
   const displayBio =
     bio || description || "Passionate educator dedicated to student success.";
 
-  const profileImageUrl =
-    profileImage?.url ||
-    profilePicture ||
-    image?.url ||
-    "/images/placeholders/1.svg";
+  const resolveProfileImage = () =>
+    profileImage?.url || profilePicture || image?.url || EDUCATOR_FALLBACK_IMAGE;
+
+  const [profileImageUrl, setProfileImageUrl] = useState(resolveProfileImage);
+
+  useEffect(() => {
+    setProfileImageUrl(resolveProfileImage());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileImage?.url, profilePicture, image?.url]);
 
   const ratingAverage =
     typeof rating?.average === "number" ? rating.average : 4.5;
@@ -102,7 +108,7 @@ const EducatorCard = ({ educator }) => {
   const ratingCount = rating?.count ?? reviewCount ?? 0;
 
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full">
+    <div className=" group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full">
       {/* Profile Section */}
       <div className="mb-4 flex flex-col items-center gap-3">
         <div className="relative">
@@ -113,6 +119,7 @@ const EducatorCard = ({ educator }) => {
               width={96}
               height={96}
               className="h-full w-full object-cover"
+              onError={() => setProfileImageUrl(EDUCATOR_FALLBACK_IMAGE)}
             />
           </div>
           <span

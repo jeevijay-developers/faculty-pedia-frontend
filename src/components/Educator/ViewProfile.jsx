@@ -44,6 +44,14 @@ import {
 } from "@/components/server/test-series.route";
 import { rateEducator } from "@/components/server/educators.routes";
 import Player from "@vimeo/player";
+import {
+  followEducator,
+  unfollowEducator,
+} from "@/components/server/student/student.routes";
+import { getUserData } from "@/utils/userData";
+import { toast } from "react-hot-toast";
+
+const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
 
 const extractVimeoId = (value) => {
   if (!value) return null;
@@ -56,12 +64,6 @@ const extractVimeoId = (value) => {
   if (match && match[1]) return match[1];
   return null;
 };
-import {
-  followEducator,
-  unfollowEducator,
-} from "@/components/server/student/student.routes";
-import { getUserData } from "@/utils/userData";
-import { toast } from "react-hot-toast";
 
 const safeNumber = (value, fallback = 0) => {
   const n = Number(value);
@@ -126,6 +128,23 @@ const ViewProfile = ({ educatorData }) => {
   const [visibleCourses, setVisibleCourses] = useState(6);
   const [visibleWebinars, setVisibleWebinars] = useState(6);
   const [visibleTestSeries, setVisibleTestSeries] = useState(6);
+
+  const resolveAvatar = () => {
+    const fromObject =
+      educatorData?.image && typeof educatorData.image === "object"
+        ? educatorData.image.url || ""
+        : "";
+    return (
+      fromObject || educatorData?.image || EDUCATOR_FALLBACK_IMAGE
+    );
+  };
+
+  const [avatarSrc, setAvatarSrc] = useState(resolveAvatar);
+
+  useEffect(() => {
+    setAvatarSrc(resolveAvatar());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [educatorData?.image]);
 
   // Vimeo player refs
   const vimeoContainerRef = useRef(null);
@@ -687,13 +706,12 @@ const ViewProfile = ({ educatorData }) => {
               <div className="relative z-10 mt-4 mb-4">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-md ring-4 ring-white">
                   <Image
-                    src={
-                      educatorData.image?.url || "/images/placeholders/1.svg"
-                    }
+                    src={avatarSrc}
                     alt={`${educatorData.firstName} ${educatorData.lastName}`}
                     fill
                     sizes="128px"
                     className="object-cover"
+                    onError={() => setAvatarSrc(EDUCATOR_FALLBACK_IMAGE)}
                     priority
                   />
                   <div
@@ -1270,7 +1288,8 @@ const ViewProfile = ({ educatorData }) => {
                         educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
                         educatorPhoto:
                           educatorData.image?.url ||
-                          "/images/placeholders/1.svg",
+                          educatorData.image ||
+                          EDUCATOR_FALLBACK_IMAGE,
                         qualification:
                           educatorData.qualification?.[0]?.title || "N/A",
                         specialization:
@@ -1348,7 +1367,8 @@ const ViewProfile = ({ educatorData }) => {
                         educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
                         educatorPhoto:
                           educatorData.image?.url ||
-                          "/images/placeholders/1.svg",
+                          educatorData.image ||
+                          EDUCATOR_FALLBACK_IMAGE,
                         qualification:
                           educatorData.qualification?.[0]?.title || "N/A",
                         subject: testSeries.subject,
