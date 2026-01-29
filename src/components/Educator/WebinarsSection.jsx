@@ -139,7 +139,7 @@ const WebinarsSection = ({ webinars }) => {
             {webinars.map((webinar, index) => (
               <div
                 key={index}
-                className="flex-shrink-0"
+                className="shrink-0"
                 style={{ width: `${100 / webinars.length}%` }}
               >
                 <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden group h-full">
@@ -168,17 +168,17 @@ const WebinarsSection = ({ webinars }) => {
 
                       <div className="grid grid-cols-1 gap-2 mt-4 text-xs">
                         <div className="flex items-center space-x-2 bg-blue-50 p-2 rounded-lg">
-                          <FaCalendarAlt className="w-3 h-3 text-blue-500 flex-shrink-0" />
+                          <FaCalendarAlt className="w-3 h-3 text-blue-500 shrink-0" />
                           <span className="text-gray-700 truncate">
                             {formatDate(webinar.date, 'short')}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2 bg-blue-50 p-2 rounded-lg">
-                          <FaClock className="w-3 h-3 text-blue-500 flex-shrink-0" />
+                          <FaClock className="w-3 h-3 text-blue-500 shrink-0" />
                           <span className="text-gray-700 truncate">{webinar.time}</span>
                         </div>
                         <div className="flex items-center space-x-2 bg-blue-50 p-2 rounded-lg">
-                          <FaUsers className="w-3 h-3 text-blue-500 flex-shrink-0" />
+                          <FaUsers className="w-3 h-3 text-blue-500 shrink-0" />
                           <span className="text-gray-700 truncate">
                             {webinar.attendees} registered
                           </span>

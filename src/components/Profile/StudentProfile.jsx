@@ -23,6 +23,8 @@ import {
 import { confirmAlert } from "@/components/CustomAlert";
 import toast from "react-hot-toast";
 import { Bell, Loader2, RefreshCcw } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const CLASS_LABELS = {
   "class-6th": "Class 6th",
@@ -823,16 +825,14 @@ const StudentDashboard = ({
       {/* Top Navigation Bar */}
       <header className="flex-none h-20 w-full px-6 md:px-10 flex items-center justify-between z-20 bg-white dark:bg-[#1a2632] shadow-sm">
         <div className="flex items-center gap-8">
-          <div className="flex items-center gap-3 text-blue-600">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-              <span className="material-symbols-outlined text-blue-600 text-2xl">
-                school
-              </span>
+          <Link href="/" className="flex items-center gap-3 text-blue-600">
+            <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
+              <Image src="/logo/logo-blue.png" alt="Facultypedia Logo" width={32} height={32} className="m-2" />
             </div>
             <h2 className="text-gray-900 dark:text-white text-xl font-bold tracking-tight">
-              FacultyPedia
+              Facultypedia
             </h2>
-          </div>
+          </Link>
         </div>
         <div className="flex items-center gap-4" ref={profileMenuRef}>
           <div className="relative" ref={notificationPanelRef}>
