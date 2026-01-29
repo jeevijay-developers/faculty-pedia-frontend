@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { FiChevronDown, FiFileText } from "react-icons/fi";
+import { FiChevronDown, FiFileText, FiCheck } from "react-icons/fi";
 import { getCourseById } from "@/components/server/course.routes";
 import {
   getTestSeriesByCourse,
@@ -11,6 +11,10 @@ import {
 import { getTestsBySeries, getTestById } from "@/components/server/test.route";
 import { getVideos } from "@/components/server/video.routes";
 import { getStudyMaterialsByCourse } from "@/components/server/study-material.routes";
+import {
+  getCourseProgress,
+  toggleVideoComplete,
+} from "@/components/server/progress.routes";
 
 const getEmbedUrl = (url) => {
   if (!url) return null;
@@ -47,6 +51,25 @@ const CoursePanelPage = () => {
   const [courseVideosLoading, setCourseVideosLoading] = useState(false);
   const [courseMaterials, setCourseMaterials] = useState([]);
   const [courseMaterialsLoading, setCourseMaterialsLoading] = useState(false);
+  const [completedVideos, setCompletedVideos] = useState({});
+  const [studentId, setStudentId] = useState(null);
+  const [togglingVideoId, setTogglingVideoId] = useState(null);
+
+  // Get student ID from localStorage on mount
+  useEffect(() => {
+    try {
+      const raw =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("faculty-pedia-student-data")
+          : null;
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setStudentId(parsed?._id || parsed?.id || null);
+      }
+    } catch (err) {
+      console.warn("Failed to get student id", err);
+    }
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -199,6 +222,33 @@ const CoursePanelPage = () => {
     };
   }, [courseData?._id, courseData?.id, courseId]);
 
+  // Fetch video progress for this course and student
+  useEffect(() => {
+    const resolvedCourseId = courseData?._id || courseData?.id || courseId;
+    if (!resolvedCourseId || !studentId) {
+      setCompletedVideos({});
+      return;
+    }
+
+    let cancelled = false;
+    const loadProgress = async () => {
+      try {
+        const response = await getCourseProgress(resolvedCourseId, studentId);
+        if (!cancelled && response?.success && response?.data?.completedVideos) {
+          setCompletedVideos(response.data.completedVideos);
+        }
+      } catch (err) {
+        console.error("Failed to load video progress", err);
+        if (!cancelled) setCompletedVideos({});
+      }
+    };
+
+    loadProgress();
+    return () => {
+      cancelled = true;
+    };
+  }, [courseData?._id, courseData?.id, courseId, studentId]);
+
   const allVideos = useMemo(() => {
     const embedded = Array.isArray(courseData?.videos)
       ? courseData.videos
@@ -327,6 +377,69 @@ const CoursePanelPage = () => {
     const found = allVideos.find((v) => v.id === selectedVideoId);
     return found || allVideos[0];
   }, [allVideos, selectedVideoId]);
+
+  // Compute completed count from allVideos and completedVideos state
+  const completedCount = useMemo(() => {
+    if (!allVideos || allVideos.length === 0) return 0;
+    return allVideos.filter((v) => completedVideos[v.id]?.isCompleted).length;
+  }, [allVideos, completedVideos]);
+
+  // Handle toggling video completion via checkbox
+  const handleToggleVideoComplete = useCallback(
+    async (e, videoId) => {
+      e.stopPropagation(); // Prevent video selection when clicking checkbox
+      const resolvedCourseId = courseData?._id || courseData?.id || courseId;
+
+      if (!studentId || !resolvedCourseId || !videoId) return;
+
+      const currentStatus = completedVideos[videoId]?.isCompleted || false;
+      const newStatus = !currentStatus;
+
+      // Optimistic update
+      setCompletedVideos((prev) => ({
+        ...prev,
+        [videoId]: {
+          isCompleted: newStatus,
+          completedAt: newStatus ? new Date().toISOString() : null,
+        },
+      }));
+
+      setTogglingVideoId(videoId);
+
+      try {
+        const response = await toggleVideoComplete(
+          studentId,
+          resolvedCourseId,
+          videoId,
+          newStatus
+        );
+
+        // Update with server response if different
+        if (response?.success && response?.data) {
+          setCompletedVideos((prev) => ({
+            ...prev,
+            [videoId]: {
+              isCompleted: response.data.isCompleted,
+              completedAt: response.data.completedAt,
+            },
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to toggle video completion", err);
+        // Revert optimistic update on error
+        setCompletedVideos((prev) => ({
+          ...prev,
+          [videoId]: {
+            isCompleted: currentStatus,
+            completedAt: currentStatus ? prev[videoId]?.completedAt : null,
+          },
+        }));
+      } finally {
+        setTogglingVideoId(null);
+      }
+    },
+    [studentId, courseData, courseId, completedVideos]
+  );
 
   const hasCourseTests = useMemo(
     () => Array.isArray(courseTests) && courseTests.length > 0,
@@ -743,7 +856,7 @@ const CoursePanelPage = () => {
                   <div className="bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
                     <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                       <div>
-                        <div className="flex gap-2 mb-2 text-xs text-text-secondary">
+                        {/* <div className="flex gap-2 mb-2 text-xs text-text-secondary">
                           <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-white/10 font-medium">
                             {activeTab === "videos" ? "Lesson" : ""}{" "}
                             {allVideos.findIndex(
@@ -755,12 +868,12 @@ const CoursePanelPage = () => {
                               {currentVideo.duration}
                             </span>
                           )}
-                        </div>
+                        </div> */}
                         <h2 className="text-2xl font-bold leading-tight">
                           {currentVideo?.title || "Select a lesson"}
                         </h2>
                       </div>
-                      <div className="flex gap-2">
+                      {/* <div className="flex gap-2">
                         <button
                           className="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
                           title="Previous Lesson"
@@ -777,7 +890,7 @@ const CoursePanelPage = () => {
                             skip_next
                           </span>
                         </button>
-                      </div>
+                      </div> */}
                     </div>
                     <p className="text-text-secondary text-sm leading-relaxed line-clamp-3">
                       {courseData?.description ||
@@ -791,8 +904,7 @@ const CoursePanelPage = () => {
                     <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-white/5 rounded-t-2xl">
                       <h3 className="font-bold">Course Content</h3>
                       <span className="text-xs font-medium text-text-secondary">
-                        {Math.min(allVideos.length, 12)}/
-                        {allVideos.length || 26} Completed
+                        {completedCount}/{allVideos.length} Completed
                       </span>
                     </div>
                     <div className="overflow-y-auto flex-1 p-2 space-y-1 no-scrollbar">
@@ -803,33 +915,51 @@ const CoursePanelPage = () => {
                       )}
                       {allVideos.map((video, idx) => {
                         const isActive = video.id === currentVideo?.id;
+                        const isVideoCompleted = completedVideos[video.id]?.isCompleted || false;
+                        const isToggling = togglingVideoId === video.id;
                         return (
-                          <button
+                          <div
                             key={video.id}
-                            type="button"
-                            onClick={() => setSelectedVideoId(video.id)}
                             className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-colors ${
                               isActive
                                 ? "bg-primary/5 border-l-4 border-primary"
                                 : "hover:bg-gray-50 dark:hover:bg-white/5"
                             }`}
                           >
-                            <div
-                              className={`mt-1 size-5 rounded-full flex items-center justify-center shrink-0 ${
-                                isActive
-                                  ? "border-2 border-primary"
-                                  : "border-2 border-gray-300 dark:border-gray-600"
+                            {/* Checkbox for marking completion */}
+                            <button
+                              type="button"
+                              onClick={(e) => handleToggleVideoComplete(e, video.id)}
+                              disabled={isToggling || !studentId}
+                              className={`mt-0.5 size-5 rounded flex items-center justify-center shrink-0 border-2 transition-all ${
+                                isVideoCompleted
+                                  ? "bg-green-500 border-green-500 text-white"
+                                  : "border-gray-300 dark:border-gray-600 hover:border-primary"
+                              } ${isToggling ? "opacity-50 cursor-wait" : ""} ${
+                                !studentId ? "opacity-30 cursor-not-allowed" : "cursor-pointer"
                               }`}
+                              title={
+                                !studentId
+                                  ? "Login to track progress"
+                                  : isVideoCompleted
+                                  ? "Mark as incomplete"
+                                  : "Mark as completed"
+                              }
                             >
-                              {isActive && (
-                                <div className="size-2 rounded-full bg-primary animate-pulse" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
+                              {isVideoCompleted && <FiCheck className="size-3" />}
+                            </button>
+                            {/* Video title - clickable to select */}
+                            <button
+                              type="button"
+                              onClick={() => setSelectedVideoId(video.id)}
+                              className="flex-1 min-w-0 text-left"
+                            >
                               <div
                                 className={`text-sm font-medium line-clamp-2 ${
                                   isActive
                                     ? "text-primary"
+                                    : isVideoCompleted
+                                    ? "text-green-600 dark:text-green-400"
                                     : "text-text-main dark:text-white"
                                 }`}
                               >
@@ -844,8 +974,8 @@ const CoursePanelPage = () => {
                               >
                                 {video.duration || "—"}
                               </div>
-                            </div>
-                          </button>
+                            </button>
+                          </div>
                         );
                       })}
                       {allVideos.length === 0 && (

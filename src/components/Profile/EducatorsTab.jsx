@@ -227,12 +227,11 @@ const EducatorsTab = ({ followingEducators }) => {
                       ? educator.rating.average.toFixed(1)
                       : typeof educator.rating === "number"
                       ? educator.rating.toFixed(1)
-                      : "N/A"}
+                      : "0.0"}
                   </span>
                   <span className="text-gray-400">•</span>
                   <span>
-                    {educator.yearsExperience || educator.experience || 0} yrs
-                    exp.
+                    {(educator.yearsExperience || educator.experience || 0) <= 1 ? "Fresher" : `${educator.yearsExperience || educator.experience || 0} yrs exp.`}
                   </span>
                 </div>
 

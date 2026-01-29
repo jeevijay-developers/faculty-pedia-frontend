@@ -120,7 +120,7 @@ const UpcomingWebinarCard = ({ item }) => {
           </div>
         )}
       </div>
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col grow">
         <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight line-clamp-2">
           {item.title || "Webinar Title"}
         </h3>
@@ -202,7 +202,7 @@ const UpcomingWebinarCard = ({ item }) => {
           <div className="flex items-center space-x-2">
             <div className="flex items-baseline space-x-2">
               <span className="text-xl font-bold text-blue-600">
-                ₹{Number(item.fees || 0).toLocaleString("en-IN")}
+                {item.fees && item.fees > 0 ? `₹${Number(item.fees).toLocaleString("en-IN")}` : "Free"}
               </span>
             </div>
           </div>
