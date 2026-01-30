@@ -546,7 +546,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                         style={{
                           backgroundImage: educatorImage 
                             ? `url("${educatorImage}")` 
-                            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                            : 'url("/images/educator/educatorFallback.svg")'
                         }}
                       ></div>
                       <div>

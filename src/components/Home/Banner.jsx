@@ -11,7 +11,7 @@ import "swiper/css/pagination";
 
 const Banner = () => {
   return (
-    <div className="relative h-[80vh] min-h-[450px] w-full overflow-hidden ">
+    <div className="relative h-[80vh] min-h-112.5 w-full overflow-hidden ">
       {/* Swiper Carousel */}
       <Swiper
         modules={[Autoplay, EffectFade]}
