@@ -182,3 +182,4 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
 };
 
 export default EducatorsCarousel;
+ 
