@@ -73,16 +73,40 @@ export default function TestSeriesPage() {
     return () => clearTimeout(handle);
   }, [searchInput]);
 
-  // Get unique specializations
+  // Get unique specializations (supports string or array specializations)
   const specializations = useMemo(() => {
-    const set = new Set(allTestSeries.map((test) => test.specialization).filter(Boolean));
+    const set = new Set();
+
+    allTestSeries.forEach((test) => {
+      const { specialization } = test;
+
+      if (Array.isArray(specialization)) {
+        specialization.forEach((item) => {
+          const value = (typeof item === "string" ? item : String(item || "")).trim();
+          if (value) set.add(value);
+        });
+      } else if (specialization !== undefined && specialization !== null) {
+        const value = (typeof specialization === "string"
+          ? specialization
+          : String(specialization)
+        ).trim();
+        if (value) set.add(value);
+      }
+    });
+
     return ["All", ...Array.from(set)];
   }, [allTestSeries]);
 
   const filteredTests = useMemo(() => {
     return allTestSeries.filter((test) => {
       const matchesSpec =
-        activeTab === "All" || test.specialization === activeTab;
+        activeTab === "All" ||
+        (Array.isArray(test.specialization)
+          ? test.specialization.some((spec) => {
+              const value = (typeof spec === "string" ? spec : String(spec || "")).trim();
+              return value === activeTab;
+            })
+          : test.specialization === activeTab);
       const query = searchQuery.trim().toLowerCase();
       if (!query) return matchesSpec;
       const inText =

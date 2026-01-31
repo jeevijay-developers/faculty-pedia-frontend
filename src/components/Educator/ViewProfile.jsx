@@ -130,13 +130,19 @@ const ViewProfile = ({ educatorData }) => {
   const [visibleTestSeries, setVisibleTestSeries] = useState(6);
 
   const resolveAvatar = () => {
-    const fromObject =
-      educatorData?.image && typeof educatorData.image === "object"
-        ? educatorData.image.url || ""
-        : "";
-    return (
-      fromObject || educatorData?.image || EDUCATOR_FALLBACK_IMAGE
-    );
+    // Handle image as object with url property
+    if (educatorData?.image && typeof educatorData.image === "object") {
+      const url = educatorData.image.url;
+      if (url && typeof url === "string" && url.trim().length > 0) {
+        return url;
+      }
+    }
+    // Handle image as string
+    if (educatorData?.image && typeof educatorData.image === "string" && educatorData.image.trim().length > 0) {
+      return educatorData.image;
+    }
+    // Fallback
+    return EDUCATOR_FALLBACK_IMAGE;
   };
 
   const [avatarSrc, setAvatarSrc] = useState(resolveAvatar);
@@ -701,7 +707,7 @@ const ViewProfile = ({ educatorData }) => {
           <div className="lg:col-span-4 flex flex-col gap-6">
             {/* Profile Header Card */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-50 to-indigo-50 opacity-50 z-0"></div>
+              <div className="absolute top-0 left-0 w-full h-24 bg-linear-to-r from-blue-50 to-indigo-50 opacity-50 z-0"></div>
 
               <div className="relative z-10 mt-4 mb-4">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-md ring-4 ring-white">
@@ -840,7 +846,7 @@ const ViewProfile = ({ educatorData }) => {
                     Experience
                   </p>
                   <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
-                    <FaGraduationCap className="text-gray-500 w-[18px] h-[18px]" />
+                    <FaGraduationCap className="text-gray-500 w-4.5 h-4.5" />
                     <span className="text-sm text-[#111118] font-medium">
                       {safeNumber(educatorData.yearsExperience, 0)}+ Years
                       Experience
@@ -899,7 +905,7 @@ const ViewProfile = ({ educatorData }) => {
           <div className="lg:col-span-8 flex flex-col gap-6">
             {/* Intro Media Section */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="relative w-full aspect-video bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
+              <div className="relative w-full aspect-video bg-linear-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
                 {educatorData.introVideoLink &&
                 extractVimeoId(educatorData.introVideoLink) ? (
                   <iframe
@@ -1174,7 +1180,7 @@ const ViewProfile = ({ educatorData }) => {
 
             {/* Pay Per Hour Action Card - Book 1:1 Session */}
             {hasPayPerHour && (
-              <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-xl shadow-lg shadow-blue-900/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-white relative overflow-hidden">
+              <div className="bg-linear-to-r from-blue-900 to-indigo-900 rounded-xl shadow-lg shadow-blue-900/10 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-white relative overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-10"
                   style={{
@@ -1419,7 +1425,7 @@ const ViewProfile = ({ educatorData }) => {
                   onClick={(event) => event.stopPropagation()}
                 >
                   <div className="flex flex-col max-h-[85vh]">
-                    <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600">
+                    <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-linear-to-r from-blue-600 to-indigo-600">
                       <div>
                         <h2 className="text-xl font-semibold text-white">
                           Pay Per Hour Session

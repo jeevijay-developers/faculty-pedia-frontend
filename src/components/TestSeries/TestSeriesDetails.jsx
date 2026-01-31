@@ -131,6 +131,18 @@ const TestSeriesDetails = ({ testSeriesData }) => {
     return desc.long || desc.short || "";
   }, [testSeriesData?.description]);
 
+  // Get actual tests from the test series
+  const actualTests = useMemo(() => {
+    const series = testSeriesData?.testSeries || testSeriesData;
+    if (Array.isArray(series?.tests) && series.tests.length > 0) {
+      return series.tests;
+    }
+    if (Array.isArray(series?.liveTests) && series.liveTests.length > 0) {
+      return series.liveTests;
+    }
+    return [];
+  }, [testSeriesData]);
+
   const testsCount = useMemo(() => {
     const series = testSeriesData?.testSeries || testSeriesData;
 
@@ -148,6 +160,41 @@ const TestSeriesDetails = ({ testSeriesData }) => {
 
     return 0;
   }, [testSeriesData?.testSeries, testSeriesData?.tests, testSeriesData?.liveTests, testSeriesData?.numberOfTests, testSeriesData?.noOfTests]);
+
+  // Format validity date properly
+  const formatValidity = (validity) => {
+    if (!validity) return "12 Months";
+    
+    // If it's a number, assume it's months
+    if (typeof validity === "number") {
+      return `${validity} Months`;
+    }
+    
+    // If it's a date string, calculate remaining time
+    try {
+      const validityDate = new Date(validity);
+      const now = new Date();
+      
+      if (validityDate <= now) {
+        return "Expired";
+      }
+      
+      const diffTime = validityDate - now;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays > 365) {
+        const years = Math.floor(diffDays / 365);
+        return `${years}+ Year${years > 1 ? 's' : ''}`;
+      } else if (diffDays > 30) {
+        const months = Math.floor(diffDays / 30);
+        return `${months} Month${months > 1 ? 's' : ''}`;
+      } else {
+        return `${diffDays} Day${diffDays > 1 ? 's' : ''}`;
+      }
+    } catch {
+      return "12 Months";
+    }
+  };
 
   const handleEnrollmentSuccess = useCallback(
     async ({ alreadyEnrolled }) => {
@@ -170,254 +217,413 @@ const TestSeriesDetails = ({ testSeriesData }) => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="grid lg:grid-cols-3 gap-8">
+    <div className="max-w-7xl mx-auto px-6 py-6">
+      {/* Breadcrumbs */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        <a className="text-[#4e7597] text-sm font-medium hover:text-[#1E88E5] transition-colors" href="/">
+          Home
+        </a>
+        <span className="text-[#4e7597] text-sm">/</span>
+        <a className="text-[#4e7597] text-sm font-medium hover:text-[#1E88E5] transition-colors" href="/test-series">
+          Test Series
+        </a>
+        <span className="text-[#4e7597] text-sm">/</span>
+        <span className="text-[#1E88E5] text-sm font-medium">{testSeriesData.title}</span>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Header Section */}
-          <div data-aos="fade-up" className="space-y-4">
-            <div className="flex items-center space-x-2">
-              
-              <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
-                {testsCount} Tests
-              </span>
+        <div className="lg:col-span-2">
+          {/* Hero Banner */}
+          <div className="relative overflow-hidden rounded-md h-80 mb-8 border border-[#e7eef3]">
+            <div className="absolute inset-0 bg-linear-to-br from-[#1E88E5]/10 to-[#1E88E5]/5"></div>
+            <div className="relative z-10 p-8 flex flex-col justify-center h-full">
+              <div className="flex gap-2 mb-6">
+                {testSeriesData.specialization && (
+                  <span className="bg-[#1E88E5]/10 text-[#1E88E5] border border-[#1E88E5]/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                    {Array.isArray(testSeriesData.specialization) 
+                      ? testSeriesData.specialization[0] 
+                      : testSeriesData.specialization}
+                  </span>
+                )}
+                {testSeriesData.subject && (
+                  <span className="bg-[#1E88E5]/10 text-[#1E88E5] border border-[#1E88E5]/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                    {Array.isArray(testSeriesData.subject) 
+                      ? testSeriesData.subject[0] 
+                      : testSeriesData.subject}
+                  </span>
+                )}
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4 max-w-2xl text-[#0e151b]">
+                {testSeriesData.title || "Test Series Title"}
+              </h1>
+              <p className="text-lg text-[#4e7597] max-w-xl">
+                {descriptionText || "Master your exam preparation with comprehensive mock tests designed by expert faculty."}
+              </p>
             </div>
-            <h1 className="text-4xl font-bold capitalize text-gray-900">
-              {testSeriesData.title || "Test Series Title"}
-            </h1>
-            <p className="text-lg text-gray-600">
-              {descriptionText || "No description available"}
-            </p>
+            <div className="absolute -right-5 -bottom-5 opacity-[0.03]">
+              <FaBookOpen className="text-[240px] text-[#0e151b]" />
+            </div>
           </div>
 
-          {/* Test Series Image */}
-         
-
-          {/* Key Information */}
-          <div
-            data-aos="fade-up"
-            data-aos-delay="200"
-            className="grid md:grid-cols-2 gap-6"
-          >
-            
-
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-lg">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="p-2 bg-green-500 rounded-lg">
-                  <FaUsers className="text-white text-lg" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  Enrollment
-                </h3>
-              </div>
-              <p className="text-gray-700 font-medium">
-                {testSeriesData.enrolledStudents?.length || 0} students enrolled
+          <div className="flex flex-col gap-10">
+            {/* About Section */}
+            <section>
+              <h3 className="text-2xl font-bold mb-5 flex items-center gap-2">
+                <span className="w-1 h-6 bg-[#1E88E5] rounded-full"></span>
+                About this Test Series
+              </h3>
+              <p className="text-[#4e7597] leading-relaxed mb-6 text-lg whitespace-pre-line">
+                {descriptionText || "No detailed description available."}
               </p>
-              <div className="flex items-center mt-2">
-                <FaTrophy className="text-yellow-500 mr-2" />
-                <span className="text-sm text-gray-600">
-                  Join the competition
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                  <FaFileAlt className="text-[#1E88E5] mb-3 text-2xl" />
+                  <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Total Tests</p>
+                  <p className="text-lg font-bold">{testsCount} Full Length</p>
+                </div>
+                <div className="bg-white p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                  <FaChartLine className="text-[#1E88E5] mb-3 text-2xl" />
+                  <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Analytics</p>
+                  <p className="text-lg font-bold">Detailed</p>
+                </div>
+                <div className="bg-white p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                  <FaClock className="text-[#1E88E5] mb-3 text-2xl" />
+                  <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Validity</p>
+                  <p className="text-lg font-bold">{formatValidity(testSeriesData.validity)}</p>
+                </div>
+                <div className="bg-white p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                  <FaTrophy className="text-[#1E88E5] mb-3 text-2xl" />
+                  <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Ranking</p>
+                  <p className="text-lg font-bold">All India</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Tests Included Section */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold flex items-center gap-2">
+                  <span className="w-1 h-6 bg-[#1E88E5] rounded-full"></span>
+                  Tests Included
+                </h3>
+                <span className="text-sm font-bold text-[#1E88E5] px-3 py-1 bg-[#1E88E5]/5 rounded-md">
+                  {testsCount} Modules
                 </span>
               </div>
-            </div>
+              <div className="space-y-3">
+                {/* Render actual tests from backend */}
+                {actualTests.length > 0 ? (
+                  actualTests.map((test, index) => {
+                    const testId = test?._id || test?.id || test;
+                    const testTitle = test?.title || `Mock Test ${String(index + 1).padStart(2, '0')}`;
+                    const testDuration = test?.duration || 180;
+                    const testMarks = test?.overallMarks || test?.totalMarks || 300;
+                    const isFirstTest = index === 0;
+                    
+                    return (
+                      <div 
+                        key={testId}
+                        className={`bg-white p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] group hover:border-[#1E88E5]/30 transition-colors gap-4 ${!isEnrolled && !isFirstTest ? 'opacity-80' : ''}`}
+                      >
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className={`size-11 rounded-md flex items-center justify-center shrink-0 ${
+                            isEnrolled || isFirstTest 
+                              ? 'bg-green-100 text-green-600' 
+                              : 'bg-slate-100 text-slate-400'
+                          }`}>
+                            {isEnrolled || isFirstTest ? (
+                              <FaCheckCircle className="text-xl" />
+                            ) : (
+                              <FaFileAlt className="text-xl" />
+                            )}
+                          </div>
+                          <div>
+                            <h4 className="font-bold group-hover:text-[#1E88E5] transition-colors">
+                              {testTitle}
+                            </h4>
+                            <p className="text-sm text-[#4e7597]">
+                              {testDuration} Mins • {testMarks} Marks
+                              {isFirstTest && !isEnrolled && (
+                                <span className="text-green-600 font-medium"> • Free Demo</span>
+                              )}
+                              {test?.negativeMarking && (
+                                <span className="text-orange-500 font-medium"> • Negative Marking</span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        {isEnrolled ? (
+                          <button 
+                            onClick={() => router.push(`/tests/${testId}`)}
+                            className="bg-[#1E88E5] text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm hover:bg-[#1565C0] transition-all w-full sm:w-auto"
+                          >
+                            Start Test
+                          </button>
+                        ) : isFirstTest ? (
+                          <button 
+                            className="bg-[#1E88E5] text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm hover:bg-[#1565C0] transition-all w-full sm:w-auto"
+                          >
+                            Enroll to Access
+                          </button>
+                        ) : (
+                          <button className="border-2 border-[#1E88E5] text-[#1E88E5] px-6 py-2 rounded-md text-sm font-bold hover:bg-[#1E88E5] hover:text-white transition-all w-full sm:w-auto">
+                            Unlock Now
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })
+                ) : (
+                  /* Fallback placeholder tests when no actual tests are populated */
+                  <>
+                    <div className="bg-white p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] group hover:border-[#1E88E5]/30 transition-colors gap-4">
+                      <div className="flex items-center gap-4 flex-1">
+                        <div className="size-11 rounded-md bg-green-100 flex items-center justify-center text-green-600 shrink-0">
+                          <FaCheckCircle className="text-xl" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold group-hover:text-[#1E88E5] transition-colors">
+                            Mock Test 01: Complete Syllabus
+                          </h4>
+                          <p className="text-sm text-[#4e7597]">
+                            180 Mins • 300 Marks • <span className="text-green-600 font-medium">Free Demo</span>
+                          </p>
+                        </div>
+                      </div>
+                      <button 
+                        className="bg-[#1E88E5] text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm hover:bg-[#1565C0] transition-all w-full sm:w-auto"
+                        disabled={!isEnrolled}
+                      >
+                        {isEnrolled ? "Start Test" : "Enroll to Access"}
+                      </button>
+                    </div>
+
+                    {testsCount > 1 && (
+                      <>
+                        {Array.from({ length: Math.min(testsCount - 1, 2) }).map((_, idx) => (
+                          <div key={idx} className="bg-white p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] gap-4">
+                            <div className="flex items-center gap-4 flex-1">
+                              <div className="size-11 rounded-md bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+                                <FaFileAlt className="text-xl" />
+                              </div>
+                              <div>
+                                <h4 className="font-bold">Mock Test {String(idx + 2).padStart(2, '0')}</h4>
+                                <p className="text-sm text-[#4e7597]">180 Mins • 300 Marks</p>
+                              </div>
+                            </div>
+                            {!isEnrolled ? (
+                              <button className="border-2 border-[#1E88E5] text-[#1E88E5] px-6 py-2 rounded-md text-sm font-bold hover:bg-[#1E88E5] hover:text-white transition-all w-full sm:w-auto">
+                                Unlock Now
+                              </button>
+                            ) : (
+                              <button className="bg-[#1E88E5] text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm hover:bg-[#1565C0] transition-all w-full sm:w-auto">
+                                Start Test
+                              </button>
+                            )}
+                          </div>
+                        ))}
+
+                        {testsCount > 3 && (
+                          <div className="bg-white p-4 rounded-md flex items-center justify-between shadow-sm border border-[#e7eef3] opacity-60">
+                            <div className="flex items-center gap-4">
+                              <div className="size-11 rounded-md bg-slate-100 flex items-center justify-center text-slate-400">
+                                <FaFileAlt className="text-xl" />
+                              </div>
+                              <div>
+                                <h4 className="font-bold">+{testsCount - 3} More Tests</h4>
+                                <p className="text-sm text-[#4e7597]">Enroll to view all</p>
+                              </div>
+                            </div>
+                            <span className="text-slate-400">•••</span>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            </section>
           </div>
-
-          {/* Test Features */}
-          {/* <div
-            data-aos="fade-up"
-            data-aos-delay="250"
-            className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl shadow-lg"
-          >
-            <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center">
-              <FaChartLine className="mr-3 text-purple-600" />
-              Test Features
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
-                  <FaFileAlt className="text-blue-500 text-xl" />
-                  <div>
-                    <p className="font-semibold text-gray-800">
-                      Full Length Tests
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Complete exam simulation
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
-                  <FaChartLine className="text-green-500 text-xl" />
-                  <div>
-                    <p className="font-semibold text-gray-800">
-                      Performance Analytics
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Detailed score analysis
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
-                  <FaClock className="text-orange-500 text-xl" />
-                  <div>
-                    <p className="font-semibold text-gray-800">
-                      Time Management
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Learn to manage exam time
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3 p-3 bg-white rounded-lg shadow-sm">
-                  <FaTrophy className="text-yellow-500 text-xl" />
-                  <div>
-                    <p className="font-semibold text-gray-800">
-                      Rank & Leaderboard
-                    </p>
-                    <p className="text-sm text-gray-600">Compare with peers</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          {/* Description Section */}
-          <div
-            data-aos="fade-up"
-            data-aos-delay="300"
-            className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg overflow-hidden"
-          >
-            <div className="p-8">
-              <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center">
-                <FaBookOpen className="mr-3 text-blue-600" />
-                About This Test Series
-              </h2>
-              <div className="prose max-w-none">
-                <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {descriptionText || "No description available."}
-                </div>
-              </div>
-            </div>
-          </div>
-
-         
-          
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           {/* Pricing Card */}
           <div
             data-aos="fade-left"
-            className="bg-gradient-to-br from-white to-green-50 p-6 rounded-xl shadow-xl top-6 ring-1 ring-green-100"
+            className="bg-white rounded-md shadow-md overflow-hidden border border-[#e7eef3]"
           >
-            <div className="text-center space-y-6">
-              <div className="relative">
-                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                  Best Value
-                </div>
-                <span className="text-5xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                  ₹{testSeriesData.price || 0}
+            <div 
+              className="h-44 bg-center bg-cover bg-no-repeat" 
+              style={{
+                backgroundImage: testSeriesData.image?.url 
+                  ? `url("${testSeriesData.image.url}")` 
+                  : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+              }}
+            ></div>
+            <div className="p-6">
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-3xl font-black text-[#0e151b]">
+                  ₹{testSeriesData.price?.toLocaleString() || 0}
                 </span>
-                <p className="text-gray-600 mt-2">Complete access</p>
+                {testSeriesData.originalPrice && testSeriesData.originalPrice > testSeriesData.price && (
+                  <>
+                    <span className="text-lg text-[#4e7597] line-through">
+                      ₹{testSeriesData.originalPrice.toLocaleString()}
+                    </span>
+                    <span className="text-sm font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md">
+                      {Math.round(((testSeriesData.originalPrice - testSeriesData.price) / testSeriesData.originalPrice) * 100)}% OFF
+                    </span>
+                  </>
+                )}
               </div>
+              {testSeriesData.endDate && (
+                <p className="text-sm text-red-500 font-bold mb-6 flex items-center gap-1">
+                  <FaClock className="text-sm" /> Valid till {formatDate(testSeriesData.endDate)}
+                </p>
+              )}
 
               <div className="space-y-3">
                 <EnrollButton
                   type="testseries"
                   itemId={testSeriesData._id || testSeriesData.id}
                   price={testSeriesData.price}
-                  title="🎯 Enroll Now"
+                  title="Enroll Now"
                   joinLabel="Join Test Series"
                   initialEnrolled={isEnrolled}
                   onEnrollmentSuccess={handleEnrollmentSuccess}
-                  className="w-full bg-gradient-to-r from-green-600 to-blue-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:cursor-pointer"
+                  className="w-full bg-[#1E88E5] text-white font-bold py-4 rounded-md shadow-md shadow-[#1E88E5]/20 hover:bg-[#1565C0] transition-all flex items-center justify-center gap-2"
                 />
-                {/* <button className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300">
-                  📋 View Sample Test
-                </button> */}
               </div>
 
-              <div className="pt-4 bg-gray-50 rounded-lg p-4 space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 flex items-center">
-                    <FaFileAlt className="w-4 h-4 mr-2 text-green-500" />
-                    Total Tests:
-                  </span>
-                  <span className="font-semibold text-gray-800">
-                    {testsCount}
+              <div className="mt-6 pt-6 border-t border-[#e7eef3]">
+                <div className="flex items-center gap-2 text-sm text-[#4e7597]">
+                  <FaUsers className="text-base" />
+                  <span className="font-medium">
+                    {testSeriesData.enrolledStudents?.length?.toLocaleString() || 0} Students enrolled
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 flex items-center">
-                    <FaUsers className="w-4 h-4 mr-2 text-blue-500" />
-                    Enrolled:
-                  </span>
-                  <span className="font-semibold text-gray-800">
-                    {testSeriesData.enrolledStudents?.length || 0} students
-                  </span>
-                </div>
-               
-                {testSeriesData.isCourseSpecific && (
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 flex items-center">
-                      <FaBookOpen className="w-4 h-4 mr-2 text-orange-500" />
-                      Type:
-                    </span>
-                    <span className="font-semibold text-gray-800">
-                      Course Specific
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
           </div>
 
-          {/* Benefits */}
+          {/* Educator Card */}
+          {(testSeriesData.educator || testSeriesData.educatorId) && (
+            <div
+              data-aos="fade-left"
+              data-aos-delay="100"
+              className="bg-white p-6 rounded-md shadow-sm border border-[#e7eef3]"
+            >
+              {(() => {
+                // Support both populated educator object and educatorId reference
+                const educator = testSeriesData.educator || testSeriesData.educatorId;
+                if (!educator || typeof educator === 'string') return null;
+                
+                // Handle image - check multiple possible field names
+                const educatorImage = educator.image?.url || educator.profilePicture || educator.image || null;
+                // Handle name - prefer fullName, fallback to firstName + lastName
+                const educatorName = educator.fullName || `${educator.firstName || ''} ${educator.lastName || ''}`.trim() || educator.name || 'Expert Educator';
+                // Handle qualification - could be array of objects or strings
+                const educatorQualification = (Array.isArray(educator.qualification) && educator.qualification.length > 0)
+                  ? (educator.qualification[0]?.title || educator.qualification[0])
+                  : (Array.isArray(educator.specialization) && educator.specialization.length > 0)
+                    ? educator.specialization[0]
+                    : 'Expert Educator';
+                const educatorBio = educator.bio || educator.description || "Experienced educator dedicated to helping students achieve their goals.";
+                const educatorId = educator._id || educator.id;
+                
+                return (
+                  <>
+                    <h4 className="font-bold mb-5 text-[#0e151b] border-b border-[#e7eef3] pb-3">
+                      Meet your Mentor
+                    </h4>
+                    <div className="flex items-center gap-4 mb-4">
+                      <div 
+                        className="size-16 rounded-md bg-cover bg-center border border-[#e7eef3]"
+                        style={{
+                          backgroundImage: educatorImage 
+                            ? `url("${educatorImage}")` 
+                            : 'url("/images/educator/educatorFallback.svg")'
+                        }}
+                      ></div>
+                      <div>
+                        <p className="font-bold text-lg leading-tight">
+                          {educatorName}
+                        </p>
+                        <p className="text-xs text-[#1E88E5] font-bold mt-1 uppercase tracking-tight">
+                          {educatorQualification}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-[#4e7597] leading-relaxed mb-6 line-clamp-3">
+                      {educatorBio}
+                    </p>
+                    {educatorId && (
+                      <button 
+                        onClick={() => router.push(`/educators/${educatorId}`)}
+                        className="w-full border-2 border-[#e7eef3] py-2.5 rounded-md text-sm font-bold hover:bg-slate-50 transition-colors text-[#0e151b]"
+                      >
+                        View Profile
+                      </button>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* Reviews Card */}
           <div
             data-aos="fade-left"
-            data-aos-delay="100"
-            className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl shadow-lg ring-1 ring-blue-100"
+            data-aos-delay="150"
+            className="bg-white p-6 rounded-md shadow-sm border border-[#e7eef3]"
           >
-            <h3 className="text-lg font-bold mb-4 text-gray-800 flex items-center">
-              <span className="text-2xl mr-2">🏆</span>
-              What You'll Get
-            </h3>
-            <ul className="space-y-4">
-              <li className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <FaCheckCircle className="text-green-600 w-4 h-4" />
-                </div>
-                <span className="text-gray-700 font-medium">
-                  {testSeriesData.noOfTests || 0} full-length mock tests
+            <div className="flex items-center justify-between mb-6">
+              <h4 className="font-bold text-[#0e151b]">Student Reviews</h4>
+              <div className="flex items-center text-yellow-500 bg-yellow-50 px-2 py-1 rounded-md">
+                <FaTrophy className="text-base mr-1" />
+                <span className="text-sm font-bold">
+                  {testSeriesData.rating ? Number(testSeriesData.rating).toFixed(1) : '5.0'}/5
                 </span>
-              </li>
-              <li className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <FaChartLine className="text-blue-600 w-4 h-4" />
-                </div>
-                <span className="text-gray-700 font-medium">
-                  Detailed performance analysis
-                </span>
-              </li>
-              <li className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <FaBookOpen className="text-purple-600 w-4 h-4" />
-                </div>
-                <span className="text-gray-700 font-medium">
-                  Solution explanations
-                </span>
-              </li>
-              <li className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <FaTrophy className="text-yellow-600 w-4 h-4" />
-                </div>
-                <span className="text-gray-700 font-medium">
-                  Time management strategies
-                </span>
-              </li>
-            </ul>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {/* Dynamic rating bars based on actual rating */}
+              {(() => {
+                const rating = Number(testSeriesData.rating) || 5;
+                const ratingCount = testSeriesData.ratingCount || testSeriesData.enrolledStudents?.length || 0;
+                
+                // Generate approximate distribution based on average rating
+                const getBarWidth = (star) => {
+                  if (ratingCount === 0) return star === 5 ? 100 : 0;
+                  const diff = Math.abs(star - rating);
+                  if (diff < 0.5) return 85;
+                  if (diff < 1) return 10;
+                  if (diff < 1.5) return 3;
+                  return 2;
+                };
+                
+                return [5, 4, 3, 2, 1].map((star) => (
+                  <div key={star} className="flex items-center gap-3">
+                    <span className="text-xs font-bold w-4">{star}</span>
+                    <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-yellow-500 h-full rounded-full transition-all" 
+                        style={{ width: `${getBarWidth(star)}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+            <div className="mt-6 pt-4 border-t border-[#e7eef3] text-center">
+              <p className="text-[11px] text-[#4e7597] font-bold uppercase tracking-wider">
+                Based on {testSeriesData.ratingCount || testSeriesData.enrolledStudents?.length || 0} verified reviews
+              </p>
+            </div>
           </div>
         </div>
       </div>

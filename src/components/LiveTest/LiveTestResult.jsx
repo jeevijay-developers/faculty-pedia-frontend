@@ -75,7 +75,7 @@ const LiveTestResult = ({ resultData }) => {
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-linear-to-r from-blue-600 to-indigo-700 rounded-xl shadow-lg overflow-hidden">
         <div className="px-6 sm:px-8 py-8 sm:py-10 text-white">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
             <div className="mb-4 sm:mb-0">
@@ -261,7 +261,7 @@ const LiveTestResult = ({ resultData }) => {
           
           <div className="space-y-4">
             {/* Percentile */}
-            <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+            <div className="p-4 bg-linear-to-r from-blue-50 to-indigo-50 rounded-lg">
               <div className="text-sm text-gray-600 mb-1">Percentile</div>
               <div className="text-xl font-bold text-blue-600">
                 {Math.round(((totalStudents - rank) / totalStudents) * 100)}th
