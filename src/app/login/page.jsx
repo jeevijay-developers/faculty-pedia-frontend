@@ -17,7 +17,7 @@ const GenericLoginPage = () => {
   const handleLoginSuccess = async (userData, userType) => {
     // Handle successful login based on user type
     if (userType === "student") {
-      router.replace("/exams");
+      router.replace("/");
     } else if (userType === "educator") {
       router.replace(`/profile/educator/${userData._id}`);
     }

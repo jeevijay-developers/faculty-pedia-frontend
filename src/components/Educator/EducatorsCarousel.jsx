@@ -69,7 +69,7 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
   }, [specialization]);
 
   if (loading) {
-    return <Loading />;
+    return <Loading variant="skeleton" message="Loading educators" count={6} />;
   }
 
   // Show error state if there was an error
@@ -98,7 +98,7 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
   }
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row justify-between items-center gap-2 mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">

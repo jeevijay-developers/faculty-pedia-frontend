@@ -113,14 +113,13 @@ const Login = ({
           )
         );
       }
-
+      console.log("Login successful:", response);
       // Handle navigation
       if (onLoginSuccess) {
         await onLoginSuccess(response.userData, response.userType);
       } else {
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get("redirect");
-
         const destination = redirectUrl
           ? decodeURIComponent(redirectUrl)
           : response.userType === "student"

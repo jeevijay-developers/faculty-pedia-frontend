@@ -52,14 +52,14 @@ const OneToOneLiveClassesCard = ({ classData }) => {
   }, [classData.educatorID?.profilePicture, classData.educatorID]);
 
   return (
-    <div className="group relative flex flex-col rounded-xl bg-white border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-lg hover:border-blue-600/30 h-full overflow-hidden">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]">
       {/* Thumbnail */}
-      <div className="relative aspect-video overflow-hidden bg-gray-100">
+      <div className="relative aspect-video overflow-hidden rounded-2xl bg-white">
         <Image
           src="/images/placeholders/1.svg"
           alt={classData.liveClassTitle || "Live Class"}
           fill
-          className="object-cover transform transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
         />
         {/* Specialization Badges */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">

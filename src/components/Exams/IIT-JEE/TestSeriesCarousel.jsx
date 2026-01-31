@@ -59,7 +59,13 @@ const TestSeriesCarousel = ({
   }, [specialization]);
 
   if (loading) {
-    return <Loading />;
+    return (
+      <Loading
+        variant="skeleton"
+        message="Loading test series"
+        count={6}
+      />
+    );
   }
 
   // Show error state if there was an error
@@ -96,7 +102,7 @@ const TestSeriesCarousel = ({
   };
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-12">
@@ -215,59 +221,55 @@ export const TestSeriesCard = ({ testSeries }) => {
   })();
 
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
-      {/* Test Series Image */}
-      <div className="relative h-40 bg-gray-100 rounded-xl mb-4">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]">
+      <div className="relative mb-4 h-40 overflow-hidden rounded-xl bg-white">
         <Image
           src={testSeries.image || "/images/placeholders/1.svg"}
           alt={testSeries.title || "Test Series"}
           fill
-          className="object-cover"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.015]"
         />
-        <div className="absolute top-3 left-3">
-          <span className="bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded-md">
+        <div className="absolute left-3 top-3">
+          <span className="inline-flex items-center rounded-md bg-blue-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
             {testSeries.specialization?.[0] || "General"}
           </span>
         </div>
       </div>
 
-      {/* Card Content */}
       <div className="flex flex-col flex-grow">
-        <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight line-clamp-2">
+        <h3 className="mb-2 line-clamp-2 text-lg font-bold text-gray-900">
           {testSeries.title}
         </h3>
-        <h4 className="text-base font-semibold text-blue-600 mb-3">
-          {testSeries.educatorId?.fullName || "Educator"}
+        <h4 className="mb-3 text-base font-semibold text-blue-600">
+          {testSeries.educatorId?.fullName || testSeries.educatorName || "Educator"}
         </h4>
 
-        <div className="space-y-2 mb-4">
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Subject: </span>
+        <div className="mb-4 space-y-2 text-sm text-gray-600">
+          <div>
+            <span className="font-semibold text-gray-700">Subject: </span>
             <span className="text-gray-800">
               {Array.isArray(testSeries.subject)
                 ? testSeries.subject.join(", ")
                 : testSeries.subject}
             </span>
           </div>
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Number of Tests: </span>
+          <div>
+            <span className="font-semibold text-gray-700">Number of Tests: </span>
             <span className="text-gray-800">{testsCount}</span>
           </div>
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Valid Until: </span>
+          <div>
+            <span className="font-semibold text-gray-700">Valid Until: </span>
             <span className="text-gray-800">{validityDate}</span>
           </div>
         </div>
 
         <div className="mt-auto">
-          <div className="mb-4 text-2xl font-bold text-blue-600">
+          <div className="mb-4 text-2xl font-bold text-blue-700">
             ₹{testSeries.price?.toLocaleString("en-IN") || 0}
           </div>
-
-          {/* Action Button */}
           <Link
             href={`/test-series/${testSeries._id || testSeries.id}`}
-            className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center block"
+            className="block w-full rounded-full bg-blue-600 py-2.5 text-center text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             View Details
           </Link>

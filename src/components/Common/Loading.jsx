@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
   Reusable Loading Component
   ---------------------------------
   Props:
-    variant: 'spinner' | 'card-grid' | 'text'
+    variant: 'spinner' | 'card-grid' | 'text' | 'skeleton'
     count: number (for skeleton items)
     message: optional status message
     className: extra wrapper classes
@@ -47,6 +47,10 @@ const CardSkeleton = () => (
   </div>
 );
 
+const SkeletonBlock = ({ width = "w-full", height = "h-4" }) => (
+  <div className={`${width} ${height} rounded-full bg-slate-200 animate-pulse`} />
+);
+
 const Loading = ({
   variant = "spinner",
   count = 6,
@@ -73,6 +77,33 @@ const Loading = ({
         <p className="text-sm text-slate-300 font-medium animate-pulse">
           {message}
         </p>
+      )}
+
+      {variant === "skeleton" && (
+        <div className="w-full max-w-6xl space-y-8">
+          <div className="space-y-3">
+            <SkeletonBlock width="w-1/4" height="h-5" />
+            <SkeletonBlock width="w-1/2" height="h-8" />
+            <SkeletonBlock width="w-3/4" />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: count }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-4"
+              >
+                <SkeletonBlock height="h-28" />
+                <SkeletonBlock width="w-3/4" />
+                <SkeletonBlock width="w-1/2" />
+                <SkeletonBlock width="w-2/3" />
+                <div className="flex gap-3">
+                  <SkeletonBlock width="w-1/3" height="h-9" />
+                  <SkeletonBlock width="w-1/4" height="h-9" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {variant === "card-grid" && (

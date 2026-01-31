@@ -538,14 +538,14 @@ const Navbar = () => {
                           <UserIcon className="size-4 mr-2" /> Dashboard
                         </Link>
                       </DropdownItem>
-                      <DropdownItem
+                      {/* <DropdownItem
                         key="help"
                         className={`${hoverExamDropdown}`}
                       >
                         <Link href="/help" className="flex items-center">
                           <HelpCircle className="size-4 mr-2" /> Help & Support
                         </Link>
-                      </DropdownItem>
+                      </DropdownItem> */}
                       <DropdownItem
                         className="hover:bg-red-200 transition-colors duration-200 rounded-md"
                         key="logout"

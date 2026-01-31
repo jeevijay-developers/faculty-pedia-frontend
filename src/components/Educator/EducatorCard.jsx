@@ -122,12 +122,12 @@ const EducatorCard = ({ educator }) => {
               onError={() => setProfileImageUrl(EDUCATOR_FALLBACK_IMAGE)}
             />
           </div>
-          <span
+          {/* <span
             className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-white shadow-sm ${
               status === "active" ? "bg-green-500" : "bg-gray-400"
             }`}
             title={status === "active" ? "Online" : "Offline"}
-          />
+          /> */}
         </div>
         <div className="text-center">
           <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">

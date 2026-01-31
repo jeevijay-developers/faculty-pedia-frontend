@@ -59,7 +59,13 @@ const PostCarousel = ({ subject = "All", specialization }) => {
   }, [effectiveSpecialization]);
 
   if (loading) {
-    return <Loading />;
+    return (
+      <Loading
+        variant="skeleton"
+        message="Loading posts"
+        count={6}
+      />
+    );
   }
 
   // Show error state if there was an error

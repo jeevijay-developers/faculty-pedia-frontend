@@ -166,7 +166,7 @@ const ContactPage = () => {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8 pt-[50px]" >
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {contactCards.map((card) => {
             const Icon = card.icon;

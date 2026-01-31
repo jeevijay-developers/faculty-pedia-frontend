@@ -309,7 +309,13 @@ const CourseCarousel = ({
   }, [specialization]);
 
   if (loading) {
-    return <Loading />;
+    return (
+      <Loading
+        variant="skeleton"
+        message="Loading courses"
+        count={6}
+      />
+    );
   }
 
   // Show error state if there was an error

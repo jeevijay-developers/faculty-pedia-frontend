@@ -175,7 +175,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section className="bg-blue-600 py-16">
+      {/* <section className="bg-blue-600 py-16">
         <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 text-white sm:px-6 lg:flex-row lg:items-center lg:px-8">
           <div className="flex-1 space-y-4">
             <h2 className="text-3xl font-bold sm:text-4xl">
@@ -203,7 +203,7 @@ const AboutPage = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <section className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8">
         <h3 className="text-2xl font-semibold text-gray-900 sm:text-3xl">
