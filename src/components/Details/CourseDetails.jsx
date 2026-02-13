@@ -359,38 +359,6 @@ const CourseDetails = ({ id }) => {
           <div className="lg:col-span-3">
             {activeTab === "overview" && (
               <div className="space-y-8">
-                {/* Course Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <FaUsers className="w-8 h-8 mx-auto text-blue-600 mb-2" />
-                    <div className="text-2xl font-bold text-gray-900">
-                      {course.maxStudents || 0}
-                    </div>
-                    <div className="text-sm text-gray-600">Max Students</div>
-                  </div>
-                  <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <FaClock className="w-8 h-8 mx-auto text-green-600 mb-2" />
-                    <div className="text-2xl font-bold text-gray-900">
-                      {course.courseDuration || "N/A"}
-                    </div>
-                    <div className="text-sm text-gray-600">Course Duration</div>
-                  </div>
-                  <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <FaGraduationCap className="w-8 h-8 mx-auto text-purple-600 mb-2" />
-                    <div className="text-2xl font-bold text-gray-900">
-                      {course.liveClass?.length || 0}
-                    </div>
-                    <div className="text-sm text-gray-600">Live Classes</div>
-                  </div>
-                  <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
-                    <FaChair className="w-8 h-8 mx-auto text-orange-600 mb-2" />
-                    <div className="text-2xl font-bold text-gray-900">
-                      {course.enrolledStudents?.length || 0}
-                    </div>
-                    <div className="text-sm text-gray-600">Enrolled</div>
-                  </div>
-                </div>
-
                 {/* Course Videos */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Intro Video */}
@@ -414,14 +382,14 @@ const CourseDetails = ({ id }) => {
                   )}
 
                   {/* Demo Videos */}
-                  {course.videos && course.videos.length > 0 && (
+                  {course.videos && course.videos.length > 0 && course.videos[0]?.links?.[0] && (
                     <div className="bg-white rounded-lg border border-gray-200 p-6">
                       <h3 className="text-xl font-semibold text-gray-900 mb-4">
                         Demo Video
                       </h3>
                       <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
                         <iframe
-                          src={getYouTubeEmbedUrl(course.videos[0].link)}
+                          src={getYouTubeEmbedUrl(course.videos[0].links[0])}
                           title={course.videos[0].title || "Course Demo"}
                           className="w-full h-full"
                           frameBorder="0"
@@ -608,29 +576,13 @@ const CourseDetails = ({ id }) => {
               {/* Course Price and Enroll */}
               <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6 shadow-sm">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600 mb-2">
+                  <div className="text-3xl font-bold text-green-600 mb-4">
                     ₹{course.fees?.toLocaleString()}
                   </div>
-                  {course.discount > 0 && (
-                    <div className="text-sm text-green-600 mb-4">
-                      {course.discount}% discount
-                    </div>
-                  )}
-                  {course.rating > 0 && (
-                    <div className="flex items-center justify-center mb-4">
-                      <span className="text-yellow-500 mr-1">★</span>
-                      <span className="font-medium">
-                        {course.rating.toFixed(1)}
-                      </span>
-                      <span className="text-gray-500 text-sm ml-1">
-                        ({course.ratingCount || 0} reviews)
-                      </span>
-                    </div>
-                  )}
                   {isEnrolled ? (
                     <button
                       onClick={handleOpenCoursePanel}
-                      className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors mb-3"
+                      className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors mb-4"
                     >
                       Go to Course
                     </button>
@@ -639,11 +591,37 @@ const CourseDetails = ({ id }) => {
                       type="course"
                       itemId={course._id || course.id}
                       price={course.fees}
-                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-3"
+                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-4"
                     />
                   )}
+
+                  {/* Course Stats */}
+                  <div className="space-y-3 pt-4 border-t border-gray-200">
+                    <div className="flex items-center text-sm">
+                      <span className="flex items-center mr-1 text-gray-600">
+                        <FaClock className="w-4 h-4 mr-2" />
+                        <span>{course.courseDuration || "N/A"}</span>
+                      </span>
+                      <span className="text-gray-500">Course Duration</span>
+                    </div>
+                    <div className="flex items-center text-sm">
+                      <span className="flex items-center  mr-1 text-gray-600">
+                        <FaGraduationCap className="w-4 h-4 mr-2" />
+                        <span>{course.liveClass?.length || 0}</span>
+                      </span>
+                      <span className="text-gray-500">Live Classes</span>
+                    </div>
+                    <div className="flex items-center text-sm">
+                      <span className="flex items-center  mr-1 text-gray-600">
+                        <FaChair className="w-4 h-4 mr-2" />
+                        <span>{course.enrolledStudents?.length || 0}</span>
+                      </span>
+                      <span className="text-gray-500">Enrolled</span>
+                    </div>
+                  </div>
+
                   {course.certificateAvailable && (
-                    <div className="text-sm text-gray-600 mt-2">
+                    <div className="text-sm text-gray-600 mt-4 pt-3 border-t border-gray-200">
                       🎓 Certificate available upon completion
                     </div>
                   )}
