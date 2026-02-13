@@ -710,17 +710,25 @@ const CoursePanelPage = () => {
         {/* Breadcrumbs and Header */}
         <header className="flex flex-col gap-6">
           <div className="flex items-center gap-2 text-sm text-text-secondary">
-            <span className="hover:text-primary transition-colors">Home</span>
+            <Link 
+              href="/profile/student"
+              className="hover:text-blue-600 transition-colors cursor-pointer"
+            >
+              Home
+            </Link>
             <span className="material-symbols-outlined text-[16px]">
               chevron_right
             </span>
-            <span className="hover:text-primary transition-colors">
+            <Link 
+              href={studentId ? `/profile/student/${studentId}?tab=my-courses` : "/profile/student"}
+              className="hover:text-blue-600 transition-colors cursor-pointer"
+            >
               My Courses
-            </span>
+            </Link>
             <span className="material-symbols-outlined text-[16px]">
               chevron_right
             </span>
-            <span className="text-primary font-medium line-clamp-1">
+            <span className="text-blue-600 font-medium line-clamp-1">
               {courseData?.title || "Course"}
             </span>
           </div>
@@ -729,7 +737,7 @@ const CoursePanelPage = () => {
             <div className="flex-1 space-y-4">
               <div className="flex flex-wrap items-center gap-3">
                 {courseData?.subject && (
-                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wide rounded-full">
+                  <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wide rounded-full">
                     {Array.isArray(courseData.subject)
                       ? courseData.subject.join(", ")
                       : courseData.subject}
@@ -805,6 +813,7 @@ const CoursePanelPage = () => {
                 {[
                   { id: "videos", label: "Videos" },
                   { id: "assets", label: "Assets" },
+                  { id: "liveClasses", label: "Live Classes" },
                   { id: "tests", label: "Tests" },
                 ].map((tab) => {
                   const active =
@@ -815,8 +824,8 @@ const CoursePanelPage = () => {
                       key={tab.id}
                       className={`pb-4 px-2 border-b-2 transition-all text-lg ${
                         active
-                          ? "text-primary border-primary font-bold"
-                          : "text-text-secondary hover:text-text-main border-transparent hover:border-gray-300 font-medium"
+                          ? "text-blue-600 border-blue-600 font-bold"
+                          : "text-text-secondary hover:text-blue-600 border-transparent hover:border-blue-300 font-medium"
                       }`}
                       onClick={() => setActiveTab(tab.id)}
                     >
@@ -901,9 +910,9 @@ const CoursePanelPage = () => {
 
                 <div className="w-full xl:w-90 flex flex-col gap-4">
                   <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col h-150">
-                    <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-white/5 rounded-t-2xl">
-                      <h3 className="font-bold">Course Content</h3>
-                      <span className="text-xs font-medium text-text-secondary">
+                    <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-blue-50/50 dark:bg-blue-900/10 rounded-t-2xl">
+                      <h3 className="font-bold text-blue-900 dark:text-blue-200">Course Content</h3>
+                      <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
                         {completedCount}/{allVideos.length} Completed
                       </span>
                     </div>
@@ -922,7 +931,7 @@ const CoursePanelPage = () => {
                             key={video.id}
                             className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-colors ${
                               isActive
-                                ? "bg-primary/5 border-l-4 border-primary"
+                                ? "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600"
                                 : "hover:bg-gray-50 dark:hover:bg-white/5"
                             }`}
                           >
@@ -934,7 +943,7 @@ const CoursePanelPage = () => {
                               className={`mt-0.5 size-5 rounded flex items-center justify-center shrink-0 border-2 transition-all ${
                                 isVideoCompleted
                                   ? "bg-green-500 border-green-500 text-white"
-                                  : "border-gray-300 dark:border-gray-600 hover:border-primary"
+                                  : "border-gray-300 dark:border-gray-600 hover:border-blue-600"
                               } ${isToggling ? "opacity-50 cursor-wait" : ""} ${
                                 !studentId ? "opacity-30 cursor-not-allowed" : "cursor-pointer"
                               }`}
@@ -957,7 +966,7 @@ const CoursePanelPage = () => {
                               <div
                                 className={`text-sm font-medium line-clamp-2 ${
                                   isActive
-                                    ? "text-primary"
+                                    ? "text-blue-600 dark:text-blue-400"
                                     : isVideoCompleted
                                     ? "text-green-600 dark:text-green-400"
                                     : "text-text-main dark:text-white"
@@ -968,7 +977,7 @@ const CoursePanelPage = () => {
                               <div
                                 className={`text-xs mt-0.5 ${
                                   isActive
-                                    ? "text-primary/70"
+                                    ? "text-blue-600/70 dark:text-blue-400/70"
                                     : "text-text-secondary"
                                 }`}
                               >
@@ -994,7 +1003,7 @@ const CoursePanelPage = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold">Course Assets</h3>
-                  <span className="text-sm font-bold text-primary">
+                  <span className="text-sm font-bold text-blue-600">
                     View All
                   </span>
                 </div>
@@ -1010,9 +1019,9 @@ const CoursePanelPage = () => {
                       href={asset.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-start gap-4 hover:-translate-y-1 hover:shadow-md transition-all duration-300"
+                      className="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-start gap-4 hover:-translate-y-1 hover:shadow-md hover:border-blue-300 transition-all duration-300"
                     >
-                      <div className="size-12 bg-gray-100 text-gray-500 rounded-lg flex items-center justify-center shrink-0">
+                      <div className="size-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center shrink-0">
                         <span className="material-symbols-outlined">
                           description
                         </span>
@@ -1037,12 +1046,163 @@ const CoursePanelPage = () => {
               </div>
             )}
 
+            {/* Live Classes tab */}
+            {activeTab === "liveClasses" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold">Live Classes</h3>
+                  {courseData?.liveClass?.length > 0 && (
+                    <span className="text-sm font-medium text-text-secondary">
+                      {courseData.liveClass.length} {courseData.liveClass.length === 1 ? 'class' : 'classes'}
+                    </span>
+                  )}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {courseData?.liveClass?.map((liveClass, index) => {
+                    const classDate = liveClass?.classTiming ? new Date(liveClass.classTiming) : null;
+                    const now = new Date();
+                    const isPast = classDate && classDate < now;
+                    const isUpcoming = classDate && classDate > now;
+                    const isToday = classDate && classDate.toDateString() === now.toDateString();
+                    
+                    return (
+                      <div
+                        key={liveClass._id || liveClass.id || index}
+                        className="bg-white dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all duration-300"
+                      >
+                        <div className="space-y-3">
+                          {/* Status Badge */}
+                          <div className="flex items-center justify-between">
+                            <span
+                              className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
+                                isPast
+                                  ? "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                                  : isToday
+                                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                                  : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                              }`}
+                            >
+                              {isPast ? "Completed" : isToday ? "Today" : "Upcoming"}
+                            </span>
+                          </div>
+
+                          {/* Title */}
+                          <h4 className="text-lg font-bold text-text-main dark:text-white line-clamp-2">
+                            {liveClass.liveClassTitle || "Live Class"}
+                          </h4>
+
+                          {/* Date and Time */}
+                          {classDate && (
+                            <div className="flex items-center gap-2 text-sm text-text-secondary">
+                              <span className="material-symbols-outlined text-[18px]">
+                                calendar_today
+                              </span>
+                              <span>
+                                {classDate.toLocaleDateString("en-US", {
+                                  weekday: "short",
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                })}
+                              </span>
+                              <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                              <span className="material-symbols-outlined text-[18px]">
+                                schedule
+                              </span>
+                              <span>
+                                {classDate.toLocaleTimeString("en-US", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Duration */}
+                          {liveClass.classDuration && (
+                            <div className="flex items-center gap-2 text-sm text-text-secondary">
+                              <span className="material-symbols-outlined text-[18px]">
+                                timer
+                              </span>
+                              <span>{liveClass.classDuration} minutes</span>
+                            </div>
+                          )}
+
+                          {/* Fee (only for non-course-specific classes) */}
+                          {!liveClass.isCourseSpecific && liveClass.liveClassesFee > 0 && (
+                            <div className="flex items-center gap-2 text-sm font-semibold text-blue-600">
+                              <span className="material-symbols-outlined text-[18px]">
+                                currency_rupee
+                              </span>
+                              <span>₹{liveClass.liveClassesFee}</span>
+                            </div>
+                          )}
+
+                          {/* Join Button */}
+                          <div className="pt-2">
+                            {isPast && liveClass.recordingURL ? (
+                              <a
+                                href={liveClass.recordingURL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 bg-purple-600 text-white hover:bg-purple-700 shadow-md hover:shadow-lg active:scale-95"
+                              >
+                                <span className="material-symbols-outlined text-[20px]">
+                                  play_circle
+                                </span>
+                                Watch Recording
+                              </a>
+                            ) : liveClass.liveClassLink && !isPast ? (
+                              <a
+                                href={liveClass.liveClassLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg active:scale-95"
+                              >
+                                <span className="material-symbols-outlined text-[20px]">
+                                  videocam
+                                </span>
+                                {isToday ? "Join Now" : "Join Class"}
+                              </a>
+                            ) : (
+                              <button
+                                className={`w-full py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                                  isPast
+                                    ? "bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-500"
+                                    : "bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-500"
+                                }`}
+                                disabled={true}
+                              >
+                                {isPast ? "Class Completed" : "Link Not Available"}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {(!courseData?.liveClass || courseData.liveClass.length === 0) && (
+                    <div className="col-span-2 text-center py-12">
+                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+                        <span className="material-symbols-outlined text-gray-400 text-3xl">
+                          video_call
+                        </span>
+                      </div>
+                      <p className="text-text-secondary text-sm">
+                        No live classes scheduled for this course yet.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Tests tab */}
             {activeTab === "tests" && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold">Assessments</h3>
-                  <span className="text-sm font-bold text-primary">
+                  <span className="text-sm font-bold text-blue-600">
                     View All
                   </span>
                 </div>

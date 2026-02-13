@@ -39,6 +39,7 @@ const INITIAL_NOTIFICATION_STATE = {
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExamDropdownOpen, setIsExamDropdownOpen] = useState(false);
+  const [isEducatorDropdownOpen, setIsEducatorDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -292,14 +293,23 @@ const Navbar = () => {
 
   const toggleExamDropdown = () => {
     setIsExamDropdownOpen((prev) => !prev);
+    setIsEducatorDropdownOpen(false);
     setIsNotificationOpen(false);
   };
+
+  const toggleEducatorDropdown = () => {
+    setIsEducatorDropdownOpen((prev) => !prev);
+    setIsExamDropdownOpen(false);
+    setIsNotificationOpen(false);
+  };
+
   const hoverExamDropdown =
     "hover:bg-gray-200 transition-colors duration-200 rounded-md p-2";
   const menuItems = [
     {
       name: "Exams",
       hasDropdown: true,
+      dropdownKey: "exam",
       subMenus: [
         { name: "IIT-JEE", href: "/exams/iit-jee" },
         { name: "NEET", href: "/exams/neet" },
@@ -308,7 +318,16 @@ const Navbar = () => {
     },
     // { name: 'Courses', href: '/courses' },
     // { name: 'Webinars', href: '/webinars' },
-    { name: "Educators", href: "/educators" },
+    {
+      name: "Educators",
+      hasDropdown: true,
+      dropdownKey: "educator",
+      subMenus: [
+        { name: "IIT-JEE", href: "/educators?specialization=IIT-JEE" },
+        { name: "NEET", href: "/educators?specialization=NEET" },
+        { name: "CBSE", href: "/educators?specialization=CBSE" },
+      ],
+    },
   ];
 
   return (
@@ -340,8 +359,22 @@ const Navbar = () => {
                   {item.hasDropdown ? (
                     <div
                       className="relative"
-                      onMouseEnter={() => setIsExamDropdownOpen(true)}
-                      onMouseLeave={() => setIsExamDropdownOpen(false)}
+                      onMouseEnter={() => {
+                        if (item.dropdownKey === "exam") {
+                          setIsExamDropdownOpen(true);
+                          setIsEducatorDropdownOpen(false);
+                        } else if (item.dropdownKey === "educator") {
+                          setIsEducatorDropdownOpen(true);
+                          setIsExamDropdownOpen(false);
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (item.dropdownKey === "exam") {
+                          setIsExamDropdownOpen(false);
+                        } else if (item.dropdownKey === "educator") {
+                          setIsEducatorDropdownOpen(false);
+                        }
+                      }}
                     >
                       <div
                         href={item.href}
@@ -350,7 +383,10 @@ const Navbar = () => {
                         <span>{item.name}</span>
                         <svg
                           className={`w-4 h-4 transition-transform duration-200 ${
-                            isExamDropdownOpen ? "rotate-180" : ""
+                            (item.dropdownKey === "exam" && isExamDropdownOpen) ||
+                            (item.dropdownKey === "educator" && isEducatorDropdownOpen)
+                              ? "rotate-180"
+                              : ""
                           }`}
                           fill="none"
                           stroke="currentColor"
@@ -369,7 +405,8 @@ const Navbar = () => {
                       {/* Dropdown Menu */}
                       <div
                         className={`absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-300 transform origin-top ${
-                          isExamDropdownOpen
+                          (item.dropdownKey === "exam" && isExamDropdownOpen) ||
+                          (item.dropdownKey === "educator" && isEducatorDropdownOpen)
                             ? "opacity-100 scale-100 visible"
                             : "opacity-0 scale-95 invisible"
                         }`}
@@ -645,12 +682,19 @@ const Navbar = () => {
                       {item.name}
                     </div>
                     <button
-                      onClick={toggleExamDropdown}
+                      onClick={
+                        item.dropdownKey === "exam"
+                          ? toggleExamDropdown
+                          : toggleEducatorDropdown
+                      }
                       className="text-gray-700 hover:text-blue-600 hover:bg-white px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                     >
                       <svg
                         className={`w-4 h-4 transition-transform duration-200 ${
-                          isExamDropdownOpen ? "rotate-180" : ""
+                          (item.dropdownKey === "exam" && isExamDropdownOpen) ||
+                          (item.dropdownKey === "educator" && isEducatorDropdownOpen)
+                            ? "rotate-180"
+                            : ""
                         }`}
                         fill="none"
                         stroke="currentColor"
@@ -669,7 +713,8 @@ const Navbar = () => {
                   {/* Mobile Dropdown Submenu */}
                   <div
                     className={`transition-all duration-300 ease-in-out ${
-                      isExamDropdownOpen
+                      (item.dropdownKey === "exam" && isExamDropdownOpen) ||
+                      (item.dropdownKey === "educator" && isEducatorDropdownOpen)
                         ? "max-h-40 opacity-100"
                         : "max-h-0 opacity-0 overflow-hidden"
                     }`}
@@ -683,6 +728,7 @@ const Navbar = () => {
                           onClick={() => {
                             setIsMenuOpen(false);
                             setIsExamDropdownOpen(false);
+                            setIsEducatorDropdownOpen(false);
                           }}
                         >
                           {subItem.name}

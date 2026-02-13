@@ -1,12 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import EducatorCard from "../../components/Educator/EducatorCard";
 import { getAllEducators } from "@/components/server/educators.routes";
 import Loading from "@/components/Common/Loading";
 import { Search } from "lucide-react";
 
 const EducatorsPage = () => {
+  const searchParams = useSearchParams();
+  const specialization = searchParams.get('specialization');
+  
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [allEducators, setAllEducators] = useState([]);
@@ -59,26 +63,41 @@ const EducatorsPage = () => {
   }, []);
 
   useEffect(() => {
-    if (activeTab === "All") {
-      setFilteredEducators(allEducators);
-      return;
+    let filtered = allEducators;
+
+    // First filter by specialization if present in query params
+    if (specialization) {
+      filtered = filtered.filter((educator) => {
+        const educatorSpecializations = Array.isArray(educator.specialization)
+          ? educator.specialization
+          : educator.specialization
+          ? [educator.specialization]
+          : [];
+
+        return educatorSpecializations.some(
+          (spec) => spec?.toLowerCase() === specialization.toLowerCase()
+        );
+      });
     }
 
-    const subjectKey = activeTab.toLowerCase();
-    const filtered = allEducators.filter((educator) => {
-      const subjectsList = Array.isArray(educator.subject)
-        ? educator.subject
-        : educator.subject
-        ? [educator.subject]
-        : [];
+    // Then filter by subject tab if not "All"
+    if (activeTab !== "All") {
+      const subjectKey = activeTab.toLowerCase();
+      filtered = filtered.filter((educator) => {
+        const subjectsList = Array.isArray(educator.subject)
+          ? educator.subject
+          : educator.subject
+          ? [educator.subject]
+          : [];
 
-      return subjectsList.some(
-        (subject) => subject?.toLowerCase() === subjectKey
-      );
-    });
+        return subjectsList.some(
+          (subject) => subject?.toLowerCase() === subjectKey
+        );
+      });
+    }
 
     setFilteredEducators(filtered);
-  }, [activeTab, allEducators]);
+  }, [activeTab, allEducators, specialization]);
 
   useEffect(() => {
     if (activeTab !== "All" && sortOption !== "none") {
@@ -188,11 +207,12 @@ const EducatorsPage = () => {
         >
           <div className="flex flex-col gap-4 text-center items-center max-w-4xl mx-auto">
             <h1 className="text-white text-4xl font-black leading-tight tracking-tight md:text-6xl drop-shadow-sm">
-              Our Expert Educators
+              {specialization ? `${specialization} Educators` : 'Our Expert Educators'}
             </h1>
             <h2 className="text-gray-200 text-base font-normal leading-normal md:text-lg max-w-2xl">
-              Learn from India's top educators across multiple subjects.
-              Discover mentors who inspire and guide you to success.
+              {specialization 
+                ? `Learn from expert ${specialization} educators across multiple subjects.` 
+                : 'Learn from India\'s top educators across multiple subjects. Discover mentors who inspire and guide you to success.'}
             </h2>
 
             {/* Search Bar */}
@@ -287,6 +307,7 @@ const EducatorsPage = () => {
             </span>{" "}
             educator
             {searchFilteredEducators.length !== 1 ? "s" : ""}
+            {specialization && <span> for {specialization}</span>}
             {activeTab !== "All" && <span> in {activeTab}</span>}
           </p>
         )}
@@ -308,15 +329,20 @@ const EducatorsPage = () => {
               <p className="mt-2 max-w-sm text-gray-500">
                 {searchQuery
                   ? "We couldn't find any educators matching your search. Try different keywords."
+                  : specialization
+                  ? `No educators found for ${specialization}${activeTab !== "All" ? " in " + activeTab : ""}. Try selecting another subject or specialization.`
                   : activeTab !== "All"
                   ? `No educators found for ${activeTab}. Try selecting another subject.`
                   : "We're constantly adding new educators. Please check back soon!"}
               </p>
-              {(searchQuery || activeTab !== "All") && (
+              {(searchQuery || activeTab !== "All" || specialization) && (
                 <button
                   onClick={() => {
                     setSearchQuery("");
                     setActiveTab("All");
+                    if (specialization) {
+                      window.location.href = "/educators";
+                    }
                   }}
                   className="mt-6 rounded-full bg-white border border-gray-200 px-6 py-2.5 text-sm font-bold text-blue-600 shadow-sm hover:bg-gray-50"
                 >
