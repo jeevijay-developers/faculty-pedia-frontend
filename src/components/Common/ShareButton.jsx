@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { FiAlertCircle, FiCheck, FiShare2, FiX } from "react-icons/fi";
+import { FiAlertCircle, FiCheck, FiCopy, FiShare2, FiX } from "react-icons/fi";
 import {
   FaFacebookF,
   FaLinkedinIn,
@@ -183,7 +183,7 @@ const ShareButton = ({
             aria-hidden="true"
             onClick={handleCloseModal}
           />
-          <div className="relative z-10 w-full max-w-lg rounded-full bg-white p-6 shadow-xl">
+          <div className="relative z-10 w-full max-w-xl rounded-2xl bg-white p-6 shadow-2xl border border-gray-100">
             <button
               type="button"
               onClick={handleCloseModal}
@@ -192,56 +192,55 @@ const ShareButton = ({
             >
               <FiX className="h-5 w-5" />
             </button>
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Share this page
-              </h2>
-              <p className="text-sm text-gray-500">
-                Copy the link or choose a platform to share directly.
-              </p>
-            </div>
 
-            <div className="mb-4">
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <div
-                  className="flex-1 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 truncate"
-                  title={shareUrl}
-                >
-                  {shareUrl}
-                </div>
-                <button
-                  type="button"
-                  onClick={handleCopyLink}
-                  className="inline-flex items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-                >
-                  {copyStatus === "copied" ? (
-                    <FiCheck className="h-4 w-4" />
-                  ) : null}
-                  {copyStatus === "copied" ? copiedLabel : "Copy Link"}
-                </button>
-              </div>
-              {copyStatus === "error" && (
-                <div className="mt-2 flex items-center gap-2 text-sm text-red-600">
-                  <FiAlertCircle className="h-4 w-4" />
-                  <span>{errorLabel}</span>
-                </div>
-              )}
-            </div>
-
-            {socialLinks.length > 0 && (
-              <div>
-                <p className="mb-3 text-sm font-semibold text-gray-700">
-                  Share via social media
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold text-gray-900">Share Profile</h2>
+                <p className="text-sm text-gray-500">
+                  Invite others to view this profile or share it across your social networks.
                 </p>
-                <div className="flex flex-wrap gap-3">
-                  {socialLinks.map(
-                    ({ name, href, icon: SocialIcon, color }) => (
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-xs font-semibold text-gray-600 tracking-wide">PROFILE URL</p>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <input
+                    readOnly
+                    value={shareUrl || ""}
+                    className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-800 shadow-inner focus:outline-none"
+                    title={shareUrl}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleCopyLink}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+                  >
+                    {copyStatus === "copied" ? <FiCheck className="h-4 w-4" /> : <FiCopy className="h-4 w-4" />}
+                    {copyStatus === "copied" ? copiedLabel : "Copy Link"}
+                  </button>
+                </div>
+                {copyStatus === "error" && (
+                  <div className="flex items-center gap-2 text-sm text-red-600">
+                    <FiAlertCircle className="h-4 w-4" />
+                    <span>{errorLabel}</span>
+                  </div>
+                )}
+                {copyStatus === "copied" && (
+                  <p className="text-xs text-green-600 font-medium">Link copied to clipboard.</p>
+                )}
+              </div>
+
+              {socialLinks.length > 0 && (
+                <div className="space-y-3">
+                  <p className="text-xs font-semibold text-gray-600 tracking-wide">SHARE VIA</p>
+                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
+                    {socialLinks.map(({ name, href, icon: SocialIcon, color }) => (
                       <a
                         key={name}
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 text-gray-700 transition hover:border-blue-500 hover:text-blue-600"
+                        className="flex flex-col items-center gap-2 text-sm text-gray-700 hover:text-blue-600"
                         onClick={() =>
                           onShared?.({
                             method: name.toLowerCase(),
@@ -249,13 +248,17 @@ const ShareButton = ({
                           })
                         }
                       >
-                        <SocialIcon className={`h-5 w-5 ${color}`} />
+                        <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-gray-50 shadow-sm hover:border-blue-200">
+                          <SocialIcon className={`h-5 w-5 ${color}`} />
+                        </span>
+                        <span className="text-xs font-medium">{name}</span>
                       </a>
-                    )
-                  )}
+                    ))}
+                    
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}

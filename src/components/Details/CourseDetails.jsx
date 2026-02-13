@@ -52,6 +52,20 @@ const CourseDetails = ({ id }) => {
     return embedUrl;
   };
 
+  const getVimeoEmbedUrl = (url) => {
+    if (!url) return null;
+    if (url.includes("player.vimeo.com/video/")) return url;
+    const match = url.match(/vimeo\.com\/(?:video\/|manage\/videos\/)?([0-9]+)/);
+    const id = match?.[1];
+    return id ? `https://player.vimeo.com/video/${id}` : null;
+  };
+
+  const getIntroEmbedUrl = (url) => {
+    const yt = getYouTubeEmbedUrl(url);
+    if (yt) return yt;
+    return getVimeoEmbedUrl(url);
+  };
+
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -387,7 +401,7 @@ const CourseDetails = ({ id }) => {
                       </h3>
                       <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
                         <iframe
-                          src={getYouTubeEmbedUrl(course.introVideo)}
+                          src={getIntroEmbedUrl(course.introVideo)}
                           title="Course Introduction"
                           className="w-full h-full"
                           frameBorder="0"

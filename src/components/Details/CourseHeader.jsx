@@ -11,8 +11,11 @@ import {
   FaRupeeSign,
 } from "react-icons/fa";
 import ShareButton from "@/components/Common/ShareButton";
+import { useRouter } from "next/navigation";
 
 const CourseHeader = ({ course }) => {
+  const router = useRouter();
+
   const formatDate = (dateString) => {
     try {
       return new Date(dateString).toLocaleDateString("en-US", {
@@ -38,6 +41,37 @@ const CourseHeader = ({ course }) => {
   const shareText = course?.title
     ? `Explore the course "${course.title}" on Facultypedia.`
     : "Check out this course on Facultypedia.";
+
+  const resolveEducator = (courseObj) => {
+    const candidates = [courseObj?.educatorID, courseObj?.educatorId, courseObj?.educator];
+    for (const cand of candidates) {
+      if (!cand) continue;
+
+      if (typeof cand === "string") {
+        const trimmed = cand.trim();
+        if (trimmed) return { id: trimmed, name: courseObj?.educatorName || "Instructor" };
+      }
+
+      if (typeof cand === "object") {
+        const nestedId = cand._id || cand.id || cand.educatorId || cand.educatorID;
+        const normalizedId =
+          typeof nestedId === "string" ? nestedId : nestedId?._id || nestedId?.id || null;
+
+        const fullName =
+          cand.fullName ||
+          [cand.firstName, cand.lastName].filter(Boolean).join(" ").trim() ||
+          cand.username ||
+          cand.name;
+
+        if (normalizedId || fullName) {
+          return { id: normalizedId, name: fullName || "Instructor" };
+        }
+      }
+    }
+    return { id: null, name: "Instructor" };
+  };
+
+  const { id: educatorId, name: educatorName } = resolveEducator(course);
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -101,11 +135,18 @@ const CourseHeader = ({ course }) => {
             <div className="flex items-center space-x-2 mb-4">
               <div className="text-sm">
                 <span className="text-black/80">Instructor: </span>
-                <span className="font-semibold">
-                  {course.educatorID?.fullName ||
-                    course.educatorID?.username ||
-                    "Instructor"}
-                </span>
+                {educatorId ? (
+                  <button
+                    type="button"
+                    onClick={() => router.push(`/profile/educator/${educatorId}`)}
+                    className="font-semibold text-blue-600 hover:underline"
+                    aria-label="View instructor profile"
+                  >
+                    {educatorName}
+                  </button>
+                ) : (
+                  <span className="font-semibold">{educatorName}</span>
+                )}
               </div>
             </div>
 

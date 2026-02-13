@@ -45,6 +45,8 @@ const EXAM_SUBJECTS = {
   CBSE: ["chemistry", "physics", "mathematics", "biology", "hindi", "english"],
 };
 
+const SPECIALIZATION_OPTIONS = ["IIT-JEE", "NEET", "CBSE"];
+
 const SUBJECT_LIST_DISPLAY = SUBJECT_OPTIONS.map(
   (subject) => subject.charAt(0).toUpperCase() + subject.slice(1)
 ).join(", ");
@@ -94,8 +96,8 @@ const EducatorSignup = () => {
     mobileNumber: "",
     bio: "",
     introVideoLink: "",
-    specialization: "IIT-JEE",
-    subject: "",
+    specialization: ["IIT-JEE"],
+    subject: [],
 
     // Work Experience
     workExperience: [
@@ -160,12 +162,6 @@ const EducatorSignup = () => {
         ...prev,
         [name]: value,
       };
-
-      // Reset subject if exam category changes
-      if (name === "specialization") {
-        updated.subject = "";
-      }
-
       return updated;
     });
 
@@ -205,6 +201,64 @@ const EducatorSignup = () => {
         [platform]: value,
       },
     }));
+  };
+
+  const getAvailableSubjects = (selectedSpecializations = []) => {
+    const validSpecs = Array.isArray(selectedSpecializations)
+      ? selectedSpecializations.filter(Boolean)
+      : [];
+
+    return Array.from(
+      new Set(
+        validSpecs.flatMap((spec) => EXAM_SUBJECTS[spec] || [])
+      )
+    );
+  };
+
+  const toggleSpecialization = (value) => {
+    setFormData((prev) => {
+      const current = Array.isArray(prev.specialization)
+        ? prev.specialization
+        : [];
+      const hasValue = current.includes(value);
+      const nextSpecializations = hasValue
+        ? current.filter((item) => item !== value)
+        : [...current, value];
+
+      const allowedSubjects = getAvailableSubjects(nextSpecializations);
+      const nextSubjects = (prev.subject || []).filter((subj) =>
+        allowedSubjects.includes(subj)
+      );
+
+      return {
+        ...prev,
+        specialization: nextSpecializations,
+        subject: nextSubjects,
+      };
+    });
+
+    if (errors.specialization) {
+      setErrors((prev) => ({ ...prev, specialization: "" }));
+    }
+  };
+
+  const toggleSubject = (value) => {
+    setFormData((prev) => {
+      const current = Array.isArray(prev.subject) ? prev.subject : [];
+      const hasValue = current.includes(value);
+      const nextSubjects = hasValue
+        ? current.filter((item) => item !== value)
+        : [...current, value];
+
+      return {
+        ...prev,
+        subject: nextSubjects,
+      };
+    });
+
+    if (errors.subject) {
+      setErrors((prev) => ({ ...prev, subject: "" }));
+    }
   };
 
   const handleIntroVideoFileChange = (e) => {
@@ -344,6 +398,13 @@ const EducatorSignup = () => {
         const email = formData.email.trim();
         const mobile = formData.mobileNumber.trim();
         const bio = formData.bio.trim();
+        const selectedSpecializations = Array.isArray(formData.specialization)
+          ? formData.specialization.filter(Boolean)
+          : [];
+        const selectedSubjects = Array.isArray(formData.subject)
+          ? formData.subject.filter(Boolean)
+          : [];
+        const allowedSubjects = getAvailableSubjects(selectedSpecializations);
 
         if (!firstName) stepErrors.firstName = "First name is required";
         else if (firstName.length < 2)
@@ -372,15 +433,23 @@ const EducatorSignup = () => {
         else if (bio.length < MIN_BIO_LENGTH)
           stepErrors.bio = `Bio must be at least ${MIN_BIO_LENGTH} characters`;
 
-        if (!formData.specialization)
-          stepErrors.specialization = "Specialization is required";
+        if (!selectedSpecializations.length) {
+          stepErrors.specialization = "Select at least one exam category";
+        }
 
-        if (!formData.subject || !formData.subject.trim()) {
-          stepErrors.subject = "Please select a subject";
+        if (!selectedSubjects.length) {
+          stepErrors.subject = "Select at least one subject";
         } else {
-          const allowedSubjects = EXAM_SUBJECTS[formData.specialization] || [];
-          if (!allowedSubjects.includes(formData.subject.toLowerCase())) {
-            stepErrors.subject = `Invalid subject for ${formData.specialization}`;
+          const allowedSet = new Set(
+            allowedSubjects.map((subject) => subject.toLowerCase())
+          );
+
+          const hasInvalidSubject = selectedSubjects.some(
+            (subject) => !allowedSet.has(subject.toLowerCase())
+          );
+
+          if (hasInvalidSubject) {
+            stepErrors.subject = "Subject must match selected exam categories";
           }
         }
         break;
@@ -526,8 +595,14 @@ const EducatorSignup = () => {
     const trimmedEmail = formData.email.trim().toLowerCase();
     const trimmedMobile = formData.mobileNumber.trim();
     const trimmedBio = formData.bio.trim();
-    const normalizedSubjects = formData.subject
-      ? [formData.subject.toLowerCase()]
+    const normalizedSpecializations = Array.isArray(formData.specialization)
+      ? formData.specialization.filter(Boolean)
+      : [];
+
+    const normalizedSubjects = Array.isArray(formData.subject)
+      ? formData.subject
+          .map((subject) => subject.toLowerCase())
+          .filter(Boolean)
       : [];
 
     const submitData = {
@@ -537,7 +612,7 @@ const EducatorSignup = () => {
       password: formData.password,
       mobileNumber: trimmedMobile,
       bio: trimmedBio,
-      specialization: [formData.specialization].filter(Boolean),
+      specialization: normalizedSpecializations,
       subject: normalizedSubjects,
       workExperience: sanitizeEntries(formData.workExperience).map(
         ({ institute, ...rest }) => rest
@@ -737,56 +812,83 @@ const EducatorSignup = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <label className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-            Exam Category
+            Exam Categories
           </span>
-          <select
-            id="specialization"
-            name="specialization"
-            value={formData.specialization}
-            onChange={handleInputChange}
-            className={`${inputClass(
-              Boolean(errors.specialization)
-            )} appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%236b7280\' viewBox=\'0 0 20 20\'%3E%3Cpath d=\'M5.23 7.21a.75.75 0 011.06.02L10 11.177l3.71-3.946a.75.75 0 111.08 1.04l-4.243 4.51a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z\'/%3E%3C/svg%3E')] bg-no-repeat bg-position-[right_0.75rem_center]`}
-          >
-            <option value="IIT-JEE">IIT-JEE</option>
-            <option value="NEET">NEET</option>
-            <option value="CBSE">CBSE</option>
-          </select>
+          <div className="flex flex-wrap gap-2">
+            {SPECIALIZATION_OPTIONS.map((option) => {
+              const isSelected = formData.specialization.includes(option);
+              return (
+                <button
+                  type="button"
+                  key={option}
+                  onClick={() => toggleSpecialization(option)}
+                  className={`px-4 py-2 rounded-lg border shadow-sm text-sm font-semibold transition-colors ${
+                    isSelected
+                      ? "bg-blue-50 border-blue-500 text-blue-700"
+                      : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                  }`}
+                >
+                  <span className="inline-flex items-center gap-2">
+                    {isSelected && <LuCheck className="h-4 w-4" />}
+                    {option}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-xs text-slate-500 mt-1">
+            Select all exam categories you teach.
+          </p>
           {errors.specialization && (
             <span className="text-xs text-red-500 font-medium mt-1">
               {errors.specialization}
             </span>
           )}
-        </label>
+        </div>
 
-        <label className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-            Specialised Subject
+            Subjects
           </span>
-          <select
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleInputChange}
-            className={`${inputClass(
-              Boolean(errors.subject)
-            )} appearance-none bg-[url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'%236b7280\' viewBox=\'0 0 20 20\'%3E%3Cpath d=\'M5.23 7.21a.75.75 0 011.06.02L10 11.177l3.71-3.946a.75.75 0 111.08 1.04l-4.243 4.51a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z\'/%3E%3C/svg%3E')] bg-no-repeat bg-position-[right_0.75rem_center]`}
-          >
-            <option value="">Select a subject</option>
-            {EXAM_SUBJECTS[formData.specialization]?.map((subj) => (
-              <option key={subj} value={subj}>
-                {subj.charAt(0).toUpperCase() + subj.slice(1)}
-              </option>
-            ))}
-          </select>
+          {getAvailableSubjects(formData.specialization).length === 0 ? (
+            <p className="text-sm text-slate-500 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
+              Choose at least one exam category to see subjects.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {getAvailableSubjects(formData.specialization).map((subj) => {
+                const isSelected = formData.subject.includes(subj);
+                return (
+                  <button
+                    type="button"
+                    key={subj}
+                    onClick={() => toggleSubject(subj)}
+                    className={`px-3 py-2 rounded-lg border shadow-sm text-sm font-semibold transition-colors ${
+                      isSelected
+                        ? "bg-indigo-50 border-indigo-500 text-indigo-700"
+                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      {isSelected && <LuCheck className="h-4 w-4" />}
+                      {subj.charAt(0).toUpperCase() + subj.slice(1)}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          <p className="text-xs text-slate-500 mt-1">
+            Pick multiple subjects across selected exams.
+          </p>
           {errors.subject && (
             <span className="text-xs text-red-500 font-medium mt-1">
               {errors.subject}
             </span>
           )}
-        </label>
+        </div>
       </div>
 
       <label className="flex flex-col gap-1.5">
@@ -959,67 +1061,10 @@ const EducatorSignup = () => {
             </div>
 
             {/* Start Date */}
-            <div className="col-span-1">
-              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
-                Start Date
-              </label>
-              <MonthPicker
-                value={exp.startDate}
-                onChange={(value) =>
-                  handleNestedChange(
-                    "workExperience",
-                    index,
-                    "startDate",
-                    value
-                  )
-                }
-                placeholder="Select start month"
-                maxDate={new Date()}
-              />
-              {errors[`workExperience.${index}.startDate`] && (
-                <p className="mt-2 text-xs text-red-500 font-medium">
-                  {errors[`workExperience.${index}.startDate`]}
-                </p>
-              )}
-            </div>
+           
 
             {/* End Date */}
-            <div className="col-span-1">
-              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
-                End Date
-              </label>
-              <div className="space-y-2">
-                <MonthPicker
-                  value={exp.isCurrentRole ? "" : exp.endDate}
-                  onChange={(value) =>
-                    handleNestedChange(
-                      "workExperience",
-                      index,
-                      "endDate",
-                      value
-                    )
-                  }
-                  disabled={exp.isCurrentRole}
-                  placeholder="Select end month"
-                  maxDate={new Date()}
-                />
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id={`currentRole${index}`}
-                    checked={exp.isCurrentRole}
-                    onChange={() => toggleCurrentRole(index)}
-                    className="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
-                  />
-                  <label
-                    htmlFor={`currentRole${index}`}
-                    className="text-sm text-slate-600 font-medium cursor-pointer select-none"
-                  >
-                    Currently working here
-                  </label>
-                </div>
-              </div>
-            </div>
+           
           </div>
         </div>
       ))}

@@ -65,7 +65,7 @@ const Footer = () => {
             <div className="shrink-0 flex items-center justify-center mb-5">
               <Link href="/" className="flex items-center space-x-2 group">
                 <Image
-                  src={"/logo/logo-blue.png"}
+                  src={"/logo/finalLogo.png"}
                   alt="Logo"
                   width={40}
                   height={40}

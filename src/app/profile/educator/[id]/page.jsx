@@ -5,6 +5,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import ViewProfileLoader from "@/components/others/viewProfileLoader";
 import { getEducatorProfile } from "@/components/server/educators.routes";
+import ShareButton from "@/components/Common/ShareButton";
 
 const Page = ({ params }) => {
   const resolvedParams = use(params);
@@ -134,6 +135,20 @@ const Page = ({ params }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 pt-6 flex justify-end">
+        <ShareButton
+          title={
+            educatorData?.fullName ||
+            educatorData?.username ||
+            "Educator Profile"
+          }
+          text={`Check out ${
+            educatorData?.fullName || educatorData?.username || "this educator"
+          } on Facultypedia.`}
+          useCurrentUrl
+          size="sm"
+        />
+      </div>
       <ViewProfile educatorData={educatorData} />
     </div>
   );
