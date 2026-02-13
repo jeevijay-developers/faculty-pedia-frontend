@@ -260,8 +260,8 @@ const ViewProfile = ({ educatorData }) => {
     : educatorData?.specialization || null;
   const payPerHourDescription =
     educatorData?.payPerHourDescription || educatorData?.bio || null;
-  const payPerHourWhatsAppLink = educatorData?.mobileNumber
-    ? `https://wa.me/${educatorData.mobileNumber}`
+  const payPerHourWhatsAppLink = educatorData?.whatsappNumber
+    ? `https://wa.me/${educatorData.whatsappNumber}`
     : null;
   const payPerHourEmailLink = educatorData?.email
     ? `mailto:${educatorData.email}`
@@ -893,8 +893,8 @@ const ViewProfile = ({ educatorData }) => {
                     {isSubmittingRating
                       ? "Submitting..."
                       : userRating
-                      ? `You rated ${userRating}/5`
-                      : "Click to rate"}
+                        ? `You rated ${userRating}/5`
+                        : "Click to rate"}
                   </span>
                 </div>
               </div>
@@ -953,7 +953,7 @@ const ViewProfile = ({ educatorData }) => {
                     ? "..."
                     : safeNumber(
                         summaryCounts.courses ?? courseDetails?.length,
-                        0
+                        0,
                       )}
                 </p>
                 <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
@@ -976,7 +976,7 @@ const ViewProfile = ({ educatorData }) => {
                     ? "..."
                     : safeNumber(
                         summaryCounts.testSeries ?? testSeriesDetails?.length,
-                        0
+                        0,
                       )}
                 </p>
                 <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
@@ -986,9 +986,7 @@ const ViewProfile = ({ educatorData }) => {
 
               <button
                 type="button"
-                onClick={() =>
-                  router.push(`/webinars?educator=${educatorId}`)
-                }
+                onClick={() => router.push(`/webinars?educator=${educatorId}`)}
                 className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
               >
                 <div className="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center mb-1">
@@ -999,7 +997,7 @@ const ViewProfile = ({ educatorData }) => {
                     ? "..."
                     : safeNumber(
                         summaryCounts.webinars ?? webinarDetails?.length,
-                        0
+                        0,
                       )}
                 </p>
                 <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
@@ -1009,9 +1007,7 @@ const ViewProfile = ({ educatorData }) => {
 
               <button
                 type="button"
-                onClick={() =>
-                  router.push(`/posts?educator=${educatorId}`)
-                }
+                onClick={() => router.push(`/posts?educator=${educatorId}`)}
                 className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
               >
                 <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1">
@@ -1173,6 +1169,16 @@ const ViewProfile = ({ educatorData }) => {
                         <FaFacebook className="w-4 h-4" />
                       </a>
                     )}
+                    {educatorData.whatsappNumber && (
+                      <a
+                        href={`https://wa.me/91${educatorData.whatsappNumber}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600  hover:text-green-600 transition-colors cursor-pointer"
+                      >
+                        <IoLogoWhatsapp className="w-5 h-5" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1246,7 +1252,7 @@ const ViewProfile = ({ educatorData }) => {
                         rating: ratingAverage,
                         yearsExperience: safeNumber(
                           educatorData.yearsExperience,
-                          0
+                          0,
                         ),
                       },
                     }}
@@ -1304,7 +1310,7 @@ const ViewProfile = ({ educatorData }) => {
                         totalHours: (() => {
                           const durationMinutes = safeNumber(
                             webinar.duration,
-                            0
+                            0,
                           );
                           const hours = Math.floor(durationMinutes / 60);
                           const minutes = durationMinutes % 60;
@@ -1318,7 +1324,7 @@ const ViewProfile = ({ educatorData }) => {
                             year: "numeric",
                             month: "long",
                             day: "numeric",
-                          }
+                          },
                         ),
                         fee: webinar.fees?.toString() || "0",
                         detailsLink: `/webinars/${webinar._id}`,
@@ -1564,7 +1570,7 @@ const ViewProfile = ({ educatorData }) => {
                   </div>
                 </div>
               </div>,
-              document.body
+              document.body,
             )
           : null}
       </div>

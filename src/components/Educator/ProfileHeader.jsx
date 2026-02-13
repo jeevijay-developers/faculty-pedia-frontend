@@ -35,7 +35,8 @@ const ProfileHeader = ({
   specialization, 
   classes, 
   exams, 
-  mobileNumber, 
+  mobileNumber,
+  whatsappNumber, 
   introVideoLink, 
   demoVideoLink 
 }) => {
@@ -153,9 +154,9 @@ const ProfileHeader = ({
           </div>
           
           {/* WhatsApp Contact */}
-          {mobileNumber && (
+          {whatsappNumber && (
             <a
-              href={`https://wa.me/91${mobileNumber}`}
+              href={`https://wa.me/91${whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-green-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-green-600 transition-colors w-full sm:w-auto justify-center"
@@ -188,7 +189,7 @@ const ProfileHeader = ({
           {/* Key Information Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <FaGraduationCap className="text-blue-600 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+              <FaGraduationCap className="text-blue-600 w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
               <div className="min-w-0">
                 <span className="text-xs sm:text-sm text-gray-500 block">Qualification</span>
                 <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">{getHighestQualification()}</p>
@@ -196,7 +197,7 @@ const ProfileHeader = ({
             </div>
             
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <FaBriefcase className="text-green-600 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+              <FaBriefcase className="text-green-600 w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
               <div className="min-w-0">
                 <span className="text-xs sm:text-sm text-gray-500 block">Experience</span>
                 <p className="font-semibold text-gray-800 text-sm sm:text-base">{calculateExperience()}</p>
@@ -204,7 +205,7 @@ const ProfileHeader = ({
             </div>
             
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <FaBook className="text-purple-600 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+              <FaBook className="text-purple-600 w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
               <div className="min-w-0">
                 <span className="text-xs sm:text-sm text-gray-500 block">Specialization</span>
                 <p className="font-semibold text-gray-800 text-sm sm:text-base truncate">{specialization || "Not specified"}</p>
@@ -212,7 +213,7 @@ const ProfileHeader = ({
             </div>
             
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <FaUsers className="text-orange-600 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+              <FaUsers className="text-orange-600 w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
               <div className="min-w-0">
                 <span className="text-xs sm:text-sm text-gray-500 block">Classes</span>
                 <p className="font-semibold text-gray-800 text-sm sm:text-base">{classes ? classes.join(', ') : "XI, XII"}</p>

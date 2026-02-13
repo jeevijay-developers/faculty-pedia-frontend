@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import Link from "next/link";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
 const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
@@ -116,14 +117,14 @@ const PostCard = ({ post, activeSpecialization }) => {
   return (
     <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Content */}
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col grow">
         {/* Title */}
         <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors line">
           {title}
         </h3>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2 grow">
           {description}
         </p>
 
@@ -149,7 +150,7 @@ const PostCard = ({ post, activeSpecialization }) => {
         {/* Faculty Info */}
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           <div className="flex items-center space-x-3">
-            <div className="relative h-10 w-10 rounded-full overflow-hidden flex-shrink-0">
+            <div className="relative h-10 w-10 rounded-full overflow-hidden shrink-0">
               <Image
                 src={avatarSrc}
                 alt={educator?.fullName || "Educator"}
@@ -159,9 +160,19 @@ const PostCard = ({ post, activeSpecialization }) => {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-900">
-                {educator?.fullName || "Educator"}
-              </span>
+              {educator?._id ? (
+                <Link
+                  href={`/profile/educator/${educator._id}`}
+                  className="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {educator?.fullName || "Educator"}
+                </Link>
+              ) : (
+                <span className="text-sm font-semibold text-gray-900">
+                  {educator?.fullName || "Educator"}
+                </span>
+              )}
             </div>
           </div>
 
@@ -243,9 +254,18 @@ const PostCard = ({ post, activeSpecialization }) => {
                       >
                         {category}
                       </span>
-                      <span className="text-sm font-semibold text-gray-700">
-                        {educator?.fullName || "Educator"}
-                      </span>
+                      {educator?._id ? (
+                        <Link
+                          href={`/profile/educator/${educator._id}`}
+                          className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors"
+                        >
+                          {educator?.fullName || "Educator"}
+                        </Link>
+                      ) : (
+                        <span className="text-sm font-semibold text-gray-700">
+                          {educator?.fullName || "Educator"}
+                        </span>
+                      )}
                     </div>
 
                     {coverImage && (

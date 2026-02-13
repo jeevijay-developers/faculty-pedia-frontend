@@ -83,6 +83,7 @@ const EducatorSignup = () => {
   const [isUploadingIntroVideo, setIsUploadingIntroVideo] = useState(false);
   const [pendingUser, setPendingUser] = useState(null);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [isSameNumber, setIsSameNumber] = useState(false);
 
   const [formData, setFormData] = useState({
     // Personal Information
@@ -92,6 +93,7 @@ const EducatorSignup = () => {
     password: "",
     confirmPassword: "",
     mobileNumber: "",
+    whatsappNumber: "",
     bio: "",
     introVideoLink: "",
     specialization: "IIT-JEE",
@@ -166,6 +168,11 @@ const EducatorSignup = () => {
         updated.subject = "";
       }
 
+      // Sync WhatsApp number with mobile when checkbox is active
+      if (name === "mobileNumber" && isSameNumber) {
+        updated.whatsappNumber = value;
+      }
+
       return updated;
     });
 
@@ -174,6 +181,32 @@ const EducatorSignup = () => {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
+      }));
+    }
+  };
+
+  const handleSameNumberChange = (e) => {
+    const checked = e.target.checked;
+    setIsSameNumber(checked);
+
+    if (checked) {
+      // Copy mobile number to WhatsApp
+      setFormData((prev) => ({
+        ...prev,
+        whatsappNumber: prev.mobileNumber,
+      }));
+      // Clear WhatsApp error if any
+      if (errors.whatsappNumber) {
+        setErrors((prev) => ({
+          ...prev,
+          whatsappNumber: "",
+        }));
+      }
+    } else {
+      // Clear WhatsApp number when unchecked
+      setFormData((prev) => ({
+        ...prev,
+        whatsappNumber: "",
       }));
     }
   };
@@ -368,6 +401,12 @@ const EducatorSignup = () => {
           stepErrors.mobileNumber =
             "Enter a valid 10-digit Indian mobile number starting with 6-9";
 
+        const whatsapp = formData.whatsappNumber.trim();
+        if (!whatsapp) stepErrors.whatsappNumber = "WhatsApp number is required";
+        else if (!MOBILE_REGEX.test(whatsapp))
+          stepErrors.whatsappNumber =
+            "Enter a valid 10-digit Indian WhatsApp number starting with 6-9";
+
         if (!bio) stepErrors.bio = "Bio is required";
         else if (bio.length < MIN_BIO_LENGTH)
           stepErrors.bio = `Bio must be at least ${MIN_BIO_LENGTH} characters`;
@@ -525,6 +564,7 @@ const EducatorSignup = () => {
     const trimmedLastName = formData.lastName.trim();
     const trimmedEmail = formData.email.trim().toLowerCase();
     const trimmedMobile = formData.mobileNumber.trim();
+    const trimmedWhatsapp = formData.whatsappNumber.trim();
     const trimmedBio = formData.bio.trim();
     const normalizedSubjects = formData.subject
       ? [formData.subject.toLowerCase()]
@@ -536,6 +576,7 @@ const EducatorSignup = () => {
       email: trimmedEmail,
       password: formData.password,
       mobileNumber: trimmedMobile,
+      whatsappNumber: trimmedWhatsapp,
       bio: trimmedBio,
       specialization: [formData.specialization].filter(Boolean),
       subject: normalizedSubjects,
@@ -642,7 +683,7 @@ const EducatorSignup = () => {
         </label>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <label className="flex flex-col gap-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
             Email Address
@@ -663,7 +704,9 @@ const EducatorSignup = () => {
             </span>
           )}
         </label>
+      </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <label className="flex flex-col gap-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
             Mobile Number
@@ -682,6 +725,44 @@ const EducatorSignup = () => {
               {errors.mobileNumber}
             </span>
           )}
+        </label>
+
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            WhatsApp Number
+          </span>
+          <input
+            type="tel"
+            id="whatsappNumber"
+            name="whatsappNumber"
+            value={formData.whatsappNumber}
+            onChange={handleInputChange}
+            disabled={isSameNumber}
+            className={`${inputClass(Boolean(errors.whatsappNumber))} ${isSameNumber ? "opacity-60 cursor-not-allowed" : ""}`}
+            placeholder="XXXXXX9658"
+          />
+          {errors.whatsappNumber && (
+            <span className="text-xs text-red-500 font-medium mt-1">
+              {errors.whatsappNumber}
+            </span>
+          )}
+        </label>
+      </div>
+
+      {/* Both numbers same checkbox */}
+      <div className="flex items-center gap-2 px-1">
+        <input
+          type="checkbox"
+          id="sameNumber"
+          checked={isSameNumber}
+          onChange={handleSameNumberChange}
+          className="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+        />
+        <label
+          htmlFor="sameNumber"
+          className="text-sm text-slate-600 font-medium cursor-pointer select-none"
+        >
+          Both numbers are same
         </label>
       </div>
 
