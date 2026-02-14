@@ -848,7 +848,7 @@ const ViewProfile = ({ educatorData }) => {
                   <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
                     <FaGraduationCap className="text-gray-500 w-4.5 h-4.5" />
                     <span className="text-sm text-[#111118] font-medium">
-                      {safeNumber(educatorData.yearsExperience, 0)}+ Years
+                      {safeNumber(educatorData.yoe, 0)}+ Years
                       Experience
                     </span>
                   </div>
@@ -1251,7 +1251,7 @@ const ViewProfile = ({ educatorData }) => {
                         qualification: educatorData.qualification,
                         rating: ratingAverage,
                         yearsExperience: safeNumber(
-                          educatorData.yearsExperience,
+                          educatorData.yoe,
                           0,
                         ),
                       },
@@ -1502,7 +1502,7 @@ const ViewProfile = ({ educatorData }) => {
                             </p>
                           </div>
                         )}
-                        {educatorData?.yearsExperience && (
+                        {educatorData?.yoe && (
                           <div className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-4">
                             <FaClock className="mt-1 h-4 w-4 text-[#231fe5]" />
                             <div>
@@ -1510,7 +1510,7 @@ const ViewProfile = ({ educatorData }) => {
                                 Experience
                               </p>
                               <p className="text-sm text-gray-700">
-                                {educatorData.yearsExperience}+ years of
+                                {educatorData.yoe}+ years of
                                 mentoring students
                               </p>
                             </div>

@@ -24,6 +24,8 @@ const CourseCarousel = ({
   title = "Our Top Courses",
   viewMoreLink = "/courses",
   specialization = "All", // New prop for filtering by specialization
+  courseType = null, // New prop for filtering by courseType: "one-to-one" or "one-to-all"
+  bgColor = "bg-gray-50", // Background color for the section
   autoplay = true,
 }) => {
   const [swiperRef, setSwiperRef] = useState(null);
@@ -289,8 +291,15 @@ const CourseCarousel = ({
           );
         });
 
+        // Filter by courseType if specified
+        const filteredCourses = courseType
+          ? activeCourses.filter(
+              (course) => course.courseType === courseType
+            )
+          : activeCourses;
+
         const enrichedCourses = await enrichCoursesWithEducators(
-          activeCourses,
+          filteredCourses,
           specialization
         );
         setCoursesToRender(enrichedCourses);
@@ -306,7 +315,7 @@ const CourseCarousel = ({
     if (specialization) {
       fetchOnlineCourse();
     }
-  }, [specialization]);
+  }, [specialization, courseType]);
 
   if (loading) {
     return (
@@ -346,7 +355,7 @@ const CourseCarousel = ({
   }
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className={`py-16 ${bgColor}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-row justify-between items-center gap-2 mb-8">

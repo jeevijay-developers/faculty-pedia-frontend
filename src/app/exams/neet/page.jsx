@@ -32,11 +32,20 @@ const NeetPage = () => {
       />
       <EducatorsCarousel specialization="NEET" />
       <CourseCarousel
-        title="Courses for NEET"
+        title="One to All Courses"
         viewMoreLink="/courses"
         specialization="NEET"
+        courseType="one-to-all"
+        bgColor="bg-gray-50"
       />
-      <OneToOneLiveClassesCarousel specialization="NEET" />
+      <CourseCarousel
+        title="One to One Live Courses"
+        viewMoreLink="/courses"
+        specialization="NEET"
+        courseType="one-to-one"
+        bgColor="bg-white"
+      />
+      {/* <OneToOneLiveClassesCarousel specialization="NEET" /> */}
       <OneToOnePPHCarousel specialization="NEET" />
       <UpcomingWebinarCarousel specialization="NEET" />
       <TestSeriesCarousel specialization="NEET" />

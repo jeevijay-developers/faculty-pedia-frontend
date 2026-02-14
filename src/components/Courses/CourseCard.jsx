@@ -206,16 +206,18 @@ const CourseCard = ({ course }) => {
             </span>
           </div>
 
-          {/* Max Students */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-600">
-              <MdAccessTime className="w-4 h-4 mr-2 text-purple-700" />
-              <span className="font-medium">Max Students:</span>
+          {/* Max Students - Only show for one-to-all courses */}
+          {course.courseType !== "one-to-one" && (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center text-sm text-gray-600">
+                <MdAccessTime className="w-4 h-4 mr-2 text-purple-700" />
+                <span className="font-medium">Max Students:</span>
+              </div>
+              <span className="text-sm text-gray-800 font-medium">
+                {course.maxStudents || course.seatLimit || "N/A"}
+              </span>
             </div>
-            <span className="text-sm text-gray-800 font-medium">
-              {course.maxStudents || course.seatLimit || "N/A"}
-            </span>
-          </div>
+          )}
         </div>
 
         {/* Pricing Section */}
