@@ -119,7 +119,7 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
                 id="category-select"
                 value={selectedCategory}
                 onChange={(e) => handleCategoryChange(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 min-w-[150px]"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 min-w-37.5"
               >
                 {categories.map((category) => (
                   <option key={category} value={category}>

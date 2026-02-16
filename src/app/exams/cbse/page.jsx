@@ -28,7 +28,7 @@ const page = () => {
       <CBSEPageContent />
 
       <CourseCarousel
-        title="One to All Courses"
+        title="One to All Live Courses"
         viewMoreLink="/courses"
         specialization="CBSE"
         courseType="one-to-all"

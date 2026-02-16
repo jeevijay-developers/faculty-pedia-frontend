@@ -812,7 +812,7 @@ const CoursePanelPage = () => {
               <div className="flex gap-8">
                 {[
                   { id: "videos", label: "Videos" },
-                  { id: "assets", label: "Assets" },
+                  { id: "assets", label: "Study Material" },
                   { id: "liveClasses", label: "Live Classes" },
                   { id: "tests", label: "Tests" },
                 ].map((tab) => {

@@ -22,7 +22,7 @@ const page = async () => {
 
       <EducatorsCarousel specialization="IIT-JEE" />
       <CourseCarousel
-        title="One to All Courses"
+        title="One to All Live Courses"
         viewMoreLink="/courses"
         specialization="IIT-JEE"
         courseType="one-to-all"

@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import CourseHeader from "./CourseHeader";
 import ClassCard from "./ClassCard";
-import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
+// import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
 import { getTestSeriesByCourse } from "@/components/server/test-series.route";
 import {
   FaUsers,
@@ -11,8 +11,10 @@ import {
   FaCalendarAlt,
   FaChair,
   FaGraduationCap,
+  FaWhatsapp,
 } from "react-icons/fa";
 import { getCourseById } from "../server/course.routes";
+import { getEducatorProfile } from "../server/educators.routes";
 import CourseLoader from "../others/courseLoader";
 import EnrollButton from "../Common/EnrollButton";
 
@@ -72,6 +74,7 @@ const CourseDetails = ({ id }) => {
   const [studentId, setStudentId] = useState(null);
   const [courseTests, setCourseTests] = useState([]);
   const [testsLoading, setTestsLoading] = useState(false);
+  const [educator, setEducator] = useState(null);
 
   const resolveAssetUrl = (asset) => {
     if (!asset) return null;
@@ -155,6 +158,18 @@ const CourseDetails = ({ id }) => {
 
         if (data) {
           setCourse(data);
+          
+          // Fetch educator details if educatorID exists
+          if (data.educatorID) {
+            try {
+              const educatorId = typeof data.educatorID === 'object' ? data.educatorID._id : data.educatorID;
+              const educatorResponse = await getEducatorProfile(educatorId);
+              const educatorData = educatorResponse?.data?.educator || educatorResponse?.educator || educatorResponse;
+              setEducator(educatorData);
+            } catch (educatorError) {
+              console.error("Error fetching educator:", educatorError);
+            }
+          }
         } else {
           setError("Course not found");
         }
@@ -627,6 +642,29 @@ const CourseDetails = ({ id }) => {
                   )}
                 </div>
               </div>
+
+              {/* Talk to Educator WhatsApp Button */}
+              {!isEnrolled && educator?.whatsappNumber && (
+                <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200 p-5 shadow-sm">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600 mb-3">
+                      Worried about buying a course?
+                    </p>
+                    <a
+                      href={`https://wa.me/${educator.whatsappNumber.replace(/[^0-9]/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full inline-flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-sm hover:shadow-md"
+                    >
+                      <FaWhatsapp className="w-5 h-5" />
+                      Talk to Educator
+                    </a>
+                    <p className="text-xs text-gray-500 mt-3">
+                      Connect directly with the educator to clarify your doubts
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

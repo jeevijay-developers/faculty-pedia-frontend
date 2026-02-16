@@ -32,7 +32,7 @@ const NeetPage = () => {
       />
       <EducatorsCarousel specialization="NEET" />
       <CourseCarousel
-        title="One to All Courses"
+        title="One to All Live Courses"
         viewMoreLink="/courses"
         specialization="NEET"
         courseType="one-to-all"
