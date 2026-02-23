@@ -10,11 +10,14 @@ import {
   FaChalkboardTeacher,
   FaBook,
   FaGraduationCap,
+  FaStar,
+  FaStarHalfAlt,
 } from "react-icons/fa";
 import Banner from "../Common/Banner";
 import EnrollButton from "../Common/EnrollButton";
 import ShareButton from "@/components/Common/ShareButton";
 import { fetchEducatorById } from "@/components/server/webinars.routes";
+import { createItemReview } from "../server/reviews.routes";
 
 const deriveEducatorName = (webinar) => {
   const educatorObject =
@@ -56,6 +59,12 @@ const deriveEducatorName = (webinar) => {
 const WebinarDetails = ({ webinar }) => {
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
   const [educatorName, setEducatorName] = useState(deriveEducatorName(webinar));
+  const [studentId, setStudentId] = useState(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewStatus, setReviewStatus] = useState("");
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [showReviewSuccess, setShowReviewSuccess] = useState(false);
 
   useEffect(() => {
     const educatorIdString =
@@ -95,6 +104,10 @@ const WebinarDetails = ({ webinar }) => {
         localStorage.getItem("faculty-pedia-student-data") || "{}"
       );
       const studentId = userData?._id || userData?.id;
+
+      if (studentId) {
+        setStudentId(studentId);
+      }
 
       const enrollmentList =
         webinar?.studentEnrolled || webinar?.enrolledStudents || [];
@@ -141,8 +154,67 @@ const WebinarDetails = ({ webinar }) => {
   const seatsAvailable = webinar.seatsAvailable || seatLimit - enrolledCount;
   const shareText = `Join the webinar "${title}" on Facultypedia.`;
 
+  const handleWebinarReviewSubmit = async (event) => {
+    event.preventDefault();
+    if (!isAlreadyEnrolled) {
+      setReviewStatus("Only enrolled students can submit a review.");
+      return;
+    }
+    if (!studentId) {
+      setReviewStatus("Please sign in to submit your review.");
+      return;
+    }
+
+    try {
+      setIsSubmittingReview(true);
+      setReviewStatus("");
+      await createItemReview({
+        studentId,
+        itemId: webinar._id || webinar.id,
+        itemType: "webinar",
+        rating: Number(reviewRating),
+        reviewText,
+      });
+      setReviewStatus("Review submitted successfully.");
+      setReviewText("");
+      setShowReviewSuccess(true);
+    } catch (submitError) {
+      const message =
+        submitError?.response?.data?.message ||
+        submitError?.message ||
+        "Failed to submit review. Please try again.";
+      setReviewStatus(message);
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
+
+  const handleWebinarStarClick = (index, event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const isLeftHalf = event.clientX - rect.left <= rect.width / 2;
+    const nextRating = index + (isLeftHalf ? 0.5 : 1);
+    setReviewRating(nextRating);
+  };
+
   return (
     <div>
+      {showReviewSuccess && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Thanks for your review!</h3>
+            <p className="text-gray-600 mb-4">
+              Your rating has been recorded and will appear on the educator profile.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowReviewSuccess(false)}
+              className="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto p-4 space-y-8">
         {/* Header Section */}
         <div
@@ -321,6 +393,85 @@ const WebinarDetails = ({ webinar }) => {
               <p className="text-gray-600">Live Online Webinar</p>
             </div>
           </div>
+        </div>
+
+        <div
+          className="bg-white rounded-xl shadow-lg p-6"
+          data-aos="fade-up"
+          data-aos-delay="130"
+        >
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            Give Review and rate this Webinar
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Share your experience. Only enrolled students can submit a review, and it will show on the educator profile.
+          </p>
+          <form className="space-y-4" onSubmit={handleWebinarReviewSubmit}>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+              <span className="text-sm font-medium text-gray-700">
+                Tap to rate (half stars supported)
+              </span>
+              <div className="flex items-center gap-1">
+                {[0, 1, 2, 3, 4].map((index) => {
+                  const fillState = reviewRating - index;
+                  const icon = fillState >= 1 ? (
+                    <FaStar className="h-6 w-6 text-yellow-400" />
+                  ) : fillState >= 0.5 ? (
+                    <FaStarHalfAlt className="h-6 w-6 text-yellow-400" />
+                  ) : (
+                    <FaStar className="h-6 w-6 text-gray-300" />
+                  );
+                  return (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={(event) => handleWebinarStarClick(index, event)}
+                      disabled={!isAlreadyEnrolled || isSubmittingReview}
+                      className="p-1 disabled:cursor-not-allowed"
+                      aria-label={`Set webinar rating to ${index + 1} star${index === 0 ? "" : "s"}`}
+                    >
+                      {icon}
+                    </button>
+                  );
+                })}
+                <span className="ml-2 text-sm text-gray-700">{reviewRating.toFixed(1)}</span>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700" htmlFor="webinar-review-text">
+                Your Review
+              </label>
+              <textarea
+                id="webinar-review-text"
+                value={reviewText}
+                onChange={(event) => setReviewText(event.target.value)}
+                rows={4}
+                className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                placeholder="Tell others about the content, delivery, and outcomes."
+                disabled={!isAlreadyEnrolled || isSubmittingReview}
+                required
+              />
+            </div>
+            {reviewStatus && (
+              <p className="text-sm text-gray-700">{reviewStatus}</p>
+            )}
+            <button
+              type="submit"
+              className={`w-full sm:w-auto inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold text-white shadow-sm ${
+                isAlreadyEnrolled
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={!isAlreadyEnrolled || isSubmittingReview}
+            >
+              {isSubmittingReview ? "Submitting..." : "Submit Review"}
+            </button>
+            {!isAlreadyEnrolled && (
+              <p className="text-sm text-red-600 font-medium">
+                Enroll in this webinar to submit a review.
+              </p>
+            )}
+          </form>
         </div>
 
         {/* Assets Section */}

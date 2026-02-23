@@ -9,17 +9,25 @@ import {
   FaTrophy,
   FaBookOpen,
   FaCheckCircle,
+  FaStar,
+  FaStarHalfAlt,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import EnrollButton from "../Common/EnrollButton";
 import { useRouter } from "next/navigation";
+import { createItemReview } from "../server/reviews.routes";
 
 const TestSeriesDetails = ({ testSeriesData }) => {
   const [activeTab, setActiveTab] = useState("description");
   const [isClient, setIsClient] = useState(false);
   const [studentId, setStudentId] = useState(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewStatus, setReviewStatus] = useState("");
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [showReviewSuccess, setShowReviewSuccess] = useState(false);
   const router = useRouter();
 
   // Check if testSeriesData exists
@@ -196,6 +204,48 @@ const TestSeriesDetails = ({ testSeriesData }) => {
     }
   };
 
+  const handleTestSeriesReviewSubmit = async (event) => {
+    event.preventDefault();
+    if (!isEnrolled) {
+      setReviewStatus("Only enrolled students can submit a review.");
+      return;
+    }
+    if (!studentId) {
+      setReviewStatus("Please sign in to submit your review.");
+      return;
+    }
+
+    try {
+      setIsSubmittingReview(true);
+      setReviewStatus("");
+      await createItemReview({
+        studentId,
+        itemId: testSeriesData?._id || testSeriesData?.id,
+        itemType: "testSeries",
+        rating: Number(reviewRating),
+        reviewText,
+      });
+      setReviewStatus("Review submitted successfully.");
+      setReviewText("");
+      setShowReviewSuccess(true);
+    } catch (submitError) {
+      const message =
+        submitError?.response?.data?.message ||
+        submitError?.message ||
+        "Failed to submit review. Please try again.";
+      setReviewStatus(message);
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
+
+  const handleTestSeriesStarClick = (index, event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const isLeftHalf = event.clientX - rect.left <= rect.width / 2;
+    const nextRating = index + (isLeftHalf ? 0.5 : 1);
+    setReviewRating(nextRating);
+  };
+
   const handleEnrollmentSuccess = useCallback(
     async ({ alreadyEnrolled }) => {
       // Redirect only for independent test series
@@ -218,6 +268,23 @@ const TestSeriesDetails = ({ testSeriesData }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-6">
+      {showReviewSuccess && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
+            <h3 className="text-xl font-semibold text-[#0e151b] mb-2">Thanks for your review!</h3>
+            <p className="text-[#4e7597] mb-4">
+              Your rating has been recorded and will appear on the educator profile.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowReviewSuccess(false)}
+              className="inline-flex w-full justify-center rounded-md bg-[#1E88E5] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#1565C0]"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       {/* Breadcrumbs */}
       <div className="flex flex-wrap gap-2 mb-6">
         <a className="text-[#4e7597] text-sm font-medium hover:text-[#1E88E5] transition-colors" href="/">
@@ -445,6 +512,81 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                   </>
                 )}
               </div>
+            </section>
+
+            <section className="bg-white rounded-md shadow-sm border border-[#e7eef3] p-6">
+              <h3 className="text-2xl font-bold mb-2 text-[#0e151b]">
+                Give Review and rate this Test Series
+              </h3>
+              <p className="text-sm text-[#4e7597] mb-4">
+                Reviews are limited to enrolled students and will appear on the educator profile.
+              </p>
+              <form className="space-y-4" onSubmit={handleTestSeriesReviewSubmit}>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                  <span className="text-sm font-medium text-[#0e151b]">
+                    Tap to rate (half stars supported)
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {[0, 1, 2, 3, 4].map((index) => {
+                      const fillState = reviewRating - index;
+                      const icon = fillState >= 1 ? (
+                        <FaStar className="h-6 w-6 text-yellow-400" />
+                      ) : fillState >= 0.5 ? (
+                        <FaStarHalfAlt className="h-6 w-6 text-yellow-400" />
+                      ) : (
+                        <FaStar className="h-6 w-6 text-gray-300" />
+                      );
+                      return (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={(event) => handleTestSeriesStarClick(index, event)}
+                          disabled={!isEnrolled || isSubmittingReview}
+                          className="p-1 disabled:cursor-not-allowed"
+                          aria-label={`Set test series rating to ${index + 1} star${index === 0 ? "" : "s"}`}
+                        >
+                          {icon}
+                        </button>
+                      );
+                    })}
+                    <span className="ml-2 text-sm text-[#0e151b]">{reviewRating.toFixed(1)}</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-[#0e151b]" htmlFor="testseries-review-text">
+                    Your Review
+                  </label>
+                  <textarea
+                    id="testseries-review-text"
+                    value={reviewText}
+                    onChange={(event) => setReviewText(event.target.value)}
+                    rows={4}
+                    className="mt-2 w-full rounded-md border border-[#e7eef3] px-3 py-2 text-sm"
+                    placeholder="Share your experience with this test series."
+                    disabled={!isEnrolled || isSubmittingReview}
+                    required
+                  />
+                </div>
+                {reviewStatus && (
+                  <p className="text-sm text-[#0e151b]">{reviewStatus}</p>
+                )}
+                <button
+                  type="submit"
+                  className={`w-full sm:w-auto inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold text-white shadow-sm ${
+                    isEnrolled
+                      ? "bg-[#1E88E5] hover:bg-[#1565C0]"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
+                  disabled={!isEnrolled || isSubmittingReview}
+                >
+                  {isSubmittingReview ? "Submitting..." : "Submit Review"}
+                </button>
+                {!isEnrolled && (
+                  <p className="text-sm font-medium text-red-600">
+                    Enroll in this test series to submit a review.
+                  </p>
+                )}
+              </form>
             </section>
           </div>
         </div>

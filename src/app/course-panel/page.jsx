@@ -302,9 +302,6 @@ const CoursePanelPage = () => {
   }, [courseData, courseVideos]);
 
   const assets = useMemo(() => {
-    const embedded = Array.isArray(courseData?.studyMaterials)
-      ? courseData.studyMaterials
-      : [];
     const assigned = Array.isArray(courseMaterials) ? courseMaterials : [];
 
     const normalizeFromMaterial = (material, index) => {
@@ -340,7 +337,7 @@ const CoursePanelPage = () => {
       return [...topLevelEntry, ...docEntries];
     };
 
-    const combined = [...embedded, ...assigned]
+    const combined = assigned
       .flatMap(normalizeFromMaterial)
       .filter(Boolean);
 

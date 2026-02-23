@@ -73,6 +73,11 @@ const CourseHeader = ({ course }) => {
 
   const { id: educatorId, name: educatorName } = resolveEducator(course);
 
+  const courseTypeValue = (course?.courseType || "").toString().toLowerCase();
+  const isOneToAll = courseTypeValue === "one-to-all" || courseTypeValue === "ota";
+  const isOneToOne = courseTypeValue === "one-to-one" || courseTypeValue === "oto";
+  const courseTypeLabel = isOneToAll ? "One to All" : isOneToOne ? "One to One" : "Course Type";
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       {/* Header Section */}
@@ -113,7 +118,7 @@ const CourseHeader = ({ course }) => {
                   </span>
                 ))}
               <span className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
-                {course.courseType === "OTA" ? "One to All" : "One to One"}
+                    {courseTypeLabel}
               </span>
             </div>
 
@@ -170,12 +175,14 @@ const CourseHeader = ({ course }) => {
                 </div>
                 <div className="text-black/80 text-sm">Videos</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">
-                  {course.maxStudents || 0}
+              {isOneToAll && (
+                <div className="text-center">
+                  <div className="text-2xl font-bold">
+                    {course.maxStudents || 0}
+                  </div>
+                  <div className="text-black/80 text-sm">Max Students</div>
                 </div>
-                <div className="text-black/80 text-sm">Max Students</div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -216,19 +223,21 @@ const CourseHeader = ({ course }) => {
             </div>
           </div>
 
-          {/* Enrollment */}
-          <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-            <div className="flex items-center space-x-2 mb-2">
-              <FaUsers className="w-5 h-5 text-purple-600" />
-              <span className="text-sm font-medium text-purple-700">
-                Enrollment
-              </span>
+          {/* Enrollment (only for One to All) */}
+          {isOneToAll && (
+            <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+              <div className="flex items-center space-x-2 mb-2">
+                <FaUsers className="w-5 h-5 text-purple-600" />
+                <span className="text-sm font-medium text-purple-700">
+                  Enrollment
+                </span>
+              </div>
+              <div className="text-2xl font-bold text-purple-800">
+                {course.enrolledStudents?.length || 0}/{course.maxStudents || 0}
+              </div>
+              <div className="text-sm text-purple-600">Students</div>
             </div>
-            <div className="text-2xl font-bold text-purple-800">
-              {course.enrolledStudents?.length || 0}/{course.maxStudents || 0}
-            </div>
-            <div className="text-sm text-purple-600">Students</div>
-          </div>
+          )}
 
           {/* Subject */}
           <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">

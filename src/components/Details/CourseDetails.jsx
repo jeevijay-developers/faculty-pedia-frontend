@@ -12,11 +12,14 @@ import {
   FaChair,
   FaGraduationCap,
   FaWhatsapp,
+  FaStar,
+  FaStarHalfAlt,
 } from "react-icons/fa";
 import { getCourseById } from "../server/course.routes";
 import { getEducatorProfile } from "../server/educators.routes";
 import CourseLoader from "../others/courseLoader";
 import EnrollButton from "../Common/EnrollButton";
+import { createItemReview } from "../server/reviews.routes";
 
 const CourseDetails = ({ id }) => {
   const router = useRouter();
@@ -75,6 +78,11 @@ const CourseDetails = ({ id }) => {
   const [courseTests, setCourseTests] = useState([]);
   const [testsLoading, setTestsLoading] = useState(false);
   const [educator, setEducator] = useState(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewStatus, setReviewStatus] = useState("");
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [showReviewSuccess, setShowReviewSuccess] = useState(false);
 
   const resolveAssetUrl = (asset) => {
     if (!asset) return null;
@@ -309,6 +317,48 @@ const CourseDetails = ({ id }) => {
     );
   }
 
+  const handleCourseReviewSubmit = async (event) => {
+    event.preventDefault();
+    if (!isEnrolled) {
+      setReviewStatus("Only enrolled students can submit a review.");
+      return;
+    }
+    if (!studentId) {
+      setReviewStatus("Please sign in to submit your review.");
+      return;
+    }
+
+    try {
+      setIsSubmittingReview(true);
+      setReviewStatus("");
+      await createItemReview({
+        studentId,
+        itemId: course._id || course.id,
+        itemType: "course",
+        rating: Number(reviewRating),
+        reviewText,
+      });
+      setReviewStatus("Review submitted successfully.");
+      setReviewText("");
+      setShowReviewSuccess(true);
+    } catch (submitError) {
+      const message =
+        submitError?.response?.data?.message ||
+        submitError?.message ||
+        "Failed to submit review. Please try again.";
+      setReviewStatus(message);
+    } finally {
+      setIsSubmittingReview(false);
+    }
+  };
+
+  const handleCourseStarClick = (index, event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const isLeftHalf = event.clientX - rect.left <= rect.width / 2;
+    const nextRating = index + (isLeftHalf ? 0.5 : 1);
+    setReviewRating(nextRating);
+  };
+
   const handleOpenCoursePanel = () => {
     const targetId = course?._id || course?.id || id;
     const query = targetId ? `?courseId=${targetId}` : "";
@@ -327,6 +377,23 @@ const CourseDetails = ({ id }) => {
 
   return (
     <div className="max-w-7xl mx-auto p-4">
+      {showReviewSuccess && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Thanks for your review!</h3>
+            <p className="text-gray-600 mb-4">
+              Your rating has been recorded and will appear on the educator profile.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowReviewSuccess(false)}
+              className="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       <CourseHeader course={course} />
 
       <div className="mt-8">
@@ -493,6 +560,81 @@ const CourseDetails = ({ id }) => {
                     </ul>
                   </div>
                 )}
+
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Give Review and rate this Course
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Reviews are limited to enrolled students. Your feedback appears on the educator profile.
+                  </p>
+                  <form className="space-y-4" onSubmit={handleCourseReviewSubmit}>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                      <span className="text-sm font-medium text-gray-700">
+                        Tap to rate (half stars supported)
+                      </span>
+                      <div className="flex items-center gap-1">
+                        {[0, 1, 2, 3, 4].map((index) => {
+                          const fillState = reviewRating - index;
+                          const icon = fillState >= 1 ? (
+                            <FaStar className="h-6 w-6 text-yellow-400" />
+                          ) : fillState >= 0.5 ? (
+                            <FaStarHalfAlt className="h-6 w-6 text-yellow-400" />
+                          ) : (
+                            <FaStar className="h-6 w-6 text-gray-300" />
+                          );
+                          return (
+                            <button
+                              key={index}
+                              type="button"
+                              onClick={(event) => handleCourseStarClick(index, event)}
+                              disabled={!isEnrolled || isSubmittingReview}
+                              className="p-1 disabled:cursor-not-allowed"
+                              aria-label={`Set course rating to ${index + 1} star${index === 0 ? "" : "s"}`}
+                            >
+                              {icon}
+                            </button>
+                          );
+                        })}
+                        <span className="ml-2 text-sm text-gray-700">{reviewRating.toFixed(1)}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700" htmlFor="course-review-text">
+                        Your Review
+                      </label>
+                      <textarea
+                        id="course-review-text"
+                        value={reviewText}
+                        onChange={(event) => setReviewText(event.target.value)}
+                        rows={4}
+                        className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                        placeholder="Share what you liked and what could improve."
+                        disabled={!isEnrolled || isSubmittingReview}
+                        required
+                      />
+                    </div>
+                    {reviewStatus && (
+                      <p className="text-sm text-gray-700">{reviewStatus}</p>
+                    )}
+                    <button
+                      type="submit"
+                      className={`w-full sm:w-auto inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold text-white shadow-sm ${
+                        isEnrolled
+                          ? "bg-blue-600 hover:bg-blue-700"
+                          : "bg-gray-400 cursor-not-allowed"
+                      }`}
+                      disabled={!isEnrolled || isSubmittingReview}
+                    >
+                      {isSubmittingReview ? "Submitting..." : "Submit Review"}
+                    </button>
+                    {!isEnrolled && (
+                      <p className="text-sm text-red-600 font-medium">
+                        Enroll in this course to submit a review.
+                      </p>
+                    )}
+                  </form>
+                </div>
               </div>
             )}
 
@@ -614,7 +756,7 @@ const CourseDetails = ({ id }) => {
                   <div className="space-y-3 pt-4 border-t border-gray-200">
                     <div className="flex items-center text-sm">
                       <span className="flex items-center mr-1 text-gray-600">
-                        <FaClock className="w-4 h-4 mr-2" />
+                        <FaClock className="w-4 h-4 mr-2" />  
                         <span>{course.courseDuration || "N/A"}</span>
                       </span>
                       <span className="text-gray-500">Course Duration</span>

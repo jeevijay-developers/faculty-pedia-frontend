@@ -1148,10 +1148,56 @@ const EducatorSignup = () => {
             </div>
 
             {/* Start Date */}
-           
+            <div>
+              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
+                Start Date
+              </label>
+              <MonthPicker
+                value={exp.startDate}
+                onChange={(value) =>
+                  handleNestedChange("workExperience", index, "startDate", value)
+                }
+                placeholder="Select start month"
+                className="h-12 rounded-lg"
+              />
+              {errors[`workExperience.${index}.startDate`] && (
+                <p className="mt-2 text-xs text-red-500 font-medium">
+                  {errors[`workExperience.${index}.startDate`]}
+                </p>
+              )}
+            </div>
 
             {/* End Date */}
-           
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider">
+                  End Date
+                </label>
+                <label className="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={exp.isCurrentRole}
+                    onChange={() => toggleCurrentRole(index)}
+                    className="w-4 h-4 text-blue-500 border-slate-300 rounded focus:ring-blue-500"
+                  />
+                  Currently working here
+                </label>
+              </div>
+              <MonthPicker
+                value={exp.endDate}
+                onChange={(value) =>
+                  handleNestedChange("workExperience", index, "endDate", value)
+                }
+                placeholder={exp.isCurrentRole ? "Present" : "Select end month"}
+                className="h-12 rounded-lg"
+                disabled={exp.isCurrentRole}
+              />
+              {errors[`workExperience.${index}.endDate`] && (
+                <p className="mt-2 text-xs text-red-500 font-medium">
+                  {errors[`workExperience.${index}.endDate`]}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       ))}
@@ -1254,36 +1300,6 @@ const EducatorSignup = () => {
                   {errors[`qualification.${index}.institute`]}
                 </p>
               )}
-            </div>
-
-            {/* Start Date */}
-            <div>
-              <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
-                Start Date
-              </label>
-              <MonthPicker
-                value={qual.startDate}
-                onChange={(value) =>
-                  handleNestedChange("qualification", index, "startDate", value)
-                }
-                placeholder="Select start month"
-                className="h-11 rounded-xl"
-              />
-            </div>
-
-            {/* End Date */}
-            <div>
-              <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
-                End Date (or Expected)
-              </label>
-              <MonthPicker
-                value={qual.endDate}
-                onChange={(value) =>
-                  handleNestedChange("qualification", index, "endDate", value)
-                }
-                placeholder="Select end month"
-                className="h-11 rounded-xl"
-              />
             </div>
           </div>
         </div>

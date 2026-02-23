@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import Image from "next/image";
@@ -24,6 +24,8 @@ import {
   Calendar,
   FileQuestion,
   Briefcase,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import CourseCard from "@/components/Courses/CourseCard";
 import UpcomingWebinarCard from "@/components/Webinars/UpcomingWebinarCard";
@@ -43,6 +45,10 @@ import {
   getTestSeriesByEducator,
 } from "@/components/server/test-series.route";
 import { rateEducator } from "@/components/server/educators.routes";
+import {
+  createItemReview,
+  getEducatorItemReviews,
+} from "@/components/server/reviews.routes";
 import Player from "@vimeo/player";
 import {
   followEducator,
@@ -156,6 +162,7 @@ const ViewProfile = ({ educatorData }) => {
   const vimeoContainerRef = useRef(null);
   const vimeoIframeRef = useRef(null);
   const vimeoPlayerRef = useRef(null);
+  const reviewCarouselRef = useRef(null);
 
   const payPerHourFeeValue = safeNumber(educatorData?.payPerHourFee, 0);
   const hasPayPerHour =
@@ -220,6 +227,14 @@ const ViewProfile = ({ educatorData }) => {
   });
   const [hoverRating, setHoverRating] = useState(0);
   const [isSubmittingRating, setIsSubmittingRating] = useState(false);
+  const [itemReviews, setItemReviews] = useState([]);
+  const [itemReviewsLoading, setItemReviewsLoading] = useState(false);
+  const [itemReviewsError, setItemReviewsError] = useState(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedItemForReview, setSelectedItemForReview] = useState(null);
+  const [itemReviewRating, setItemReviewRating] = useState(0);
+  const [itemReviewText, setItemReviewText] = useState("");
+  const [isSubmittingItemReview, setIsSubmittingItemReview] = useState(false);
 
   // State for webinar details
   const [webinarDetails, setWebinarDetails] = useState([]);
@@ -232,6 +247,41 @@ const ViewProfile = ({ educatorData }) => {
   // State for test series details
   const [testSeriesDetails, setTestSeriesDetails] = useState([]);
   const [loadingTestSeries, setLoadingTestSeries] = useState(false);
+
+  const reviewableItems = useMemo(() => {
+    const items = [];
+    if (Array.isArray(courseDetails)) {
+      courseDetails.forEach((course) => {
+        if (!course) return;
+        items.push({
+          id: course._id || course.id,
+          type: "course",
+          title: course.title || course.name || "Course",
+        });
+      });
+    }
+    if (Array.isArray(webinarDetails)) {
+      webinarDetails.forEach((webinar) => {
+        if (!webinar) return;
+        items.push({
+          id: webinar._id || webinar.id,
+          type: "webinar",
+          title: webinar.title || "Webinar",
+        });
+      });
+    }
+    if (Array.isArray(testSeriesDetails)) {
+      testSeriesDetails.forEach((series) => {
+        if (!series) return;
+        items.push({
+          id: series._id || series.id,
+          type: "testSeries",
+          title: series.title || "Test Series",
+        });
+      });
+    }
+    return items;
+  }, [courseDetails, webinarDetails, testSeriesDetails]);
 
   // State for follow functionality
   const [isFollowing, setIsFollowing] = useState(false);
@@ -493,6 +543,42 @@ const ViewProfile = ({ educatorData }) => {
     testSeriesDetails?.length,
   ]);
 
+  // Fetch item reviews for this educator (courses, webinars, test series)
+  useEffect(() => {
+    if (!educatorId) return;
+    let cancelled = false;
+
+    const loadReviews = async () => {
+      setItemReviewsLoading(true);
+      setItemReviewsError(null);
+      try {
+        const response = await getEducatorItemReviews(educatorId, {
+          limit: 50,
+        });
+        const list = response?.data || response?.reviews || [];
+        if (!cancelled) {
+          setItemReviews(Array.isArray(list) ? list : []);
+        }
+      } catch (error) {
+        console.error("Error fetching educator item reviews:", error);
+        if (!cancelled) {
+          setItemReviewsError(
+            error?.response?.data?.message || "Unable to load reviews right now."
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setItemReviewsLoading(false);
+        }
+      }
+    };
+
+    loadReviews();
+    return () => {
+      cancelled = true;
+    };
+  }, [educatorId]);
+
   if (!educatorData) return null; // Functions to load more items
   const loadMoreCourses = () => {
     setVisibleCourses((prev) => prev + 3);
@@ -629,6 +715,101 @@ const ViewProfile = ({ educatorData }) => {
       setIsSubmittingRating(false);
     }
   };
+
+  const handleItemReviewSubmit = async () => {
+    if (isSubmittingItemReview) return;
+
+    if (!currentUser?._id) {
+      toast.error("Please login as a student to submit a review");
+      return;
+    }
+
+    if (!selectedItemForReview?.id || !selectedItemForReview?.type) {
+      toast.error("Select a course, webinar, or test series to review");
+      return;
+    }
+
+    if (!itemReviewRating || itemReviewRating < 1 || itemReviewRating > 5) {
+      toast.error("Please provide a rating between 1 and 5");
+      return;
+    }
+
+    try {
+      setIsSubmittingItemReview(true);
+      await createItemReview({
+        studentId: currentUser._id,
+        itemId: selectedItemForReview.id,
+        itemType: selectedItemForReview.type,
+        rating: itemReviewRating,
+        reviewText: itemReviewText,
+      });
+      toast.success("Review submitted");
+      setItemReviewText("");
+      setItemReviewRating(0);
+      setIsReviewModalOpen(false);
+      // Refresh reviews list
+      const response = await getEducatorItemReviews(educatorId, { limit: 50 });
+      const list = response?.data || response?.reviews || [];
+      setItemReviews(Array.isArray(list) ? list : []);
+    } catch (error) {
+      console.error("Error submitting item review:", error);
+      toast.error(
+        error?.response?.data?.message || "Unable to submit review."
+      );
+    } finally {
+      setIsSubmittingItemReview(false);
+    }
+  };
+
+  const scrollReviews = (direction = "right") => {
+    const node = reviewCarouselRef.current;
+    if (!node) return;
+
+    const gap = (() => {
+      try {
+        const style = window.getComputedStyle(node);
+        const parsed = parseFloat(style.columnGap || style.gap || "0");
+        return Number.isFinite(parsed) && parsed >= 0 ? parsed : 16;
+      } catch (_err) {
+        return 16;
+      }
+    })();
+
+    const cardWidth = node.firstElementChild?.getBoundingClientRect?.().width || 320;
+    const step = Math.max(cardWidth + gap, 1);
+    const max = Math.max(node.scrollWidth - node.clientWidth, 0);
+
+    if (max <= 0) return;
+
+    if (direction === "left") {
+      const atStart = node.scrollLeft <= 1;
+      if (atStart) {
+        node.scrollTo({ left: max, behavior: "smooth" });
+        return;
+      }
+      const next = Math.max(node.scrollLeft - step, 0);
+      node.scrollTo({ left: next, behavior: "smooth" });
+    } else {
+      const atEnd = node.scrollLeft >= max - 1;
+      if (atEnd) {
+        node.scrollTo({ left: 0, behavior: "smooth" });
+        return;
+      }
+      const next = Math.min(node.scrollLeft + step, max);
+      node.scrollTo({ left: next, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const node = reviewCarouselRef.current;
+    if (!node || !itemReviews || itemReviews.length <= 1) return undefined;
+
+    const id = window.setInterval(() => {
+      scrollReviews("right");
+    }, 3000);
+
+    return () => window.clearInterval(id);
+  }, [itemReviews]);
 
   // Initialize Vimeo intro video player when introVideoLink changes
   useEffect(() => {
@@ -899,6 +1080,114 @@ const ViewProfile = ({ educatorData }) => {
                 </div>
               </div>
             )}
+
+            {/* Enrolled Item Reviews */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                <div>
+                  <h3 className="text-[#111118] text-lg font-bold">
+                   Students Feedback
+                  </h3>
+                  <p className="text-sm text-[#636388]">
+                    Feedback from students enrolled in this educator's content
+                  </p>
+                </div>
+                {canRate && reviewableItems.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedItemForReview(
+                        selectedItemForReview || reviewableItems[0]
+                      );
+                      setIsReviewModalOpen(true);
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#231fe5] text-white text-sm font-semibold shadow-sm hover:bg-[#1c19c8] transition-colors"
+                  >
+                    Share Your Review
+                  </button>
+                )}
+              </div>
+
+              {itemReviewsError && (
+                <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {itemReviewsError}
+                </div>
+              )}
+
+              {itemReviewsLoading ? (
+                <div className="py-6 text-center text-sm text-[#636388]">
+                  Loading reviews...
+                </div>
+              ) : itemReviews.length === 0 ? (
+                <div className="py-6 text-center text-sm text-[#636388]">
+                  No reviews yet. Be the first to share your experience.
+                </div>
+              ) : (
+                <div className="relative">
+                  <div
+                    ref={reviewCarouselRef}
+                    className="flex gap-4 overflow-hidden pb-2 scroll-smooth"
+                  >
+                    {itemReviews.map((review) => {
+                      const ratingValue = Number(review.rating) || 0;
+                      return (
+                        <div
+                          key={`${review.itemType}-${review._id || review.itemId}`}
+                          className="min-w-[280px] max-w-[320px] bg-white border border-gray-100 rounded-lg p-4 shadow-sm"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100 capitalize">
+                              {review.itemType === "testSeries"
+                                ? "Test Series"
+                                : review.itemType}
+                            </span>
+                            <span className="text-xs text-[#636388]">
+                              {review.createdAt
+                                ? new Date(review.createdAt).toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  })
+                                : ""}
+                            </span>
+                          </div>
+                          <p className="text-sm font-semibold text-[#111118] mb-1 line-clamp-2" title={review.itemTitle}>
+                            {review.itemTitle || "Untitled"}
+                          </p>
+                          <div className="flex items-center gap-1 mb-2">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <IoStarSharp
+                                key={star}
+                                className={`w-4 h-4 ${
+                                  star <= ratingValue
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              />
+                            ))}
+                            <span className="text-xs text-[#636388] ml-1">
+                              {ratingValue.toFixed(1)}
+                            </span>
+                          </div>
+                          {review.reviewText ? (
+                            <p className="text-sm text-[#111118] mb-3 line-clamp-3">
+                              {review.reviewText}
+                            </p>
+                          ) : (
+                            <p className="text-sm text-[#636388] mb-3">
+                              No comment provided.
+                            </p>
+                          )}
+                          <div className="text-xs text-[#636388] font-semibold">
+                            — {review.studentName || "Student"}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* RIGHT COLUMN (Media, Stats, Experience, Actions) */}
@@ -1411,6 +1700,117 @@ const ViewProfile = ({ educatorData }) => {
                 </button>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Item Review Modal */}
+        {isReviewModalOpen && (
+          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 px-4">
+            <div className="bg-white w-full max-w-lg rounded-xl shadow-xl border border-gray-200 p-6">
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#111118]">
+                    Share Your Course / Webinar / Test Series Review
+                  </h3>
+                  <p className="text-sm text-[#636388]">
+                    You can review only the items you are enrolled in.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsReviewModalOpen(false)}
+                  className="text-gray-500 hover:text-gray-800"
+                  aria-label="Close review modal"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-[#111118]">
+                    Select Item
+                  </label>
+                  <select
+                    value={selectedItemForReview?.id || ""}
+                    onChange={(e) => {
+                      const next = reviewableItems.find((item) => item.id === e.target.value);
+                      setSelectedItemForReview(next || null);
+                    }}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50"
+                  >
+                    <option value="" disabled>
+                      Select a course, webinar, or test series
+                    </option>
+                    {reviewableItems.map((item) => (
+                      <option key={`${item.type}-${item.id}`} value={item.id}>
+                        {item.title} ({item.type === "testSeries" ? "Test Series" : item.type})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-[#111118]">
+                    Rating
+                  </label>
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        onClick={() => setItemReviewRating(value)}
+                        className="p-1"
+                        aria-label={`Rate ${value}`}
+                      >
+                        <IoStarSharp
+                          className={`w-7 h-7 ${
+                            value <= itemReviewRating
+                              ? "text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                    <span className="text-xs text-[#636388]">
+                      {itemReviewRating ? `${itemReviewRating}/5` : "Select"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-[#111118]">
+                    Review (optional)
+                  </label>
+                  <textarea
+                    value={itemReviewText}
+                    onChange={(e) => setItemReviewText(e.target.value)}
+                    rows={4}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50"
+                    placeholder="Share your experience..."
+                  />
+                </div>
+
+                <div className="flex justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsReviewModalOpen(false)}
+                    className="px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-[#111118] hover:bg-gray-50"
+                    disabled={isSubmittingItemReview}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleItemReviewSubmit}
+                    className="px-4 py-2 rounded-lg bg-[#231fe5] text-white text-sm font-semibold shadow-sm hover:bg-[#1c19c8] disabled:opacity-60"
+                    disabled={isSubmittingItemReview}
+                  >
+                    {isSubmittingItemReview ? "Submitting..." : "Submit Review"}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
