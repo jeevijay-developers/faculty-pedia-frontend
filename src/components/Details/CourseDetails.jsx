@@ -375,6 +375,10 @@ const CourseDetails = ({ id }) => {
     setSelectedVideo(video);
   };
 
+  // Determine course type
+  const courseTypeValue = (course?.courseType || "").toString().toLowerCase();
+  const isOneToOne = courseTypeValue === "one-to-one" || courseTypeValue === "oto";
+
   return (
     <div className="max-w-7xl mx-auto p-4">
       {showReviewSuccess && (
@@ -410,7 +414,7 @@ const CourseDetails = ({ id }) => {
             >
               Overview
             </button>
-            <button
+            {/* <button
               onClick={() => setActiveTab("classes")}
               className={`${
                 activeTab === "classes"
@@ -419,7 +423,7 @@ const CourseDetails = ({ id }) => {
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
             >
               Classes
-            </button>
+            </button> */}
             {hasTestSeries && (
               <button
                 onClick={() => setActiveTab("tests")}
@@ -761,13 +765,31 @@ const CourseDetails = ({ id }) => {
                       </span>
                       <span className="text-gray-500">Course Duration</span>
                     </div>
+                    {!isOneToOne && (
+                      <div className="flex items-center text-sm">
+                        <span className="flex items-center mr-1 text-gray-600">
+                          <FaCalendarAlt className="w-4 h-4 mr-2" />
+                          <span>{course.classesPerWeek || "N/A"}</span>
+                        </span>
+                        <span className="text-gray-500">Classes / Week</span>
+                      </div>
+                    )}
                     <div className="flex items-center text-sm">
-                      <span className="flex items-center  mr-1 text-gray-600">
-                        <FaGraduationCap className="w-4 h-4 mr-2" />
-                        <span>{course.liveClass?.length || 0}</span>
+                      <span className="flex items-center mr-1 text-gray-600">
+                        <FaClock className="w-4 h-4 mr-2" />
+                        <span>{course.classDuration ? `${course.classDuration} min` : "N/A"}</span>
                       </span>
-                      <span className="text-gray-500">Live Classes</span>
+                      <span className="text-gray-500">Per Class Duration</span>
                     </div>
+                    {course.classTiming && (
+                      <div className="flex items-center text-sm">
+                        <span className="flex items-center mr-1 text-gray-600">
+                          <FaClock className="w-4 h-4 mr-2" />
+                          <span>{course.classTiming}</span>
+                        </span>
+                        <span className="text-gray-500">Class Timing</span>
+                      </div>
+                    )}
                     <div className="flex items-center text-sm">
                       <span className="flex items-center  mr-1 text-gray-600">
                         <FaChair className="w-4 h-4 mr-2" />

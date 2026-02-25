@@ -156,7 +156,7 @@ const CourseHeader = ({ course }) => {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold">
                   {course.courseDuration || "N/A"}
@@ -183,14 +183,30 @@ const CourseHeader = ({ course }) => {
                   <div className="text-black/80 text-sm">Max Students</div>
                 </div>
               )}
-            </div>
+              {course.classesPerWeek > 0 && (
+                <div className="text-center">
+                  <div className="text-2xl font-bold">
+                    {course.classesPerWeek}
+                  </div>
+                  <div className="text-black/80 text-sm">Classes/Week</div>
+                </div>
+              )}
+              {course.classDuration > 0 && (
+                <div className="text-center">
+                  <div className="text-2xl font-bold">
+                    {course.classDuration} min
+                  </div>
+                  <div className="text-black/80 text-sm">Per Class</div>
+                </div>
+              )}
+            </div> */}
           </div>
         </div>
       </div>
 
       {/* Details Section */}
       <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Pricing */}
           <div className="bg-green-50 rounded-lg p-4 border border-green-200">
             <div className="flex items-center space-x-2 mb-2">

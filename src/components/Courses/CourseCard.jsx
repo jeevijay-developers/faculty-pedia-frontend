@@ -206,7 +206,6 @@ const CourseCard = ({ course }) => {
             </span>
           </div>
 
-          {/* Max Students - Only show for one-to-all courses */}
           {course.courseType !== "one-to-one" && (
             <div className="flex items-center justify-between">
               <div className="flex items-center text-sm text-gray-600">
@@ -215,6 +214,28 @@ const CourseCard = ({ course }) => {
               </div>
               <span className="text-sm text-gray-800 font-medium">
                 {course.maxStudents || course.seatLimit || "N/A"}
+              </span>
+            </div>
+          )}
+          {course.classesPerWeek > 0 && (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center text-sm text-gray-600">
+                <MdCalendarToday className="w-4 h-4 mr-2 text-blue-700" />
+                <span className="font-medium">Classes/Week:</span>
+              </div>
+              <span className="text-sm text-gray-800 font-medium">
+                {course.classesPerWeek}
+              </span>
+            </div>
+          )}
+          {course.classDuration > 0 && (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center text-sm text-gray-600">
+                <MdAccessTime className="w-4 h-4 mr-2 text-green-700" />
+                <span className="font-medium">Per Class:</span>
+              </div>
+              <span className="text-sm text-gray-800 font-medium">
+                {course.classDuration} min
               </span>
             </div>
           )}

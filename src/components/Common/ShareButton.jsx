@@ -177,100 +177,118 @@ const ShareButton = ({
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-in fade-in duration-200">
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             aria-hidden="true"
             onClick={handleCloseModal}
           />
-          <div className="relative z-10 w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
+          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-200">
             <button
               type="button"
               onClick={handleCloseModal}
-              className="absolute right-3 top-3 rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+              className="absolute right-4 top-4 rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all active:scale-95"
               aria-label="Close share dialog"
             >
               <FiX className="h-5 w-5" />
             </button>
             
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Share this page
-              </h2>
-              <p className="text-sm text-gray-600">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <FiShare2 className="h-6 w-6 text-blue-600" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Share this page
+                </h2>
+              </div>
+              <p className="text-sm text-gray-600 ml-14">
                 Copy the link or choose a platform to share directly.
               </p>
             </div>
 
             <div className="mb-6">
-              <label className="block text-xs font-medium text-gray-700 mb-2">
+              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
                 Page URL
               </label>
               <div className="flex items-center gap-2">
                 <div
-                  className="flex-1 rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 overflow-hidden"
+                  className="flex-1 rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 overflow-hidden hover:border-gray-300 transition-colors"
                   title={shareUrl}
                 >
-                  <div className="truncate">{shareUrl}</div>
+                  <div className="truncate font-medium">{shareUrl}</div>
                 </div>
                 <button
                   type="button"
                   onClick={handleCopyLink}
-                  className="flex items-center justify-center h-10 w-10 rounded-lg border-2 border-gray-300 bg-white text-gray-600 transition-all hover:bg-blue-50 hover:border-blue-500 hover:text-blue-600 active:scale-95"
+                  className={`flex items-center justify-center h-12 w-12 rounded-lg border-2 transition-all active:scale-95 ${
+                    copyStatus === "copied"
+                      ? "bg-green-50 border-green-500 text-green-600"
+                      : "bg-white border-gray-300 text-gray-600 hover:bg-blue-50 hover:border-blue-500 hover:text-blue-600"
+                  }`}
                   title={copyStatus === "copied" ? "Copied!" : "Copy to clipboard"}
                   aria-label={copyStatus === "copied" ? "Copied" : "Copy link"}
                 >
                   {copyStatus === "copied" ? (
-                    <FiCheck className="h-5 w-5 text-green-600" />
+                    <FiCheck className="h-5 w-5" />
                   ) : (
                     <FiCopy className="h-5 w-5" />
                   )}
                 </button>
               </div>
+              {copyStatus === "copied" && (
+                <div className="mt-2 flex items-center gap-2 text-sm text-green-600 animate-in slide-in-from-top-1 duration-200">
+                  <FiCheck className="h-4 w-4" />
+                  <span className="font-medium">{copiedLabel}</span>
+                </div>
+              )}
               {copyStatus === "error" && (
-                <div className="mt-2 flex items-center gap-2 text-sm text-red-600">
+                <div className="mt-2 flex items-center gap-2 text-sm text-red-600 animate-in slide-in-from-top-1 duration-200">
                   <FiAlertCircle className="h-4 w-4" />
-                  <span>{errorLabel}</span>
+                  <span className="font-medium">{errorLabel}</span>
                 </div>
               )}
             </div>
 
             {socialLinks.length > 0 && (
               <div>
-                <p className="mb-3 text-xs font-medium text-gray-700 uppercase tracking-wide">
+                <p className="mb-4 text-xs font-semibold text-gray-700 uppercase tracking-wide">
                   Share via social media
                 </p>
-                  <div className="flex flex-wrap gap-3">
-                    {socialLinks.map(
-                      ({ name, href, icon: SocialIcon, color }) => (
-                        <a
-                          key={name}
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-200 text-gray-600 transition-all hover:scale-110 hover:border-blue-500 hover:shadow-lg"
-                          title={`Share on ${name}`}
-                          onClick={() =>
-                            onShared?.({
-                              method: name.toLowerCase(),
-                              url: shareUrl,
-                            })
-                          }
-                        >
-                          <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-gray-50 shadow-sm hover:border-blue-200">
-                            <SocialIcon className={`h-5 w-5 ${color}`} />
-                          </span>
-                          <span className="text-xs font-medium">{name}</span>
-                        </a>
-                      ))}
-                  </div>
+                <div className="grid grid-cols-4 gap-3">
+                  {socialLinks.map(
+                    ({ name, href, icon: SocialIcon, color }) => (
+                      <a
+                        key={name}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center gap-2 group"
+                        title={`Share on ${name}`}
+                        onClick={() =>
+                          onShared?.({
+                            method: name.toLowerCase(),
+                            url: shareUrl,
+                          })
+                        }
+                      >
+                        <div className="flex h-14 w-14 items-center justify-center rounded-xl border-2 border-gray-200 bg-white shadow-sm transition-all group-hover:scale-110 group-hover:border-blue-400 group-hover:shadow-md group-active:scale-95">
+                          <SocialIcon className={`h-6 w-6 ${color}`} />
+                        </div>
+                        <span className="text-xs font-medium text-gray-600 group-hover:text-gray-900">
+                          {name}
+                        </span>
+                      </a>
+                    )
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        )}
-      </>
-    );
+        </div>
+      )}
+    </>
+  );
 };
 
 export default ShareButton;
