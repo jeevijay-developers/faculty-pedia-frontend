@@ -40,6 +40,8 @@ export const getVideos = async (params = {}) => {
   }
 };
 
-export default {
+const videoRoutes = {
   getVideos,
 };
+
+export default videoRoutes;

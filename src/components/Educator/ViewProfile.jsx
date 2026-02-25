@@ -560,11 +560,11 @@ const ViewProfile = ({ educatorData }) => {
           setItemReviews(Array.isArray(list) ? list : []);
         }
       } catch (error) {
-        console.error("Error fetching educator item reviews:", error);
+        // Reviews endpoint may not be implemented yet - fail silently
+        console.warn("Reviews endpoint not available:", error.message);
         if (!cancelled) {
-          setItemReviewsError(
-            error?.response?.data?.message || "Unable to load reviews right now."
-          );
+          // Don't show error to user since this is an expected issue
+          setItemReviews([]);
         }
       } finally {
         if (!cancelled) {
@@ -748,9 +748,14 @@ const ViewProfile = ({ educatorData }) => {
       setItemReviewRating(0);
       setIsReviewModalOpen(false);
       // Refresh reviews list
-      const response = await getEducatorItemReviews(educatorId, { limit: 50 });
-      const list = response?.data || response?.reviews || [];
-      setItemReviews(Array.isArray(list) ? list : []);
+      try {
+        const response = await getEducatorItemReviews(educatorId, { limit: 50 });
+        const list = response?.data || response?.reviews || [];
+        setItemReviews(Array.isArray(list) ? list : []);
+      } catch (refreshError) {
+        // Silently handle reviews refresh error (endpoint may not exist)
+        console.warn("Could not refresh reviews:", refreshError.message);
+      }
     } catch (error) {
       console.error("Error submitting item review:", error);
       toast.error(
@@ -1133,7 +1138,7 @@ const ViewProfile = ({ educatorData }) => {
                       return (
                         <div
                           key={`${review.itemType}-${review._id || review.itemId}`}
-                          className="min-w-[280px] max-w-[320px] bg-white border border-gray-100 rounded-lg p-4 shadow-sm"
+                          className="min-w-70 max-w-[320px] bg-white border border-gray-100 rounded-lg p-4 shadow-sm"
                         >
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100 capitalize">

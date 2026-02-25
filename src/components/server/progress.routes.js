@@ -31,7 +31,9 @@ export const getCourseProgress = async (courseId, studentId) => {
   return response?.data || response;
 };
 
-export default {
+const progressRoutes = {
   toggleVideoComplete,
   getCourseProgress,
 };
+
+export default progressRoutes;

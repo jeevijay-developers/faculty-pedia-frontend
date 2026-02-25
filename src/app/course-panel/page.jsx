@@ -322,11 +322,14 @@ const CoursePanelPage = () => {
 
       const docEntries = docs.map((doc, docIdx) => {
         if (!doc?.url) return null;
+        // If there's only one doc, use the material title directly
+        // Otherwise, append index to differentiate multiple docs
+        const displayTitle = docs.length === 1 
+          ? materialTitle 
+          : `${materialTitle} (${docIdx + 1})`;
+        
         return {
-          title:
-            doc.originalName ||
-            doc.name ||
-            `${materialTitle} (${docIdx + 1})`,
+          title: displayTitle,
           type: doc.fileType || doc.mimeType || "FILE",
           size: doc.sizeInBytes || "",
           url: doc.url,
@@ -1199,9 +1202,9 @@ const CoursePanelPage = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold">Assessments</h3>
-                  <span className="text-sm font-bold text-blue-600">
+                  {/* <span className="text-sm font-bold text-blue-600">
                     View All
-                  </span>
+                  </span> */}
                 </div>
                 {renderTests()}
               </div>

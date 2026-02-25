@@ -6,6 +6,11 @@ import "aos/dist/aos.css";
 import ViewProfileLoader from "@/components/others/viewProfileLoader";
 import { getEducatorProfile } from "@/components/server/educators.routes";
 import ShareButton from "@/components/Common/ShareButton";
+import CourseCard from "@/components/Courses/CourseCard";
+import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
+import { getCoursesByEducator } from "@/components/server/course.routes";
+import { getTestSeriesByEducator } from "@/components/server/test-series.route";
+import Link from "next/link";
 
 const Page = ({ params }) => {
   const resolvedParams = use(params);
@@ -18,6 +23,10 @@ const Page = ({ params }) => {
   }, []);
 
   const [educatorData, setEducatorData] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [testSeries, setTestSeries] = useState([]);
+  const [coursesLoading, setCoursesLoading] = useState(false);
+  const [testSeriesLoading, setTestSeriesLoading] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -89,6 +98,47 @@ const Page = ({ params }) => {
     fetchEducators();
   }, [resolvedParams?.id]);
 
+  // Fetch educator's courses and test series
+  useEffect(() => {
+    if (!educatorData?._id) return;
+
+    const fetchEducatorContent = async () => {
+      const educatorId = educatorData._id;
+
+      // Fetch courses
+      setCoursesLoading(true);
+      try {
+        const coursesResponse = await getCoursesByEducator(educatorId, { limit: 100 });
+        const coursesList = coursesResponse?.courses || coursesResponse?.data?.courses || [];
+        setCourses(Array.isArray(coursesList) ? coursesList : []);
+      } catch (err) {
+        console.error("Error fetching educator courses:", err);
+        setCourses([]);
+      } finally {
+        setCoursesLoading(false);
+      }
+
+      // Fetch test series (only non-course-specific ones)
+      setTestSeriesLoading(true);
+      try {
+        const testSeriesResponse = await getTestSeriesByEducator(educatorId, { limit: 100 });
+        const testSeriesList = testSeriesResponse?.testSeries || testSeriesResponse?.data?.testSeries || [];
+        // Filter out course-specific test series
+        const standaloneTestSeries = (Array.isArray(testSeriesList) ? testSeriesList : []).filter(
+          (ts) => !ts.courseId && !ts.course
+        );
+        setTestSeries(standaloneTestSeries);
+      } catch (err) {
+        console.error("Error fetching educator test series:", err);
+        setTestSeries([]);
+      } finally {
+        setTestSeriesLoading(false);
+      }
+    };
+
+    fetchEducatorContent();
+  }, [educatorData]);
+
   if (loading) {
     return <ViewProfileLoader />;
   }
@@ -133,6 +183,8 @@ const Page = ({ params }) => {
   //   notFound();
   // }
 
+  const educatorName = educatorData?.fullName || educatorData?.username || "this educator";
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 pt-6 flex justify-end">
@@ -150,6 +202,102 @@ const Page = ({ params }) => {
         />
       </div>
       <ViewProfile educatorData={educatorData} />
+
+      {/* Courses Section */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Courses by {educatorName}
+          </h2>
+          <p className="text-gray-600">
+            Explore all courses offered by this educator
+          </p>
+        </div>
+
+        {coursesLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-80 bg-gray-200 rounded-lg animate-pulse"
+              />
+            ))}
+          </div>
+        ) : courses.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {courses.slice(0, 6).map((course) => (
+                <CourseCard key={course._id} course={course} />
+              ))}
+            </div>
+            {courses.length > 6 && (
+              <div className="mt-8 text-center">
+                <Link
+                  href="/courses"
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  View All {courses.length} Courses
+                </Link>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+            <div className="text-gray-400 text-5xl mb-4">📚</div>
+            <p className="text-gray-600 text-lg">
+              No courses available yet
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Test Series Section */}
+      <div className="max-w-7xl mx-auto px-4 pb-12">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Test Series by {educatorName}
+          </h2>
+          <p className="text-gray-600">
+            Practice with comprehensive test series
+          </p>
+        </div>
+
+        {testSeriesLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-80 bg-gray-200 rounded-lg animate-pulse"
+              />
+            ))}
+          </div>
+        ) : testSeries.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {testSeries.slice(0, 6).map((ts) => (
+                <TestSeriesCard key={ts._id} testSeries={ts} />
+              ))}
+            </div>
+            {testSeries.length > 6 && (
+              <div className="mt-8 text-center">
+                <Link
+                  href="/test-series"
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  View All {testSeries.length} Test Series
+                </Link>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+            <div className="text-gray-400 text-5xl mb-4">📝</div>
+            <p className="text-gray-600 text-lg">
+              No test series available yet
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

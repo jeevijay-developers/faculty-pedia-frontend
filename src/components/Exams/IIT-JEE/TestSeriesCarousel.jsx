@@ -236,7 +236,7 @@ export const TestSeriesCard = ({ testSeries }) => {
         </div>
       </div>
 
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col grow">
         <h3 className="mb-2 line-clamp-2 text-lg font-bold text-gray-900">
           {testSeries.title}
         </h3>
