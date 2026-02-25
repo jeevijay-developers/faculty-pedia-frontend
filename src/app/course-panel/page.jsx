@@ -1202,9 +1202,9 @@ const CoursePanelPage = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold">Assessments</h3>
-                  <span className="text-sm font-bold text-blue-600">
+                  {/* <span className="text-sm font-bold text-blue-600">
                     View All
-                  </span>
+                  </span> */}
                 </div>
                 {renderTests()}
               </div>

@@ -123,7 +123,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
             {/* Educator Info Section */}
             <div className="bg-white rounded-xl shadow-sm border p-8 mb-8">
               <div className="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <Image
                     src={selectedCourse.educator.profileImage?.url || "/images/placeholders/square.svg"}
                     alt={selectedCourse.educator.name}

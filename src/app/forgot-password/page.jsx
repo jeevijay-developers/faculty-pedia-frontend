@@ -10,10 +10,8 @@ import {
   LuArrowLeft,
   LuArrowRight,
   LuLoaderCircle,
-  LuCheckCircle,
-  LuAlertCircle,
-  LuGraduationCap,
 } from "react-icons/lu";
+import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import API_CLIENT from "@/components/server/config";
 
 const ForgotPassword = () => {
@@ -104,7 +102,7 @@ const ForgotPassword = () => {
           {/* Feedback States */}
           {feedbackState === "error" && (
             <div className="w-full mt-6 bg-red-50 border border-red-100 rounded-lg p-3 flex items-start gap-2 text-left animate-in fade-in slide-in-from-top-2 duration-300">
-              <LuAlertCircle className="text-red-500 text-sm mt-0.5 shrink-0" />
+              <FaExclamationCircle className="text-red-500 text-sm mt-0.5 shrink-0" />
               <p className="text-xs text-red-600 font-medium">
                 {feedbackMessage}
               </p>
@@ -113,7 +111,7 @@ const ForgotPassword = () => {
 
           {feedbackState === "success" && (
             <div className="w-full mt-6 bg-green-50 border border-green-100 rounded-lg p-3 flex items-start gap-2 text-left animate-in fade-in slide-in-from-top-2 duration-300">
-              <LuCheckCircle className="text-green-600 text-sm mt-0.5 shrink-0" />
+              <FaCheckCircle className="text-green-600 text-sm mt-0.5 shrink-0" />
               <p className="text-xs text-green-700 font-medium">
                 {feedbackMessage}
               </p>
