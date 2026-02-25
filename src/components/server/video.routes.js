@@ -13,8 +13,31 @@ const pickVideosArray = (payload) => {
 };
 
 export const getVideos = async (params = {}) => {
-  const response = await API_CLIENT.get(`/api/videos`, { params });
-  return pickVideosArray(response?.data || response);
+  const normalizedCourseId =
+    typeof params?.courseId === "string" ? params.courseId.trim() : "";
+
+  if (typeof window !== "undefined") {
+    const role = window.localStorage.getItem("user-role");
+    if (role && role !== "educator" && normalizedCourseId) {
+      const { courseId: _omitCourseId, ...restParams } = params;
+      const response = await API_CLIENT.get(
+        `/api/videos/course/${encodeURIComponent(normalizedCourseId)}`,
+        { params: restParams }
+      );
+      return pickVideosArray(response?.data || response);
+    }
+  }
+
+  try {
+    const response = await API_CLIENT.get(`/api/videos`, { params });
+    return pickVideosArray(response?.data || response);
+  } catch (error) {
+    const status = error?.response?.status;
+    if (status === 401 || status === 403) {
+      return [];
+    }
+    throw error;
+  }
 };
 
 export default {
