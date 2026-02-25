@@ -21,6 +21,8 @@ export const getStudyMaterialsByCourse = async (courseId, params = {}) => {
   return pickStudyMaterials(response?.data || response);
 };
 
-export default {
+const studyMaterialRoutes = {
   getStudyMaterialsByCourse,
 };
+
+export default studyMaterialRoutes;

@@ -3,6 +3,7 @@ import Banner from "@/components/Common/Banner";
 import React from "react";
 import dynamic from "next/dynamic";
 import EducatorsCarousel from "@/components/Educator/EducatorsCarousel";
+import CourseCarousel from "@/components/Courses/CourseCarousal";
 import OneToOnePPHCarousel from "@/components/OneToOne/OneToOnePPHCarousel";
 import UpcomingWebinarCarousel from "@/components/Webinars/UpcomingWebinarCarousel";
 import TestSeriesCarousel from "@/components/Exams/IIT-JEE/TestSeriesCarousel";

@@ -17,6 +17,8 @@ export const getVideos = async (params = {}) => {
   return pickVideosArray(response?.data || response);
 };
 
-export default {
+const videoRoutes = {
   getVideos,
 };
+
+export default videoRoutes;

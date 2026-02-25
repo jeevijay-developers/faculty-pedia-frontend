@@ -322,11 +322,14 @@ const CoursePanelPage = () => {
 
       const docEntries = docs.map((doc, docIdx) => {
         if (!doc?.url) return null;
+        // If there's only one doc, use the material title directly
+        // Otherwise, append index to differentiate multiple docs
+        const displayTitle = docs.length === 1 
+          ? materialTitle 
+          : `${materialTitle} (${docIdx + 1})`;
+        
         return {
-          title:
-            doc.originalName ||
-            doc.name ||
-            `${materialTitle} (${docIdx + 1})`,
+          title: displayTitle,
           type: doc.fileType || doc.mimeType || "FILE",
           size: doc.sizeInBytes || "",
           url: doc.url,
