@@ -10,7 +10,9 @@ import CourseCard from "@/components/Courses/CourseCard";
 import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
 import { getCoursesByEducator } from "@/components/server/course.routes";
 import { getTestSeriesByEducator } from "@/components/server/test-series.route";
+import { getWebinarsByEducator } from "@/components/server/webinars.routes";
 import Link from "next/link";
+import WebinarCard from "@/components/Webinars/WebinarCard";
 
 const Page = ({ params }) => {
   const resolvedParams = use(params);
@@ -24,8 +26,10 @@ const Page = ({ params }) => {
 
   const [educatorData, setEducatorData] = useState(null);
   const [courses, setCourses] = useState([]);
+  const [webinars, setWebinars] = useState([]);
   const [testSeries, setTestSeries] = useState([]);
   const [coursesLoading, setCoursesLoading] = useState(false);
+  const [webinarsLoading, setWebinarsLoading] = useState(false);
   const [testSeriesLoading, setTestSeriesLoading] = useState(false);
 
   const [loading, setLoading] = useState(true);
@@ -118,6 +122,22 @@ const Page = ({ params }) => {
         setCoursesLoading(false);
       }
 
+      // Fetch webinars
+      setWebinarsLoading(true);
+      try {
+        const webinarsResponse = await getWebinarsByEducator(educatorId, {
+          limit: 100,
+        });
+        const webinarsList =
+          webinarsResponse?.data?.webinars || webinarsResponse?.webinars || [];
+        setWebinars(Array.isArray(webinarsList) ? webinarsList : []);
+      } catch (err) {
+        console.error("Error fetching educator webinars:", err);
+        setWebinars([]);
+      } finally {
+        setWebinarsLoading(false);
+      }
+
       // Fetch test series (only non-course-specific ones)
       setTestSeriesLoading(true);
       try {
@@ -184,6 +204,12 @@ const Page = ({ params }) => {
   // }
 
   const educatorName = educatorData?.fullName || educatorData?.username || "this educator";
+  const oneToOneCourses = courses.filter(
+    (course) => course?.courseType === "one-to-one" || course?.courseType === "OTO"
+  );
+  const oneToAllCourses = courses.filter(
+    (course) => course?.courseType === "one-to-all" || course?.courseType === "OTA"
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -205,14 +231,6 @@ const Page = ({ params }) => {
 
       {/* Courses Section */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Courses by {educatorName}
-          </h2>
-          <p className="text-gray-600">
-            Explore all courses offered by this educator
-          </p>
-        </div>
 
         {coursesLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -225,27 +243,130 @@ const Page = ({ params }) => {
           </div>
         ) : courses.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courses.slice(0, 6).map((course) => (
-                <CourseCard key={course._id} course={course} />
-              ))}
+            <div className="mb-10">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                One to One Live Course
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Personalized live sessions for focused preparation
+              </p>
+              {oneToOneCourses.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {oneToOneCourses.slice(0, 6).map((course) => (
+                      <CourseCard key={course._id} course={course} />
+                    ))}
+                  </div>
+                  {oneToOneCourses.length > 6 && (
+                    <div className="mt-8 text-center">
+                      <Link
+                        href="/courses"
+                        className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        View All {oneToOneCourses.length} One to One Live Course
+                      </Link>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
+                  <p className="text-gray-600 text-lg">
+                    No one to one live course available yet
+                  </p>
+                </div>
+              )}
             </div>
-            {courses.length > 6 && (
-              <div className="mt-8 text-center">
-                <Link
-                  href="/courses"
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  View All {courses.length} Courses
-                </Link>
+
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                One to All Live Course
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Interactive live classes designed for group learning
+              </p>
+              {oneToAllCourses.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {oneToAllCourses.slice(0, 6).map((course) => (
+                      <CourseCard key={course._id} course={course} />
+                    ))}
+                  </div>
+                  {oneToAllCourses.length > 6 && (
+                    <div className="mt-8 text-center">
+                      <Link
+                        href="/courses"
+                        className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        View All {oneToAllCourses.length} One to All Live Course
+                      </Link>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
+                  <p className="text-gray-600 text-lg">
+                    No one to all live course available yet
+                  </p>
+                </div>
+              )}
               </div>
-            )}
           </>
         ) : (
           <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
             <div className="text-gray-400 text-5xl mb-4">📚</div>
             <p className="text-gray-600 text-lg">
               No courses available yet
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Test Series Section */}
+      <div className="max-w-7xl mx-auto px-4 pb-12">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Webinars by {educatorName}
+          </h2>
+          <p className="text-gray-600">
+            Join live and upcoming webinars by this educator
+          </p>
+        </div>
+
+        {webinarsLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-80 bg-gray-200 rounded-lg animate-pulse"
+              />
+            ))}
+          </div>
+        ) : webinars.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {webinars.slice(0, 6).map((webinar) => (
+                <WebinarCard
+                  key={webinar._id || webinar.id}
+                  webinar={webinar}
+                />
+              ))}
+            </div>
+            {webinars.length > 6 && (
+              <div className="mt-8 text-center">
+                <Link
+                  href={`/webinars?educator=${educatorData._id}`}
+                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  View All {webinars.length} Webinars
+                </Link>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+            <div className="text-gray-400 text-5xl mb-4">📅</div>
+            <p className="text-gray-600 text-lg">
+              No webinars available yet
             </p>
           </div>
         )}

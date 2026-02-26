@@ -488,50 +488,7 @@ const CourseDetails = ({ id }) => {
                   )}
                 </div>
 
-                {/* Course Description */}
-                {/* <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Course Description
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                    {course.description}
-                  </p>
-                </div> */}
-
-                {/* Course Timeline
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Course Timeline
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="flex items-center space-x-3">
-                      <FaCalendarAlt className="w-5 h-5 text-blue-600" />
-                      <div>
-                        <p className="text-sm text-gray-500">Start Date</p>
-                        <p className="font-medium">
-                          {new Date(course.startDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <FaCalendarAlt className="w-5 h-5 text-red-600" />
-                      <div>
-                        <p className="text-sm text-gray-500">End Date</p>
-                        <p className="font-medium">
-                          {new Date(course.endDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <FaClock className="w-5 h-5 text-green-600" />
-                      <div>
-                        <p className="text-sm text-gray-500">Duration</p>
-                        <p className="font-medium">{course.courseDuration}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
-
+              
                 {/* Course Objectives */}
                 {course.courseObjectives &&
                   course.courseObjectives.length > 0 && (
