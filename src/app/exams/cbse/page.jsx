@@ -41,9 +41,7 @@ const page = () => {
         specialization="CBSE"
         courseType="one-to-one"
         bgColor="bg-white"
-      />
-      {/* <OneToOneLiveClassesCarousel specialization="CBSE" /> */}
-      <OneToOnePPHCarousel specialization="CBSE" />
+      />     
 
       <UpcomingWebinarCarousel specialization="CBSE" />
       <TestSeriesCarousel specialization="CBSE" />
