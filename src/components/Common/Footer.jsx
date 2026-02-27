@@ -16,10 +16,12 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
-   
-    { name: "One to one live Classes", href: "/1-1-live-class" },
-    { name: "Courses", href: "/courses" },
+
+    { name: "One to All live Courses", href: "/1-all-live-Courses" },
+     { name: "One to one live Classes", href: "/1-1-live-class" },
+    // { name: "Courses", href: "/courses" },
     { name: "Webinars", href: "/webinars" },
+     { name: "Online Test Series", href: "/test-series" },
     { name: "Educators", href: "/educators" },
     { name: "Posts", href: "/posts" },
   ];
@@ -40,18 +42,23 @@ const Footer = () => {
   const socialLinks = [
     {
       icon: FaFacebookF,
-      href: "https://facebook.com/facultypedia",
+      href: "https://www.facebook.com/profile.php?id=61587778010456",
       label: "Facebook",
     },
     {
       icon: FaInstagram,
-      href: "https://instagram.com/facultypedia",
+      href: "https://www.instagram.com/facultypedia02/",
       label: "Instagram",
     },
     {
       icon: FaYoutube,
-      href: "https://youtube.com/facultypedia",
+      href: "https://www.youtube.com/@Facultypedia",
       label: "YouTube",
+    },
+    {
+      icon: FaLinkedinIn,
+      href: "https://www.linkedin.com/company/facultypedia/",
+      label: "LinkedIn",
     },
   ];
 
@@ -81,21 +88,28 @@ const Footer = () => {
 
             {/* Contact Information */}
             <div className="space-y-3 mb-8">
-              <div className="flex items-start space-x-3">  
+              <div className="flex items-start space-x-3">
                 <FiMapPin className="text-blue-600 mt-1 shrink-0" />
 
                 <span className="text-sm">
                   {" "}
-                  C304 om enclave, Anantpura, Kota, Rajasthan, 324005
+                  om enclave Anantpura Kota Rajasthan 324005
                 </span>
               </div>
               <div className="flex items-center space-x-3">
                 <FiPhone className="text-blue-600 shrink-0" />
-                <span className="text-sm">+91 80007 93693 </span>
+                <span className="text-sm">+91 9509933693 </span>
               </div>
+
               <div className="flex items-center space-x-3">
                 <IoMail className="text-blue-600 shrink-0" />
-                <span className="text-sm">nucleonorder@gmail.com</span>
+
+                <a
+                  href="mailto:facultypedia20@gmail.com"
+                  className="text-sm hover:text-blue-600 hover:underline"
+                >
+                  facultypedia20@gmail.com
+                </a>
               </div>
             </div>
 

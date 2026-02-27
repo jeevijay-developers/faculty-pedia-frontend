@@ -722,15 +722,13 @@ const CourseDetails = ({ id }) => {
                       </span>
                       <span className="text-gray-500">Course Duration</span>
                     </div>
-                    {!isOneToOne && (
-                      <div className="flex items-center text-sm">
-                        <span className="flex items-center mr-1 text-gray-600">
-                          <FaCalendarAlt className="w-4 h-4 mr-2" />
-                          <span>{course.classesPerWeek || "N/A"}</span>
-                        </span>
-                        <span className="text-gray-500">Classes / Week</span>
-                      </div>
-                    )}
+                    <div className="flex items-center text-sm">
+                      <span className="flex items-center mr-1 text-gray-600">
+                        <FaCalendarAlt className="w-4 h-4 mr-2" />
+                        <span>{course.classesPerWeek || "N/A"}</span>
+                      </span>
+                      <span className="text-gray-500">Classes / Week</span>
+                    </div>
                     <div className="flex items-center text-sm">
                       <span className="flex items-center mr-1 text-gray-600">
                         <FaClock className="w-4 h-4 mr-2" />
