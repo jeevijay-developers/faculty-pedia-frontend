@@ -762,7 +762,7 @@ const CourseDetails = ({ id }) => {
                 </div>
               </div>
 
-              {/* Talk to Educator WhatsApp Button */}
+              {/* Talk to Educator WhatsApp Button - now visible for both 'One to One' and 'One to All' course types */}
               {!isEnrolled && educator?.whatsappNumber && (
                 <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200 p-5 shadow-sm">
                   <div className="text-center">
