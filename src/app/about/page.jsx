@@ -253,7 +253,7 @@ export default function AboutPage() {
               href="https://www.FacultyPedia.com"
               className="inline-block text-white/80 hover:text-white font-semibold text-lg underline underline-offset-4 transition-colors"
             >
-              www.FacultyPedia.com
+              www.facultypedia.com
             </a>
           </div>
 
