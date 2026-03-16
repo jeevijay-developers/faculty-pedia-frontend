@@ -2,11 +2,36 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaClock, FaUsers, FaRupeeSign, FaBook } from "react-icons/fa";
+import { getApiUrl } from "@/utils/environment";
+
+const resolveImageUrl = (image) => {
+  const rawImage =
+    (typeof image === "string" && image.trim() && image.trim()) ||
+    (typeof image?.url === "string" && image.url.trim() && image.url.trim()) ||
+    (typeof image?.secure_url === "string" &&
+      image.secure_url.trim() &&
+      image.secure_url.trim()) ||
+    "";
+
+  if (!rawImage) return "https://placehold.co/600x400";
+
+  if (/^https?:\/\//i.test(rawImage)) return rawImage;
+
+  const apiUrl = getApiUrl().replace(/\/$/, "");
+  const normalizedPath = rawImage.startsWith("/") ? rawImage : `/${rawImage}`;
+  return `${apiUrl}${normalizedPath}`;
+};
 
 const WebinarCard = ({ webinar }) => {
   const webinarId = webinar._id || webinar.id;
-  const imageUrl = webinar.image?.url || "https://placehold.co/600x400";
-  const subject = webinar.subject || "general";
+  const imageUrl = resolveImageUrl(webinar.image);
+  const normalizedSubject = Array.isArray(webinar.subject)
+    ? webinar.subject.find((item) => typeof item === "string" && item.trim())
+    : webinar.subject;
+  const subject =
+    typeof normalizedSubject === "string" && normalizedSubject.trim()
+      ? normalizedSubject.trim()
+      : "general";
   const title = webinar.title || "Untitled Webinar";
   const description = webinar.description?.short || "No description available";
 

@@ -35,7 +35,6 @@ const page = async () => {
         courseType="one-to-one"
         bgColor="bg-white"
       />
-      {/* <OneToOneLiveClassesCarousel specialization="IIT-JEE" /> */}
      
       <UpcomingWebinarCarousel specialization="IIT-JEE" />
       <TestSeriesCarousel specialization="IIT-JEE" />

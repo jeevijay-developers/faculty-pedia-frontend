@@ -1,220 +1,467 @@
-"use client";
+﻿"use client";
 
 import React from "react";
-import {
-  FiShield,
-  FiUsers,
-  FiLock,
-  FiShare2,
-  FiAlertCircle,
-  FiClock,
-} from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
 
-const infoSections = [
+const sections = [
   {
-    title: "1. Information We Collect",
-    icon: FiUsers,
-    description:
-      "At Facultypedia, we collect only the information we need to deliver a personalised learning experience.",
-    subSections: [
+    number: "1",
+    title: "Definitions",
+    items: [
+      { label: "Platform", text: "refers to FacultyPedia website, application, and services." },
+      { label: "Educator", text: "means any teacher, instructor, or professional who publishes or conducts courses through FacultyPedia." },
+      { label: "Student", text: "means any registered user enrolled in a course." },
+      { label: "Course", text: "means any live, recorded, webinar, one-to-one, test series, or paid educational program listed on the Platform." },
+    ],
+    type: "definitions",
+  },
+  {
+    number: "2",
+    title: "Role of FacultyPedia",
+    intro: "FacultyPedia operates as a technology platform that enables Educators to deliver educational services to Students.",
+    subtitle: "FacultyPedia:",
+    bullets: [
+      "Does not act as an academic institution.",
+      "Does not guarantee academic results.",
+      "Is not responsible for course outcomes or performance of Students.",
+    ],
+  },
+  {
+    number: "3",
+    title: "Educator Revenue & Payout Policy",
+    ordered: [
+      "Educators shall receive 90% (Ninety Percent) of the net revenue earned from their respective courses.",
+      "FacultyPedia retains 10% platform service fee.",
+      "Payouts shall be processed after 30 (Thirty) days from the official course starting date.",
+    ],
+    subSection: {
+      intro: "FacultyPedia reserves the right to withhold, cancel, or reverse payout transfers in case of:",
+      bullets: [
+        "Student complaints",
+        "Non-commencement of course",
+        "Non-delivery of promised syllabus",
+        "Breach of platform guidelines",
+        "Fraudulent activity",
+      ],
+    },
+  },
+  {
+    number: "4",
+    title: "Refund Policy",
+    children: [
       {
-        label: "A. Information You Provide",
+        subtitle: "4.1 Student Refund Rights",
         bullets: [
-          "Name",
-          "Email address",
-          "Mobile number",
-          "Password (encrypted)",
-          "Class or exam preference (CBSE 6-12, IIT JEE, NEET)",
-          "Educator or Student profile details",
+          "Students are eligible for 100% refund before the official date of course commencement.",
+          "No refund shall be provided once the course has started, under any circumstances except legal order.",
         ],
       },
       {
-        label: "B. Activity Information",
+        subtitle: "4.2 Educator Liability for Non-Completion",
+        intro: "Once a course has commenced, the Educator is legally obligated to:",
         bullets: [
-          "Courses you join",
-          "Educators you follow",
-          "Classes attended (live or recorded)",
-          "Assignments, tests, and progress tracking",
+          "Complete the course within the promised duration.",
+          "Deliver the complete syllabus as mentioned in the course description.",
+          "Provide all services promised in the listing.",
+        ],
+        followUp: "If an Educator fails to fulfill these obligations:",
+        followUpBullets: [
+          "The Educator must refund the entire course fee to enrolled Students.",
+          "Students may initiate legal proceedings directly against the Educator.",
+          "FacultyPedia reserves the right to suspend or permanently disable the Educator account.",
+        ],
+      },
+    ],
+  },
+  {
+    number: "5",
+    title: "Intellectual Property Rights",
+    ordered: [
+      "All study materials, videos, notes, PDFs, test series, and content uploaded by Educators remain the sole intellectual property of the respective Educator.",
+    ],
+    children: [
+      {
+        subtitle: "FacultyPedia:",
+        bullets: [
+          "Does not claim ownership over Educator content.",
+          "Shall not use, sell, reproduce, or promote such content without written consent of the Educator.",
         ],
       },
       {
-        label: "C. Technical Information",
+        subtitle: "Students are prohibited from:",
         bullets: [
-          "Device type",
-          "Browser details",
-          "IP address",
-          "Usage statistics and app performance data",
+          "Recording, copying, distributing, or reselling course content.",
+          "Sharing login credentials with others.",
         ],
       },
     ],
-    footer:
-      "We do not collect unnecessary or sensitive information beyond what is required for educational use.",
+    footer: "Legal action may be taken for intellectual property violations.",
   },
   {
-    title: "2. How We Use Your Information",
-    icon: FiShield,
-    description:
-      "Your data helps us keep your teaching and learning journey seamless and effective.",
+    number: "6",
+    title: "Educator Obligations",
+    intro: "Educators agree that they shall:",
     bullets: [
-      "Create and manage your Facultypedia account",
-      "Provide access to live classes, courses, and study materials",
-      "Help educators connect with students and vice versa",
-      "Improve teaching quality and platform performance",
-      "Send important updates, notifications, and class reminders",
-      "Prevent fraud, unauthorized access, or misuse of accounts",
+      "Deliver the course as described in the listing.",
+      "Maintain professional behavior.",
+      "Avoid abusive, defamatory, misleading, or objectionable content.",
+      "Not upload illegal, copyrighted (without authorization), obscene, or harmful material.",
+      "Conduct sessions as per scheduled timelines.",
+      "Maintain academic integrity.",
     ],
-    footer: "We never sell your personal data to third-party advertisers.",
+    footer: "Failure to comply may result in immediate account suspension.",
   },
   {
-    title: "3. How We Protect Your Information",
-    icon: FiLock,
-    bullets: [
-      "Encrypted passwords",
-      "Secure servers",
-      "Access-restricted databases",
-      "Regular security checks",
+    number: "7",
+    title: "Student Conduct Policy",
+    children: [
+      {
+        subtitle: "Students agree to:",
+        bullets: [
+          "Maintain discipline during live classes.",
+          "Not use abusive language.",
+          "Not disrupt sessions.",
+          "Not misuse platform tools.",
+        ],
+      },
+      {
+        subtitle: "FacultyPedia and/or Educator reserve full rights to:",
+        bullets: [
+          "Remove access of any Student on disciplinary grounds.",
+          "Block or permanently disable accounts violating policies.",
+        ],
+      },
     ],
-    footer:
-      "While no online platform can guarantee absolute security, we take every reasonable step to safeguard your information.",
+    footer: "No refund shall be issued in case of removal due to misconduct.",
   },
   {
-    title: "4. Sharing of Information",
-    icon: FiShare2,
+    number: "8",
+    title: "Reviews & Ratings",
     bullets: [
-      "With educators (limited to your name and academic information)",
-      "With service providers who help us run the platform",
-      "When required by law or authorised government requests",
-    ],
-    footer:
-      "We do not share your information for marketing purposes outside Facultypedia.",
-  },
-  {
-    title: "6. Children’s Data",
-    icon: FiUsers,
-    description:
-      "Facultypedia is open to students from Class 6 to 12, IIT JEE, NEET, and droppers.",
-    bullets: [
-      "Students under 18 should use the platform with parental guidance, as required by Indian law.",
+      "Only enrolled Students may post reviews.",
+      "Reviews must be genuine and based on actual course experience.",
+      "Fake reviews, defamatory comments, or manipulated ratings are strictly prohibited.",
+      "FacultyPedia reserves the right to remove inappropriate reviews.",
     ],
   },
   {
-    title: "7. Changes to This Policy",
-    icon: FiClock,
+    number: "9",
+    title: "Account Suspension & Termination",
+    intro: "FacultyPedia has full discretionary rights to:",
     bullets: [
-      "We may update this Privacy Policy as our platform evolves.",
-      'Whenever we make changes, we will update the "Last Updated" date at the top.',
+      "Disable or suspend Educator or Student accounts.",
+      "Remove course listings.",
+      "Cancel payouts.",
+      "Restrict access for policy violations.",
+    ],
+    footer: "Such decisions may be taken without prior notice in serious cases.",
+  },
+  {
+    number: "10",
+    title: "Limitation of Liability",
+    intro: "FacultyPedia shall not be liable for:",
+    bullets: [
+      "Academic results of Students.",
+      "Technical issues beyond reasonable control.",
+      "Disputes between Educator and Student (except platform mediation).",
+      "Indirect or consequential damages.",
+    ],
+  },
+  {
+    number: "11",
+    title: "Payment Disputes & Amount Reversal",
+    intro: "FacultyPedia reserves the right to:",
+    bullets: [
+      "Cancel transfer of amounts.",
+      "Request refund from Educators.",
+      "Withhold payouts.",
+    ],
+    followUp: "In case of verified Student complaint that:",
+    followUpBullets: [
+      "Course has not started.",
+      "Educator is not teaching.",
+      "Services promised are not delivered.",
+    ],
+  },
+  {
+    number: "12",
+    title: "Governing Law & Jurisdiction",
+    intro: "All disputes arising out of or relating to these Terms shall be subject to the exclusive jurisdiction of the courts located in:",
+    highlight: "Kota, Rajasthan, India",
+  },
+  {
+    number: "13",
+    title: "Amendments",
+    bullets: [
+      "FacultyPedia reserves the right to modify these Terms at any time.",
+      "Continued use of the Platform constitutes acceptance of revised Terms.",
     ],
   },
 ];
 
+const BulletList = ({ items, className = "" }) => (
+  <ul className={`space-y-2 ${className}`}>
+    {items.map((item) => (
+      <li key={item} className="flex items-start gap-3 text-gray-600 text-sm leading-relaxed">
+        <span className="shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500" />
+        <span>{item}</span>
+      </li>
+    ))}
+  </ul>
+);
+
 const TermsPage = () => {
-  const lastUpdated = "December 11, 2025";
-
   return (
-    <div className="bg-linear-to-b from-white via-blue-50/40 to-white">
-      <header className="relative overflow-hidden bg-white py-20">
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-linear-to-br from-blue-100 via-white to-indigo-100" />
-          <div className="absolute -top-24 left-[-12%] h-72 w-72 rounded-full bg-blue-200/40 blur-3xl" />
-          <div className="absolute -bottom-16 -right-12 h-96 w-96 rounded-full bg-purple-200/30 blur-3xl" />
+    <div className="bg-white text-gray-900">
+
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-600/10 blur-[100px]" />
+          <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-blue-400/10 blur-[100px]" />
         </div>
-        <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
-          <span className="inline-flex items-center rounded-full bg-blue-100 px-5 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-blue-700">
-            Privacy Policy
-          </span>
-          <h1 className="mt-6 text-4xl font-extrabold text-gray-900 sm:text-5xl lg:text-[56px]">
-            Facultypedia Terms & Privacy Commitment
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-20 lg:pt-32 lg:pb-28 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600/10 text-blue-600 font-semibold text-sm mb-8">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-600 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-600" />
+            </span>
+            Legal
+          </div>
+
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600">
+            Terms & Conditions
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-gray-600">
-            At Facultypedia, we are committed to protecting your personal
-            information and ensuring that your experience on our platform is
-            safe, transparent, and trustworthy. This Privacy Policy explains how
-            we collect, use, store, and protect the data of students, educators,
-            and visitors who use our services.
+
+          <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-600 leading-relaxed mb-4">
+            FacultyPedia &ndash; Educator & Student Platform Agreement
           </p>
-          <p className="mt-4 text-base text-gray-600">
-            By signing up, logging in, or accessing any part of Facultypedia,
-            you agree to the practices described in this policy.
+
+          <p className="max-w-2xl mx-auto text-base text-gray-500 leading-relaxed mb-6">
+            Welcome to FacultyPedia, an online educational marketplace platform enabling Educators to conduct live courses, one-to-one sessions, webinars, test series, and recorded programs for Students.
           </p>
-          <p className="mt-6 text-sm font-semibold uppercase tracking-wide text-gray-500">
-            Last Updated: {lastUpdated}
+
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 font-medium">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100">
+              Effective: 26-02-2026
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100">
+              www.facultypedia.com
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100">
+              Jurisdiction: Kota, Rajasthan, India
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* AGREEMENT NOTICE */}
+      <section className="bg-blue-600">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 text-center">
+          <p className="text-white text-sm md:text-base font-medium leading-relaxed">
+            By accessing or using the FacultyPedia Platform, you agree to be legally bound by these Terms & Conditions. If you do not agree with any part of these Terms, you must not use the Platform.
           </p>
         </div>
-      </header>
+      </section>
 
-      <main className="mx-auto max-w-6xl px-4 pb-20 sm:px-6 lg:px-8">
-        <div className="space-y-8">
-          {infoSections.map((section) => {
-            const Icon = section.icon ?? FiAlertCircle;
-            return (
-              <section
-                key={section.title}
-                className="rounded-3xl border border-blue-100 bg-white p-8 shadow-sm transition hover:shadow-lg"
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
-                      <Icon className="h-5 w-5" />
+      {/* TERMS SECTIONS */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
+          {sections.map((section) => (
+            <div
+              key={section.number}
+              className="bg-white rounded-2xl border border-gray-100 p-8 shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-shadow duration-300"
+            >
+              {/* section header */}
+              <div className="flex items-center gap-3 mb-5">
+                <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-50 text-blue-600 text-sm font-bold shrink-0">
+                  {section.number}
+                </span>
+                <h2 className="text-xl font-bold text-gray-900">{section.title}</h2>
+              </div>
+
+              {/* intro text */}
+              {section.intro && (
+                <p className="text-gray-600 text-sm leading-relaxed mb-4">{section.intro}</p>
+              )}
+
+              {/* subtitle */}
+              {section.subtitle && (
+                <p className="text-gray-800 text-sm font-semibold mb-3">{section.subtitle}</p>
+              )}
+
+              {/* definitions type */}
+              {section.type === "definitions" && section.items && (
+                <div className="space-y-3">
+                  {section.items.map((def) => (
+                    <div key={def.label} className="flex items-start gap-2 text-sm text-gray-600">
+                      <span className="shrink-0 font-bold text-gray-900">&ldquo;{def.label}&rdquo;</span>
+                      <span>{def.text}</span>
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      {section.title}
-                    </h2>
-                  </div>
+                  ))}
                 </div>
-                {section.description && (
-                  <p className="mt-4 text-sm leading-relaxed text-gray-600">
-                    {section.description}
-                  </p>
-                )}
-                {section.subSections && (
-                  <div className="mt-6 space-y-5">
-                    {section.subSections.map((sub) => (
-                      <div key={sub.label}>
-                        <p className="text-sm font-semibold text-gray-900">
-                          {sub.label}
-                        </p>
-                        <ul className="mt-2 space-y-1 text-sm text-gray-600">
-                          {sub.bullets.map((item) => (
-                            <li key={item} className="flex items-start gap-2">
-                              <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {section.bullets && (
-                  <ul className="mt-6 space-y-2 text-sm text-gray-600">
-                    {section.bullets.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {section.footer && (
-                  <p className="mt-6 text-sm font-medium text-blue-700">
-                    {section.footer}
-                  </p>
-                )}
-              </section>
-            );
-          })}
-        </div>
+              )}
 
-        <section className="mt-16 rounded-3xl border border-blue-100 bg-blue-50/80 p-8 text-center shadow-sm">
-          <h2 className="text-2xl font-semibold text-blue-900">
-            Questions about our policy?
+              {/* ordered list */}
+              {section.ordered && (
+                <ol className="space-y-2 mb-4">
+                  {section.ordered.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-600 leading-relaxed">
+                      <span className="shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-blue-50 text-blue-600 text-xs font-bold mt-0.5">
+                        {i + 1}
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ol>
+              )}
+
+              {/* bullet list */}
+              {section.bullets && <BulletList items={section.bullets} />}
+
+              {/* sub section with its own intro + bullets */}
+              {section.subSection && (
+                <div className="mt-5 rounded-xl bg-red-50/50 border border-red-100 p-5">
+                  <p className="text-gray-700 text-sm font-semibold mb-3">{section.subSection.intro}</p>
+                  <BulletList items={section.subSection.bullets} />
+                </div>
+              )}
+
+              {/* children sub-sections */}
+              {section.children && (
+                <div className="space-y-5 mt-4">
+                  {section.children.map((child, idx) => (
+                    <div key={idx} className="rounded-xl bg-gray-50 border border-gray-100 p-5">
+                      {child.subtitle && (
+                        <p className="text-gray-800 text-sm font-semibold mb-3">{child.subtitle}</p>
+                      )}
+                      {child.intro && (
+                        <p className="text-gray-600 text-sm leading-relaxed mb-3">{child.intro}</p>
+                      )}
+                      {child.bullets && <BulletList items={child.bullets} />}
+                      {child.followUp && (
+                        <div className="mt-4 rounded-xl bg-red-50/50 border border-red-100 p-4">
+                          <p className="text-gray-700 text-sm font-semibold mb-3">{child.followUp}</p>
+                          {child.followUpBullets && <BulletList items={child.followUpBullets} />}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* follow up (top-level) */}
+              {section.followUp && (
+                <div className="mt-5 rounded-xl bg-gray-50 border border-gray-100 p-5">
+                  <p className="text-gray-700 text-sm font-semibold mb-3">{section.followUp}</p>
+                  {section.followUpBullets && <BulletList items={section.followUpBullets} />}
+                </div>
+              )}
+
+              {/* jurisdiction highlight */}
+              {section.highlight && (
+                <div className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-100 px-5 py-3">
+                  <FiMapPin className="text-blue-600 w-4 h-4 shrink-0" />
+                  <span className="text-blue-700 font-bold text-sm">{section.highlight}</span>
+                </div>
+              )}
+
+              {/* footer note */}
+              {section.footer && (
+                <p className="mt-5 text-sm font-semibold text-blue-700 bg-blue-50 rounded-xl px-4 py-3 border border-blue-100">
+                  {section.footer}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CONTACT INFORMATION */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-10">
+            <div className="inline-block px-3 py-1 bg-blue-50 rounded-lg mb-4">
+              <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">Section 14</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">Contact Information</h2>
+            <p className="mt-3 text-gray-500 text-sm">For any issues, complaints, or legal communication:</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <a
+              href="mailto:facultypedia02@gmail.com"
+              className="flex items-center gap-4 rounded-2xl bg-gray-50 border border-gray-100 p-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+                <FiMail className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 font-medium">Email</p>
+                <p className="text-sm text-gray-900 font-semibold">facultypedia02@gmail.com</p>
+              </div>
+            </a>
+            <a
+              href="tel:+919509933693"
+              className="flex items-center gap-4 rounded-2xl bg-gray-50 border border-gray-100 p-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+                <FiPhone className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 font-medium">Call</p>
+                <p className="text-sm text-gray-900 font-semibold">+91-9509933693</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* DECLARATION */}
+      <section className="py-24 bg-gradient-to-br from-blue-600 to-blue-700 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-8">
+            Declaration
           </h2>
-          <p className="mt-3 text-sm text-blue-800">
-            Reach out to support@facultypedia.com and our compliance team will
-            be happy to help.
+          <p className="text-white/90 text-lg font-medium mb-8 max-w-3xl mx-auto leading-relaxed">
+            By registering as an Educator or Student on FacultyPedia, you acknowledge that:
           </p>
-        </section>
-      </main>
+          <div className="space-y-4 max-w-2xl mx-auto text-left">
+            <div className="flex items-start gap-3 rounded-xl bg-white/10 border border-white/20 px-5 py-4">
+              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1.5 5l2.5 2.5 4.5-4.5" />
+                </svg>
+              </span>
+              <p className="text-white font-medium text-sm">You have read and understood these Terms & Conditions.</p>
+            </div>
+            <div className="flex items-start gap-3 rounded-xl bg-white/10 border border-white/20 px-5 py-4">
+              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1.5 5l2.5 2.5 4.5-4.5" />
+                </svg>
+              </span>
+              <p className="text-white font-medium text-sm">You agree to be legally bound by them.</p>
+            </div>
+            <div className="flex items-start gap-3 rounded-xl bg-white/10 border border-white/20 px-5 py-4">
+              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+                <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1.5 5l2.5 2.5 4.5-4.5" />
+                </svg>
+              </span>
+              <p className="text-white font-medium text-sm">You accept the jurisdiction of Kota, Rajasthan courts.</p>
+            </div>
+          </div>
+
+          <div className="mt-12">
+            <span className="inline-block px-6 py-3 rounded-full bg-white/10 text-white font-semibold tracking-wide text-sm border border-white/20">
+              Empowering Educators | Educating India
+            </span>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };

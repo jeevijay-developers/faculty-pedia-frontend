@@ -45,8 +45,7 @@ const NeetPage = () => {
         courseType="one-to-one"
         bgColor="bg-white"
       />
-      {/* <OneToOneLiveClassesCarousel specialization="NEET" /> */}
-      <OneToOnePPHCarousel specialization="NEET" />
+      
       <UpcomingWebinarCarousel specialization="NEET" />
       <TestSeriesCarousel specialization="NEET" />
       <PostCarousel subject="NEET" />

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState, useRef } from "react";
 import { Search, ChevronDown, X } from "lucide-react";
@@ -12,7 +12,7 @@ const normalizeText = (value) =>
     .trim()
     .toLowerCase();
 
-const isOneToOneCourse = (item) => {
+const isOneToAllCourse = (item) => {
   const typeCandidates = [
     item?.type,
     item?.courseType,
@@ -26,25 +26,24 @@ const isOneToOneCourse = (item) => {
     .filter(Boolean)
     .map(normalizeText);
 
-  const hasOneToOneType = typeCandidates.some((value) =>
-    ["one to one", "one-to-one", "oto", "1-1", "one2one"].includes(
-      value
-    )
+  // Accepts various spellings/cases for One to All
+  const hasOneToAllType = typeCandidates.some((value) =>
+    [
+      "one to all",
+      "one-to-all",
+      "ota",
+      "1-all",
+      "one2all",
+      "one 2 all"
+    ].includes(value)
   );
 
-  const maxStudentsRaw = item?.maxStudents;
-  const maxStudentsNum = Number(maxStudentsRaw);
-  const hasSingleSeat =
-    maxStudentsRaw !== undefined &&
-    maxStudentsRaw !== null &&
-    !Number.isNaN(maxStudentsNum) &&
-    maxStudentsNum === 1;
-
-  return hasOneToOneType || hasSingleSeat;
+  // Optionally, you could check for maxStudents > 1 if needed
+  return hasOneToAllType;
 };
 
-const OneToOneLiveCoursesPage = () => {
-  const [liveClasses, setLiveClasses] = useState([]);
+const OneToAllLiveCoursesPage = () => {
+  const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
@@ -55,34 +54,31 @@ const OneToOneLiveCoursesPage = () => {
   const filterRef = useRef(null);
 
   useEffect(() => {
-    const fetchClasses = async () => {
+    const fetchCourses = async () => {
       setLoading(true);
       setError(null);
       try {
         const response = await getAllCourses({ includePast: true, limit: 200 });
-        let courses = [];
+        let allCourses = [];
         if (Array.isArray(response?.courses)) {
-          courses = response.courses;
+          allCourses = response.courses;
         } else if (Array.isArray(response?.data?.courses)) {
-          courses = response.data.courses;
+          allCourses = response.data.courses;
         } else if (Array.isArray(response?.data)) {
-          courses = response.data;
+          allCourses = response.data;
         } else if (Array.isArray(response)) {
-          courses = response;
+          allCourses = response;
         }
-
-        setLiveClasses(courses.filter(isOneToOneCourse));
+        setCourses(allCourses.filter(isOneToAllCourse));
       } catch (err) {
-        console.error("Failed to fetch one-to-one courses:", err);
-        setError(err.message || "Failed to load one-to-one courses");
+        setError(err.message || "Failed to load One to All courses");
       } finally {
         setLoading(false);
       }
     };
-    fetchClasses();
+    fetchCourses();
   }, []);
 
-  // Close filter dropdown when clicking outside
   useEffect(() => {
     const handler = (e) => {
       if (filterRef.current && !filterRef.current.contains(e.target)) {
@@ -93,21 +89,19 @@ const OneToOneLiveCoursesPage = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Debounce search
   useEffect(() => {
     const handle = setTimeout(() => setSearchQuery(searchInput.trim()), 300);
     return () => clearTimeout(handle);
   }, [searchInput]);
 
-  // Derive unique subjects from data
   const allSubjects = React.useMemo(() => {
     const set = new Set();
-    liveClasses.forEach((cls) => {
+    courses.forEach((cls) => {
       if (Array.isArray(cls.subject)) cls.subject.forEach((s) => set.add(s));
       else if (cls.subject) set.add(cls.subject);
     });
     return Array.from(set).sort();
-  }, [liveClasses]);
+  }, [courses]);
 
   const toggleSubject = (subject) => {
     setSelectedSubjects((prev) =>
@@ -122,10 +116,8 @@ const OneToOneLiveCoursesPage = () => {
 
   const activeFilterCount = selectedSubjects.length + (sortBy !== "default" ? 1 : 0);
 
-  const getFilteredClasses = () => {
-    let filtered = [...liveClasses];
-
-    // Search
+  const getFilteredCourses = () => {
+    let filtered = [...courses];
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter((cls) => {
@@ -137,26 +129,21 @@ const OneToOneLiveCoursesPage = () => {
         return title.includes(q) || subject.includes(q) || description.includes(q);
       });
     }
-
-    // Subject filter
     if (selectedSubjects.length > 0) {
       filtered = filtered.filter((cls) => {
         const subjects = Array.isArray(cls.subject) ? cls.subject : [cls.subject];
         return subjects.some((s) => selectedSubjects.includes(s));
       });
     }
-
-    // Sort
     if (sortBy === "price-asc") filtered.sort((a, b) => (a.fees || 0) - (b.fees || 0));
     else if (sortBy === "price-desc") filtered.sort((a, b) => (b.fees || 0) - (a.fees || 0));
     else if (sortBy === "date-asc") filtered.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
     else if (sortBy === "date-desc") filtered.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
     else if (sortBy === "duration-asc") filtered.sort((a, b) => (a.classDuration || 0) - (b.classDuration || 0));
-
     return filtered;
   };
 
-  const filteredClasses = getFilteredClasses();
+  const filteredCourses = getFilteredCourses();
 
   if (loading) return <Loading />;
 
@@ -174,16 +161,14 @@ const OneToOneLiveCoursesPage = () => {
           <div className="flex flex-col gap-4 text-center items-center max-w-4xl mx-auto">
             <span className="inline-flex items-center gap-2 bg-blue-600/20 border border-blue-400/30 text-blue-200 text-xs font-semibold px-4 py-1.5 rounded-full backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-              Personalised · One to One
+              Group · One to All
             </span>
             <h1 className="text-white text-4xl font-black leading-tight tracking-tight md:text-6xl drop-shadow-sm">
-              One-to-One Live Courses
+              One-to-All Live Courses
             </h1>
             <p className="text-gray-200 text-base font-normal leading-normal md:text-lg max-w-2xl">
-              Get undivided attention from expert educators. Book a private live
-              session tailored entirely to your learning pace and goals.
+              Join interactive group sessions led by top educators. Learn collaboratively and benefit from a shared classroom experience.
             </p>
-
             {/* Search Bar */}
             <div className="mt-6 flex w-full max-w-150 flex-col gap-2 md:flex-row">
               <label className="flex w-full items-center rounded-full bg-white p-2 shadow-lg focus-within:ring-4 focus-within:ring-blue-500/20 transition-all">
@@ -213,14 +198,12 @@ const OneToOneLiveCoursesPage = () => {
         <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
           <div className="flex flex-col gap-2 max-w-2xl">
             <h2 className="text-gray-900 text-4xl md:text-5xl font-black leading-tight tracking-tight">
-              Private Live Sessions
+              Group Live Sessions
             </h2>
             <p className="text-gray-600 text-lg font-normal leading-relaxed">
-              Every session is exclusively yours — study at your own speed with
-              a dedicated educator.
+              Learn together with peers in a collaborative environment guided by expert educators.
             </p>
           </div>
-
           {/* Filter Button */}
           <div className="relative flex-shrink-0" ref={filterRef}>
             <button
@@ -239,7 +222,6 @@ const OneToOneLiveCoursesPage = () => {
               )}
               <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? "rotate-180" : ""}`} />
             </button>
-
             {/* Filter Dropdown */}
             {showFilters && (
               <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 z-50">
@@ -254,7 +236,6 @@ const OneToOneLiveCoursesPage = () => {
                     </button>
                   )}
                 </div>
-
                 {/* Sort */}
                 <div className="mb-5">
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
@@ -273,7 +254,6 @@ const OneToOneLiveCoursesPage = () => {
                     <option value="duration-asc">Duration: Shortest First</option>
                   </select>
                 </div>
-
                 {/* Subject Filter */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
@@ -299,7 +279,6 @@ const OneToOneLiveCoursesPage = () => {
                     </div>
                   )}
                 </div>
-
                 <button
                   onClick={() => setShowFilters(false)}
                   className="mt-5 w-full px-4 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors"
@@ -310,7 +289,6 @@ const OneToOneLiveCoursesPage = () => {
             )}
           </div>
         </section>
-
         {/* Active filter chips */}
         {selectedSubjects.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
@@ -327,7 +305,6 @@ const OneToOneLiveCoursesPage = () => {
             ))}
           </div>
         )}
-
         {/* Error State */}
         {error && (
           <div className="text-center py-12">
@@ -343,9 +320,8 @@ const OneToOneLiveCoursesPage = () => {
             </div>
           </div>
         )}
-
         {/* Empty State */}
-        {!error && filteredClasses.length === 0 && (
+        {!error && filteredCourses.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-gray-300 text-center">
             <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
               <svg className="w-10 h-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -357,7 +333,7 @@ const OneToOneLiveCoursesPage = () => {
             <p className="text-gray-600 mb-6 max-w-sm">
               {selectedSubjects.length > 0 || searchQuery
                 ? "Try adjusting your filters or search terms."
-                : "No one-to-one live courses are available at the moment."}
+                : "No one-to-all live courses are available at the moment."}
             </p>
             {(selectedSubjects.length > 0 || searchQuery) && (
               <button
@@ -369,19 +345,18 @@ const OneToOneLiveCoursesPage = () => {
             )}
           </div>
         )}
-
         {/* Courses Grid */}
-        {!error && filteredClasses.length > 0 && (
+        {!error && filteredCourses.length > 0 && (
           <section>
             <div className="mb-6 flex justify-between items-center">
               <p className="text-gray-600 text-sm">
                 Showing{" "}
-                <span className="font-semibold text-gray-900">{filteredClasses.length}</span>{" "}
-                {filteredClasses.length === 1 ? "course" : "courses"}
+                <span className="font-semibold text-gray-900">{filteredCourses.length}</span>{" "}
+                {filteredCourses.length === 1 ? "course" : "courses"}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
-              {filteredClasses.map((classData) => (
+              {filteredCourses.map((classData) => (
                 <CourseCard key={classData._id || classData.id} course={classData} />
               ))}
             </div>
@@ -392,4 +367,4 @@ const OneToOneLiveCoursesPage = () => {
   );
 };
 
-export default OneToOneLiveCoursesPage;
+export default OneToAllLiveCoursesPage;

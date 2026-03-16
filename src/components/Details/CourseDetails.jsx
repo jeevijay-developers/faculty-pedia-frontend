@@ -488,50 +488,7 @@ const CourseDetails = ({ id }) => {
                   )}
                 </div>
 
-                {/* Course Description */}
-                {/* <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Course Description
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                    {course.description}
-                  </p>
-                </div> */}
-
-                {/* Course Timeline
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Course Timeline
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="flex items-center space-x-3">
-                      <FaCalendarAlt className="w-5 h-5 text-blue-600" />
-                      <div>
-                        <p className="text-sm text-gray-500">Start Date</p>
-                        <p className="font-medium">
-                          {new Date(course.startDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <FaCalendarAlt className="w-5 h-5 text-red-600" />
-                      <div>
-                        <p className="text-sm text-gray-500">End Date</p>
-                        <p className="font-medium">
-                          {new Date(course.endDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <FaClock className="w-5 h-5 text-green-600" />
-                      <div>
-                        <p className="text-sm text-gray-500">Duration</p>
-                        <p className="font-medium">{course.courseDuration}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
-
+              
                 {/* Course Objectives */}
                 {course.courseObjectives &&
                   course.courseObjectives.length > 0 && (
@@ -765,15 +722,13 @@ const CourseDetails = ({ id }) => {
                       </span>
                       <span className="text-gray-500">Course Duration</span>
                     </div>
-                    {!isOneToOne && (
-                      <div className="flex items-center text-sm">
-                        <span className="flex items-center mr-1 text-gray-600">
-                          <FaCalendarAlt className="w-4 h-4 mr-2" />
-                          <span>{course.classesPerWeek || "N/A"}</span>
-                        </span>
-                        <span className="text-gray-500">Classes / Week</span>
-                      </div>
-                    )}
+                    <div className="flex items-center text-sm">
+                      <span className="flex items-center mr-1 text-gray-600">
+                        <FaCalendarAlt className="w-4 h-4 mr-2" />
+                        <span>{course.classesPerWeek || "N/A"}</span>
+                      </span>
+                      <span className="text-gray-500">Classes / Week</span>
+                    </div>
                     <div className="flex items-center text-sm">
                       <span className="flex items-center mr-1 text-gray-600">
                         <FaClock className="w-4 h-4 mr-2" />
@@ -807,7 +762,7 @@ const CourseDetails = ({ id }) => {
                 </div>
               </div>
 
-              {/* Talk to Educator WhatsApp Button */}
+              {/* Talk to Educator WhatsApp Button - now visible for both 'One to One' and 'One to All' course types */}
               {!isEnrolled && educator?.whatsappNumber && (
                 <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200 p-5 shadow-sm">
                   <div className="text-center">
