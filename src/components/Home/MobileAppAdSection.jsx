@@ -76,6 +76,7 @@ const MobileAppAdSection = () => {
                   src="/images/Home/MobileApp.png"
                   alt="Facultypedia Mobile App"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 448px"
                   className="object-contain bg-transparent"
                   priority
                 />

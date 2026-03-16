@@ -70,6 +70,7 @@ const Footer = () => {
                   width={40}
                   height={40}
                   className="rounded-lg"
+                  style={{ width: "40px", height: "auto" }}
                 />
               </Link>
             </div>

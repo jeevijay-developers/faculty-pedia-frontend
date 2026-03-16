@@ -9,7 +9,7 @@ import {
   getTestSeriesById,
 } from "@/components/server/test-series.route";
 import { getTestsBySeries, getTestById } from "@/components/server/test.route";
-import { getVideos } from "@/components/server/video.routes";
+import { getCourseVideosPublic } from "@/components/server/video.routes";
 import { getStudyMaterialsByCourse } from "@/components/server/study-material.routes";
 import {
   getCourseProgress,
@@ -173,9 +173,7 @@ const CoursePanelPage = () => {
     const loadVideos = async () => {
       try {
         setCourseVideosLoading(true);
-        const videos = await getVideos({
-          courseId: resolvedCourseId,
-          isCourseSpecific: true,
+        const videos = await getCourseVideosPublic(resolvedCourseId, {
           limit: 200,
         });
         if (!cancelled) setCourseVideos(Array.isArray(videos) ? videos : []);
@@ -851,7 +849,7 @@ const CoursePanelPage = () => {
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
                       />
-                    ) : courseVideosLoading ? (
+                    ) : loading || courseVideosLoading ? (
                       <div className="absolute inset-0 flex items-center justify-center text-white">
                         Loading videos...
                       </div>
@@ -917,7 +915,7 @@ const CoursePanelPage = () => {
                       </span>
                     </div>
                     <div className="overflow-y-auto flex-1 p-2 space-y-1 no-scrollbar">
-                      {courseVideosLoading && allVideos.length === 0 && (
+                      {(loading || courseVideosLoading) && allVideos.length === 0 && (
                         <div className="p-4 text-sm text-text-secondary">
                           Loading videos...
                         </div>

@@ -17,8 +17,17 @@ export const getVideos = async (params = {}) => {
   return pickVideosArray(response?.data || response);
 };
 
+export const getCourseVideosPublic = async (courseId, params = {}) => {
+  if (!courseId) return [];
+  const response = await API_CLIENT.get(`/api/videos/course/${courseId}`, {
+    params,
+  });
+  return pickVideosArray(response?.data || response);
+};
+
 const videoRoutes = {
   getVideos,
+  getCourseVideosPublic,
 };
 
 export default videoRoutes;

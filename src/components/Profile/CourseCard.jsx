@@ -10,7 +10,6 @@ import {
   FiWifi,
 } from "react-icons/fi";
 import { getCourseById } from "../server/course.routes";
-import { getVideos } from "../server/video.routes";
 import { getTestSeriesByCourse } from "../server/test-series.route";
 
 const DEFAULT_IMAGE = "/images/placeholders/1.svg";
@@ -230,24 +229,14 @@ const CourseCard = ({ course, meta }) => {
 
     const fetchCounts = async () => {
       try {
-        const seriesPromise = courseObjectId
+        const seriesRes = await (courseObjectId
           ? getTestSeriesByCourse(courseObjectId, { limit: 200 })
-          : Promise.resolve(null);
-
-        const [videosRes, seriesRes] = await Promise.allSettled([
-          getVideos({ courseId, isCourseSpecific: true, limit: 200 }),
-          seriesPromise,
-        ]);
+          : Promise.resolve(null));
 
         const nextCounts = { videos: null, tests: null };
 
-        if (videosRes.status === "fulfilled") {
-          const list = Array.isArray(videosRes.value) ? videosRes.value : [];
-          nextCounts.videos = toCount(list.length) ?? null;
-        }
-
-        if (seriesRes.status === "fulfilled" && seriesRes.value) {
-          const testTotal = getTestsFromCourseSeries(seriesRes.value);
+        if (seriesRes) {
+          const testTotal = getTestsFromCourseSeries(seriesRes);
           nextCounts.tests = toCount(testTotal) ?? null;
         }
 
