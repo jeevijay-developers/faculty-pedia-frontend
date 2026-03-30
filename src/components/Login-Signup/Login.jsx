@@ -120,12 +120,19 @@ const Login = ({
       } else {
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get("redirect");
+        const educatorDashboardBaseUrl = (
+          process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL ||
+          (process.env.NODE_ENV === "production"
+            ? "https://educator.facultypedia.com"
+            : "http://localhost:3001")
+        )
+          .trim()
+          .replace(/\/+$/, "");
         const destination = redirectUrl
           ? decodeURIComponent(redirectUrl)
           : response.userType === "student"
           ? "/"
-          : process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL ||
-            "/educator/dashboard";
+          : educatorDashboardBaseUrl;
 
         router.replace(destination);
       }

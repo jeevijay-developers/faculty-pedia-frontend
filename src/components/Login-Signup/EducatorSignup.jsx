@@ -713,7 +713,15 @@ const EducatorSignup = () => {
     setPendingUser(null);
     
     // Redirect to educator dashboard login page
-    const dashboardLoginUrl = `${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/login`;
+    const educatorDashboardBaseUrl = (
+      process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL ||
+      (process.env.NODE_ENV === "production"
+        ? "https://educator.facultypedia.com"
+        : "http://localhost:3001")
+    )
+      .trim()
+      .replace(/\/+$/, "");
+    const dashboardLoginUrl = `${educatorDashboardBaseUrl}/login`;
     toast.success("Email verified! Please login to access your dashboard.");
     
     // Use window.location.href for cross-origin redirect to the dashboard app
