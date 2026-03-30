@@ -713,7 +713,7 @@ const EducatorSignup = () => {
     setPendingUser(null);
     
     // Redirect to educator dashboard login page
-    const dashboardLoginUrl = `${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL || "/educator/dashboard"}/login`;
+    const dashboardLoginUrl = `${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/login`;
     toast.success("Email verified! Please login to access your dashboard.");
     
     // Use window.location.href for cross-origin redirect to the dashboard app
