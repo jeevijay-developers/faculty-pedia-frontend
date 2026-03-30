@@ -1497,15 +1497,12 @@ const EducatorSignup = () => {
                 </h1>
               </div>
             </div>
-            {/* <div className="text-sm text-slate-600">
-              Already have an account?{" "}
-              <Link
-                href={`${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/login `}
-                className="font-semibold text-blue-500 hover:text-blue-700"
-              >
-                Log in
-              </Link>
-            </div> */}
+            <Link
+              href={`${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/login`}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-500 text-sm font-semibold hover:bg-blue-50 transition-colors"
+            >
+              Login
+            </Link>
           </header>
 
           <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8">
