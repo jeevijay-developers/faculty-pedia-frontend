@@ -19,7 +19,6 @@ const page = async () => {
         btnTitle={" Join as Educator"}
         btnUrl={"/join-as-educator"}
       />
-
       <EducatorsCarousel specialization="IIT-JEE" />
       <CourseCarousel
         title="One to All Live Courses"
