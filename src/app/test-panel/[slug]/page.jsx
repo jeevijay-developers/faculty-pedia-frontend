@@ -1038,7 +1038,7 @@ const TestPanelPage = () => {
                 type="button"
                 onClick={() => {
                   setShowSummaryModal(false);
-                  router.push(resultsPath);
+                  router.push(`/test-result/${slug}`);
                 }}
                 className="px-4 py-2 rounded-md text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700"
               >

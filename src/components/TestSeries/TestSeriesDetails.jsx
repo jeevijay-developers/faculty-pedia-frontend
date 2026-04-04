@@ -377,7 +377,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                   Tests Included
                 </h3>
                 <span className="text-sm font-bold text-[#1E88E5] px-3 py-1 bg-[#1E88E5]/5 rounded-md">
-                  {testsCount} Modules
+                  {testsCount} Tests included
                 </span>
               </div>
               <div className="space-y-3">
@@ -424,7 +424,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                         </div>
                         {isEnrolled ? (
                           <button 
-                            onClick={() => router.push(`/tests/${testId}`)}
+                            onClick={() => router.push(`/test-panel/${test.slug}`)}
                             className="bg-[#1E88E5] text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm hover:bg-[#1565C0] transition-all w-full sm:w-auto"
                           >
                             Start Test
