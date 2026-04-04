@@ -380,9 +380,9 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.webinars && educatorData.webinars.length > 0) {
         setLoadingWebinars(true);
         try {
-          const validIds = educatorData.webinars.filter(
-            (id) => id && typeof id === "string" && id.trim().length > 0
-          );
+          const validIds = educatorData.webinars
+            .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
+            .filter((id) => id && typeof id === "string" && id.trim().length > 0);
 
           const webinarPromises = validIds.map((webinarId) =>
             getWebinarById(webinarId).catch((err) => {
@@ -413,9 +413,9 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.courses && educatorData.courses.length > 0) {
         setLoadingCourses(true);
         try {
-          const validIds = educatorData.courses.filter(
-            (id) => id && typeof id === "string" && id.trim().length > 0
-          );
+          const validIds = educatorData.courses
+            .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
+            .filter((id) => id && typeof id === "string" && id.trim().length > 0);
 
           const coursePromises = validIds.map((courseId) =>
             getCourseById(courseId).catch((err) => {
@@ -443,9 +443,9 @@ const ViewProfile = ({ educatorData }) => {
       if (educatorData?.testSeries && educatorData.testSeries.length > 0) {
         setLoadingTestSeries(true);
         try {
-          const validIds = educatorData.testSeries.filter(
-            (id) => id && typeof id === "string" && id.trim().length > 0
-          );
+          const validIds = educatorData.testSeries
+            .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
+            .filter((id) => id && typeof id === "string" && id.trim().length > 0);
 
           const testSeriesPromises = validIds.map((testSeriesId) =>
             getTestSeriesById(testSeriesId).catch((err) => {
