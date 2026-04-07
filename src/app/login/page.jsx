@@ -10,7 +10,12 @@ const GenericLoginPage = () => {
 
   useEffect(() => {
     if (isUserLoggedIn()) {
-      router.replace(getDashboardUrl());
+      const dashboardUrl = getDashboardUrl();
+      if (dashboardUrl.startsWith("http")) {
+        window.location.href = dashboardUrl;
+      } else {
+        router.replace(dashboardUrl);
+      }
     }
   }, [router]);
 

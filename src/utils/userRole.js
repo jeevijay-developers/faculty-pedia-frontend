@@ -77,8 +77,17 @@ export const getDashboardUrl = () => {
   switch (role) {
     case 'student':
       return '/exams';
-    case 'educator':
-      return '/educator/dashboard';
+    case 'educator': {
+      const baseUrl = (
+        process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL ||
+        (process.env.NODE_ENV === 'production'
+          ? 'https://educator.facultypedia.com'
+          : 'http://localhost:3001')
+      )
+        .trim()
+        .replace(/\/+$/, '');
+      return `${baseUrl}/dashboard`;
+    }
     default:
       return '/';
   }

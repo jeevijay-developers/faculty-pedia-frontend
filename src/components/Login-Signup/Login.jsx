@@ -134,7 +134,11 @@ const Login = ({
           ? "/"
           : educatorDashboardBaseUrl;
 
-        router.replace(destination);
+        if (destination.startsWith("http")) {
+          window.location.href = destination;
+        } else {
+          router.replace(destination);
+        }
       }
     } catch (error) {
       // Error is already logged in auth.routes.js if it's a network/server error
