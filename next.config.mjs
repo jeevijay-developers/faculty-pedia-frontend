@@ -9,13 +9,17 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "*",
+        hostname: "res.cloudinary.com",
         pathname: "/**",
       },
       {
         protocol: "https",
-        hostname: "cloudinary.com",
+        hostname: "ik.imagekit.io",
         pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**",
       },
     ],
   },
