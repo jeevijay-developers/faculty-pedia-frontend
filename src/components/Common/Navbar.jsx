@@ -342,8 +342,7 @@ const Navbar = () => {
                 alt="Logo"
                 width={45}
                 height={45}
-                className="rounded-lg"
-                style={{ width: "45px", height: "auto" }}
+                className="rounded-lg w-[45px] h-auto"
                 priority
               />
             </Link>

@@ -82,7 +82,7 @@ const LiveClasses = ({
                             disableOnInteraction: false,
                             pauseOnMouseEnter: true
                         } : false}
-                        loop={coursesToRender.length > 1}
+                        loop={coursesToRender.length > 3}
                         className="course-carousel"
                         breakpoints={{
                             480: {

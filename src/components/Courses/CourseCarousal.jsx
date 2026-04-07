@@ -404,7 +404,7 @@ const CourseCarousel = ({
             spaceBetween={16}
             slidesPerView={1}
             autoplay={
-              autoplay && coursesToRender.length > 1
+              autoplay && coursesToRender.length > 3
                 ? {
                     delay: 3000,
                     disableOnInteraction: false,
@@ -412,7 +412,7 @@ const CourseCarousel = ({
                   }
                 : false
             }
-            loop={coursesToRender.length > 1}
+            loop={coursesToRender.length > 3}
             className="course-carousel"
             breakpoints={{
               480: {

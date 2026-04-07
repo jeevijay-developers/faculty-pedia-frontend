@@ -169,7 +169,7 @@ const OneToOneLiveClassesCarousel = ({
                   }
                 : false
             }
-            loop={classesToRender.length > 1}
+            loop={classesToRender.length > 3}
             className="one-to-one-carousel"
             breakpoints={{
               480: {

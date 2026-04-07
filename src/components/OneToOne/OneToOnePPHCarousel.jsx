@@ -162,7 +162,7 @@ const OneToOnePPHCarousel = ({
               disableOnInteraction: false,
               pauseOnMouseEnter: true,
             }}
-            loop={data.length > 1}
+            loop={data.length > 3}
             className="one-to-one-carousel"
             breakpoints={{
               480: { slidesPerView: 1, spaceBetween: 16 },
