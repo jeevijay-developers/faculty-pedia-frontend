@@ -43,7 +43,12 @@ const PostCarousel = ({ subject = "All", specialization }) => {
 
         // Extract posts from response
         const postsData = response?.data?.posts || response?.posts || [];
-        setData(postsData);
+        setData(
+          postsData.filter((post) => {
+            const edu = post?.educatorId || post?.educator;
+            return edu && (edu.fullName || edu.name || edu.firstName);
+          })
+        );
       } catch (error) {
         console.error("Failed to fetch posts:", error);
         setError(error.message || "Failed to load posts");

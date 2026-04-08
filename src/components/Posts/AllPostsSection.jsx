@@ -53,7 +53,12 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
           paginationData = result.pagination || paginationData;
         }
 
-        setAllPosts(posts);
+        setAllPosts(
+          posts.filter((post) => {
+            const edu = post?.educatorId || post?.educator;
+            return edu && (edu.fullName || edu.name || edu.firstName);
+          })
+        );
         setPagination(paginationData);
       } catch (err) {
         console.error("Error loading posts:", err);
