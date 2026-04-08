@@ -42,7 +42,12 @@ const UpcomingWebinarCarousel = ({
         // Extract webinars from response
         const webinarsData =
           response?.data?.webinars || response?.webinars || [];
-        setData(webinarsData);
+        setData(
+          webinarsData.filter((webinar) => {
+            const edu = webinar?.educatorId || webinar?.educator;
+            return edu && (edu.fullName || edu.name || edu.firstName);
+          })
+        );
       } catch (error) {
         console.error("Failed to fetch webinars:", error);
         setError(error.message || "Failed to load webinars");

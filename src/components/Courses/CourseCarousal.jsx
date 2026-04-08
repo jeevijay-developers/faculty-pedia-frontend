@@ -302,7 +302,13 @@ const CourseCarousel = ({
           filteredCourses,
           specialization
         );
-        setCoursesToRender(enrichedCourses);
+
+        setCoursesToRender(
+          enrichedCourses.filter((course) => {
+            const edu = course?.educator;
+            return edu && (edu.fullName || edu.name || edu.firstName);
+          })
+        );
       } catch (error) {
         console.error("Failed to fetch courses:", error);
         setError(error.message || "Failed to load courses");

@@ -48,7 +48,9 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
           educators = response;
         }
 
-        setFilteredEducators(educators);
+        setFilteredEducators(
+          educators.filter((edu) => edu && (edu.fullName || edu.name || edu.firstName))
+        );
       } catch (error) {
         console.error("Failed to fetch educators:", error);
         console.error("Error details:", {

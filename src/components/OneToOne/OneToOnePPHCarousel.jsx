@@ -44,25 +44,27 @@ const OneToOnePPHCarousel = ({
         const educators = response?.educators || [];
 
         // Transform educator data to match card component expectations
-        const transformedData = educators.map((educator) => ({
-          id: educator._id,
-          _id: educator._id,
-          title: `1-1 Session with ${educator.fullName}`,
-          educatorName: educator.fullName,
-          postImage:
-            educator.profilePicture ||
-            educator.image?.url ||
-            EDUCATOR_FALLBACK_IMAGE,
-          qualification: educator.qualifications || "Not specified",
-          subject: Array.isArray(educator.subject)
-            ? educator.subject.join(", ")
-            : educator.subject,
-          specialization: Array.isArray(educator.specialization)
-            ? educator.specialization.join(", ")
-            : educator.specialization,
-          fee: educator.payPerHourFee || 0,
-          ...educator,
-        }));
+        const transformedData = educators
+          .filter((educator) => educator && (educator.fullName || educator.name || educator.firstName))
+          .map((educator) => ({
+            id: educator._id,
+            _id: educator._id,
+            title: `1-1 Session with ${educator.fullName || educator.name || educator.firstName}`,
+            educatorName: educator.fullName || educator.name || educator.firstName,
+            postImage:
+              educator.profilePicture ||
+              educator.image?.url ||
+              EDUCATOR_FALLBACK_IMAGE,
+            qualification: educator.qualifications || "Not specified",
+            subject: Array.isArray(educator.subject)
+              ? educator.subject.join(", ")
+              : educator.subject,
+            specialization: Array.isArray(educator.specialization)
+              ? educator.specialization.join(", ")
+              : educator.specialization,
+            fee: educator.payPerHourFee || 0,
+            ...educator,
+          }));
 
         setData(transformedData);
       } catch (error) {

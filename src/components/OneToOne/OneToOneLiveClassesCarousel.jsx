@@ -64,7 +64,12 @@ const OneToOneLiveClassesCarousel = ({
           liveClasses = response;
         }
 
-        setClassesToRender(liveClasses);
+        setClassesToRender(
+          liveClasses.filter((liveClass) => {
+            const edu = liveClass?.educator || liveClass?.educatorId;
+            return edu && (edu.fullName || edu.name || edu.firstName);
+          })
+        );
       } catch (error) {
         console.error("Failed to fetch live classes:", error);
         setError(error.message || "Failed to load live classes");

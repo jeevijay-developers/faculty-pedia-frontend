@@ -40,7 +40,9 @@ const TestSeriesCarousel = ({
           // Exclude anything linked to a course or marked course specific
           const hasCourse = Boolean(ts?.courseId);
           const isCourseSpecific = Boolean(ts?.isCourseSpecific);
-          return !hasCourse && !isCourseSpecific;
+          const edu = ts?.educator || ts?.educatorId;
+          const hasEducatorName = edu && (edu.fullName || edu.name || edu.firstName);
+          return !hasCourse && !isCourseSpecific && hasEducatorName;
         });
 
         setData(testSeriesData);

@@ -131,7 +131,7 @@ const CourseCard = ({ course }) => {
     return (
         <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
             {/* Course Image */}
-            <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
+            <div className="relative h-40 bg-gray-200 overflow-hidden shrink-0">
                 {course.image ? (
                     <Image
                         src={course.image}
@@ -142,7 +142,7 @@ const CourseCard = ({ course }) => {
                         priority
                     />
                 ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-linear-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                         <div className="text-white text-center">
                             <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-2">
                                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -156,7 +156,7 @@ const CourseCard = ({ course }) => {
             </div>
 
             {/* Course Content */}
-            <div className="p-5 flex flex-col flex-grow">
+            <div className="p-5 flex flex-col grow">
                 {/* Course Title */}
                 <h3 className="text-lg font-bold text-gray-800 mb-3 leading-tight overflow-hidden">
                     {course.title}
@@ -175,10 +175,8 @@ const CourseCard = ({ course }) => {
 
                 </div>
 
-
-
                 {/* Description */}
-                <div className="mb-4 flex-grow">
+                <div className="mb-4 grow">
                     <p className="text-sm text-gray-600 line-clamp-2 text-ellipsis overflow-hidden min-h-[2.6em] leading-tight">
                         {course.description}
                     </p>
