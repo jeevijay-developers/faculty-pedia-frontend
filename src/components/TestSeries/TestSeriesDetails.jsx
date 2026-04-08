@@ -204,6 +204,57 @@ const TestSeriesDetails = ({ testSeriesData }) => {
     }
   };
 
+  const resolveTestPanelPath = (testItem) => {
+    const toSegment = (value) => {
+      if (value === null || value === undefined) return null;
+
+      let raw = String(value).trim();
+      if (!raw) return null;
+
+      // If backend sends a full url/path template, normalize to the last segment.
+      if (/^https?:\/\//i.test(raw)) {
+        try {
+          raw = new URL(raw).pathname;
+        } catch {
+          // keep raw as-is
+        }
+      }
+
+      raw = raw.replace(/^[#/]+|[/?#]+$/g, "");
+      if (!raw) return null;
+
+      const parts = raw.split("/").filter(Boolean);
+      const segment = parts[parts.length - 1];
+
+      if (!segment || segment.startsWith(":")) return null;
+      if (segment.toLowerCase() === "tests" || segment.toLowerCase() === "test") {
+        return null;
+      }
+
+      return segment;
+    };
+
+    const candidates = [
+      testItem?.slug,
+      testItem?.testSlug,
+      testItem?.path,
+      testItem?.url,
+      testItem?._id,
+      testItem?.id,
+      testItem?.testId,
+      testItem,
+    ];
+
+    for (const candidate of candidates) {
+      const segment = toSegment(candidate);
+      if (segment) {
+        return `/test-panel/${encodeURIComponent(segment)}`;
+      }
+    }
+
+    return null;
+  };
+
   const handleTestSeriesReviewSubmit = async (event) => {
     event.preventDefault();
     if (!isEnrolled) {
@@ -385,6 +436,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                 {actualTests.length > 0 ? (
                   actualTests.map((test, index) => {
                     const testId = test?._id || test?.id || test;
+                    const testPanelPath = resolveTestPanelPath(test);
                     const testTitle = test?.title || `Mock Test ${String(index + 1).padStart(2, '0')}`;
                     const testDuration = test?.duration || 180;
                     const testMarks = test?.overallMarks || test?.totalMarks || 300;
@@ -424,8 +476,13 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                         </div>
                         {isEnrolled ? (
                           <button 
-                            onClick={() => router.push(`/test-panel/${test.slug}`)}
-                            className="bg-[#1E88E5] text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm hover:bg-[#1565C0] transition-all w-full sm:w-auto"
+                            onClick={() => {
+                              if (testPanelPath) {
+                                router.push(testPanelPath);
+                              }
+                            }}
+                            disabled={!testPanelPath}
+                            className="bg-[#1E88E5] text-white px-6 py-2.5 rounded-md text-sm font-bold shadow-sm hover:bg-[#1565C0] disabled:opacity-60 disabled:cursor-not-allowed transition-all w-full sm:w-auto"
                           >
                             Start Test
                           </button>
