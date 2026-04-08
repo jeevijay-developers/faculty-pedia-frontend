@@ -1418,7 +1418,7 @@ const ViewProfile = ({ educatorData }) => {
                         href={educatorData.socials.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:bg-blue-900/20 hover:text-blue-600 transition-colors"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:bg-blue-900/20 hover:text-blue-600 transition-colors"
                       >
                         <FaLinkedin className="w-4 h-4" />
                       </a>

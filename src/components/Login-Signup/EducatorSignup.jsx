@@ -1108,7 +1108,7 @@ const EducatorSignup = () => {
                     e.target.value
                   )
                 }
-                className={`w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 dark:text-white placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-4 transition-all ${
+                className={`w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-4 transition-all ${
                   errors[`workExperience.${index}.title`]
                     ? "border-red-300 focus:border-red-500 focus:ring-red-100"
                     : "border-slate-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500/10"
@@ -1140,7 +1140,7 @@ const EducatorSignup = () => {
                       e.target.value
                     )
                   }
-                  className={`w-full h-12 pl-11 pr-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 dark:text-white placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-4 transition-all ${
+                  className={`w-full h-12 pl-11 pr-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-4 transition-all ${
                     errors[`workExperience.${index}.company`]
                       ? "border-red-300 focus:border-red-500 focus:ring-red-100"
                       : "border-slate-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500/10"

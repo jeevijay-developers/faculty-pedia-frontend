@@ -92,7 +92,7 @@ const PostDetails = ({ postData }) => {
           <div
             data-aos="fade-up"
             data-aos-delay="100"
-            className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-xl shadow-lg"
+            className="bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-xl shadow-lg"
           >
             <div className="grid md:grid-cols-3 gap-6">
               <div className="flex items-center space-x-3">
@@ -150,7 +150,7 @@ const PostDetails = ({ postData }) => {
           <div
             data-aos="fade-up"
             data-aos-delay="300"
-            className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden"
+            className="bg-linear-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden"
           >
             <div className="p-8">
               <div
@@ -170,14 +170,14 @@ const PostDetails = ({ postData }) => {
             <div
               data-aos="fade-up"
               data-aos-delay="400"
-              className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-100 dark:border-blue-800/40 p-8 rounded-xl shadow-lg"
+              className="bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-100 dark:border-blue-800/40 p-8 rounded-xl shadow-lg"
             >
               <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center">
                 <FaUser className="mr-3 text-blue-600" />
                 About the Author
               </h2>
               <div className="flex flex-col md:flex-row items-start gap-6">
-                <div className="relative w-24 h-24 rounded-full overflow-hidden shadow-lg flex-shrink-0">
+                <div className="relative w-24 h-24 rounded-full overflow-hidden shadow-lg shrink-0">
                   <img
                     src={
                       postData.author.profileImage?.url ||
@@ -220,7 +220,7 @@ const PostDetails = ({ postData }) => {
             <div
               data-aos="fade-up"
               data-aos-delay="500"
-              className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-100 dark:border-green-800/40 p-8 rounded-xl shadow-lg"
+              className="bg-linear-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-100 dark:border-green-800/40 p-8 rounded-xl shadow-lg"
             >
               <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center">
                 <FaGraduationCap className="mr-3 text-green-600" />
@@ -332,7 +332,7 @@ const PostDetails = ({ postData }) => {
           <div
             data-aos="fade-left"
             data-aos-delay="200"
-            className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-6 rounded-xl shadow-lg ring-1 ring-orange-100 dark:ring-orange-800/40"
+            className="bg-linear-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-6 rounded-xl shadow-lg ring-1 ring-orange-100 dark:ring-orange-800/40"
           >
             <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
               <FaTag className="mr-2 text-orange-600" />
@@ -354,7 +354,7 @@ const PostDetails = ({ postData }) => {
             <div
               data-aos="fade-left"
               data-aos-delay="300"
-              className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 p-6 rounded-xl shadow-lg ring-1 ring-indigo-100 dark:ring-indigo-800/40"
+              className="bg-linear-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 p-6 rounded-xl shadow-lg ring-1 ring-indigo-100 dark:ring-indigo-800/40"
             >
               <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200">
                 Related Tags

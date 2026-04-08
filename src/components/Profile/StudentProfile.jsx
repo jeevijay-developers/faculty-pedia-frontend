@@ -827,7 +827,7 @@ const StudentDashboard = ({
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3 text-blue-600">
             <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
-              <Image src="/logo/finalLogo.png" alt="Facultypedia Logo" width={32} height={32} className="m-2 w-[32px] h-auto" />
+              <Image src="/logo/finalLogo.png" alt="Facultypedia Logo" width={32} height={32} className="m-2 w-8 h-auto" />
             </div>
             <h2 className="text-gray-900 dark:text-white text-xl font-bold tracking-tight">
               Facultypedia

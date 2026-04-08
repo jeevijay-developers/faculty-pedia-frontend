@@ -38,7 +38,7 @@ const HomeExamMenu = () => {
           
           <div className="text-center relative z-10">
            <div className='w-15 h-15 mx-auto mb-2 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-md'>
-              <Image src="/logo/iit-logo.png" alt="IIT Icon" width={40} height={40} className="w-[40px] h-auto" />
+              <Image src="/logo/iit-logo.png" alt="IIT Icon" width={40} height={40} className="w-10 h-auto" />
             </div>
             <div>IIT JEE</div>
             <p className="text-sm font-normal mt-2 opacity-90">Indian Institute of Technology</p>
@@ -58,7 +58,7 @@ const HomeExamMenu = () => {
           
           <div className="text-center relative z-10">
            <div className='w-15 h-15 mx-auto mb-2 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-md'>
-              <Image src="/logo/neet-logo.png" alt="NEET Icon" width={40} height={40} className="w-[40px] h-auto" />
+              <Image src="/logo/neet-logo.png" alt="NEET Icon" width={40} height={40} className="w-10 h-auto" />
             </div>
             <div>NEET</div>
             <p className="text-sm font-normal mt-2 opacity-90">National Eligibility cum Entrance Test</p>
@@ -79,7 +79,7 @@ const HomeExamMenu = () => {
           
           <div className="text-center relative z-10">
            <div className='w-15 h-15 mx-auto mb-2 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-md'>
-              <Image src="/logo/cbse-logo.png" alt="CBSE Icon" width={40} height={40} className="w-[40px] h-auto" />
+              <Image src="/logo/cbse-logo.png" alt="CBSE Icon" width={40} height={40} className="w-10 h-auto" />
             </div>
             <div>CBSE</div>
             <p className="text-sm font-normal mt-2 opacity-90">Central Board of Secondary Education</p>
