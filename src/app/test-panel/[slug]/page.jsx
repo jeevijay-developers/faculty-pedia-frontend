@@ -724,7 +724,7 @@ const TestPanelPage = () => {
     <>
       <div className="min-h-screen h-screen w-full flex flex-col bg-linear-to-b from-slate-100 via-white to-slate-100 py-8 px-4 sm:px-6 lg:px-10">
         <div className="w-full flex-1 flex flex-col space-y-6">
-          <div className="flex items-center justify-between gap-4 bg-white/70 backdrop-blur-sm border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
+          <div className="flex items-center justify-between gap-4 bg-white dark:bg-gray-900/70 backdrop-blur-sm border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
                 A+
@@ -770,13 +770,13 @@ const TestPanelPage = () => {
           )}
 
           {error && (
-            <div className="p-3 rounded-md border border-rose-200 bg-rose-50 text-rose-700 text-sm">
+            <div className="p-3 rounded-md border border-rose-200 bg-rose-50 dark:bg-rose-900/20 text-rose-700 text-sm">
               {error}
             </div>
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1">
-            <aside className="lg:col-span-4 xl:col-span-3 bg-white border border-slate-200 rounded-2xl shadow-sm p-4 space-y-4 h-full">
+            <aside className="lg:col-span-4 xl:col-span-3 bg-white dark:bg-gray-900 border border-slate-200 rounded-2xl shadow-sm p-4 space-y-4 h-full">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold text-slate-800">
                   Question Panel
@@ -822,7 +822,7 @@ const TestPanelPage = () => {
                           ? "border-indigo-600 bg-indigo-50 text-indigo-700"
                           : answered
                           ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                          : "border-slate-200 bg-white text-slate-700 hover:border-indigo-200"
+                          : "border-slate-200 bg-white dark:bg-gray-900 text-slate-700 hover:border-indigo-200"
                       }`}
                     >
                       {idx + 1}
@@ -837,7 +837,7 @@ const TestPanelPage = () => {
               </div>
             </aside>
 
-            <section className="lg:col-span-8 xl:col-span-9 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-5 h-full">
+            <section className="lg:col-span-8 xl:col-span-9 bg-white dark:bg-gray-900 border border-slate-200 rounded-2xl shadow-sm p-6 space-y-5 h-full">
               {loading || questionLoading ? (
                 <div className="text-center text-slate-500">
                   Loading test...
@@ -876,7 +876,7 @@ const TestPanelPage = () => {
                         id={`ans-${currentQuestion.id}`}
                         type="number"
                         inputMode="numeric"
-                        className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 bg-white"
+                        className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 bg-white dark:bg-gray-900"
                         value={answers[currentQuestion.id] ?? ""}
                         onChange={(e) =>
                           selectAnswer(currentQuestion.id, e.target.value)
@@ -896,7 +896,7 @@ const TestPanelPage = () => {
                             className={`w-full text-left px-4 py-3 rounded-lg border transition-colors ${
                               selected
                                 ? "border-indigo-600 bg-indigo-50 text-indigo-800 shadow-sm"
-                                : "border-slate-200 hover:border-indigo-200 bg-white text-slate-800"
+                                : "border-slate-200 hover:border-indigo-200 bg-white dark:bg-gray-900 text-slate-800"
                             }`}
                           >
                             <span className="font-semibold mr-2">
@@ -959,7 +959,7 @@ const TestPanelPage = () => {
             className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
             onClick={() => setShowSummaryModal(false)}
           />
-          <div className="relative z-10 w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 p-6 space-y-4">
+          <div className="relative z-10 w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 shadow-2xl border border-slate-200 p-6 space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-wide text-emerald-600 font-semibold">

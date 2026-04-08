@@ -40,7 +40,7 @@ const ReviewSection = ({ reviews }) => {
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-semibold text-gray-800 mb-6">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">
         Student Reviews
       </h2>
 
@@ -50,7 +50,7 @@ const ReviewSection = ({ reviews }) => {
             {reviews.slice(0, visibleReviews).map((review, index) => (
               <div
                 key={index}
-                className="bg-white p-5 rounded-lg border border-gray-200"
+                className="bg-white dark:bg-gray-900 p-5 rounded-lg border border-gray-200 dark:border-gray-700"
               >
                 <div className="flex items-start">
                   <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3 flex-shrink-0">
@@ -69,10 +69,10 @@ const ReviewSection = ({ reviews }) => {
 
                   <div className="flex-grow">
                     <div className="flex justify-between">
-                      <h3 className="font-medium text-gray-800">
+                      <h3 className="font-medium text-gray-800 dark:text-gray-200">
                         {review.userName}
                       </h3>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         {review.date}
                       </span>
                     </div>
@@ -82,12 +82,12 @@ const ReviewSection = ({ reviews }) => {
                     </div>
 
                     {review.courseName && (
-                      <p className="text-sm text-gray-600 mb-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                         Course: {review.courseName}
                       </p>
                     )}
 
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                       {review.comment}
                     </p>
                   </div>
@@ -108,8 +108,8 @@ const ReviewSection = ({ reviews }) => {
           )}
         </>
       ) : (
-        <div className="text-center py-10 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">
+        <div className="text-center py-10 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-gray-500 dark:text-gray-400">
             No reviews available for this educator yet.
           </p>
         </div>

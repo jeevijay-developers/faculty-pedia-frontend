@@ -39,7 +39,7 @@ const RoleBasedComponent = () => {
       
       {/* Student-specific content */}
       {isStudent() && (
-        <div className="bg-blue-50 p-4 rounded-lg mb-6">
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-6">
           <h2 className="text-lg font-semibold mb-2">Student Dashboard</h2>
           <p>Welcome back, {userData.name}!</p>
           <div className="mt-4 space-y-2">
@@ -60,7 +60,7 @@ const RoleBasedComponent = () => {
 
       {/* Educator-specific content */}
       {isEducator() && (
-        <div className="bg-green-50 p-4 rounded-lg mb-6">
+        <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg mb-6">
           <h2 className="text-lg font-semibold mb-2">Educator Dashboard</h2>
           <p>Welcome back, {userData.firstName} {userData.lastName}!</p>
           <div className="mt-4 space-y-2">
@@ -82,7 +82,7 @@ const RoleBasedComponent = () => {
       )}
 
       {/* Common content */}
-      <div className="bg-gray-50 p-4 rounded-lg">
+      <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
         <h3 className="font-medium mb-2">Account Information</h3>
         <div className="text-sm space-y-1">
           <p>Role: {userRole}</p>

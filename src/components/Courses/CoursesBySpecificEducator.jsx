@@ -27,7 +27,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading courses...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading courses...</p>
         </div>
       </div>
     );
@@ -38,7 +38,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
       case 'IIT-JEE': return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'NEET': return 'bg-green-100 text-green-800 border-green-200';
       case 'CBSE': return 'bg-blue-100 text-blue-800 border-blue-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      default: return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-200 dark:border-gray-700';
     }
   };
 
@@ -46,8 +46,8 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
     <div 
       className={`p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
         isSelected 
-          ? 'border-blue-500 bg-blue-50 shadow-md' 
-          : 'border-gray-200 hover:border-blue-300 hover:shadow-sm'
+          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md' 
+          : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:shadow-sm'
       }`}
       onClick={() => onClick(course)}
     >
@@ -60,10 +60,10 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
           className="rounded-lg object-cover"
         />
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-800 capitalize text-sm">
+          <h3 className="font-semibold text-gray-800 dark:text-gray-200 capitalize text-sm">
             {course.title}
           </h3>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
             Class {course.courseClass} • {course.subject}
           </p>
           <div className="flex items-center justify-between mt-2">
@@ -80,18 +80,18 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Header Section */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white dark:bg-gray-900 shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
             <span>Courses</span>
             <FaChevronRight className="w-3 h-3" />
             <span>Educator</span>
             <FaChevronRight className="w-3 h-3" />
             <span className="text-blue-600">{selectedCourse.educator.name}</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             Courses by {selectedCourse.educator.name}
           </h1>
         </div>
@@ -101,8 +101,8 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar - Course List */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                 Available Courses ({courses.length})
               </h2>
               <div className="space-y-3">
@@ -121,7 +121,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
           {/* Main Content */}
           <div className="lg:col-span-3">
             {/* Educator Info Section */}
-            <div className="bg-white rounded-xl shadow-sm border p-8 mb-8">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-8 mb-8">
               <div className="flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
                 <div className="shrink-0">
                   <Image
@@ -133,13 +133,13 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
                   />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                     {selectedCourse.educator.name}
                   </h2>
-                  <p className="text-lg text-gray-600 mb-3">
+                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-3">
                     {selectedCourse.educator.qualification}
                   </p>
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-700 dark:text-gray-300 mb-4">
                     {selectedCourse.educator.experience}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -157,14 +157,14 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
                   {[...Array(5)].map((_, i) => (
                     <FaStar key={i} className="w-5 h-5" />
                   ))}
-                  <span className="text-gray-600 ml-2">(4.9)</span>
+                  <span className="text-gray-600 dark:text-gray-400 ml-2">(4.9)</span>
                 </div>
               </div>
             </div>
 
             {/* Course Videos Section */}
-            <div className="bg-white rounded-xl shadow-sm border p-8 mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Course Videos</h3>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-8 mb-8">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">Course Videos</h3>
               
               {/* Video Toggle Buttons */}
               <div className="flex space-x-4 mb-6">
@@ -173,7 +173,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
                   className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                     activeVideoType === 'intro'
                       ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
                   <FaPlay className="inline-block w-4 h-4 mr-2" />
@@ -184,7 +184,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
                   className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                     activeVideoType === 'demo'
                       ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
                   <MdOutlineOndemandVideo className="inline-block w-4 h-4 mr-2" />
@@ -206,14 +206,14 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
             </div>
 
             {/* About Course Section */}
-            <div className="bg-white rounded-xl shadow-sm border p-8 mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">About the Course</h3>
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-8 mb-8">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">About the Course</h3>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Course Description */}
                 <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">Course Description</h4>
-                  <p className="text-gray-700 leading-relaxed mb-6">
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Course Description</h4>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
                     {selectedCourse.description.longDesc}
                   </p>
                   
@@ -221,15 +221,15 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
                     <div className="flex items-center space-x-3">
                       <FaGraduationCap className="w-5 h-5 text-blue-600" />
                       <div>
-                        <p className="text-sm text-gray-500">Subject</p>
-                        <p className="font-medium text-gray-900">{selectedCourse.subject}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Subject</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{selectedCourse.subject}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <BsPeople className="w-5 h-5 text-blue-600" />
                       <div>
-                        <p className="text-sm text-gray-500">Class</p>
-                        <p className="font-medium text-gray-900">{selectedCourse.courseClass}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Class</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100">{selectedCourse.courseClass}</p>
                       </div>
                     </div>
                   </div>
@@ -237,56 +237,56 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
 
                 {/* Course Details */}
                 <div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-4">Course Details</h4>
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Course Details</h4>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
                       <div className="flex items-center space-x-3">
                         <MdDateRange className="w-5 h-5 text-blue-600" />
-                        <span className="text-gray-700">Starting Date</span>
+                        <span className="text-gray-700 dark:text-gray-300">Starting Date</span>
                       </div>
-                      <span className="font-medium text-gray-900">
+                      <span className="font-medium text-gray-900 dark:text-gray-100">
                         {formatDate(selectedCourse.startDate)}
                       </span>
                     </div>
                     
-                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
                       <div className="flex items-center space-x-3">
                         <MdAccessTime className="w-5 h-5 text-blue-600" />
-                        <span className="text-gray-700">Total Hours</span>
+                        <span className="text-gray-700 dark:text-gray-300">Total Hours</span>
                       </div>
-                      <span className="font-medium text-gray-900">{selectedCourse.totalHours}</span>
+                      <span className="font-medium text-gray-900 dark:text-gray-100">{selectedCourse.totalHours}</span>
                     </div>
                     
-                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
                       <div className="flex items-center space-x-3">
                         <FaCalendarAlt className="w-5 h-5 text-blue-600" />
-                        <span className="text-gray-700">Classes per Week</span>
+                        <span className="text-gray-700 dark:text-gray-300">Classes per Week</span>
                       </div>
-                      <span className="font-medium text-gray-900">{selectedCourse.classesPerWeek}</span>
+                      <span className="font-medium text-gray-900 dark:text-gray-100">{selectedCourse.classesPerWeek}</span>
                     </div>
                     
-                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
                       <div className="flex items-center space-x-3">
                         <FaClock className="w-5 h-5 text-blue-600" />
-                        <span className="text-gray-700">Each Class Duration</span>
+                        <span className="text-gray-700 dark:text-gray-300">Each Class Duration</span>
                       </div>
-                      <span className="font-medium text-gray-900">{selectedCourse.classDuration} hours</span>
+                      <span className="font-medium text-gray-900 dark:text-gray-100">{selectedCourse.classDuration} hours</span>
                     </div>
                     
-                    <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                    <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-800">
                       <div className="flex items-center space-x-3">
                         <FaCalendarAlt className="w-5 h-5 text-blue-600" />
-                        <span className="text-gray-700">Duration in Weeks</span>
+                        <span className="text-gray-700 dark:text-gray-300">Duration in Weeks</span>
                       </div>
-                      <span className="font-medium text-gray-900">{selectedCourse.totalWeeks}</span>
+                      <span className="font-medium text-gray-900 dark:text-gray-100">{selectedCourse.totalWeeks}</span>
                     </div>
                     
                     <div className="flex items-center justify-between py-3">
                       <div className="flex items-center space-x-3">
                         <BsShieldCheck className="w-5 h-5 text-blue-600" />
-                        <span className="text-gray-700">Validity</span>
+                        <span className="text-gray-700 dark:text-gray-300">Validity</span>
                       </div>
-                      <span className="font-medium text-gray-900">{selectedCourse.validity}</span>
+                      <span className="font-medium text-gray-900 dark:text-gray-100">{selectedCourse.validity}</span>
                     </div>
                   </div>
                 </div>
@@ -294,22 +294,22 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
             </div>
 
             {/* Payment Section */}
-            <div className="bg-white rounded-xl shadow-sm border p-8">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-8">
               <div className="flex flex-col md:flex-row items-center justify-between">
                 <div className="mb-6 md:mb-0">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Course Fee</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Course Fee</h3>
                   <div className="flex items-baseline space-x-2">
-                    <span className="text-3xl font-bold text-gray-900">
+                    <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                       {formatCurrency(selectedCourse.fees)}
                     </span>
-                    <span className="text-lg text-gray-500 line-through">
+                    <span className="text-lg text-gray-500 dark:text-gray-400 line-through">
                       {formatCurrency(selectedCourse.fees * 1.3)}
                     </span>
                     <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
                       23% OFF
                     </span>
                   </div>
-                  <p className="text-gray-600 mt-2">
+                  <p className="text-gray-600 dark:text-gray-400 mt-2">
                     <FaUsers className="inline-block w-4 h-4 mr-1" />
                     {selectedCourse.seatLimit - 15} seats remaining
                   </p>
@@ -320,7 +320,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
                 </button>
               </div>
               
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200">
                 <p className="text-blue-800 text-sm">
                   <BsShieldCheck className="inline-block w-4 h-4 mr-2" />
                   30-day money-back guarantee • Lifetime access to course materials • Certificate of completion

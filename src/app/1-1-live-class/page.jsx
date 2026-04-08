@@ -161,9 +161,9 @@ const OneToOneLiveCoursesPage = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Hero Banner */}
-      <div className="relative w-full bg-white">
+      <div className="relative w-full bg-white dark:bg-gray-900">
         <div
           className="flex flex-col gap-6 bg-cover bg-center bg-no-repeat py-16 px-4 md:py-24"
           style={{
@@ -186,12 +186,12 @@ const OneToOneLiveCoursesPage = () => {
 
             {/* Search Bar */}
             <div className="mt-6 flex w-full max-w-150 flex-col gap-2 md:flex-row">
-              <label className="flex w-full items-center rounded-full bg-white p-2 shadow-lg focus-within:ring-4 focus-within:ring-blue-500/20 transition-all">
-                <div className="flex items-center justify-center pl-4 text-gray-500">
+              <label className="flex w-full items-center rounded-full bg-white dark:bg-gray-900 p-2 shadow-lg focus-within:ring-4 focus-within:ring-blue-500/20 transition-all">
+                <div className="flex items-center justify-center pl-4 text-gray-500 dark:text-gray-400">
                   <Search className="h-5 w-5" />
                 </div>
                 <input
-                  className="h-12 w-full min-w-0 flex-1 border-none bg-transparent px-4 text-base font-normal text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-0"
+                  className="h-12 w-full min-w-0 flex-1 border-none bg-transparent px-4 text-base font-normal text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400 focus:outline-none focus:ring-0"
                   placeholder="Search by title, subject, or educator..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
@@ -212,10 +212,10 @@ const OneToOneLiveCoursesPage = () => {
         {/* Page Header + Filter */}
         <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
           <div className="flex flex-col gap-2 max-w-2xl">
-            <h2 className="text-gray-900 text-4xl md:text-5xl font-black leading-tight tracking-tight">
+            <h2 className="text-gray-900 dark:text-gray-100 text-4xl md:text-5xl font-black leading-tight tracking-tight">
               Private Live Sessions
             </h2>
-            <p className="text-gray-600 text-lg font-normal leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 text-lg font-normal leading-relaxed">
               Every session is exclusively yours — study at your own speed with
               a dedicated educator.
             </p>
@@ -225,7 +225,7 @@ const OneToOneLiveCoursesPage = () => {
           <div className="relative flex-shrink-0" ref={filterRef}>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 rounded-full text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+              className="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 transition-all shadow-sm"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -242,9 +242,9 @@ const OneToOneLiveCoursesPage = () => {
 
             {/* Filter Dropdown */}
             {showFilters && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 z-50">
+              <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-5 z-50">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-base font-bold text-gray-900">Filter & Sort</h3>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">Filter & Sort</h3>
                   {activeFilterCount > 0 && (
                     <button
                       onClick={clearFilters}
@@ -257,13 +257,13 @@ const OneToOneLiveCoursesPage = () => {
 
                 {/* Sort */}
                 <div className="mb-5">
-                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                  <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
                     Sort By
                   </label>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="default">Default</option>
                     <option value="price-asc">Price: Low to High</option>
@@ -276,7 +276,7 @@ const OneToOneLiveCoursesPage = () => {
 
                 {/* Subject Filter */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                  <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
                     Filter by Subject
                   </label>
                   {allSubjects.length === 0 ? (
@@ -290,7 +290,7 @@ const OneToOneLiveCoursesPage = () => {
                           className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                             selectedSubjects.includes(subject)
                               ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-                              : "bg-gray-50 text-gray-600 border-gray-200 hover:border-blue-300 hover:text-blue-600"
+                              : "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:text-blue-600"
                           }`}
                         >
                           {subject}
@@ -317,7 +317,7 @@ const OneToOneLiveCoursesPage = () => {
             {selectedSubjects.map((s) => (
               <span
                 key={s}
-                className="flex items-center gap-1.5 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold px-3 py-1.5 rounded-full"
+                className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 border border-blue-200 text-xs font-semibold px-3 py-1.5 rounded-full"
               >
                 {s}
                 <button onClick={() => toggleSubject(s)} className="hover:text-blue-900">
@@ -338,7 +338,7 @@ const OneToOneLiveCoursesPage = () => {
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Error Loading Courses</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Error Loading Courses</h3>
               <p className="text-red-600 text-sm">{error}</p>
             </div>
           </div>
@@ -346,15 +346,15 @@ const OneToOneLiveCoursesPage = () => {
 
         {/* Empty State */}
         {!error && filteredClasses.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-dashed border-gray-300 text-center">
-            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+          <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-gray-900 rounded-3xl border border-dashed border-gray-300 dark:border-gray-600 text-center">
+            <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4">
               <svg className="w-10 h-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                   d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">No Courses Found</h3>
-            <p className="text-gray-600 mb-6 max-w-sm">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">No Courses Found</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm">
               {selectedSubjects.length > 0 || searchQuery
                 ? "Try adjusting your filters or search terms."
                 : "No one-to-one live courses are available at the moment."}
@@ -374,9 +374,9 @@ const OneToOneLiveCoursesPage = () => {
         {!error && filteredClasses.length > 0 && (
           <section>
             <div className="mb-6 flex justify-between items-center">
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Showing{" "}
-                <span className="font-semibold text-gray-900">{filteredClasses.length}</span>{" "}
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{filteredClasses.length}</span>{" "}
                 {filteredClasses.length === 1 ? "course" : "courses"}
               </p>
             </div>

@@ -3,10 +3,10 @@ import Link from "next/link";
 
 const TrustedBy = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mt-8">
-          <div className="bg-blue-600 rounded-lg p-6 md:p-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="bg-blue-600 dark:bg-blue-700 rounded-lg p-6 md:p-8 flex flex-col md:flex-row justify-between items-center">
             <div className="text-white text-left mb-6 md:mb-0">
               <h3 className="text-2xl font-bold mb-1">
                 Become a Facultypedia Educator

@@ -63,7 +63,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer>
+    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -76,12 +76,12 @@ const Footer = () => {
                   alt="Logo"
                   width={40}
                   height={40}
-                  className="rounded-lg w-[40px] h-auto"
+                  className="rounded-lg w-10 h-auto"
                 />
               </Link>
             </div>
 
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
               Your trusted platform for educational resources, courses, and exam
               preparation from the best educators across India.
             </p>
@@ -89,24 +89,24 @@ const Footer = () => {
             {/* Contact Information */}
             <div className="space-y-3 mb-8">
               <div className="flex items-start space-x-3">
-                <FiMapPin className="text-blue-600 mt-1 shrink-0" />
+                <FiMapPin className="text-blue-600 dark:text-blue-400 mt-1 shrink-0" />
 
-                <span className="text-sm">
+                <span className="text-sm text-gray-800 dark:text-gray-300">
                   {" "}
                   om enclave Anantpura Kota Rajasthan 324005
                 </span>
               </div>
               <div className="flex items-center space-x-3">
-                <FiPhone className="text-blue-600 shrink-0" />
-                <span className="text-sm">+91 9509933693 </span>
+                <FiPhone className="text-blue-600 dark:text-blue-400 shrink-0" />
+                <span className="text-sm text-gray-800 dark:text-gray-300">+91 9509933693 </span>
               </div>
 
               <div className="flex items-center space-x-3">
-                <IoMail className="text-blue-600 shrink-0" />
+                <IoMail className="text-blue-600 dark:text-blue-400 shrink-0" />
 
                 <a
                   href="mailto:facultypedia20@gmail.com"
-                  className="text-sm hover:text-blue-600 hover:underline"
+                  className="text-sm text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline"
                 >
                   facultypedia20@gmail.com
                 </a>
@@ -122,9 +122,9 @@ const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors duration-300"
+                  className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 transition-colors duration-300"
                 >
-                  <social.icon className="text-sm" />
+                  <social.icon className="text-sm text-gray-700 dark:text-gray-300" />
                 </a>
               ))}
             </div>
@@ -132,7 +132,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -140,7 +140,7 @@ const Footer = () => {
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-sm"
                   >
                     {link.name}
                   </Link>
@@ -151,7 +151,7 @@ const Footer = () => {
 
           {/* Exam Categories */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
               Exam Categories
             </h3>
             <ul className="space-y-3">
@@ -159,7 +159,7 @@ const Footer = () => {
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-sm"
                   >
                     {link.name}
                   </Link>
@@ -170,7 +170,7 @@ const Footer = () => {
 
           {/* Company Info */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
               Company
             </h3>
             <ul className="space-y-3">
@@ -178,7 +178,7 @@ const Footer = () => {
                 <li key={index}>
                   <Link
                     href={link.href}
-                    className="text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 text-sm"
                   >
                     {link.name}
                   </Link>
@@ -190,9 +190,9 @@ const Footer = () => {
       </div>
 
       {/* Bottom Footer */}
-      <div className="bg-gray-50 py-6">
+      <div className="bg-gray-50 dark:bg-gray-950 py-6 border-t border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-sm text-center text-gray-500 mb-4 md:mb-0">
+          <div className="text-sm text-center text-gray-500 dark:text-gray-400 mb-4 md:mb-0">
             © {currentYear} Facultypedia. All rights reserved.
           </div>
         </div>

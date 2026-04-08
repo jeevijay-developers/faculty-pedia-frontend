@@ -21,14 +21,14 @@ const DebugInfo = () => {
 
   return (
     <div
-      className="fixed bottom-4 right-4 bg-white border-2 border-gray-300 rounded-lg p-4 shadow-lg max-w-md"
+      className="fixed bottom-4 right-4 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-lg max-w-md"
       style={{ zIndex: 9999 }}
     >
       <div className="flex justify-between items-center mb-3">
         <h3 className="font-bold text-sm">Debug Information</h3>
         <button
           onClick={() => setShowDebug(false)}
-          className="text-gray-500 hover:text-gray-700 font-bold"
+          className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-bold"
         >
           ×
         </button>
@@ -37,8 +37,8 @@ const DebugInfo = () => {
       <div className="text-xs space-y-1">
         {Object.entries(debugInfo).map(([key, value]) => (
           <div key={key} className="flex justify-between">
-            <span className="font-medium text-gray-600">{key}:</span>
-            <span className="text-gray-800 ml-2 break-all">
+            <span className="font-medium text-gray-600 dark:text-gray-400">{key}:</span>
+            <span className="text-gray-800 dark:text-gray-200 ml-2 break-all">
               {typeof value === "boolean"
                 ? value
                   ? "true"
@@ -49,8 +49,8 @@ const DebugInfo = () => {
         ))}
       </div>
 
-      <div className="mt-3 pt-2 border-t border-gray-200">
-        <div className="text-xs text-gray-500">
+      <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+        <div className="text-xs text-gray-500 dark:text-gray-400">
           Current URL:{" "}
           {typeof window !== "undefined" ? window.location.href : "N/A"}
         </div>

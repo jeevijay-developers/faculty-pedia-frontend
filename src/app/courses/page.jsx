@@ -143,8 +143,8 @@ const CoursesPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="relative w-full bg-white">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
+        <div className="relative w-full bg-white dark:bg-gray-900">
           <div
             className="flex flex-col gap-6 bg-cover bg-center bg-no-repeat py-16 px-4 md:py-24"
             style={{
@@ -160,7 +160,7 @@ const CoursesPage = () => {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center py-12 bg-white rounded-lg shadow">
+          <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg shadow">
             <p className="text-red-500 text-lg font-medium">{error}</p>
             <button
               onClick={() => window.location.reload()}
@@ -175,9 +175,9 @@ const CoursesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Hero Section */}
-      <div className="relative w-full bg-white">
+      <div className="relative w-full bg-white dark:bg-gray-900">
         <div
           className="flex flex-col gap-6 bg-cover bg-center bg-no-repeat py-16 px-4 md:py-24"
           style={{
@@ -197,12 +197,12 @@ const CoursesPage = () => {
 
             {/* Search Bar */}
             <div className="mt-6 flex w-full max-w-150 flex-col gap-2 md:flex-row">
-              <label className="flex w-full items-center rounded-full bg-white p-2 shadow-lg focus-within:ring-4 focus-within:ring-blue-500/20 transition-all">
-                <div className="flex items-center justify-center pl-4 text-gray-500">
+              <label className="flex w-full items-center rounded-full bg-white dark:bg-gray-900 p-2 shadow-lg focus-within:ring-4 focus-within:ring-blue-500/20 transition-all">
+                <div className="flex items-center justify-center pl-4 text-gray-500 dark:text-gray-400">
                   <Search className="h-5 w-5" />
                 </div>
                 <input
-                  className="h-12 w-full min-w-0 flex-1 border-none bg-transparent px-4 text-base font-normal text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-0"
+                  className="h-12 w-full min-w-0 flex-1 border-none bg-transparent px-4 text-base font-normal text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:text-gray-400 focus:outline-none focus:ring-0"
                   placeholder="Search for courses, subjects, or topics..."
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
@@ -221,7 +221,7 @@ const CoursesPage = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Control Bar */}
-        <div className="sticky top-0 z-40 -mx-4 md:mx-0 flex flex-col gap-4 bg-gray-50/95 backdrop-blur-sm p-4 md:rounded-2xl md:bg-white md:shadow-sm lg:flex-row lg:items-center lg:justify-between border-b md:border border-gray-200 transition-all mb-6">
+        <div className="sticky top-0 z-40 -mx-4 md:mx-0 flex flex-col gap-4 bg-gray-50 dark:bg-gray-800/95 backdrop-blur-sm p-4 md:rounded-2xl md:bg-white dark:bg-gray-900 md:shadow-sm lg:flex-row lg:items-center lg:justify-between border-b md:border border-gray-200 dark:border-gray-700 transition-all mb-6">
           {/* Subject Pills */}
           <div className="flex gap-2 overflow-x-auto pb-1 lg:pb-0">
             {subjects.map((subject) => (
@@ -231,7 +231,7 @@ const CoursesPage = () => {
                 className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 text-sm font-medium transition-all ${
                   activeTab === subject
                     ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                    : "bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-200 hover:text-gray-900"
+                    : "bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
                 }`}
               >
                 {subject}
@@ -241,7 +241,7 @@ const CoursesPage = () => {
 
           {/* Sorting & Results Count */}
           <div className="flex items-center justify-between gap-4 lg:justify-end">
-            <p className="text-sm text-gray-600 lg:hidden">
+            <p className="text-sm text-gray-600 dark:text-gray-400 lg:hidden">
               {searchFilteredCourses.length} Courses
             </p>
             <div className="flex gap-3">
@@ -249,7 +249,7 @@ const CoursesPage = () => {
                 <select
                   value={sortOption}
                   onChange={(event) => setSortOption(event.target.value)}
-                  className="appearance-none h-10 rounded-full border border-gray-200 bg-white pl-4 pr-10 text-sm font-medium text-gray-900 focus:border-blue-500 focus:ring-0 cursor-pointer hover:bg-gray-50"
+                  className="appearance-none h-10 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 pl-4 pr-10 text-sm font-medium text-gray-900 dark:text-gray-100 focus:border-blue-500 focus:ring-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   <option value="none">Sort by: Default</option>
                   <option value="priceHigh">
@@ -258,7 +258,7 @@ const CoursesPage = () => {
                   <option value="priceLow">Sort by: Price (Low to High)</option>
                   <option value="enrolled">Sort by: Enrolled Students</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400">
                   <svg
                     className="h-4 w-4"
                     fill="none"
@@ -280,7 +280,7 @@ const CoursesPage = () => {
 
         {/* Results count for desktop */}
         {searchFilteredCourses.length > 0 && (
-          <p className="text-sm text-gray-600 mb-6 hidden lg:block">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 hidden lg:block">
             Found{" "}
             <span className="font-semibold text-blue-600">
               {searchFilteredCourses.length}
@@ -299,13 +299,13 @@ const CoursesPage = () => {
             ))
           ) : (
             <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
-              <div className="mb-6 flex h-40 w-40 items-center justify-center rounded-full bg-blue-50">
+              <div className="mb-6 flex h-40 w-40 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20">
                 <Search className="h-16 w-16 text-blue-200" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                 No courses found
               </h3>
-              <p className="mt-2 max-w-sm text-gray-500">
+              <p className="mt-2 max-w-sm text-gray-500 dark:text-gray-400">
                 {searchQuery
                   ? "We couldn't find any courses matching your search. Try different keywords."
                   : activeTab !== "All"
@@ -318,7 +318,7 @@ const CoursesPage = () => {
                     setSearchQuery("");
                     setActiveTab("All");
                   }}
-                  className="mt-6 rounded-full bg-white border border-gray-200 px-6 py-2.5 text-sm font-bold text-blue-600 shadow-sm hover:bg-gray-50"
+                  className="mt-6 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-6 py-2.5 text-sm font-bold text-blue-600 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   Reset Filters
                 </button>

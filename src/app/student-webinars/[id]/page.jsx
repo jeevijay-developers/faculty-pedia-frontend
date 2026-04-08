@@ -220,10 +220,10 @@ const StudentWebinarDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <span className="text-gray-600">Loading webinar details...</span>
+          <span className="text-gray-600 dark:text-gray-400">Loading webinar details...</span>
         </div>
       </div>
     );
@@ -231,13 +231,13 @@ const StudentWebinarDetailPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Error Loading Webinar
           </h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
           <div className="space-x-4">
             <button
               onClick={() => router.back()}
@@ -259,13 +259,13 @@ const StudentWebinarDetailPage = () => {
 
   if (!webinar) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="text-gray-400 text-5xl mb-4">📹</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Webinar Not Found
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             The requested webinar could not be found.
           </p>
         </div>
@@ -274,23 +274,23 @@ const StudentWebinarDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => router.back()}
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
             >
               <FiArrowLeft className="w-5 h-5 mr-2" />
               Back
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 Webinar Details
               </h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 View and access your enrolled webinar
               </p>
             </div>
@@ -304,8 +304,8 @@ const StudentWebinarDetailPage = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Webinar Image and Basic Info */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="relative h-64 md:h-80 bg-gray-100">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="relative h-64 md:h-80 bg-gray-100 dark:bg-gray-800">
                 {getImageUrl(webinar.image) ? (
                   <Image
                     src={getImageUrl(webinar.image)}
@@ -315,7 +315,7 @@ const StudentWebinarDetailPage = () => {
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-100 to-purple-100">
-                    <div className="text-gray-500 text-center">
+                    <div className="text-gray-500 dark:text-gray-400 text-center">
                       <FiUsers className="w-16 h-16 mx-auto mb-4" />
                       <span className="text-lg">Webinar</span>
                     </div>
@@ -353,10 +353,10 @@ const StudentWebinarDetailPage = () => {
               <div className="p-6">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                       {webinar.title}
                     </h1>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       {displayDate || "Date to be announced"} {displayTime && `• ${displayTime}`}
                     </p>
                   </div>
@@ -380,19 +380,19 @@ const StudentWebinarDetailPage = () => {
                   )}
                 </div>
 
-                <div className="prose max-w-none text-gray-600 mb-6">
+                <div className="prose max-w-none text-gray-600 dark:text-gray-400 mb-6">
                   <p>
                     {resolvedDescription || "No description available"}
                   </p>
                 </div>
 
                 {/* Key Details Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 border-t border-gray-100">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 border-t border-gray-100 dark:border-gray-800">
                   <div className="flex items-center">
                     <FiCalendar className="w-5 h-5 text-blue-600 mr-2" />
                     <div>
-                      <p className="text-xs text-gray-500">Date</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Date</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
                         {displayDate || "TBD"}
                       </p>
                     </div>
@@ -401,8 +401,8 @@ const StudentWebinarDetailPage = () => {
                   <div className="flex items-center">
                     <FiClock className="w-5 h-5 text-blue-600 mr-2" />
                     <div>
-                      <p className="text-xs text-gray-500">Time</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Time</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
                         {displayTime || "TBD"}
                       </p>
                     </div>
@@ -411,8 +411,8 @@ const StudentWebinarDetailPage = () => {
                   <div className="flex items-center">
                     <FiUsers className="w-5 h-5 text-blue-600 mr-2" />
                     <div>
-                      <p className="text-xs text-gray-500">Duration</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Duration</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
                         {webinar.duration} min
                       </p>
                     </div>
@@ -421,8 +421,8 @@ const StudentWebinarDetailPage = () => {
                   <div className="flex items-center">
                     <TbCurrencyRupee className="w-5 h-5 text-blue-600 mr-2" />
                     <div>
-                      <p className="text-xs text-gray-500">Fee</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">Fee</p>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
                         {webinar.fees === 0 ? "Free" : `₹${webinar.fees}`}
                       </p>
                     </div>
@@ -433,18 +433,18 @@ const StudentWebinarDetailPage = () => {
 
             {/* Webinar Links Section */}
             {attendanceVerified && (
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                 
 
                 {verifying ? (
                   <div className="flex items-center justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
-                    <span className="text-gray-600">Verifying access...</span>
+                    <span className="text-gray-600 dark:text-gray-400">Verifying access...</span>
                   </div>
                 ) : canShowLinks ? (
                   <div className="space-y-4">
                     {webinar.webinarLink && (
-                      <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 rounded-lg">
                         <h3 className="font-medium text-green-900 mb-2 flex items-center">
                           <FiExternalLink className="w-4 h-4 mr-2" />
                           Join Webinar
@@ -462,7 +462,7 @@ const StudentWebinarDetailPage = () => {
                     )}
 
                     {webinar.assetsLinks && webinar.assetsLinks.length > 0 && (
-                      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg">
                         <h3 className="font-medium text-blue-900 mb-3 flex items-center">
                           <FiFileText className="w-4 h-4 mr-2" />
                           Study Materials
@@ -509,8 +509,8 @@ const StudentWebinarDetailPage = () => {
           <div className="space-y-6">
             {/* Educator Info */}
             {webinar.educatorId && (
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                   Instructor
                 </h3>
 
@@ -525,23 +525,23 @@ const StudentWebinarDetailPage = () => {
                       />
                     </div>
                   ) : (
-                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
                       <FiUser className="w-6 h-6 text-gray-400" />
                     </div>
                   )}
 
                   <div>
-                    <h4 className="font-semibold text-gray-900">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100">
                       {webinar.educatorId.firstName}{" "}
                       {webinar.educatorId.lastName}
                     </h4>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       {webinar.educatorId.specialization}
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-2 text-sm text-gray-600">
+                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center">
                     <span className="font-medium mr-2">Subject:</span>
                     <span>{webinar.educatorId.subject}</span>
@@ -561,30 +561,30 @@ const StudentWebinarDetailPage = () => {
             )}
 
             {/* Webinar Details */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                 Details
               </h3>
 
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subject:</span>
-                  <span className="font-medium text-gray-900 capitalize">
+                  <span className="text-gray-600 dark:text-gray-400">Subject:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100 capitalize">
                     {webinar.subject}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Level:</span>
-                  <span className="font-medium text-gray-900">
+                  <span className="text-gray-600 dark:text-gray-400">Level:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
                     {webinar.specialization}
                   </span>
                 </div>
 
                 {webinar.seatLimit && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Seats:</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-gray-600 dark:text-gray-400">Seats:</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
                       {webinar.enrolledStudents?.length || 0}/
                       {webinar.seatLimit}
                     </span>
@@ -592,8 +592,8 @@ const StudentWebinarDetailPage = () => {
                 )}
 
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Type:</span>
-                  <span className="font-medium text-gray-900">
+                  <span className="text-gray-600 dark:text-gray-400">Type:</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
                     {webinar.webinarType === "OTO"
                       ? "One-to-One"
                       : "One-to-All"}
@@ -603,8 +603,8 @@ const StudentWebinarDetailPage = () => {
             </div>
 
             {/* Registration Status */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                 Registration Status
               </h3>
 

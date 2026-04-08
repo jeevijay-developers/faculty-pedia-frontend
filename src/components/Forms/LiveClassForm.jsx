@@ -49,8 +49,8 @@ const LiveClassForm = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-lg mt-8">
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+    <div className="max-w-3xl mx-auto bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg mt-8">
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200">
         Create Live Class
       </h2>
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -195,7 +195,7 @@ const LiveClassForm = () => {
             {formData.assetsLinks.map((asset, index) => (
               <li
                 key={index}
-                className="flex justify-between items-center bg-gray-100 rounded-lg p-2"
+                className="flex justify-between items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-2"
               >
                 <span className="text-sm font-medium">
                   {asset.name}:{" "}

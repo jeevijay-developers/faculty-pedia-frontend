@@ -108,7 +108,7 @@ const EducatorCard = ({ educator }) => {
   const ratingCount = rating?.count ?? reviewCount ?? 0;
 
   return (
-    <div className=" group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full">
+    <div className=" group relative flex flex-col rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full">
       {/* Profile Section */}
       <div className="mb-4 flex flex-col items-center gap-3">
         <div className="relative">
@@ -130,59 +130,59 @@ const EducatorCard = ({ educator }) => {
           /> */}
         </div>
         <div className="text-center">
-          <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
             {displayName}
           </h3>
-          <p className="text-sm font-medium text-gray-600 mt-1">
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-1">
             {displaySubjects}
           </p>
         </div>
       </div>
 
       {/* Stats Section */}
-      <div className="mb-5 flex justify-center gap-6 border-y border-gray-100 py-3">
+      <div className="mb-5 flex justify-center gap-6 border-y border-gray-100 dark:border-gray-800 py-3">
         <div className="text-center">
-          <p className="text-base font-bold text-gray-900">
+          <p className="text-base font-bold text-gray-900 dark:text-gray-100">
             {ratingAverage.toFixed(1)}
           </p>
-          <p className="text-xs text-gray-500">Rating</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Rating</p>
         </div>
-        <div className="h-full w-px bg-gray-200"></div>
+        <div className="h-full w-px bg-gray-200 dark:bg-gray-700"></div>
         <div className="text-center">
-          <p className="text-base font-bold text-gray-900">
+          <p className="text-base font-bold text-gray-900 dark:text-gray-100">
             {formatFollowers(displayFollowers)}
           </p>
-          <p className="text-xs text-gray-500">Followers</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Followers</p>
         </div>
-        <div className="h-full w-px bg-gray-200"></div>
+        <div className="h-full w-px bg-gray-200 dark:bg-gray-700"></div>
         <div className="text-center">
-          <p className="text-base font-bold text-gray-900">
+          <p className="text-base font-bold text-gray-900 dark:text-gray-100">
             {displayExperience} Yrs
           </p>
-          <p className="text-xs text-gray-500">Exp.</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Exp.</p>
         </div>
       </div>
 
       {/* Bio & Badges */}
       <div className="mb-5 flex-1">
-        <p className="text-sm text-gray-600 line-clamp-2 text-center mb-3">
+        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 text-center mb-3">
           {displayBio}
         </p>
         <div className="flex flex-wrap justify-center gap-2">
-          <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+          <span className="inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-900/20 px-2.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
             {displayQualification}
           </span>
           {Array.isArray(specialization) && specialization.length > 0 ? (
             specialization.slice(0, 2).map((spec, index) => (
               <span
                 key={index}
-                className="inline-flex items-center rounded-full bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                className="inline-flex items-center rounded-full bg-gray-50 dark:bg-gray-800 px-2.5 py-0.5 text-xs font-medium text-gray-600 dark:text-gray-400 ring-1 ring-inset ring-gray-500/10"
               >
                 {spec}
               </span>
             ))
           ) : specialization ? (
-            <span className="inline-flex items-center rounded-full bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+            <span className="inline-flex items-center rounded-full bg-gray-50 dark:bg-gray-800 px-2.5 py-0.5 text-xs font-medium text-gray-600 dark:text-gray-400 ring-1 ring-inset ring-gray-500/10">
               {specialization}
             </span>
           ) : null}

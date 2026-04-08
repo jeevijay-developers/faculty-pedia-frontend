@@ -32,7 +32,7 @@ const ProfileHeader = ({
   })();
 
   return (
-    <div className="bg-white shadow-lg border-b border-gray-200">
+    <div className="bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-6 md:space-y-0">
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
@@ -57,20 +57,20 @@ const ProfileHeader = ({
             {/* Profile Info */}
             <div className="flex-1">
               <div className="flex items-center space-x-3 mb-3">
-                <h1 className="text-3xl font-bold text-gray-900">{name}</h1>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{name}</h1>
               </div>
               {username && (
-                <p className="text-sm text-gray-500 mb-3">@{username}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">@{username}</p>
               )}
-              <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-8 text-gray-600">
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-8 text-gray-600 dark:text-gray-400">
                 <div className="flex items-center">
-                  <div className="p-2 bg-gray-100 rounded-lg mr-3">
+                  <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg mr-3">
                     <FiMail className="w-4 h-4" />
                   </div>
                   <span className="font-medium">{email}</span>
                 </div>
                 <div className="flex items-center">
-                  <div className="p-2 bg-gray-100 rounded-lg mr-3">
+                  <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg mr-3">
                     <FiPhone className="w-4 h-4" />
                   </div>
                   <span className="font-medium">{mobileNumber}</span>
@@ -79,7 +79,7 @@ const ProfileHeader = ({
               {(specialization || classLevel || joinedDateLabel) && (
                 <div className="flex flex-wrap items-center gap-3 mt-4">
                   {specialization && (
-                    <span className="px-3 py-1 bg-blue-50 text-blue-800 rounded-full text-xs font-semibold uppercase tracking-wide">
+                    <span className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-800 rounded-full text-xs font-semibold uppercase tracking-wide">
                       {specialization}
                     </span>
                   )}
@@ -89,7 +89,7 @@ const ProfileHeader = ({
                     </span>
                   )}
                   {joinedDateLabel && (
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                       Joined {joinedDateLabel}
                     </span>
                   )}
@@ -103,7 +103,7 @@ const ProfileHeader = ({
             {isOwnProfile && (
               <button
                 onClick={onEditClick}
-                className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors font-medium"
               >
                 <svg
                   className="w-4 h-4 mr-2"

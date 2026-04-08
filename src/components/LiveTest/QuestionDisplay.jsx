@@ -43,7 +43,7 @@ const QuestionDisplay = ({
               </span>
             </div>
           </div>
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 leading-relaxed">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 leading-relaxed">
             {currentQuestion.title}
           </h2>
 
@@ -56,7 +56,7 @@ const QuestionDisplay = ({
                   alt="Question illustration"
                   width={500}
                   height={300}
-                  className="rounded-lg object-cover cursor-zoom-in border border-gray-200"
+                  className="rounded-lg object-cover cursor-zoom-in border border-gray-200 dark:border-gray-700"
                   onClick={() =>
                     setEnlargedImage &&
                     setEnlargedImage(getImageUrl(currentQuestion.image))
@@ -67,20 +67,20 @@ const QuestionDisplay = ({
                     onClick={() =>
                       setEnlargedImage(getImageUrl(currentQuestion.image))
                     }
-                    className="absolute top-2 right-2 p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full shadow-lg transition-all duration-200"
+                    className="absolute top-2 right-2 p-2 bg-white dark:bg-gray-900/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 rounded-full shadow-lg transition-all duration-200"
                   >
-                    <FiZoomIn className="w-4 h-4 text-gray-600" />
+                    <FiZoomIn className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                   </button>
                 )}
               </div>
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-600 mb-4 lg:mb-6">
-            <span className="bg-gray-100 px-2 sm:px-3 py-1 rounded-full">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 lg:mb-6">
+            <span className="bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 py-1 rounded-full">
               {currentQuestion.subject}
             </span>
-            <span className="bg-gray-100 px-2 sm:px-3 py-1 rounded-full">
+            <span className="bg-gray-100 dark:bg-gray-800 px-2 sm:px-3 py-1 rounded-full">
               {currentQuestion.topic}
             </span>
           </div>

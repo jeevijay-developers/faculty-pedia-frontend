@@ -202,7 +202,7 @@ const sections = [
 const BulletList = ({ items, className = "" }) => (
   <ul className={`space-y-2 ${className}`}>
     {items.map((item) => (
-      <li key={item} className="flex items-start gap-3 text-gray-600 text-sm leading-relaxed">
+      <li key={item} className="flex items-start gap-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
         <span className="shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500" />
         <span>{item}</span>
       </li>
@@ -212,7 +212,7 @@ const BulletList = ({ items, className = "" }) => (
 
 const TermsPage = () => {
   return (
-    <div className="bg-white text-gray-900">
+    <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50">
@@ -234,22 +234,22 @@ const TermsPage = () => {
             Terms & Conditions
           </h1>
 
-          <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-600 leading-relaxed mb-4">
+          <p className="max-w-3xl mx-auto text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
             FacultyPedia &ndash; Educator & Student Platform Agreement
           </p>
 
-          <p className="max-w-2xl mx-auto text-base text-gray-500 leading-relaxed mb-6">
+          <p className="max-w-2xl mx-auto text-base text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
             Welcome to FacultyPedia, an online educational marketplace platform enabling Educators to conduct live courses, one-to-one sessions, webinars, test series, and recorded programs for Students.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 font-medium">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400 font-medium">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800">
               Effective: 26-02-2026
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800">
               www.facultypedia.com
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800">
               Jurisdiction: Kota, Rajasthan, India
             </span>
           </div>
@@ -266,37 +266,37 @@ const TermsPage = () => {
       </section>
 
       {/* TERMS SECTIONS */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
           {sections.map((section) => (
             <div
               key={section.number}
-              className="bg-white rounded-2xl border border-gray-100 p-8 shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-shadow duration-300"
+              className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-8 shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-shadow duration-300"
             >
               {/* section header */}
               <div className="flex items-center gap-3 mb-5">
-                <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-50 text-blue-600 text-sm font-bold shrink-0">
+                <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-sm font-bold shrink-0">
                   {section.number}
                 </span>
-                <h2 className="text-xl font-bold text-gray-900">{section.title}</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{section.title}</h2>
               </div>
 
               {/* intro text */}
               {section.intro && (
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">{section.intro}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">{section.intro}</p>
               )}
 
               {/* subtitle */}
               {section.subtitle && (
-                <p className="text-gray-800 text-sm font-semibold mb-3">{section.subtitle}</p>
+                <p className="text-gray-800 dark:text-gray-200 text-sm font-semibold mb-3">{section.subtitle}</p>
               )}
 
               {/* definitions type */}
               {section.type === "definitions" && section.items && (
                 <div className="space-y-3">
                   {section.items.map((def) => (
-                    <div key={def.label} className="flex items-start gap-2 text-sm text-gray-600">
-                      <span className="shrink-0 font-bold text-gray-900">&ldquo;{def.label}&rdquo;</span>
+                    <div key={def.label} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
+                      <span className="shrink-0 font-bold text-gray-900 dark:text-gray-100">&ldquo;{def.label}&rdquo;</span>
                       <span>{def.text}</span>
                     </div>
                   ))}
@@ -307,8 +307,8 @@ const TermsPage = () => {
               {section.ordered && (
                 <ol className="space-y-2 mb-4">
                   {section.ordered.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 text-sm text-gray-600 leading-relaxed">
-                      <span className="shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-blue-50 text-blue-600 text-xs font-bold mt-0.5">
+                    <li key={i} className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                      <span className="shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-xs font-bold mt-0.5">
                         {i + 1}
                       </span>
                       <span>{item}</span>
@@ -323,7 +323,7 @@ const TermsPage = () => {
               {/* sub section with its own intro + bullets */}
               {section.subSection && (
                 <div className="mt-5 rounded-xl bg-red-50/50 border border-red-100 p-5">
-                  <p className="text-gray-700 text-sm font-semibold mb-3">{section.subSection.intro}</p>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-semibold mb-3">{section.subSection.intro}</p>
                   <BulletList items={section.subSection.bullets} />
                 </div>
               )}
@@ -332,17 +332,17 @@ const TermsPage = () => {
               {section.children && (
                 <div className="space-y-5 mt-4">
                   {section.children.map((child, idx) => (
-                    <div key={idx} className="rounded-xl bg-gray-50 border border-gray-100 p-5">
+                    <div key={idx} className="rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 p-5">
                       {child.subtitle && (
-                        <p className="text-gray-800 text-sm font-semibold mb-3">{child.subtitle}</p>
+                        <p className="text-gray-800 dark:text-gray-200 text-sm font-semibold mb-3">{child.subtitle}</p>
                       )}
                       {child.intro && (
-                        <p className="text-gray-600 text-sm leading-relaxed mb-3">{child.intro}</p>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-3">{child.intro}</p>
                       )}
                       {child.bullets && <BulletList items={child.bullets} />}
                       {child.followUp && (
                         <div className="mt-4 rounded-xl bg-red-50/50 border border-red-100 p-4">
-                          <p className="text-gray-700 text-sm font-semibold mb-3">{child.followUp}</p>
+                          <p className="text-gray-700 dark:text-gray-300 text-sm font-semibold mb-3">{child.followUp}</p>
                           {child.followUpBullets && <BulletList items={child.followUpBullets} />}
                         </div>
                       )}
@@ -353,15 +353,15 @@ const TermsPage = () => {
 
               {/* follow up (top-level) */}
               {section.followUp && (
-                <div className="mt-5 rounded-xl bg-gray-50 border border-gray-100 p-5">
-                  <p className="text-gray-700 text-sm font-semibold mb-3">{section.followUp}</p>
+                <div className="mt-5 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 p-5">
+                  <p className="text-gray-700 dark:text-gray-300 text-sm font-semibold mb-3">{section.followUp}</p>
                   {section.followUpBullets && <BulletList items={section.followUpBullets} />}
                 </div>
               )}
 
               {/* jurisdiction highlight */}
               {section.highlight && (
-                <div className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-100 px-5 py-3">
+                <div className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 px-5 py-3">
                   <FiMapPin className="text-blue-600 w-4 h-4 shrink-0" />
                   <span className="text-blue-700 font-bold text-sm">{section.highlight}</span>
                 </div>
@@ -369,7 +369,7 @@ const TermsPage = () => {
 
               {/* footer note */}
               {section.footer && (
-                <p className="mt-5 text-sm font-semibold text-blue-700 bg-blue-50 rounded-xl px-4 py-3 border border-blue-100">
+                <p className="mt-5 text-sm font-semibold text-blue-700 bg-blue-50 dark:bg-blue-900/20 rounded-xl px-4 py-3 border border-blue-100">
                   {section.footer}
                 </p>
               )}
@@ -379,39 +379,39 @@ const TermsPage = () => {
       </section>
 
       {/* CONTACT INFORMATION */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
-            <div className="inline-block px-3 py-1 bg-blue-50 rounded-lg mb-4">
+            <div className="inline-block px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-lg mb-4">
               <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">Section 14</span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">Contact Information</h2>
-            <p className="mt-3 text-gray-500 text-sm">For any issues, complaints, or legal communication:</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">Contact Information</h2>
+            <p className="mt-3 text-gray-500 dark:text-gray-400 text-sm">For any issues, complaints, or legal communication:</p>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
             <a
               href="mailto:facultypedia02@gmail.com"
-              className="flex items-center gap-4 rounded-2xl bg-gray-50 border border-gray-100 p-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+              className="flex items-center gap-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 p-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
-              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 shrink-0">
                 <FiMail className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Email</p>
-                <p className="text-sm text-gray-900 font-semibold">facultypedia02@gmail.com</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Email</p>
+                <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">facultypedia02@gmail.com</p>
               </div>
             </a>
             <a
               href="tel:+919509933693"
-              className="flex items-center gap-4 rounded-2xl bg-gray-50 border border-gray-100 p-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
+              className="flex items-center gap-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 p-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
-              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 text-blue-600 shrink-0">
+              <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 shrink-0">
                 <FiPhone className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Call</p>
-                <p className="text-sm text-gray-900 font-semibold">+91-9509933693</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Call</p>
+                <p className="text-sm text-gray-900 dark:text-gray-100 font-semibold">+91-9509933693</p>
               </div>
             </a>
           </div>
@@ -428,24 +428,24 @@ const TermsPage = () => {
             By registering as an Educator or Student on FacultyPedia, you acknowledge that:
           </p>
           <div className="space-y-4 max-w-2xl mx-auto text-left">
-            <div className="flex items-start gap-3 rounded-xl bg-white/10 border border-white/20 px-5 py-4">
-              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+            <div className="flex items-start gap-3 rounded-xl bg-white dark:bg-gray-900/10 border border-white/20 px-5 py-4">
+              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white dark:bg-gray-900/20 flex items-center justify-center">
                 <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1.5 5l2.5 2.5 4.5-4.5" />
                 </svg>
               </span>
               <p className="text-white font-medium text-sm">You have read and understood these Terms & Conditions.</p>
             </div>
-            <div className="flex items-start gap-3 rounded-xl bg-white/10 border border-white/20 px-5 py-4">
-              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+            <div className="flex items-start gap-3 rounded-xl bg-white dark:bg-gray-900/10 border border-white/20 px-5 py-4">
+              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white dark:bg-gray-900/20 flex items-center justify-center">
                 <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1.5 5l2.5 2.5 4.5-4.5" />
                 </svg>
               </span>
               <p className="text-white font-medium text-sm">You agree to be legally bound by them.</p>
             </div>
-            <div className="flex items-start gap-3 rounded-xl bg-white/10 border border-white/20 px-5 py-4">
-              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
+            <div className="flex items-start gap-3 rounded-xl bg-white dark:bg-gray-900/10 border border-white/20 px-5 py-4">
+              <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-white dark:bg-gray-900/20 flex items-center justify-center">
                 <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 10 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1.5 5l2.5 2.5 4.5-4.5" />
                 </svg>
@@ -455,7 +455,7 @@ const TermsPage = () => {
           </div>
 
           <div className="mt-12">
-            <span className="inline-block px-6 py-3 rounded-full bg-white/10 text-white font-semibold tracking-wide text-sm border border-white/20">
+            <span className="inline-block px-6 py-3 rounded-full bg-white dark:bg-gray-900/10 text-white font-semibold tracking-wide text-sm border border-white/20">
               Empowering Educators | Educating India
             </span>
           </div>

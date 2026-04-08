@@ -167,8 +167,8 @@ const LiveClassDetailsPage = ({ params }) => {
   if (!liveClass) {
     return (
       <div className="max-w-7xl mx-auto p-4">
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
-          <p className="text-gray-500">Live class not found.</p>
+        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 text-center">
+          <p className="text-gray-500 dark:text-gray-400">Live class not found.</p>
         </div>
       </div>
     );
@@ -178,7 +178,7 @@ const LiveClassDetailsPage = ({ params }) => {
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-6xl mx-auto px-4 py-10 space-y-6">
         {/* Header Card */}
-        <section className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
+        <section className="bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
             <div className="flex flex-wrap gap-2">
               {specTags.map((spec, idx) => (
@@ -229,7 +229,7 @@ const LiveClassDetailsPage = ({ params }) => {
         </section>
 
         {/* Stats Bar */}
-        <section className="bg-white rounded-2xl p-6 shadow-md border border-slate-100">
+        <section className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-md border border-slate-100">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
@@ -284,7 +284,7 @@ const LiveClassDetailsPage = ({ params }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
-            <article className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
+            <article className="bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
               <h2 className="text-xl font-bold text-slate-900 mb-3">
                 Description
               </h2>
@@ -295,7 +295,7 @@ const LiveClassDetailsPage = ({ params }) => {
             </article>
 
             {liveClass.classTiming && (
-              <article className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-slate-100 flex flex-col md:flex-row gap-4 md:items-center">
+              <article className="bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-8 shadow-md border border-slate-100 flex flex-col md:flex-row gap-4 md:items-center">
                 <div className="flex items-center gap-3 md:w-48 shrink-0">
                   <div className="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-lg">
                     <FaCalendarAlt />
@@ -320,7 +320,7 @@ const LiveClassDetailsPage = ({ params }) => {
 
           {/* Sidebar */}
           <aside className="lg:col-span-1">
-            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 md:p-8 shadow-md border border-slate-100">
               <div className="text-center mb-2">
                 <span className="text-4xl font-bold text-blue-600">
                   ₹{(liveClass.liveClassesFee || 0).toLocaleString()}

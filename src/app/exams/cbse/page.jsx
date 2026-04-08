@@ -33,14 +33,14 @@ const page = () => {
         viewMoreLink="/courses"
         specialization="CBSE"
         courseType="one-to-all"
-        bgColor="bg-gray-50"
+        bgColor="bg-gray-50 dark:bg-gray-800"
       />
       <CourseCarousel
         title="One to One Live Courses"
         viewMoreLink="/courses"
         specialization="CBSE"
         courseType="one-to-one"
-        bgColor="bg-white"
+        bgColor="bg-white dark:bg-gray-900"
       />     
 
       <UpcomingWebinarCarousel specialization="CBSE" />

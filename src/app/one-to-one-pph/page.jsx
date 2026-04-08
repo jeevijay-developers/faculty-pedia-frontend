@@ -100,7 +100,7 @@ const OneToOnePPHPage = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
           url="/images/placeholders/1.svg"
           title="1-1 Pay Per Hour"
@@ -119,7 +119,7 @@ const OneToOnePPHPage = () => {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
           url="/images/placeholders/1.svg"
           title="1-1 Pay Per Hour"
@@ -128,10 +128,10 @@ const OneToOnePPHPage = () => {
         <div className="max-w-7xl mx-auto p-4 mt-8">
           <div className="text-center py-16">
             <div className="text-red-500 text-6xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               Failed to Load Educators
             </h2>
-            <p className="text-gray-600 mb-6">{error}</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">{error}</p>
             <button
               onClick={handleRetry}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 font-medium"
@@ -145,7 +145,7 @@ const OneToOnePPHPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       <Banner
         url="/images/placeholders/1.svg"
         title="1-1 Pay Per Hour"
@@ -157,7 +157,7 @@ const OneToOnePPHPage = () => {
           data-aos="fade-up"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
               Pay Per Hour Educators
             </h1>
             <ShareButton
@@ -174,7 +174,7 @@ const OneToOnePPHPage = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search educators..."
-              className="w-full px-4 py-2.5 pr-10 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
+              className="w-full px-4 py-2.5 pr-10 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-900"
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
               {filteredEducators.length}
@@ -184,7 +184,7 @@ const OneToOnePPHPage = () => {
 
         {/* Tabs */}
         <div className="mb-8" data-aos="fade-up" data-aos-delay="100">
-          <div className="border-b border-gray-200 overflow-x-auto">
+          <div className="border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
             <nav className="flex min-w-max justify-center gap-6">
               {subjects.map((subject) => (
                 <button
@@ -194,7 +194,7 @@ const OneToOnePPHPage = () => {
                   className={`py-2 px-4 border-b-2 font-medium text-sm md:text-md transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed ${
                     activeTab === subject
                       ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                   }`}
                 >
                   {subject}
@@ -224,7 +224,7 @@ const OneToOnePPHPage = () => {
           ) : (
             <div className="col-span-full text-center py-16">
               <div className="text-gray-400 text-6xl mb-4">🔍</div>
-              <p className="text-gray-500 text-lg mb-2">
+              <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
                 {search.trim()
                   ? "No educators found matching your search."
                   : `No ${activeTab} educators available.`}
@@ -240,7 +240,7 @@ const OneToOnePPHPage = () => {
 
         {/* Results Count */}
         {filteredEducators.length > 0 && (
-          <div className="mt-8 text-center text-gray-600" data-aos="fade-up">
+          <div className="mt-8 text-center text-gray-600 dark:text-gray-400" data-aos="fade-up">
             Showing {filteredEducators.length} of {allEducators.length} educator
             {allEducators.length !== 1 ? "s" : ""}
           </div>

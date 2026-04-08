@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 const MobileAppAdSection = () => {
   return (
-    <section className="bg-gray-50 py-20 overflow-hidden">
+    <section className="bg-transparent py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left column - App Description */}
@@ -18,12 +18,12 @@ const MobileAppAdSection = () => {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.7 }}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-gray-100 leading-tight">
               Facultypedia connects students and educators in one powerful
               platform
             </h2>
 
-            <p className="text-lg text-gray-600 leading-relaxed">
+            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
               Enabling seamless learning, resource sharing, communication, and
               collaboration anytime, anywhere. Smart tools for smarter
               classrooms and growth.
@@ -55,7 +55,7 @@ const MobileAppAdSection = () => {
               </div>
 
               <div className="mt-6">
-                <div className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
+                <div className="inline-flex items-center px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium">
                   <span>Coming Soon...</span>
                 </div>
               </div>

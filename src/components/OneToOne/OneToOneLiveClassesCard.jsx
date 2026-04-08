@@ -52,9 +52,9 @@ const OneToOneLiveClassesCard = ({ classData }) => {
   }, [classData.educatorID?.profilePicture, classData.educatorID]);
 
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white dark:bg-gray-900 p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]">
       {/* Thumbnail */}
-      <div className="relative aspect-video overflow-hidden rounded-2xl bg-white">
+      <div className="relative aspect-video overflow-hidden rounded-2xl bg-white dark:bg-gray-900">
         <Image
           src="/images/placeholders/1.svg"
           alt={classData.liveClassTitle || "Live Class"}
@@ -67,7 +67,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
             classData.liveClassSpecification.map((spec, idx) => (
               <span
                 key={idx}
-                className="bg-white/90 backdrop-blur-sm text-blue-700 px-2.5 py-1 rounded-md text-xs font-semibold"
+                className="bg-white dark:bg-gray-900/90 backdrop-blur-sm text-blue-700 px-2.5 py-1 rounded-md text-xs font-semibold"
               >
                 {spec}
               </span>
@@ -88,34 +88,34 @@ const OneToOneLiveClassesCard = ({ classData }) => {
               onError={() => setAvatarSrc(EDUCATOR_FALLBACK_IMAGE)}
             />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
                 {educatorName}
               </p>
-              <p className="text-xs text-gray-500">Educator</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Educator</p>
             </div>
           </div>
         )}
 
         {/* Title and Description */}
         <div className="mb-4">
-          <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight line-clamp-2">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 leading-tight line-clamp-2">
             {classData.liveClassTitle}
           </h3>
-          <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed">
             {classData.description || "Interactive live class session"}
           </p>
         </div>
 
         {/* Metadata Grid */}
-        <div className="border-t border-b border-gray-200 py-3 mb-4">
+        <div className="border-t border-b border-gray-200 dark:border-gray-700 py-3 mb-4">
           <div className="grid grid-cols-2 gap-3 mb-3">
             {/* Class Level */}
             {classData.class && classData.class.length > 0 && (
               <div className="flex items-center gap-2">
                 <MdSchool className="w-4 h-4 text-blue-600 shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500">Class</p>
-                  <p className="text-sm font-semibold text-gray-900 truncate">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Class</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
                     {Array.isArray(classData.class)
                       ? classData.class.join(", ")
                       : classData.class}
@@ -128,8 +128,8 @@ const OneToOneLiveClassesCard = ({ classData }) => {
             <div className="flex items-center gap-2">
               <FaClock className="w-4 h-4 text-blue-600 shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs text-gray-500">Duration</p>
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Duration</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                   {classData.classDuration} mins
                 </p>
               </div>
@@ -141,8 +141,8 @@ const OneToOneLiveClassesCard = ({ classData }) => {
             <div className="flex items-center gap-2">
               <FaCalendarAlt className="w-4 h-4 text-blue-600 shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs text-gray-500">Scheduled</p>
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Scheduled</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                   {formatDate(classData.classTiming)} at{" "}
                   {formatTime(classData.classTiming)}
                 </p>
@@ -164,7 +164,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
               enrolled
             </div>
             {/* Price */}
-            <div className="text-xl font-bold text-gray-900">
+            <div className="text-xl font-bold text-gray-900 dark:text-gray-100">
               ₹{(classData.liveClassesFee || 0).toLocaleString()}
             </div>
           </div>

@@ -4,7 +4,7 @@ import EducatorSignup from '@/components/Login-Signup/EducatorSignup'
 
 const Page = () => {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
       <EducatorSignup />
     </div>
   )

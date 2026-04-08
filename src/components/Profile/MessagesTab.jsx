@@ -174,7 +174,7 @@ const MessagesTab = ({ studentId, followingEducators = [] }) => {
 	const renderContent = () => {
 		if (!studentId) {
 			return (
-				<div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-600">
+				<div className="rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-8 text-center text-sm text-gray-600 dark:text-gray-400">
 					Student information is required to load messages.
 				</div>
 			);
@@ -186,7 +186,7 @@ const MessagesTab = ({ studentId, followingEducators = [] }) => {
 					{[0, 1, 2].map((item) => (
 						<div
 							key={`message-skeleton-${item}`}
-							className="h-20 animate-pulse rounded-2xl bg-gray-100"
+							className="h-20 animate-pulse rounded-2xl bg-gray-100 dark:bg-gray-800"
 						/>
 					))}
 				</div>
@@ -205,12 +205,12 @@ const MessagesTab = ({ studentId, followingEducators = [] }) => {
 		if (!messages.length) {
 			if (!followedEducatorIds.size) {
 				return (
-					<div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-8 text-center">
+					<div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-8 text-center">
 						<FiMail className="mb-3 h-10 w-10 text-blue-500" />
-						<h3 className="text-lg font-semibold text-gray-900">
+						<h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
 							Follow educators to receive messages
 						</h3>
-						<p className="mt-2 text-sm text-gray-600">
+						<p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
 							Educators you follow can share announcements and updates. Follow your mentors to stay informed.
 						</p>
 					</div>
@@ -218,10 +218,10 @@ const MessagesTab = ({ studentId, followingEducators = [] }) => {
 			}
 
 			return (
-				<div className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-8 text-center">
+				<div className="flex flex-col items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-8 text-center">
 					<FiMessageSquare className="mb-3 h-10 w-10 text-gray-400" />
-					<h3 className="text-lg font-semibold text-gray-900">No messages yet</h3>
-					<p className="mt-2 text-sm text-gray-600">
+					<h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">No messages yet</h3>
+					<p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
 						When your educators send announcements, they will appear here.
 					</p>
 				</div>
@@ -238,30 +238,30 @@ const MessagesTab = ({ studentId, followingEducators = [] }) => {
 					return (
 						<li
 							key={messageId}
-							className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow"
+							className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 shadow-sm transition hover:shadow"
 						>
 							<div className="flex flex-col gap-3 sm:flex-row sm:items-start">
 								<div>{renderAvatar(message)}</div>
 								<div className="flex-1 space-y-1">
 									<div className="flex flex-wrap items-center gap-2">
-										<p className="text-sm font-semibold text-gray-900">{educatorName}</p>
+										<p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{educatorName}</p>
 										{createdAt && (
-											<span className="text-xs text-gray-500">{createdAt}</span>
+											<span className="text-xs text-gray-500 dark:text-gray-400">{createdAt}</span>
 										)}
 									</div>
 
 									{message?.title && (
-										<p className="text-sm font-semibold text-gray-800">{message.title}</p>
+										<p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{message.title}</p>
 									)}
 
 									{message?.message && (
-										<p className="text-sm text-gray-600 whitespace-pre-line">
+										<p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line">
 											{message.message}
 										</p>
 									)}
 
 									{message?.metadata?.summary && (
-										<p className="text-xs text-gray-500">
+										<p className="text-xs text-gray-500 dark:text-gray-400">
 											{message.metadata.summary}
 										</p>
 									)}
@@ -275,16 +275,16 @@ const MessagesTab = ({ studentId, followingEducators = [] }) => {
 	};
 
 	return (
-		<div className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-			<div className="flex flex-col gap-2 border-b border-gray-100 p-6 sm:flex-row sm:items-center sm:justify-between">
+		<div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
+			<div className="flex flex-col gap-2 border-b border-gray-100 dark:border-gray-800 p-6 sm:flex-row sm:items-center sm:justify-between">
 				<div>
-					<h2 className="text-xl font-semibold text-gray-900">Messages</h2>
-					<p className="mt-1 text-sm text-gray-500">
+					<h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Messages</h2>
+					<p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
 						Broadcast announcements sent by educators you follow.
 					</p>
 				</div>
 				{messages.length > 0 && (
-					<span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600">
+					<span className="inline-flex items-center gap-2 rounded-full bg-blue-50 dark:bg-blue-900/20 px-3 py-1 text-xs font-semibold text-blue-600">
 						<FiMail className="h-4 w-4" />
 						{messages.length === 1 ? "1 message" : `${messages.length} messages`}
 					</span>

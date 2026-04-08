@@ -47,18 +47,18 @@ const QuestionListing = ({
       case 'current':
         return 'bg-blue-500 text-white border-blue-500';
       default:
-        return 'bg-white text-gray-700 border-gray-300 hover:border-gray-400';
+        return 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-gray-400';
     }
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 ${isMobile ? 'mb-4' : ''}`}>
+    <div className={`bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-4 ${isMobile ? 'mb-4' : ''}`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3 sm:mb-4">
-        <h3 className={`font-semibold text-gray-800 ${isMobile ? 'text-base' : 'text-lg'}`}>
+        <h3 className={`font-semibold text-gray-800 dark:text-gray-200 ${isMobile ? 'text-base' : 'text-lg'}`}>
           {isMobile ? 'Questions' : 'Questions List'}
         </h3>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray-600 dark:text-gray-400">
           {Object.keys(attemptedQuestions).length}/{questions.length}
         </div>
       </div>
@@ -69,23 +69,23 @@ const QuestionListing = ({
           <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex items-center justify-center">
             <FiCheck className="w-1.5 h-1.5 sm:w-2 sm:h-2 text-white" />
           </div>
-          <span className="text-gray-600 text-xs">Answered</span>
+          <span className="text-gray-600 dark:text-gray-400 text-xs">Answered</span>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
           <div className="w-3 h-3 sm:w-4 sm:h-4 bg-yellow-500 rounded-full flex items-center justify-center">
             <FiMinus className="w-1.5 h-1.5 sm:w-2 sm:h-2 text-white" />
           </div>
-          <span className="text-gray-600 text-xs">Marked</span>
+          <span className="text-gray-600 dark:text-gray-400 text-xs">Marked</span>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
           <div className="w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 rounded-full flex items-center justify-center">
             <FiClock className="w-1.5 h-1.5 sm:w-2 sm:h-2 text-white" />
           </div>
-          <span className="text-gray-600 text-xs">Current</span>
+          <span className="text-gray-600 dark:text-gray-400 text-xs">Current</span>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
           <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-300 rounded-full"></div>
-          <span className="text-gray-600 text-xs">Not Attempted</span>
+          <span className="text-gray-600 dark:text-gray-400 text-xs">Not Attempted</span>
         </div>
       </div>
 
@@ -118,16 +118,16 @@ const QuestionListing = ({
       </div>
 
       {/* Statistics */}
-      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
+      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
         <div className={`grid grid-cols-2 gap-4 text-sm ${isMobile ? 'text-center' : ''}`}>
           <div>
-            <div className="text-gray-600 text-xs sm:text-sm">Attempted</div>
+            <div className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Attempted</div>
             <div className="font-semibold text-green-600 text-sm sm:text-base">
               {Object.keys(attemptedQuestions).length}
             </div>
           </div>
           <div>
-            <div className="text-gray-600 text-xs sm:text-sm">Remaining</div>
+            <div className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">Remaining</div>
             <div className="font-semibold text-red-600 text-sm sm:text-base">
               {questions.length - Object.keys(attemptedQuestions).length}
             </div>

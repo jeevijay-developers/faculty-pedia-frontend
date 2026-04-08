@@ -53,21 +53,21 @@ const EducatorProfileExample = () => {
     return (
       <div className="p-8 text-center">
         <h2 className="text-xl font-semibold mb-4">Access Denied</h2>
-        <p className="text-gray-600">Only educators can access this page.</p>
+        <p className="text-gray-600 dark:text-gray-400">Only educators can access this page.</p>
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               {educatorData.firstName} {educatorData.lastName}
             </h1>
-            <p className="text-gray-600">{educatorData.specialization} Educator</p>
+            <p className="text-gray-600 dark:text-gray-400">{educatorData.specialization} Educator</p>
           </div>
           <button
             onClick={() => setIsEditModalOpen(true)}
@@ -81,7 +81,7 @@ const EducatorProfileExample = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Profile Image */}
           <div className="flex justify-center">
-            <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-white shadow-lg">
+            <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 border-4 border-white shadow-lg">
               {educatorData.image?.url ? (
                 <img
                   src={educatorData.image.url}
@@ -101,38 +101,38 @@ const EducatorProfileExample = () => {
           {/* Details */}
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Email</h3>
-              <p className="text-gray-900">{educatorData.email}</p>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Email</h3>
+              <p className="text-gray-900 dark:text-gray-100">{educatorData.email}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Mobile</h3>
-              <p className="text-gray-900">{educatorData.mobileNumber}</p>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Mobile</h3>
+              <p className="text-gray-900 dark:text-gray-100">{educatorData.mobileNumber}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Specialization</h3>
-              <p className="text-gray-900">{educatorData.specialization}</p>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Specialization</h3>
+              <p className="text-gray-900 dark:text-gray-100">{educatorData.specialization}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Subject</h3>
-              <p className="text-gray-900">{educatorData.subject}</p>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Subject</h3>
+              <p className="text-gray-900 dark:text-gray-100">{educatorData.subject}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">Experience</h3>
-              <p className="text-gray-900">{educatorData.yearsExperience} years</p>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Experience</h3>
+              <p className="text-gray-900 dark:text-gray-100">{educatorData.yearsExperience} years</p>
             </div>
           </div>
         </div>
 
         {/* Bio */}
         <div className="mt-8">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Bio</h3>
-          <p className="text-gray-900 leading-relaxed">{educatorData.bio}</p>
+          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Bio</h3>
+          <p className="text-gray-900 dark:text-gray-100 leading-relaxed">{educatorData.bio}</p>
         </div>
 
         {/* Intro Video Link */}
         {educatorData.introVideoLink && (
           <div className="mt-6">
-            <h3 className="text-sm font-medium text-gray-500 mb-2">Intro Video</h3>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Intro Video</h3>
             <a
               href={educatorData.introVideoLink}
               target="_blank"
@@ -146,21 +146,21 @@ const EducatorProfileExample = () => {
 
         {/* Stats */}
         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="text-center p-4 bg-green-50 rounded-lg">
+          <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
             <div className="text-2xl font-bold text-green-600">{educatorData.rating || 0}</div>
-            <div className="text-sm text-gray-600">Rating</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Rating</div>
           </div>
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
+          <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
             <div className="text-2xl font-bold text-blue-600">{educatorData.followers?.length || 0}</div>
-            <div className="text-sm text-gray-600">Followers</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Followers</div>
           </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
+          <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
             <div className="text-2xl font-bold text-purple-600">{educatorData.courses?.length || 0}</div>
-            <div className="text-sm text-gray-600">Courses</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Courses</div>
           </div>
-          <div className="text-center p-4 bg-orange-50 rounded-lg">
+          <div className="text-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
             <div className="text-2xl font-bold text-orange-600">{educatorData.webinars?.length || 0}</div>
-            <div className="text-sm text-gray-600">Webinars</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Webinars</div>
           </div>
         </div>
       </div>

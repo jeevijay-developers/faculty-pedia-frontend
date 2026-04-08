@@ -132,9 +132,9 @@ const CourseCard = ({ course }) => {
   const hasEducator = Boolean(educatorSource || educatorName);
 
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
+    <div className="group relative flex flex-col rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Course Image */}
-      <div className="relative h-48 bg-gray-200 overflow-hidden rounded-xl mb-4">
+      <div className="relative h-48 bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-xl mb-4">
         <Image
           src={heroImageSrc}
           alt={course?.title || "Course"}
@@ -164,7 +164,7 @@ const CourseCard = ({ course }) => {
 
       <div className="flex flex-col flex-1">
         {/* Course Title */}
-        <h3 className="text-xl font-bold text-gray-900 mb-2 leading-tight line-clamp-2">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 leading-tight line-clamp-2">
           {course.title}
         </h3>
 
@@ -176,7 +176,7 @@ const CourseCard = ({ course }) => {
 
         {/* Subject and Specialization */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <FaBook className="mr-1 text-blue-700" />
             <span className="capitalize">
               {Array.isArray(course.subject)
@@ -184,7 +184,7 @@ const CourseCard = ({ course }) => {
                 : course.subject}
             </span>
           </div>
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <MdSchool className="w-4 h-4 mr-1 text-green-700" />
             <span>
               {Array.isArray(course.specialization)
@@ -198,44 +198,44 @@ const CourseCard = ({ course }) => {
         <div className="space-y-3 mb-4">
           {/* Start Date */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <MdCalendarToday className="w-4 h-4 mr-2 text-orange-700" />
               <span className="font-medium">Starts:</span>
             </div>
-            <span className="text-sm text-gray-800 font-medium">
+            <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
               {formatDate(course.startDate)}
             </span>
           </div>
 
           {course.courseType !== "one-to-one" && (
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                 <MdAccessTime className="w-4 h-4 mr-2 text-purple-700" />
                 <span className="font-medium">Max Students:</span>
               </div>
-              <span className="text-sm text-gray-800 font-medium">
+              <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
                 {course.maxStudents || course.seatLimit || "N/A"}
               </span>
             </div>
           )}
           {course.classesPerWeek > 0 && (
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                 <MdCalendarToday className="w-4 h-4 mr-2 text-blue-700" />
                 <span className="font-medium">Classes/Week:</span>
               </div>
-              <span className="text-sm text-gray-800 font-medium">
+              <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
                 {course.classesPerWeek}
               </span>
             </div>
           )}
           {course.classDuration > 0 && (
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                 <MdAccessTime className="w-4 h-4 mr-2 text-green-700" />
                 <span className="font-medium">Per Class:</span>
               </div>
-              <span className="text-sm text-gray-800 font-medium">
+              <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
                 {course.classDuration} min
               </span>
             </div>
@@ -243,10 +243,10 @@ const CourseCard = ({ course }) => {
         </div>
 
         {/* Pricing Section */}
-        <div className="border-t border-gray-100 mb-4 mt-auto pt-4">
+        <div className="border-t border-gray-100 dark:border-gray-800 mb-4 mt-auto pt-4">
           <div className="flex items-center justify-between">
             <div className="flex items-baseline space-x-2">
-              <span className="text-2xl font-bold text-gray-900">
+              <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 ₹{(course.fees || 0).toLocaleString()}
               </span>
             </div>

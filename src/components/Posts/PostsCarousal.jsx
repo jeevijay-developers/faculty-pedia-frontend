@@ -103,15 +103,15 @@ const PostCarousel = ({ subject = "All", specialization }) => {
   };
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-gray-50 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-row justify-between items-center gap-2 mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 truncate">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-200 truncate">
             {subject === "All" ? "Latest Posts" : `${subject} Posts`}
           </h2>
           <Link
             href="/posts"
-            className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
+            className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
           >
             View More
           </Link>
@@ -120,20 +120,20 @@ const PostCarousel = ({ subject = "All", specialization }) => {
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2  z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2  z-20 bg-transparent hover:bg-white dark:hover:bg-gray-800 rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200 dark:border-gray-700"
             aria-label="Previous slide"
             style={{ left: "-1rem" }}
           >
-            <RiArrowLeftSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+            <RiArrowLeftSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 transition-colors" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-20 bg-transparent hover:bg-white dark:hover:bg-gray-800 rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200 dark:border-gray-700"
             aria-label="Next slide"
             style={{ right: "-1rem" }}
           >
-            <RiArrowRightSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 group-hover:text-blue-600 transition-colors" />
+            <RiArrowRightSLine className="w-4 h-4 lg:w-6 lg:h-6 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 transition-colors" />
           </button>
 
           <Swiper

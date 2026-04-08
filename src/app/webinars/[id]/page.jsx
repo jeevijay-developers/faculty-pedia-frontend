@@ -68,19 +68,19 @@ export default function WebinarDetailsPage({ params }) {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
           url={"/images/placeholders/1.svg"}
           title={"Webinar Details"}
           subtitle={"Unable to load webinar information"}
         />
         <div className="max-w-4xl mx-auto p-4 mt-8">
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8 text-center">
             <div className="text-red-500 text-6xl mb-6">⚠️</div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Failed to Load Webinar
             </h1>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">{error}</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">{error}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={handleRetry}
@@ -90,7 +90,7 @@ export default function WebinarDetailsPage({ params }) {
               </button>
               <Link
                 href="/webinars"
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-300 font-medium"
+                className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors duration-300 font-medium"
               >
                 Back to Webinars
               </Link>
@@ -104,19 +104,19 @@ export default function WebinarDetailsPage({ params }) {
   // Success state
   if (!webinar) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
           url={"/images/placeholders/1.svg"}
           title={"Webinar Not Found"}
           subtitle={"The webinar you're looking for doesn't exist"}
         />
         <div className="max-w-4xl mx-auto p-4 mt-8">
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8 text-center">
             <div className="text-gray-400 text-6xl mb-6">🔍</div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Webinar Not Found
             </h1>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
               The webinar with ID "{id}" could not be found. It may have been
               removed or the link is incorrect.
             </p>

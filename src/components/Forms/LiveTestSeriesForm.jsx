@@ -67,10 +67,10 @@ export default function LiveTestSeriesForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-800 flex items-center justify-center p-6">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-md w-full max-w-lg space-y-4"
+        className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md w-full max-w-lg space-y-4"
       >
         <h2 className="text-2xl font-bold mb-4">Create Live Test Series</h2>
 
@@ -82,7 +82,7 @@ export default function LiveTestSeriesForm() {
             required
             value={formData.title}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -93,7 +93,7 @@ export default function LiveTestSeriesForm() {
             required
             value={formData.description.short}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -104,7 +104,7 @@ export default function LiveTestSeriesForm() {
             required
             value={formData.description.long}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -118,7 +118,7 @@ export default function LiveTestSeriesForm() {
             step="0.01"
             value={formData.price}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -131,7 +131,7 @@ export default function LiveTestSeriesForm() {
             required
             value={formData.noOfTests}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -143,7 +143,7 @@ export default function LiveTestSeriesForm() {
             required
             value={formData.startDate}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -155,7 +155,7 @@ export default function LiveTestSeriesForm() {
             required
             value={formData.endDate}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -166,7 +166,7 @@ export default function LiveTestSeriesForm() {
             name="image"
             accept="image/*"
             onChange={handleImageUpload}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
           {formData.image.url && (
             <img

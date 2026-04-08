@@ -25,12 +25,12 @@ const ClassesList = ({ selectedClass = null, data = [] }) => {
   if (!data || data.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="text-center bg-white rounded-2xl shadow-lg p-8">
+        <div className="text-center bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8">
           <div className="text-gray-400 text-6xl mb-4">📚</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
             No Courses Available
           </h3>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             CBSE courses will be available soon. Check back later!
           </p>
         </div>
@@ -42,12 +42,12 @@ const ClassesList = ({ selectedClass = null, data = [] }) => {
   if (filtered.length === 0 && selectedClass !== null) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="text-center bg-white rounded-2xl shadow-lg p-8">
+        <div className="text-center bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8">
           <div className="text-gray-400 text-6xl mb-4">🔍</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
             No courses found
           </h3>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             No courses available for Class {selectedClass}. Try selecting a
             different class.
           </p>
@@ -57,14 +57,14 @@ const ClassesList = ({ selectedClass = null, data = [] }) => {
   }
 
   return (
-    <section className="py-10 bg-gray-50">
+    <section className="py-10 bg-gray-50 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {selectedClass && (
           <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               Class {selectedClass} Courses
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               {filtered.length} courses available for Class {selectedClass}
             </p>
           </div>
@@ -72,10 +72,10 @@ const ClassesList = ({ selectedClass = null, data = [] }) => {
 
         {!selectedClass && (
           <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               CBSE Courses
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               {filtered.length} courses available across all classes
             </p>
           </div>

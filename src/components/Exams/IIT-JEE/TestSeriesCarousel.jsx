@@ -79,6 +79,7 @@ const TestSeriesCarousel = ({
         title={title}
         viewMoreLink={viewMoreLink}
         message={error}
+        bgColor="bg-white dark:bg-gray-900"
       />
     );
   }
@@ -91,6 +92,7 @@ const TestSeriesCarousel = ({
         specialization={specialization}
         title={title}
         viewMoreLink={viewMoreLink}
+        bgColor="bg-white dark:bg-gray-900"
       />
     );
   }
@@ -104,16 +106,16 @@ const TestSeriesCarousel = ({
   };
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white dark:bg-gray-900 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
             {title}
           </h2>
           <Link
             href={viewMoreLink}
-            className="bg-white text-gray-700 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
+            className="bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 px-3 py-1 xs:px-4 xs:py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-400 transition-all duration-300 font-medium text-sm sm:text-base whitespace-nowrap"
           >
             View More
           </Link>
@@ -124,18 +126,18 @@ const TestSeriesCarousel = ({
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-transparent rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-transparent rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
             aria-label="Previous slide"
           >
-            <MdOutlineKeyboardArrowLeft className="w-5 h-5 text-gray-500 hover:text-gray-900" />
+            <MdOutlineKeyboardArrowLeft className="w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-10 bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-10 bg-white dark:bg-gray-900 rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
             aria-label="Next slide"
           >
-            <MdOutlineKeyboardArrowRight className="w-5 h-5 text-gray-500 hover:text-gray-900" />
+            <MdOutlineKeyboardArrowRight className="w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" />
           </button>
 
           {/* Swiper Carousel */}
@@ -181,8 +183,8 @@ const TestSeriesCarousel = ({
               ))
             ) : (
               <SwiperSlide>
-                <div className="bg-white rounded-lg border border-gray-200 p-10 text-center w-full">
-                  <p className="text-gray-500 text-lg">
+                <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-10 text-center w-full">
+                  <p className="text-gray-500 dark:text-gray-400 text-lg">
                     No test series available for {specialization}
                   </p>
                 </div>
@@ -223,8 +225,8 @@ export const TestSeriesCard = ({ testSeries }) => {
   })();
 
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]">
-      <div className="relative mb-4 h-40 overflow-hidden rounded-xl bg-white">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white dark:bg-gray-900 p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]">
+      <div className="relative mb-4 h-40 overflow-hidden rounded-xl bg-white dark:bg-gray-900">
         <Image
           src={testSeries.image || "/images/placeholders/1.svg"}
           alt={testSeries.title || "Test Series"}
@@ -239,29 +241,29 @@ export const TestSeriesCard = ({ testSeries }) => {
       </div>
 
       <div className="flex flex-col grow">
-        <h3 className="mb-2 line-clamp-2 text-lg font-bold text-gray-900">
+        <h3 className="mb-2 line-clamp-2 text-lg font-bold text-gray-900 dark:text-gray-100">
           {testSeries.title}
         </h3>
         <h4 className="mb-3 text-base font-semibold text-blue-600">
           {testSeries.educatorId?.fullName || testSeries.educatorName || "Educator"}
         </h4>
 
-        <div className="mb-4 space-y-2 text-sm text-gray-600">
+        <div className="mb-4 space-y-2 text-sm text-gray-600 dark:text-gray-400">
           <div>
-            <span className="font-semibold text-gray-700">Subject: </span>
-            <span className="text-gray-800">
+            <span className="font-semibold text-gray-700 dark:text-gray-300">Subject: </span>
+            <span className="text-gray-800 dark:text-gray-200">
               {Array.isArray(testSeries.subject)
                 ? testSeries.subject.join(", ")
                 : testSeries.subject}
             </span>
           </div>
           <div>
-            <span className="font-semibold text-gray-700">Number of Tests: </span>
-            <span className="text-gray-800">{testsCount}</span>
+            <span className="font-semibold text-gray-700 dark:text-gray-300">Number of Tests: </span>
+            <span className="text-gray-800 dark:text-gray-200">{testsCount}</span>
           </div>
           <div>
-            <span className="font-semibold text-gray-700">Valid Until: </span>
-            <span className="text-gray-800">{validityDate}</span>
+            <span className="font-semibold text-gray-700 dark:text-gray-300">Valid Until: </span>
+            <span className="text-gray-800 dark:text-gray-200">{validityDate}</span>
           </div>
         </div>
 

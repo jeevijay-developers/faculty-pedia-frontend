@@ -85,10 +85,10 @@ const CustomAlert = ({ alert, onClose }) => {
     switch (alert.type) {
       case 'success':
         return {
-          bg: 'bg-green-50',
+          bg: 'bg-green-50 dark:bg-green-900/20',
           border: 'border-green-200',
           button: 'bg-green-600 hover:bg-green-700',
-          cancelButton: 'border-green-300 text-green-700 hover:bg-green-50'
+          cancelButton: 'border-green-300 text-green-700 hover:bg-green-50 dark:bg-green-900/20'
         };
       case 'warning':
         return {
@@ -107,10 +107,10 @@ const CustomAlert = ({ alert, onClose }) => {
       case 'info':
       default:
         return {
-          bg: 'bg-blue-50',
+          bg: 'bg-blue-50 dark:bg-blue-900/20',
           border: 'border-blue-200',
           button: 'bg-blue-600 hover:bg-blue-700',
-          cancelButton: 'border-blue-300 text-blue-700 hover:bg-blue-50'
+          cancelButton: 'border-blue-300 text-blue-700 hover:bg-blue-50 dark:bg-blue-900/20'
         };
     }
   };
@@ -128,7 +128,7 @@ const CustomAlert = ({ alert, onClose }) => {
         />
         
         {/* Custom Content */}
-        <div className={`relative bg-white rounded-2xl shadow-2xl transform transition-all duration-200 ${
+        <div className={`relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl transform transition-all duration-200 ${
           isVisible ? 'scale-100' : 'scale-95'
         }`}>
           {alert.customUI({ onClose: handleClose, onConfirm: handleConfirm })}
@@ -151,14 +151,14 @@ const CustomAlert = ({ alert, onClose }) => {
       />
       
       {/* Alert Modal */}
-      <div className={`relative bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all duration-200 ${
+      <div className={`relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full transform transition-all duration-200 ${
         isVisible ? 'scale-100' : 'scale-95'
       }`}>
         {/* Close button */}
         {alert.showCloseButton !== false && (
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200"
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition-colors duration-200"
           >
             <FiX className="w-5 h-5" />
           </button>
@@ -172,11 +172,11 @@ const CustomAlert = ({ alert, onClose }) => {
               {getIcon()}
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                 {alert.title || 'Confirmation'}
               </h3>
               {alert.message && (
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   {alert.message}
                 </p>
               )}

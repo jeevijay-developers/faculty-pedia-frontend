@@ -35,7 +35,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center">
-          <p className="text-gray-500">No test series data available</p>
+          <p className="text-gray-500 dark:text-gray-400">No test series data available</p>
         </div>
       </div>
     );
@@ -270,7 +270,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
     <div className="max-w-7xl mx-auto px-6 py-6">
       {showReviewSuccess && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6 text-center">
             <h3 className="text-xl font-semibold text-[#0e151b] mb-2">Thanks for your review!</h3>
             <p className="text-[#4e7597] mb-4">
               Your rating has been recorded and will appear on the educator profile.
@@ -346,22 +346,22 @@ const TestSeriesDetails = ({ testSeriesData }) => {
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-[#e7eef3]">
                   <FaFileAlt className="text-[#1E88E5] mb-3 text-2xl" />
                   <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Total Tests</p>
                   <p className="text-lg font-bold">{testsCount} Full Length</p>
                 </div>
-                <div className="bg-white p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-[#e7eef3]">
                   <FaChartLine className="text-[#1E88E5] mb-3 text-2xl" />
                   <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Analytics</p>
                   <p className="text-lg font-bold">Detailed</p>
                 </div>
-                <div className="bg-white p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-[#e7eef3]">
                   <FaClock className="text-[#1E88E5] mb-3 text-2xl" />
                   <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Validity</p>
                   <p className="text-lg font-bold">{formatValidity(testSeriesData.validity)}</p>
                 </div>
-                <div className="bg-white p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-[#e7eef3]">
                   <FaTrophy className="text-[#1E88E5] mb-3 text-2xl" />
                   <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Ranking</p>
                   <p className="text-lg font-bold">All India</p>
@@ -393,7 +393,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                     return (
                       <div 
                         key={testId}
-                        className={`bg-white p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] group hover:border-[#1E88E5]/30 transition-colors gap-4 ${!isEnrolled && !isFirstTest ? 'opacity-80' : ''}`}
+                        className={`bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] group hover:border-[#1E88E5]/30 transition-colors gap-4 ${!isEnrolled && !isFirstTest ? 'opacity-80' : ''}`}
                       >
                         <div className="flex items-center gap-4 flex-1">
                           <div className={`size-11 rounded-md flex items-center justify-center shrink-0 ${
@@ -446,7 +446,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                 ) : (
                   /* Fallback placeholder tests when no actual tests are populated */
                   <>
-                    <div className="bg-white p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] group hover:border-[#1E88E5]/30 transition-colors gap-4">
+                    <div className="bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] group hover:border-[#1E88E5]/30 transition-colors gap-4">
                       <div className="flex items-center gap-4 flex-1">
                         <div className="size-11 rounded-md bg-green-100 flex items-center justify-center text-green-600 shrink-0">
                           <FaCheckCircle className="text-xl" />
@@ -471,7 +471,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                     {testsCount > 1 && (
                       <>
                         {Array.from({ length: Math.min(testsCount - 1, 2) }).map((_, idx) => (
-                          <div key={idx} className="bg-white p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] gap-4">
+                          <div key={idx} className="bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] gap-4">
                             <div className="flex items-center gap-4 flex-1">
                               <div className="size-11 rounded-md bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
                                 <FaFileAlt className="text-xl" />
@@ -494,7 +494,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                         ))}
 
                         {testsCount > 3 && (
-                          <div className="bg-white p-4 rounded-md flex items-center justify-between shadow-sm border border-[#e7eef3] opacity-60">
+                          <div className="bg-white dark:bg-gray-900 p-4 rounded-md flex items-center justify-between shadow-sm border border-[#e7eef3] opacity-60">
                             <div className="flex items-center gap-4">
                               <div className="size-11 rounded-md bg-slate-100 flex items-center justify-center text-slate-400">
                                 <FaFileAlt className="text-xl" />
@@ -514,7 +514,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
               </div>
             </section>
 
-            <section className="bg-white rounded-md shadow-sm border border-[#e7eef3] p-6">
+            <section className="bg-white dark:bg-gray-900 rounded-md shadow-sm border border-[#e7eef3] p-6">
               <h3 className="text-2xl font-bold mb-2 text-[#0e151b]">
                 Give Review and rate this Test Series
               </h3>
@@ -596,7 +596,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
           {/* Pricing Card */}
           <div
             data-aos="fade-left"
-            className="bg-white rounded-md shadow-md overflow-hidden border border-[#e7eef3]"
+            className="bg-white dark:bg-gray-900 rounded-md shadow-md overflow-hidden border border-[#e7eef3]"
           >
             <div 
               className="h-44 bg-center bg-cover bg-no-repeat" 
@@ -616,7 +616,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                     <span className="text-lg text-[#4e7597] line-through">
                       ₹{testSeriesData.originalPrice.toLocaleString()}
                     </span>
-                    <span className="text-sm font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md">
+                    <span className="text-sm font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-md">
                       {Math.round(((testSeriesData.originalPrice - testSeriesData.price) / testSeriesData.originalPrice) * 100)}% OFF
                     </span>
                   </>
@@ -657,7 +657,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
             <div
               data-aos="fade-left"
               data-aos-delay="100"
-              className="bg-white p-6 rounded-md shadow-sm border border-[#e7eef3]"
+              className="bg-white dark:bg-gray-900 p-6 rounded-md shadow-sm border border-[#e7eef3]"
             >
               {(() => {
                 // Support both populated educator object and educatorId reference
@@ -721,7 +721,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
           <div
             data-aos="fade-left"
             data-aos-delay="150"
-            className="bg-white p-6 rounded-md shadow-sm border border-[#e7eef3]"
+            className="bg-white dark:bg-gray-900 p-6 rounded-md shadow-sm border border-[#e7eef3]"
           >
             <div className="flex items-center justify-between mb-6">
               <h4 className="font-bold text-[#0e151b]">Student Reviews</h4>

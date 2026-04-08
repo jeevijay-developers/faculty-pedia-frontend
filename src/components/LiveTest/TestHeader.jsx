@@ -9,28 +9,28 @@ const TestHeader = ({
   formatTime,
 }) => {
   return (
-    <div className="bg-white/80 backdrop-blur-lg shadow-lg border-b border-gray-200/50 sticky top-0 z-10">
+    <div className="bg-white dark:bg-gray-900/80 backdrop-blur-lg shadow-lg border-b border-gray-200 dark:border-gray-700/50 sticky top-0 z-10">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-6">
         <div className="flex flex-col space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
           {/* Test Info - Mobile Optimized */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-2">
               <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs sm:text-sm font-medium text-green-600 bg-green-50 px-2 sm:px-3 py-1 rounded-full">
+              <span className="text-xs sm:text-sm font-medium text-green-600 bg-green-50 dark:bg-green-900/20 px-2 sm:px-3 py-1 rounded-full">
                 Live Test
               </span>
             </div>
             <h1 className="text-lg sm:text-xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-1 lg:mb-2 leading-tight">
               {testData.title}
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 mb-2 line-clamp-2">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
               {testData.description.short}
             </p>
             <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
               <span className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-2 sm:px-3 py-1 rounded-full font-medium">
                 {testData.subject}
               </span>
-              <span className="text-gray-500">
+              <span className="text-gray-500 dark:text-gray-400">
                 Q {currentQuestionIndex + 1}/{testData.questions.length}
               </span>
             </div>

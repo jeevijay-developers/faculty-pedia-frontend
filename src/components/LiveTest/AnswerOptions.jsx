@@ -33,7 +33,7 @@ const AnswerOptions = ({
           className={`group border-2 rounded-lg lg:rounded-xl p-3 sm:p-4 lg:p-5 cursor-pointer transition-all duration-200 hover:shadow-lg ${
             currentAnswer.selectedOption === optionKey
               ? "border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 shadow-lg scale-[1.01] lg:scale-[1.02]"
-              : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+              : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
           }`}
           onClick={() => handleAnswerSelect(optionKey)}
         >
@@ -42,7 +42,7 @@ const AnswerOptions = ({
               className={`w-6 h-6 lg:w-7 lg:h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200 flex-shrink-0 ${
                 currentAnswer.selectedOption === optionKey
                   ? "border-blue-500 bg-blue-500 shadow-lg"
-                  : "border-gray-300 group-hover:border-gray-400"
+                  : "border-gray-300 dark:border-gray-600 group-hover:border-gray-400"
               }`}
             >
               {currentAnswer.selectedOption === optionKey && (
@@ -51,7 +51,7 @@ const AnswerOptions = ({
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-3 mb-3">
-                <span className="text-sm sm:text-base font-medium text-gray-900 uppercase">
+                <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-gray-100 uppercase">
                   {optionKey}
                 </span>
                 {getImageUrl(option.image) && (
@@ -60,13 +60,13 @@ const AnswerOptions = ({
                       e.stopPropagation();
                       setEnlargedImage(getImageUrl(option.image));
                     }}
-                    className="text-gray-500 hover:text-gray-700 transition-colors"
+                    className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                   >
                     <FiZoomIn className="w-4 h-4" />
                   </button>
                 )}
               </div>
-              <p className="text-sm sm:text-base text-gray-700 mb-3">
+              <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-3">
                 {option.text}
               </p>
               {getImageUrl(option.image) && (

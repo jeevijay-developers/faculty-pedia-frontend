@@ -221,14 +221,14 @@ const TestSeriesTab = ({ studentId }) => {
   const statusBadgeClass = (color) => {
     if (color === "green") return "bg-green-100 text-green-800";
     if (color === "blue") return "bg-blue-100 text-blue-800";
-    return "bg-gray-100 text-gray-800";
+    return "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200";
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-gray-600">Loading test series...</span>
+        <span className="ml-3 text-gray-600 dark:text-gray-400">Loading test series...</span>
       </div>
     );
   }
@@ -250,8 +250,8 @@ const TestSeriesTab = ({ studentId }) => {
   if (!testSeries.length) {
     return (
       <div className="p-8 text-center">
-        <div className="text-gray-600 text-lg">No enrolled test series</div>
-        <p className="text-gray-500 mt-2">
+        <div className="text-gray-600 dark:text-gray-400 text-lg">No enrolled test series</div>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
           You haven't enrolled in any test series yet.
         </p>
       </div>
@@ -274,17 +274,17 @@ const TestSeriesTab = ({ studentId }) => {
           return (
             <div
               key={series._id}
-              className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow p-4 sm:p-5"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-lg text-gray-900 leading-snug">
+                  <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 leading-snug">
                     {series.title || "Test Series"}
                   </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                     {descriptionText}
                   </p>
-                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                  <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
                     <FiFileText className="w-4 h-4" />
                     <span>{testsCount} tests</span>
                   </div>
@@ -293,7 +293,7 @@ const TestSeriesTab = ({ studentId }) => {
                   <button
                     onClick={() => handleStartTest(series)}
                     aria-label={isExpanded ? "Hide tests" : "Show tests"}
-                    className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 bg-white text-gray-600 hover:border-indigo-200 hover:text-indigo-700 transition-transform duration-200 shadow-sm"
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:border-indigo-200 hover:text-indigo-700 transition-transform duration-200 shadow-sm"
                   >
                     <FiChevronDown
                       className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : "rotate-0"}`}
@@ -303,9 +303,9 @@ const TestSeriesTab = ({ studentId }) => {
               </div>
 
               {isExpanded && (
-                <div className="mt-4 border border-gray-100 rounded-lg bg-gray-50 p-3 space-y-3">
+                <div className="mt-4 border border-gray-100 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-800 p-3 space-y-3">
                   {testsLoading[seriesId] ? (
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
                       <span>Loading tests...</span>
                     </div>
@@ -313,13 +313,13 @@ const TestSeriesTab = ({ studentId }) => {
                     testsBySeries[seriesId].map((test) => (
                       <div
                         key={test._id || test.id || test.slug}
-                        className="bg-white border border-gray-200 rounded-lg p-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="space-y-1">
-                          <h4 className="text-sm font-semibold text-gray-900 line-clamp-2">
+                          <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
                             {test.title || "Test"}
                           </h4>
-                          <p className="text-sm text-gray-600 line-clamp-2">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
                             {test.description || "No description provided."}
                           </p>
                         </div>
@@ -334,7 +334,7 @@ const TestSeriesTab = ({ studentId }) => {
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500">No tests available for this series.</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">No tests available for this series.</p>
                   )}
                 </div>
               )}

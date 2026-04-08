@@ -8,7 +8,7 @@ import { formatDate } from '@/Data/TestSeries/testseries.data';
 const CoursesSection = ({ courses }) => {
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-semibold text-gray-800 mb-6">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">
         Courses by this Educator
       </h2>
 
@@ -19,8 +19,8 @@ const CoursesSection = ({ courses }) => {
       </div>
 
       {courses.length === 0 && (
-        <div className="text-center py-10 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">
+        <div className="text-center py-10 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-gray-500 dark:text-gray-400">
             No courses available from this educator yet.
           </p>
         </div>
@@ -43,7 +43,7 @@ const CourseCard = ({ course }) => {
   } = course;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
       {/* Course Thumbnail */}
       <div className="relative h-40 w-full">
         <Image
@@ -56,7 +56,7 @@ const CourseCard = ({ course }) => {
 
       {/* Course Details */}
       <div className="p-4">
-        <h3 className="font-medium text-lg text-gray-800 mb-2 line-clamp-2">
+        <h3 className="font-medium text-lg text-gray-800 dark:text-gray-200 mb-2 line-clamp-2">
           <Link
             href={`/courses/${id}`}
             className="hover:text-blue-600 transition-colors"
@@ -68,16 +68,16 @@ const CourseCard = ({ course }) => {
         <div className="flex items-center justify-between mb-3">
           {/* <div className="flex items-center">
             <FaStar className="text-yellow-500 mr-1" />
-            <span className="text-sm text-gray-700">{rating}</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">{rating}</span>
           </div> */}
 
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
             <FaUsers className="mr-1" />
             <span>{seatLimit} students</span>
           </div>
         </div>
 
-        <div className="flex items-center text-sm text-gray-600 mb-3">
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3">
           <FaClock className="mr-1" />
           <div className="flex gap-1">
             <span>{formatDate(startDate)}</span> - 
@@ -87,9 +87,9 @@ const CourseCard = ({ course }) => {
 
         <div className="flex items-center justify-between">
           <div>
-            <span className="font-bold text-gray-800">₹{fees}</span>
+            <span className="font-bold text-gray-800 dark:text-gray-200">₹{fees}</span>
             {originalPrice && (
-              <span className="ml-2 text-gray-500 line-through text-sm">
+              <span className="ml-2 text-gray-500 dark:text-gray-400 line-through text-sm">
                 ₹{originalPrice}
               </span>
             )}

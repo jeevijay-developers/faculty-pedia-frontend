@@ -14,10 +14,10 @@ const HomeExamMenu = () => {
     <section className="my-20 px-4">
       {/* Heading Section */}
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-gray-800 mb-4">
+        <h2 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           Choose Your Exam
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           Select your target exam and get access to specialized courses, expert guidance, and comprehensive study materials
         </p>
       </div>
@@ -37,7 +37,7 @@ const HomeExamMenu = () => {
           <div className="absolute inset-0 bg-black/50 bg-opacity-40"></div>
           
           <div className="text-center relative z-10">
-           <div className='w-15 h-15 mx-auto mb-2 bg-white rounded-full flex items-center justify-center shadow-md'>
+           <div className='w-15 h-15 mx-auto mb-2 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-md'>
               <Image src="/logo/iit-logo.png" alt="IIT Icon" width={40} height={40} className="w-[40px] h-auto" />
             </div>
             <div>IIT JEE</div>
@@ -57,7 +57,7 @@ const HomeExamMenu = () => {
           <div className="absolute inset-0 bg-black/50 bg-opacity-40"></div>
           
           <div className="text-center relative z-10">
-           <div className='w-15 h-15 mx-auto mb-2 bg-white rounded-full flex items-center justify-center shadow-md'>
+           <div className='w-15 h-15 mx-auto mb-2 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-md'>
               <Image src="/logo/neet-logo.png" alt="NEET Icon" width={40} height={40} className="w-[40px] h-auto" />
             </div>
             <div>NEET</div>
@@ -78,7 +78,7 @@ const HomeExamMenu = () => {
           <div className="absolute inset-0 bg-black/50 bg-opacity-40"></div>
           
           <div className="text-center relative z-10">
-           <div className='w-15 h-15 mx-auto mb-2 bg-white rounded-full flex items-center justify-center shadow-md'>
+           <div className='w-15 h-15 mx-auto mb-2 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-md'>
               <Image src="/logo/cbse-logo.png" alt="CBSE Icon" width={40} height={40} className="w-[40px] h-auto" />
             </div>
             <div>CBSE</div>

@@ -30,7 +30,7 @@ const UpcomingWebinarSection = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Upcoming Webinars</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">Upcoming Webinars</h2>
                     <Link
                         href="/webinars/upcoming"
                         className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
@@ -45,18 +45,18 @@ const UpcomingWebinarSection = () => {
                     {/* Navigation Buttons */}
                     <button
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-20 bg-transparent hover:bg-white rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-20 bg-transparent hover:bg-white dark:hover:bg-gray-800 rounded-full p-2 lg:p-3 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200 dark:border-gray-700"
                         aria-label="Previous slide"
                     >
-                        <MdOutlineKeyboardArrowLeft className='w-5 h-5 text-gray-500 hover:text-gray-900' />
+                        <MdOutlineKeyboardArrowLeft className='w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100' />
                     </button>
 
                     <button
                         onClick={nextSlide}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-10 bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-10 bg-white dark:bg-gray-900 rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
                         aria-label="Next slide"
                     >
-                        <MdOutlineKeyboardArrowRight className='w-5 h-5 text-gray-500 hover:text-gray-900' />
+                        <MdOutlineKeyboardArrowRight className='w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100' />
                     </button>
 
                     {/* Swiper Carousel */}
@@ -97,9 +97,9 @@ const UpcomingWebinarSection = () => {
 // Webinar Card Component based on the image shown
 const WebinarCard = ({ webinar }) => {
     return (
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full">
             {/* Webinar Banner Image */}
-            <div className="relative h-40 bg-gray-100">
+            <div className="relative h-40 bg-gray-100 dark:bg-gray-800">
                 <Image
                     src={webinar.image}
                     alt={webinar.title}
@@ -115,30 +115,30 @@ const WebinarCard = ({ webinar }) => {
             <div className="p-4">
                 {/* Title */}
                 <div className="mb-3">
-                    <h3 className="text-lg font-medium text-gray-900 leading-tight line-clamp-2 text-ellipsis truncate">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 leading-tight line-clamp-2 text-ellipsis truncate">
                         {webinar.title}
                     </h3>
                 </div>
 
                 {/* Instructor */}
-                <h4 className="text-base font-semibold text-gray-800 mb-1">
+                <h4 className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-1">
                     {webinar.instructor}
                 </h4>
 
                 {/* Experience */}
-                <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
                     {webinar.experience}
                 </p>
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-2 ">
-                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
+                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md">
                         {webinar.years} exp.
                     </span>
                     {webinar.subjects.map((subject, index) => (
                         <span
                             key={index}
-                            className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md"
+                            className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-md"
                         >
                             {subject}
                         </span>
@@ -146,9 +146,9 @@ const WebinarCard = ({ webinar }) => {
                 </div>
                 <div className="mb-4">
                     <div className="flex items-baseline space-x-2">
-                        <span className="text-xl font-bold text-gray-800">₹{webinar.price}</span>
+                        <span className="text-xl font-bold text-gray-800 dark:text-gray-200">₹{webinar.price}</span>
                         {webinar.originalPrice && (
-                            <span className="text-sm text-gray-500 line-through">₹{webinar.originalPrice}</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400 line-through">₹{webinar.originalPrice}</span>
                         )}
                     </div>
                 </div>
@@ -158,7 +158,7 @@ const WebinarCard = ({ webinar }) => {
 
                     <Link
                         href={`/webinars/upcoming/${webinar.id}/details`}
-                        className="flex-1 border border-gray-300 text-gray-800 text-xs font-medium py-1.5 px-3 rounded hover:bg-gray-50 transition-colors duration-200 text-center"
+                        className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 text-xs font-medium py-1.5 px-3 rounded hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 text-center"
                     >
                         View Details
                     </Link>

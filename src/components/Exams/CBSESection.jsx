@@ -60,11 +60,11 @@ const CBSESection = () => {
   };
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
             CBSE Exam (6th to 12th)
           </h2>
           <Link
@@ -81,27 +81,27 @@ const CBSESection = () => {
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 lg:-translate-x-14 z-10 bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 lg:-translate-x-14 z-10 bg-white dark:bg-gray-900 rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
             aria-label="Previous slide"
           >
-            <MdOutlineKeyboardArrowLeft className="w-5 h-5 text-gray-500 hover:text-gray-900" />
+            <MdOutlineKeyboardArrowLeft className="w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-10 bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-10 bg-white dark:bg-gray-900 rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
             aria-label="Next slide"
           >
-            <MdOutlineKeyboardArrowRight className="w-5 h-5 text-gray-500 hover:text-gray-900" />
+            <MdOutlineKeyboardArrowRight className="w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" />
           </button>
 
           {/* Swiper Carousel */}
           {loading ? (
-            <div className="py-16 text-center text-gray-500">Loading courses...</div>
+            <div className="py-16 text-center text-gray-500 dark:text-gray-400">Loading courses...</div>
           ) : error ? (
             <div className="py-16 text-center text-red-500">{error}</div>
           ) : courses.length === 0 ? (
-            <div className="py-16 text-center text-gray-500">No CBSE courses available right now.</div>
+            <div className="py-16 text-center text-gray-500 dark:text-gray-400">No CBSE courses available right now.</div>
           ) : (
             <Swiper
               modules={[Navigation]}

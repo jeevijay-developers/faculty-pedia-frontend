@@ -49,10 +49,10 @@ const TestInstructions = ({ testId }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading test instructions...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading test instructions...</p>
         </div>
       </div>
     );
@@ -60,28 +60,28 @@ const TestInstructions = ({ testId }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Error Loading Test
           </h2>
-          <p className="text-gray-600">{error}</p>
+          <p className="text-gray-600 dark:text-gray-400">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border p-6 mb-8">
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               {testData.title}
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
               {testData.description.short}
             </p>
           </div>
@@ -92,7 +92,7 @@ const TestInstructions = ({ testId }) => {
               <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-2">
                 <FiClock className="w-6 h-6 text-blue-600" />
               </div>
-              <p className="text-sm text-gray-500">Duration</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Duration</p>
               <p className="text-lg font-semibold">{testData.duration} min</p>
             </div>
 
@@ -100,7 +100,7 @@ const TestInstructions = ({ testId }) => {
               <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mx-auto mb-2">
                 <FiFileText className="w-6 h-6 text-green-600" />
               </div>
-              <p className="text-sm text-gray-500">Questions</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Questions</p>
               <p className="text-lg font-semibold">
                 {testData.questions.length}
               </p>
@@ -110,7 +110,7 @@ const TestInstructions = ({ testId }) => {
               <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-2">
                 <FiAward className="w-6 h-6 text-purple-600" />
               </div>
-              <p className="text-sm text-gray-500">Subject</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Subject</p>
               <p className="text-lg font-semibold">{testData.subject}</p>
             </div>
 
@@ -118,20 +118,20 @@ const TestInstructions = ({ testId }) => {
               <div className="flex items-center justify-center w-12 h-12 bg-yellow-100 rounded-lg mx-auto mb-2">
                 <FiUsers className="w-6 h-6 text-yellow-600" />
               </div>
-              <p className="text-sm text-gray-500">Marking</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Marking</p>
               <p className="text-lg font-semibold">{testData.markingType}</p>
             </div>
           </div>
         </div>
 
         {/* Instructions */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
             <FiAlertTriangle className="w-5 h-5 mr-2 text-orange-500" />
             Test Instructions
           </h2>
 
-          <div className="space-y-4 text-gray-700">
+          <div className="space-y-4 text-gray-700 dark:text-gray-300">
             <div>
               <h3 className="font-semibold mb-2">General Instructions:</h3>
               <ul className="list-disc list-inside space-y-1 text-sm">
@@ -175,7 +175,7 @@ const TestInstructions = ({ testId }) => {
               <h3 className="font-semibold mb-2">Question Palette:</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
                 <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 bg-gray-100 border rounded flex items-center justify-center">
+                  <div className="w-6 h-6 bg-gray-100 dark:bg-gray-800 border rounded flex items-center justify-center">
                     1
                   </div>
                   <span>Not Visited</span>
@@ -223,30 +223,30 @@ const TestInstructions = ({ testId }) => {
 
         {/* Test Series Info */}
         {testData.testSeriesId && (
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
               Test Series Information
             </h2>
-            <h3 className="text-lg font-medium text-gray-800 mb-2">
+            <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
               {testData.testSeriesId.title}
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               {testData.testSeriesId.description.long}
             </p>
           </div>
         )}
 
         {/* Agreement and Start */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border p-6">
           <div className="flex items-start space-x-3 mb-6">
             <input
               type="checkbox"
               id="agreement"
               checked={agreed}
               onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-1 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="mt-1 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
             />
-            <label htmlFor="agreement" className="text-sm text-gray-700">
+            <label htmlFor="agreement" className="text-sm text-gray-700 dark:text-gray-300">
               I have read and understood all the instructions. I agree to the
               terms and conditions and am ready to start the test. I understand
               that once I start, the timer will begin and I cannot pause the
@@ -261,7 +261,7 @@ const TestInstructions = ({ testId }) => {
               className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
                 agreed
                   ? "bg-green-600 text-white hover:bg-green-700"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-gray-300 text-gray-500 dark:text-gray-400 cursor-not-allowed"
               }`}
             >
               Start Test

@@ -147,13 +147,13 @@ const CoursesTab = ({ resolvedCourses = [], coursesLoading, coursesError }) => {
   ];
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-1">
-          <h3 className="text-2xl font-bold text-gray-900">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             My Learning Journey
           </h3>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Welcome back! Pick up where you left off.
           </p>
         </div>
@@ -165,28 +165,28 @@ const CoursesTab = ({ resolvedCourses = [], coursesLoading, coursesError }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search your courses..."
-              className="w-full rounded-full border border-gray-200 bg-white px-10 py-2.5 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-10 py-2.5 text-sm text-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
             />
           </label>
         </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 shadow-sm">
-          <p className="text-sm text-gray-600">Total Enrolled</p>
-          <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+        <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4 shadow-sm">
+          <p className="text-sm text-gray-600 dark:text-gray-400">Total Enrolled</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.total}</p>
         </div>
-        <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 shadow-sm">
+        <div className="rounded-2xl border border-blue-100 bg-blue-50 dark:bg-blue-900/20 p-4 shadow-sm">
           <p className="text-sm font-medium text-blue-700">Ongoing</p>
-          <p className="text-3xl font-bold text-gray-900">{stats.ongoing}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.ongoing}</p>
         </div>
-        <div className="rounded-2xl border border-green-100 bg-green-50 p-4 shadow-sm">
+        <div className="rounded-2xl border border-green-100 bg-green-50 dark:bg-green-900/20 p-4 shadow-sm">
           <p className="text-sm font-medium text-green-700">Completed</p>
-          <p className="text-3xl font-bold text-gray-900">{stats.completed}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.completed}</p>
         </div>
-        <div className="rounded-2xl border border-orange-100 bg-orange-50 p-4 shadow-sm">
+        <div className="rounded-2xl border border-orange-100 bg-orange-50 dark:bg-orange-900/20 p-4 shadow-sm">
           <p className="text-sm font-medium text-orange-600">Upcoming</p>
-          <p className="text-3xl font-bold text-gray-900">{stats.upcoming}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.upcoming}</p>
         </div>
       </div>
 
@@ -201,7 +201,7 @@ const CoursesTab = ({ resolvedCourses = [], coursesLoading, coursesError }) => {
               className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all shadow-sm ${
                 isActive
                   ? "bg-blue-600 text-white shadow-blue-200"
-                  : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+                  : "bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
               }`}
             >
               {opt.label}
@@ -221,26 +221,26 @@ const CoursesTab = ({ resolvedCourses = [], coursesLoading, coursesError }) => {
           {[...Array(3)].map((_, idx) => (
             <div
               key={idx}
-              className="rounded-3xl border border-gray-200 bg-white p-5 animate-pulse space-y-4"
+              className="rounded-3xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 animate-pulse space-y-4"
             >
-              <div className="h-48 w-full rounded-2xl bg-gray-200" />
-              <div className="h-4 w-3/4 rounded bg-gray-200" />
-              <div className="h-3 w-1/2 rounded bg-gray-200" />
-              <div className="h-3 w-2/3 rounded bg-gray-200" />
-              <div className="h-2 w-full rounded bg-gray-200" />
-              <div className="h-10 w-full rounded-full bg-gray-200" />
+              <div className="h-48 w-full rounded-2xl bg-gray-200 dark:bg-gray-700" />
+              <div className="h-4 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-3 w-1/2 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-3 w-2/3 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-2 w-full rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-10 w-full rounded-full bg-gray-200 dark:bg-gray-700" />
             </div>
           ))}
         </div>
       ) : showEmpty ? (
-        <div className="text-center py-16 rounded-2xl border border-dashed border-gray-200 bg-gray-50">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm">
+        <div className="text-center py-16 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white dark:bg-gray-900 shadow-sm">
             <FiBookOpen className="h-8 w-8 text-gray-400" />
           </div>
-          <h4 className="text-lg font-semibold text-gray-900 mb-2">
+          <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
             No courses found
           </h4>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
             Try adjusting filters or searching for a different course.
           </p>
           <Link

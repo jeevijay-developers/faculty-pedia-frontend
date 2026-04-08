@@ -15,7 +15,7 @@ const Page = () => {
   }, [router]);
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
       <StudentSignup />
     </div>
   );

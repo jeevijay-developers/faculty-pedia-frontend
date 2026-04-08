@@ -37,8 +37,8 @@ export default function GlobalError({ error, reset }) {
           </div>
 
           {/* Brand Name */}
-          <h1 className="text-2xl font-bold text-gray-900">Facultypedia</h1>
-          <p className="text-sm text-gray-600 font-medium">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Facultypedia</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
             Educational Excellence Platform
           </p>
         </div>
@@ -50,10 +50,10 @@ export default function GlobalError({ error, reset }) {
               <FiAlertTriangle className="w-10 h-10 text-red-500" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 Oops! Something went wrong
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 We encountered an unexpected error. Don't worry, it's been
                 logged and we'll fix it.
               </p>
@@ -62,11 +62,11 @@ export default function GlobalError({ error, reset }) {
 
           {/* Error Details Card */}
           {error?.message && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-left max-w-md w-full">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 text-left max-w-md w-full">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                 Error Details:
               </h3>
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                 <code className="text-sm text-red-600 font-mono wrap-break-word">
                   {error.message}
                 </code>
@@ -77,32 +77,32 @@ export default function GlobalError({ error, reset }) {
 
         {/* Helpful Tips */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
-            <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mx-auto mb-3 border border-blue-100">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
+            <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center mx-auto mb-3 border border-blue-100">
               <FiRefreshCw className="w-6 h-6 text-blue-600" />
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Try Again</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Try Again</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Sometimes a simple refresh can resolve the issue.
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
-            <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mx-auto mb-3 border border-green-100">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
+            <div className="w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center mx-auto mb-3 border border-green-100">
               <FiHome className="w-6 h-6 text-green-600" />
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Go Home</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Go Home</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Return to the homepage and start fresh.
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 text-center">
-            <div className="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center mx-auto mb-3 border border-purple-100">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
+            <div className="w-12 h-12 bg-purple-50 dark:bg-purple-900/20 rounded-lg flex items-center justify-center mx-auto mb-3 border border-purple-100">
               <FiArrowLeft className="w-6 h-6 text-purple-600" />
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Go Back</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Go Back</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Return to the previous page you were viewing.
             </p>
           </div>
@@ -120,7 +120,7 @@ export default function GlobalError({ error, reset }) {
 
           <Link
             href="/"
-            className="flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
+            className="flex items-center justify-center px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
           >
             <FiHome className="w-4 h-4 mr-2" />
             Go Home
@@ -128,7 +128,7 @@ export default function GlobalError({ error, reset }) {
         </div>
 
         {/* Additional Help */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 w-full max-w-md">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-xl p-6 w-full max-w-md">
           <h3 className="font-semibold text-blue-900 mb-2">Need More Help?</h3>
           <p className="text-sm text-blue-700 mb-4">
             If this problem continues, please contact our support team with
@@ -145,7 +145,7 @@ export default function GlobalError({ error, reset }) {
 
       {/* Footer */}
       <div className="absolute bottom-8 text-center">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-gray-500 dark:text-gray-400">
           Empowering Education • Building Futures
         </p>
       </div>

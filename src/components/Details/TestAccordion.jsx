@@ -33,11 +33,11 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
   return (
     <div
       data-aos="fade-up"
-      className="mb-4 overflow-hidden bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+      className="mb-4 overflow-hidden bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
     >
       <button
         className={`w-full px-6 py-4 flex justify-between items-center ${
-          isExpanded ? "bg-blue-50" : "bg-white"
+          isExpanded ? "bg-blue-50 dark:bg-blue-900/20" : "bg-white dark:bg-gray-900"
         } transition-colors duration-300`}
         onClick={onToggle}
       >
@@ -52,21 +52,21 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
             <FaClipboardList className="w-6 h-6" />
           </div>
           <div className="flex flex-col items-start">
-            <h3 className="font-bold text-lg text-gray-900">
+            <h3 className="font-bold text-lg text-gray-900 dark:text-gray-100">
               {testData.title}
             </h3>
-            <p className="text-sm text-gray-600 flex items-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
               <FaBookOpen className="mr-2" /> {testData.description.short}
             </p>
           </div>
         </div>
         <div className="flex items-center space-x-4">
           <div className="text-right hidden md:block">
-            <p className="text-sm text-gray-600 flex items-center justify-end">
+            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center justify-end">
               <FaCalendarAlt className="mr-2" />
               {formatDate(testData.startDate)}
             </p>
-            <p className="text-sm text-gray-600 flex items-center justify-end">
+            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center justify-end">
               <FaClock className="mr-2" />
               {testData.duration} min
             </p>
@@ -91,23 +91,23 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
 
       {isExpanded && (
         <div
-          className="p-6 space-y-4 border-t border-gray-100"
+          className="p-6 space-y-4 border-t border-gray-100 dark:border-gray-800"
           data-aos="fade-down"
         >
-          <p className="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg">
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
             {testData.description.long}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaCalendarAlt className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium">Test Date</p>
                   <p>{formatDate(testData.startDate)}</p>
                 </div>
               </div>
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaClock className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium">Duration</p>
@@ -116,7 +116,7 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
               </div>
             </div>
             <div className="space-y-3">
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaMedal className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium">Marking Scheme</p>
@@ -130,7 +130,7 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaCheckCircle className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium">Marking Type</p>
@@ -149,7 +149,7 @@ const TestAccordion = ({ testData, isExpanded, onToggle }) => {
             </Link>
             <Link
               href="/details/exam/1"
-              className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 transform transition-transform duration-300 hover:scale-102"
+              className="inline-flex items-center px-6 py-3 text-base font-medium rounded-lg shadow-sm text-blue-600 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 border border-blue-200 transform transition-transform duration-300 hover:scale-102"
             >
               <FaCheckCircle className="mr-2" /> View Results
             </Link>

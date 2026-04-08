@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen dark:bg-gray-950 dark:text-gray-100`}
         suppressHydrationWarning={true}
       >
         <HeroUIProvider>

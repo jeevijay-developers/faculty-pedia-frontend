@@ -143,17 +143,17 @@ const EducatorSignup = () => {
   const progressWidth = `${((currentStep - 1) / (steps.length - 1)) * 100}%`;
 
   const inputClass = (hasError = false) =>
-    `w-full h-12 px-4 rounded-xl border bg-white shadow-sm text-[#0e121b] placeholder-slate-400 focus:outline-none focus:ring-2 transition-colors ${
+    `w-full h-12 px-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm text-[#0e121b] placeholder-slate-400 focus:outline-none focus:ring-2 transition-colors ${
       hasError
         ? "border-red-300 focus:border-red-500 focus:ring-red-200"
-        : "border-slate-200 focus:border-indigo-500 focus:ring-indigo-100"
+        : "border-slate-200 dark:border-gray-700 focus:border-indigo-500 focus:ring-indigo-100"
     }`;
 
   const textareaClass = (hasError = false) =>
-    `w-full p-4 rounded-xl border bg-white shadow-sm text-[#0e121b] placeholder-slate-400 focus:outline-none focus:ring-2 transition-colors resize-none ${
+    `w-full p-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm text-[#0e121b] placeholder-slate-400 focus:outline-none focus:ring-2 transition-colors resize-none ${
       hasError
         ? "border-red-300 focus:border-red-500 focus:ring-red-200"
-        : "border-slate-200 focus:border-indigo-500 focus:ring-indigo-100"
+        : "border-slate-200 dark:border-gray-700 focus:border-indigo-500 focus:ring-indigo-100"
     }`;
 
   const handleInputChange = (e) => {
@@ -732,7 +732,7 @@ const EducatorSignup = () => {
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <label className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             First Name
           </span>
           <input
@@ -752,7 +752,7 @@ const EducatorSignup = () => {
         </label>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             Last Name
           </span>
           <input
@@ -774,7 +774,7 @@ const EducatorSignup = () => {
 
       <div className="grid grid-cols-1 gap-6">
         <label className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             Email Address
           </span>
           <input
@@ -797,7 +797,7 @@ const EducatorSignup = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <label className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             Mobile Number
           </span>
           <input
@@ -817,7 +817,7 @@ const EducatorSignup = () => {
         </label>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             WhatsApp Number
           </span>
           <input
@@ -845,11 +845,11 @@ const EducatorSignup = () => {
           id="sameNumber"
           checked={isSameNumber}
           onChange={handleSameNumberChange}
-          className="w-4 h-4 text-blue-500 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+          className="w-4 h-4 text-blue-500 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
         />
         <label
           htmlFor="sameNumber"
-          className="text-sm text-slate-600 font-medium cursor-pointer select-none"
+          className="text-sm text-slate-600 dark:text-gray-300 font-medium cursor-pointer select-none"
         >
           Both numbers are same
         </label>
@@ -857,7 +857,7 @@ const EducatorSignup = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <label className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             Password
           </span>
           <div className="relative">
@@ -872,7 +872,7 @@ const EducatorSignup = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-500"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-500 hover:text-blue-500"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
@@ -886,7 +886,7 @@ const EducatorSignup = () => {
         </label>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             Confirm Password
           </span>
           <input
@@ -908,7 +908,7 @@ const EducatorSignup = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             Exam Categories
           </span>
           <div className="flex flex-wrap gap-2">
@@ -922,7 +922,7 @@ const EducatorSignup = () => {
                   className={`px-4 py-2 rounded-lg border shadow-sm text-sm font-semibold transition-colors ${
                     isSelected
                       ? "bg-blue-50 border-blue-500 text-blue-700"
-                      : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                      : "bg-white dark:bg-gray-900 border-slate-200 dark:border-gray-700 text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800/50"
                   }`}
                 >
                   <span className="inline-flex items-center gap-2">
@@ -933,7 +933,7 @@ const EducatorSignup = () => {
               );
             })}
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">
             Select all exam categories you teach.
           </p>
           {errors.specialization && (
@@ -944,11 +944,11 @@ const EducatorSignup = () => {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
             Subjects
           </span>
           {getAvailableSubjects(formData.specialization).length === 0 ? (
-            <p className="text-sm text-slate-500 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
+            <p className="text-sm text-slate-500 dark:text-gray-400 bg-slate-50 dark:bg-gray-800/50 border border-slate-200 dark:border-gray-700 rounded-lg px-3 py-2">
               Choose at least one exam category to see subjects.
             </p>
           ) : (
@@ -963,7 +963,7 @@ const EducatorSignup = () => {
                     className={`px-3 py-2 rounded-lg border shadow-sm text-sm font-semibold transition-colors ${
                       isSelected
                         ? "bg-indigo-50 border-indigo-500 text-indigo-700"
-                        : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                        : "bg-white dark:bg-gray-900 border-slate-200 dark:border-gray-700 text-slate-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800/50"
                     }`}
                   >
                     <span className="inline-flex items-center gap-2">
@@ -975,7 +975,7 @@ const EducatorSignup = () => {
               })}
             </div>
           )}
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-gray-400 mt-1">
             Pick multiple subjects across selected exams.
           </p>
           {errors.subject && (
@@ -987,7 +987,7 @@ const EducatorSignup = () => {
       </div>
 
       <label className="flex flex-col gap-1.5">
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
           Professional Bio
         </span>
         <textarea
@@ -1007,19 +1007,19 @@ const EducatorSignup = () => {
       </label>
 
       <div className="space-y-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">
           Introduction Video
         </span>
-        <div className="border-2 border-dashed rounded-xl border-slate-200 bg-slate-50 p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between hover:bg-slate-100 transition-colors">
+        <div className="border-2 border-dashed rounded-xl border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800/50 p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-blue-500">
               <FiVideo className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
-              <p className="text-sm font-semibold text-slate-900">
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">
                 Upload introduction video
               </p>
-              <p className="text-xs text-slate-500">MP4/MOV up to 500MB</p>
+              <p className="text-xs text-slate-500 dark:text-gray-400">MP4/MOV up to 500MB</p>
             </div>
           </div>
 
@@ -1033,7 +1033,7 @@ const EducatorSignup = () => {
             />
             <label
               htmlFor="introVideoFile"
-              className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors"
+              className="px-4 py-2 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm font-semibold text-slate-700 dark:text-gray-200 shadow-sm cursor-pointer hover:bg-slate-50 dark:hover:bg-gray-800/50 transition-colors"
             >
               Browse Files
             </label>
@@ -1046,7 +1046,7 @@ const EducatorSignup = () => {
               {isUploadingIntroVideo ? "Uploading..." : "Upload"}
             </button>
             {introVideoFile && (
-              <span className="text-xs text-slate-600 truncate max-w-60">
+              <span className="text-xs text-slate-600 dark:text-gray-300 truncate max-w-60">
                 {introVideoFile.name}
               </span>
             )}
@@ -1059,7 +1059,7 @@ const EducatorSignup = () => {
           </p>
         )}
 
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-gray-400">
           Upload your introduction video. After upload we store the Vimeo link
           for your profile.
         </p>
@@ -1072,9 +1072,9 @@ const EducatorSignup = () => {
       {formData.workExperience.map((exp, index) => (
         <div
           key={index}
-          className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+          className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+          <div className="flex justify-between items-center mb-6 border-b border-slate-100 dark:border-gray-800 pb-4">
             <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
               <LuHistory className="text-blue-500 h-5 w-5" />
               Experience #{index + 1}
@@ -1083,7 +1083,7 @@ const EducatorSignup = () => {
               <button
                 type="button"
                 onClick={() => removeExperience(index)}
-                className="text-slate-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
+                className="text-slate-400 dark:text-gray-500 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30"
                 title="Remove Experience"
               >
                 <FiTrash2 className="h-5 w-5" />
@@ -1094,7 +1094,7 @@ const EducatorSignup = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Job Title */}
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
+              <label className="block text-xs font-bold uppercase text-slate-500 dark:text-gray-400 tracking-wider mb-2">
                 Job Title
               </label>
               <input
@@ -1108,10 +1108,10 @@ const EducatorSignup = () => {
                     e.target.value
                   )
                 }
-                className={`w-full h-12 px-4 rounded-lg bg-white border text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 transition-all ${
+                className={`w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 dark:text-white placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-4 transition-all ${
                   errors[`workExperience.${index}.title`]
                     ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                    : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
+                    : "border-slate-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500/10"
                 }`}
                 placeholder="e.g. Senior Mathematics Teacher"
               />
@@ -1124,11 +1124,11 @@ const EducatorSignup = () => {
 
             {/* Company/Institution */}
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
+              <label className="block text-xs font-bold uppercase text-slate-500 dark:text-gray-400 tracking-wider mb-2">
                 School / Institution
               </label>
               <div className="relative">
-                <LuSchool className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 h-5 w-5" />
+                <LuSchool className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-500 h-5 w-5" />
                 <input
                   type="text"
                   value={exp.company}
@@ -1140,10 +1140,10 @@ const EducatorSignup = () => {
                       e.target.value
                     )
                   }
-                  className={`w-full h-12 pl-11 pr-4 rounded-lg bg-white border text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 transition-all ${
+                  className={`w-full h-12 pl-11 pr-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 dark:text-white placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-4 transition-all ${
                     errors[`workExperience.${index}.company`]
                       ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                      : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
+                      : "border-slate-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500/10"
                   }`}
                   placeholder="e.g. Springfield High School"
                 />
@@ -1157,7 +1157,7 @@ const EducatorSignup = () => {
 
             {/* Start Date */}
             <div>
-              <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider mb-2">
+              <label className="block text-xs font-bold uppercase text-slate-500 dark:text-gray-400 tracking-wider mb-2">
                 Start Date
               </label>
               <MonthPicker
@@ -1178,10 +1178,10 @@ const EducatorSignup = () => {
             {/* End Date */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-xs font-bold uppercase text-slate-500 tracking-wider">
+                <label className="block text-xs font-bold uppercase text-slate-500 dark:text-gray-400 tracking-wider">
                   End Date
                 </label>
-                <label className="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer select-none">
+                <label className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-gray-300 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={exp.isCurrentRole}
@@ -1227,10 +1227,10 @@ const EducatorSignup = () => {
       {formData.qualification.map((qual, index) => (
         <div
           key={index}
-          className="group border border-gray-200 bg-white rounded-2xl p-6 transition-all hover:border-blue-500/30 hover:shadow-sm"
+          className="group border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-2xl p-6 transition-all hover:border-blue-500/30 hover:shadow-sm"
         >
-          <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-            <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          <div className="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2">
               <LuGraduationCap className="text-blue-500 h-5 w-5" />
               Education #{index + 1}
             </h3>
@@ -1238,7 +1238,7 @@ const EducatorSignup = () => {
               <button
                 type="button"
                 onClick={() => removeQualification(index)}
-                className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
+                className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30"
                 title="Remove Entry"
               >
                 <FiTrash2 className="h-5 w-5" />
@@ -1249,7 +1249,7 @@ const EducatorSignup = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Degree/Qualification */}
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
+              <label className="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 tracking-wide mb-2">
                 Degree / Qualification
               </label>
               <input
@@ -1263,10 +1263,10 @@ const EducatorSignup = () => {
                     e.target.value
                   )
                 }
-                className={`w-full h-11 px-4 rounded-xl border bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full h-11 px-4 rounded-xl border bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
                   errors[`qualification.${index}.title`]
                     ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                    : "border-gray-200 focus:ring-blue-500 focus:border-transparent"
+                    : "border-gray-200 dark:border-gray-700 focus:ring-blue-500 focus:border-transparent"
                 }`}
                 placeholder="e.g. Master of Science in Physics"
               />
@@ -1279,7 +1279,7 @@ const EducatorSignup = () => {
 
             {/* Institute/University */}
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-xs font-bold uppercase text-gray-500 tracking-wide mb-2">
+              <label className="block text-xs font-bold uppercase text-gray-500 dark:text-gray-400 tracking-wide mb-2">
                 Institute / University
               </label>
               <div className="relative">
@@ -1295,10 +1295,10 @@ const EducatorSignup = () => {
                       e.target.value
                     )
                   }
-                  className={`w-full h-11 pl-10 pr-4 rounded-xl border bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
+                  className={`w-full h-11 pl-10 pr-4 rounded-xl border bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 transition-all ${
                     errors[`qualification.${index}.institute`]
                       ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-                      : "border-gray-200 focus:ring-blue-500 focus:border-transparent"
+                      : "border-gray-200 dark:border-gray-700 focus:ring-blue-500 focus:border-transparent"
                   }`}
                   placeholder="e.g. Indian Institute of Technology, Bombay"
                 />
@@ -1317,7 +1317,7 @@ const EducatorSignup = () => {
       <button
         type="button"
         onClick={addQualification}
-        className="w-full border-2 border-dashed border-gray-300 rounded-2xl p-4 text-blue-500 font-semibold hover:bg-blue-50 hover:border-blue-500 transition-all duration-200 flex justify-center items-center gap-2 group"
+        className="w-full border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-4 text-blue-500 font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-500 transition-all duration-200 flex justify-center items-center gap-2 group"
       >
         <LuCirclePlus className="h-5 w-5 group-hover:scale-110 transition-transform" />
         Add More Education
@@ -1328,8 +1328,8 @@ const EducatorSignup = () => {
   const renderSocialLinks = () => (
     <div className="space-y-6">
       {/* Info Banner */}
-      <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100">
-        <div className="flex items-start gap-3 text-slate-600">
+      <div className="bg-slate-50 dark:bg-gray-800/50/50 rounded-2xl p-6 border border-slate-100 dark:border-gray-800">
+        <div className="flex items-start gap-3 text-slate-600 dark:text-gray-300">
           <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-0.5">
             <LuCirclePlus className="h-3 w-3 text-blue-600" />
           </div>
@@ -1346,12 +1346,12 @@ const EducatorSignup = () => {
         <div className="flex flex-col gap-2">
           <label
             htmlFor="linkedin"
-            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+            className="text-[11px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest pl-1"
           >
             LinkedIn Profile
           </label>
           <div className="relative group">
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0077b5] transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-500 group-focus-within:text-[#0077b5] transition-colors">
               <FaLinkedin className="h-5 w-5" />
             </div>
             <input
@@ -1359,7 +1359,7 @@ const EducatorSignup = () => {
               id="linkedin"
               value={formData.socials.linkedin}
               onChange={(e) => handleSocialChange("linkedin", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://linkedin.com/in/yourprofile"
             />
           </div>
@@ -1369,12 +1369,12 @@ const EducatorSignup = () => {
         <div className="flex flex-col gap-2">
           <label
             htmlFor="twitter"
-            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+            className="text-[11px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest pl-1"
           >
             Twitter / X Profile
           </label>
           <div className="relative group">
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-black transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-500 group-focus-within:text-black transition-colors">
               <FaTwitter className="h-5 w-5" />
             </div>
             <input
@@ -1382,7 +1382,7 @@ const EducatorSignup = () => {
               id="twitter"
               value={formData.socials.twitter}
               onChange={(e) => handleSocialChange("twitter", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://twitter.com/yourusername"
             />
           </div>
@@ -1392,12 +1392,12 @@ const EducatorSignup = () => {
         <div className="flex flex-col gap-2">
           <label
             htmlFor="youtube"
-            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+            className="text-[11px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest pl-1"
           >
             YouTube Channel
           </label>
           <div className="relative group">
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#FF0000] transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-500 group-focus-within:text-[#FF0000] transition-colors">
               <FaYoutube className="h-5 w-5" />
             </div>
             <input
@@ -1405,7 +1405,7 @@ const EducatorSignup = () => {
               id="youtube"
               value={formData.socials.youtube}
               onChange={(e) => handleSocialChange("youtube", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://youtube.com/@channel"
             />
           </div>
@@ -1415,12 +1415,12 @@ const EducatorSignup = () => {
         <div className="flex flex-col gap-2">
           <label
             htmlFor="instagram"
-            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+            className="text-[11px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest pl-1"
           >
             Instagram Handle
           </label>
           <div className="relative group">
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#E1306C] transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-500 group-focus-within:text-[#E1306C] transition-colors">
               <FaInstagram className="h-5 w-5" />
             </div>
             <input
@@ -1428,7 +1428,7 @@ const EducatorSignup = () => {
               id="instagram"
               value={formData.socials.instagram}
               onChange={(e) => handleSocialChange("instagram", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://instagram.com/yourusername"
             />
           </div>
@@ -1438,12 +1438,12 @@ const EducatorSignup = () => {
         <div className="flex flex-col gap-2">
           <label
             htmlFor="facebook"
-            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+            className="text-[11px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest pl-1"
           >
             Facebook Page
           </label>
           <div className="relative group">
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1877F2] transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-500 group-focus-within:text-[#1877F2] transition-colors">
               <FaFacebook className="h-5 w-5" />
             </div>
             <input
@@ -1451,7 +1451,7 @@ const EducatorSignup = () => {
               id="facebook"
               value={formData.socials.facebook}
               onChange={(e) => handleSocialChange("facebook", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://facebook.com/yourprofile"
             />
           </div>
@@ -1461,18 +1461,18 @@ const EducatorSignup = () => {
         <div className="flex flex-col gap-2">
           <label
             htmlFor="website"
-            className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1"
+            className="text-[11px] font-bold text-slate-400 dark:text-gray-500 uppercase tracking-widest pl-1"
           >
             Personal Website
           </label>
           <div className="relative group">
-            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-500 group-focus-within:text-blue-500 transition-colors">
               <LuGlobe className="h-5 w-5" />
             </div>
             <input
               type="url"
               id="website"
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white border border-slate-200 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://yourwebsite.com"
             />
           </div>
@@ -1483,7 +1483,7 @@ const EducatorSignup = () => {
 
   return (
     <>
-      <div className="min-h-screen text-[#0e121b]">
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-950 text-[#0e121b] dark:text-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <header className="flex items-center justify-between flex-wrap gap-4 pb-6">
             <div className="flex items-center gap-3">
@@ -1491,23 +1491,23 @@ const EducatorSignup = () => {
                 <LuUser className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Educator Onboarding</p>
-                <h1 className="text-2xl font-semibold text-slate-900">
+                <p className="text-sm text-slate-500 dark:text-gray-400">Educator Onboarding</p>
+                <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">
                   Join as Educator
                 </h1>
               </div>
             </div>
             <Link
               href={`${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/login`}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-500 text-sm font-semibold hover:bg-blue-50 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-500 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
             >
               Login
             </Link>
           </header>
 
-          <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8">
+          <div className="bg-white dark:bg-gray-900/80 backdrop-blur rounded-3xl border border-slate-200 dark:border-gray-700 shadow-xl p-6 md:p-8">
             <div className="mb-10">
-              <div className="relative mb-6 h-1 bg-slate-200 rounded-full">
+              <div className="relative mb-6 h-1 bg-slate-200 dark:bg-gray-700 rounded-full">
                 <div
                   className="absolute inset-y-0 left-0 bg-blue-500 rounded-full transition-all"
                   style={{ width: progressWidth }}
@@ -1529,7 +1529,7 @@ const EducatorSignup = () => {
                             ? "bg-emerald-50 border-emerald-200 text-emerald-700"
                             : isActive
                               ? "bg-blue-500 border-blue-500 text-white"
-                              : "bg-white border-slate-200 text-slate-400"
+                              : "bg-white dark:bg-gray-900 border-slate-200 dark:border-gray-700 text-slate-400 dark:text-gray-500"
                         }`}
                       >
                         {isDone ? (
@@ -1543,8 +1543,8 @@ const EducatorSignup = () => {
                           isActive
                             ? "text-blue-700 font-semibold"
                             : isDone
-                              ? "text-slate-600 font-medium"
-                              : "text-slate-400"
+                              ? "text-slate-600 dark:text-gray-300 font-medium"
+                              : "text-slate-400 dark:text-gray-500"
                         }`}
                       >
                         {step.title}
@@ -1562,12 +1562,12 @@ const EducatorSignup = () => {
               {currentStep === 4 && renderSocialLinks()}
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-gray-800">
               <button
                 type="button"
                 onClick={prevStep}
                 disabled={currentStep === 1}
-                className="w-full sm:w-auto px-5 h-11 rounded-xl font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full sm:w-auto px-5 h-11 rounded-xl font-semibold text-slate-600 dark:text-gray-300 border border-slate-200 dark:border-gray-700 hover:bg-slate-50 dark:hover:bg-gray-800/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 Previous
               </button>

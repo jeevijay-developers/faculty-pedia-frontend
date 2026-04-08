@@ -79,9 +79,9 @@ const CourseHeader = ({ course }) => {
   const courseTypeLabel = isOneToAll ? "One to All" : isOneToOne ? "One to One" : "Course Type";
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
       {/* Header Section */}
-      <div className="text-black/80 p-6">
+      <div className="text-gray-800 dark:text-gray-100 p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Course Image */}
           <div className="lg:col-span-1">
@@ -103,7 +103,7 @@ const CourseHeader = ({ course }) => {
                 course.specialization.map((spec, idx) => (
                   <span
                     key={idx}
-                    className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium"
+                    className="bg-blue-200/50 dark:bg-blue-900/30 backdrop-blur-sm text-gray-900 dark:text-gray-100 px-3 py-1 rounded-full text-sm font-medium"
                   >
                     {spec}
                   </span>
@@ -112,18 +112,18 @@ const CourseHeader = ({ course }) => {
                 course.class.map((cls, idx) => (
                   <span
                     key={idx}
-                    className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium"
+                    className="bg-blue-200/50 dark:bg-blue-900/30 backdrop-blur-sm text-gray-900 dark:text-gray-100 px-3 py-1 rounded-full text-sm font-medium"
                   >
                     {cls}
                   </span>
                 ))}
-              <span className="bg-blue-200/50 backdrop-blur-sm text-black px-3 py-1 rounded-full text-sm font-medium">
+              <span className="bg-blue-200/50 dark:bg-blue-900/30 backdrop-blur-sm text-gray-900 dark:text-gray-100 px-3 py-1 rounded-full text-sm font-medium">
                     {courseTypeLabel}
               </span>
             </div>
 
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
-              <h1 className="text-3xl font-bold">{course.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{course.title}</h1>
               <ShareButton
                 title={course?.title || "Course"}
                 text={shareText}
@@ -132,14 +132,14 @@ const CourseHeader = ({ course }) => {
                 className="lg:ml-auto"
               />
             </div>
-            <p className="text-black/90 text-lg mb-4 line-clamp-2">
-              {course.description}
+            <p className="text-gray-700 dark:text-gray-300 text-lg mb-4 line-clamp-2 leading-relaxed">
+              {course.description || course.description?.short || "No description available"}
             </p>
 
             {/* Instructor Info */}
             <div className="flex items-center space-x-2 mb-4">
               <div className="text-sm">
-                <span className="text-black/80">Instructor: </span>
+                <span className="text-gray-700 dark:text-gray-300">Instructor: </span>
                 {educatorId ? (
                   <button
                     type="button"
@@ -150,7 +150,7 @@ const CourseHeader = ({ course }) => {
                     {educatorName}
                   </button>
                 ) : (
-                  <span className="font-semibold">{educatorName}</span>
+                  <span className="font-semibold text-gray-900 dark:text-gray-100">{educatorName}</span>
                 )}
               </div>
             </div>
@@ -208,7 +208,7 @@ const CourseHeader = ({ course }) => {
       <div className="p-6">
         <div className={`grid grid-cols-1 md:grid-cols-2 ${isOneToOne ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-6`}>
           {/* Pricing */}
-          <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaRupeeSign className="w-5 h-5 text-green-600" />
               <span className="text-sm font-medium text-green-700">
@@ -226,7 +226,7 @@ const CourseHeader = ({ course }) => {
           </div>
 
           {/* Timeline */}
-          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaCalendarAlt className="w-5 h-5 text-blue-600" />
               <span className="text-sm font-medium text-blue-700">
@@ -241,7 +241,7 @@ const CourseHeader = ({ course }) => {
 
           {/* Enrollment (only for One to All) */}
           {isOneToAll && (
-            <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200">
               <div className="flex items-center space-x-2 mb-2">
                 <FaUsers className="w-5 h-5 text-purple-600" />
                 <span className="text-sm font-medium text-purple-700">
@@ -256,7 +256,7 @@ const CourseHeader = ({ course }) => {
           )}
 
           {/* Subject */}
-          <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+          <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 border border-orange-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaGraduationCap className="w-5 h-5 text-orange-600" />
               <span className="text-sm font-medium text-orange-700">

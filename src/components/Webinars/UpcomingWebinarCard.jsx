@@ -95,8 +95,8 @@ const UpcomingWebinarCard = ({ item }) => {
   }, [item?.educatorID, item?.educatorId, educatorName]);
 
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
-      <div className="relative h-40 bg-gray-100 rounded-xl mb-4">
+    <div className="group relative flex flex-col rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
+      <div className="relative h-40 bg-gray-100 dark:bg-gray-800 rounded-xl mb-4">
         <Image
           src={item.image || "/images/placeholders/1.svg"}
           alt={item.title || "Webinar"}
@@ -121,64 +121,64 @@ const UpcomingWebinarCard = ({ item }) => {
         )}
       </div>
       <div className="flex flex-col grow">
-        <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight line-clamp-2">
+        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2 leading-tight line-clamp-2">
           {item.title || "Webinar Title"}
         </h3>
 
         {item.description && (
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
             {item.description}
           </p>
         )}
 
         <div className="space-y-2 mb-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <FaUser className="w-4 h-4 mr-2 text-blue-600" />
               <span className="font-medium">Educator:</span>
             </div>
-            <span className="text-sm text-gray-800 font-medium truncate ml-2">
+            <span className="text-sm text-gray-800 dark:text-gray-200 font-medium truncate ml-2">
               {educatorName}
             </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <FaClock className="mr-2 text-blue-600" />
               <span className="font-medium">Duration:</span>
             </div>
-            <span className="text-sm text-gray-800 font-medium">
+            <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
               {item.duration ? `${item.duration} hours` : "N/A"}
             </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <MdCalendarToday className="mr-2 text-blue-600" />
               <span className="font-medium">Date:</span>
             </div>
-            <span className="text-sm text-gray-800 font-medium">
+            <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
               {webinarDate}
             </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
               <FaClock className="mr-2 text-blue-600" />
               <span className="font-medium">Time:</span>
             </div>
-            <span className="text-sm text-gray-800 font-medium">
+            <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
               {webinarTime}
             </span>
           </div>
 
           {item.subject && (
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                 <MdSchool className="w-4 h-4 mr-2 text-blue-600" />
                 <span className="font-medium">Subject:</span>
               </div>
-              <span className="text-sm text-gray-800 font-medium capitalize">
+              <span className="text-sm text-gray-800 dark:text-gray-200 font-medium capitalize">
                 {Array.isArray(item.subject)
                   ? item.subject.join(", ")
                   : item.subject}
@@ -188,9 +188,9 @@ const UpcomingWebinarCard = ({ item }) => {
         </div>
 
         {item.seatLimit && (
-          <div className="flex items-center justify-between mb-4 p-2 bg-gray-50 rounded">
-            <span className="text-sm text-gray-600">Available Seats:</span>
-            <span className="text-sm font-medium text-gray-800">
+          <div className="flex items-center justify-between mb-4 p-2 bg-gray-50 dark:bg-gray-800 rounded">
+            <span className="text-sm text-gray-600 dark:text-gray-400">Available Seats:</span>
+            <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
               {item.seatsAvailable ||
                 item.seatLimit - (item.enrolledCount || 0)}{" "}
               / {item.seatLimit}
@@ -198,7 +198,7 @@ const UpcomingWebinarCard = ({ item }) => {
           </div>
         )}
 
-        <div className="border-t border-gray-100 pt-4 mb-4">
+        <div className="border-t border-gray-100 dark:border-gray-800 pt-4 mb-4">
           <div className="flex items-center space-x-2">
             <div className="flex items-baseline space-x-2">
               <span className="text-xl font-bold text-blue-600">

@@ -291,7 +291,7 @@ const CourseCard = ({ course, meta }) => {
   const educatorName = getEducatorName(courseSource);
 
   const statusStyles = {
-    ongoing: "bg-white/90 text-blue-700 border border-blue-200",
+    ongoing: "bg-white dark:bg-gray-900/90 text-blue-700 border border-blue-200",
     upcoming: "bg-orange-100 text-orange-700 border border-orange-200",
     completed: "bg-green-100 text-green-700 border border-green-200",
   };
@@ -304,7 +304,7 @@ const CourseCard = ({ course, meta }) => {
       : "Continue Learning";
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div className="relative h-44 w-full overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
@@ -324,21 +324,21 @@ const CourseCard = ({ course, meta }) => {
       </div>
 
       <div className="flex flex-col flex-1 p-5 gap-3">
-        <div className="flex flex-wrap gap-2 text-xs font-semibold text-gray-700">
+        <div className="flex flex-wrap gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
           {course?.courseClass && (
-            <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700">
+            <span className="px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-700">
               Class {course.courseClass}
             </span>
           )}
           {course?.subject && (
-            <span className="px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 capitalize">
+            <span className="px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-700 capitalize">
               {Array.isArray(course.subject)
                 ? course.subject.join(", ")
                 : course.subject}
             </span>
           )}
           {course?.specialization && (
-            <span className="px-2.5 py-1 rounded-full bg-orange-50 text-orange-700">
+            <span className="px-2.5 py-1 rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-700">
               {Array.isArray(course.specialization)
                 ? course.specialization.join(", ")
                 : course.specialization}
@@ -347,13 +347,13 @@ const CourseCard = ({ course, meta }) => {
         </div>
 
         <div className="space-y-1">
-          <h3 className="text-lg font-bold text-gray-900 leading-tight line-clamp-2">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 leading-tight line-clamp-2">
             {course?.title || "Course Title"}
           </h3>
-          <p className="text-sm text-gray-500">By {educatorName}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">By {educatorName}</p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm text-gray-700">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm text-gray-700 dark:text-gray-300">
           <div className="flex items-center gap-2">
             <FiPlayCircle className="text-blue-600" />
             <span>{displayVideos || displayLessons || 0} Videos</span>
@@ -365,17 +365,17 @@ const CourseCard = ({ course, meta }) => {
           
          
           <div className="flex items-center gap-2">
-            <FiCalendar className="text-gray-500" />
+            <FiCalendar className="text-gray-500 dark:text-gray-400" />
             <span>{startDate || "Started"}</span>
           </div>
         </div>
 
         <div className="space-y-2 mt-auto">
-          <div className="flex items-center justify-between text-xs text-gray-600">
+          <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
             <span>{progress}% Completed</span>
             <span>{displayLessons || displayVideos || 0} Lessons</span>
           </div>
-          <div className="h-2 w-full rounded-full bg-gray-100 overflow-hidden">
+          <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
             <div
               className="h-full rounded-full bg-linear-to-r from-blue-500 to-indigo-600"
               style={{ width: `${progress}%` }}

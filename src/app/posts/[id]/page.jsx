@@ -80,13 +80,13 @@ const PostDetailsPage = ({ params }) => {
       case "CBSE":
         return "bg-purple-100 text-purple-800 border-purple-300";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-300";
+        return "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600";
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Loading message="Loading post details..." />
       </div>
     );
@@ -94,13 +94,13 @@ const PostDetailsPage = ({ params }) => {
 
   if (error || !post) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8 max-w-md text-center">
           <div className="text-red-500 text-6xl mb-6">📝</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {error || "Post Not Found"}
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
             Unable to load post details. The post may have been removed or
             doesn't exist.
           </p>
@@ -129,9 +129,9 @@ const PostDetailsPage = ({ params }) => {
   const category = specializations?.[0] || "General";
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link
             href="/posts"
@@ -145,9 +145,9 @@ const PostDetailsPage = ({ params }) => {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <article className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <article className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
           {/* Post Header */}
-          <div className="p-8 border-b border-gray-200">
+          <div className="p-8 border-b border-gray-200 dark:border-gray-700">
             {/* Categories/Tags */}
             <div className="flex flex-wrap gap-2 mb-4">
               {specializations &&
@@ -165,12 +165,12 @@ const PostDetailsPage = ({ params }) => {
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6">
               {title}
             </h1>
 
             {/* Meta Information */}
-            <div className="flex flex-wrap items-center gap-6 text-gray-600">
+            <div className="flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400">
               {/* Author */}
               <div className="flex items-center gap-3">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0">
@@ -188,12 +188,12 @@ const PostDetailsPage = ({ params }) => {
                 <div>
                   <div className="flex items-center gap-2 text-sm">
                     <FaUser className="text-blue-600" />
-                    <span className="font-semibold text-gray-900">
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">
                       {educator?.fullName || "Educator"}
                     </span>
                   </div>
                   {educator?.username && (
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                       @{educator.username}
                     </div>
                   )}
@@ -212,10 +212,10 @@ const PostDetailsPage = ({ params }) => {
           <div className="p-8">
             {/* Subjects */}
             {subjects && Array.isArray(subjects) && subjects.length > 0 && (
-              <div className="mb-8 p-4 bg-blue-50 rounded-lg">
+              <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <FaBook className="text-blue-600" />
-                  <h3 className="font-semibold text-gray-900">
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">
                     Subjects Covered
                   </h3>
                 </div>
@@ -223,7 +223,7 @@ const PostDetailsPage = ({ params }) => {
                   {subjects.map((subject, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 bg-white text-gray-700 rounded-md text-sm font-medium capitalize"
+                      className="px-3 py-1 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium capitalize"
                     >
                       {subject}
                     </span>
@@ -234,16 +234,16 @@ const PostDetailsPage = ({ params }) => {
 
             {/* Description */}
             <div className="prose prose-lg max-w-none">
-              <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+              <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                 {description}
               </div>
             </div>
           </div>
 
           {/* Post Footer */}
-          <div className="p-8 bg-gray-50 border-t border-gray-200">
+          <div className="p-8 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 dark:text-gray-400">
                 {updatedAt && createdAt !== updatedAt && (
                   <span>Last updated: {formatDate(updatedAt)}</span>
                 )}
@@ -264,20 +264,20 @@ const PostDetailsPage = ({ params }) => {
         </article>
 
         {/* Related Info */}
-        <div className="mt-8 bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-md p-6">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             About the Post
           </h3>
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-600 mb-1">Specialization</div>
-              <div className="font-semibold text-gray-900">
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Specialization</div>
+              <div className="font-semibold text-gray-900 dark:text-gray-100">
                 {specializations?.join(", ") || "General"}
               </div>
             </div>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-600 mb-1">Subjects</div>
-              <div className="font-semibold text-gray-900 capitalize">
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Subjects</div>
+              <div className="font-semibold text-gray-900 dark:text-gray-100 capitalize">
                 {subjects?.join(", ") || "Multiple"}
               </div>
             </div>

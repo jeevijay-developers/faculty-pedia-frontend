@@ -48,7 +48,7 @@ const WebinarDetails = ({ id }) => {
   //   return (
   //     <div className="max-w-7xl mx-auto px-4 py-8">
   //       <div className="text-center">
-  //         <p className="text-gray-500">No webinar data available</p>
+  //         <p className="text-gray-500 dark:text-gray-400">No webinar data available</p>
   //       </div>
   //     </div>
   //   );
@@ -89,10 +89,10 @@ const WebinarDetails = ({ id }) => {
                 {webinarData.duration || 60} minutes
               </span>
             </div>
-            <h1 className="text-4xl font-bold capitalize text-gray-900">
+            <h1 className="text-4xl font-bold capitalize text-gray-900 dark:text-gray-100">
               {webinarData.title || "Webinar Title"}
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               {webinarData.description?.short || "No description available"}
             </p>
           </div>
@@ -121,14 +121,14 @@ const WebinarDetails = ({ id }) => {
                 <div className="p-2 bg-blue-500 rounded-lg">
                   <FaCalendarAlt className="text-white text-lg" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   Date & Time
                 </h3>
               </div>
-              <p className="text-gray-700 font-medium">
+              <p className="text-gray-700 dark:text-gray-300 font-medium">
                 {formatDate(webinarData.date)}
               </p>
-              <p className="text-gray-600">{formatTime(webinarData.time)}</p>
+              <p className="text-gray-600 dark:text-gray-400">{formatTime(webinarData.time)}</p>
             </div>
 
             <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-lg">
@@ -136,15 +136,15 @@ const WebinarDetails = ({ id }) => {
                 <div className="p-2 bg-green-500 rounded-lg">
                   <FaUsers className="text-white text-lg" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   Enrollment
                 </h3>
               </div>
-              <p className="text-gray-700 font-medium">
+              <p className="text-gray-700 dark:text-gray-300 font-medium">
                 {webinarData.enrolledStudents?.length || 0} /{" "}
                 {webinarData.seatLimit || 0} enrolled
               </p>
-              <div className="w-full bg-gray-200 rounded-full h-3 mt-3">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mt-3">
                 <div
                   className="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-500 ease-out"
                   style={{
@@ -165,10 +165,10 @@ const WebinarDetails = ({ id }) => {
             data-aos-delay="300"
             className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-xl shadow-lg"
           >
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
               About This Webinar
             </h2>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
               {webinarData.description?.long ||
                 "No detailed description available."}
             </p>
@@ -181,7 +181,7 @@ const WebinarDetails = ({ id }) => {
               data-aos-delay="400"
               className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl shadow-lg"
             >
-              <h2 className="text-2xl font-bold mb-6 text-gray-800">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200">
                 Webinar Resources
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
@@ -189,7 +189,7 @@ const WebinarDetails = ({ id }) => {
                   <Link
                     key={index}
                     href={asset.link}
-                    className="flex items-center space-x-3 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+                    className="flex items-center space-x-3 p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
                   >
                     {asset.name === "VIDEO" ? (
                       <FaPlayCircle className="text-red-500 text-2xl" />
@@ -197,10 +197,10 @@ const WebinarDetails = ({ id }) => {
                       <FaFileAlt className="text-blue-500 text-2xl" />
                     )}
                     <div>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
                         {asset.name === "VIDEO" ? "Recording" : "Document"}
                       </p>
-                      <p className="text-sm text-gray-600">Click to access</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Click to access</p>
                     </div>
                     <FaDownload className="text-gray-400 ml-auto" />
                   </Link>
@@ -224,44 +224,44 @@ const WebinarDetails = ({ id }) => {
                 <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   ₹{webinarData.fees || 0}
                 </span>
-                <p className="text-gray-600 mt-2">One-time payment</p>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">One-time payment</p>
               </div>
 
               <div className="space-y-3">
                 <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl  hover:cursor-pointer">
                   🚀 Enroll Now
                 </button>
-                {/* <button className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300">
+                {/* <button className="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-xl font-semibold hover:bg-gray-200 dark:bg-gray-700 transition-all duration-300">
                   💬 Ask Questions
                 </button> */}
               </div>
 
-              <div className="pt-4 bg-gray-50 rounded-lg p-4 space-y-3">
+              <div className="pt-4 bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 flex items-center">
+                  <span className="text-gray-600 dark:text-gray-400 flex items-center">
                     <FaClock className="w-4 h-4 mr-2 text-blue-500" />
                     Duration:
                   </span>
-                  <span className="font-semibold text-gray-800">
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">
                     {webinarData.duration || 60} mins
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 flex items-center">
+                  <span className="text-gray-600 dark:text-gray-400 flex items-center">
                     <FaUsers className="w-4 h-4 mr-2 text-green-500" />
                     Seats Available:
                   </span>
-                  <span className="font-semibold text-gray-800">
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">
                     {(webinarData.seatLimit || 0) -
                       (webinarData.enrolledStudents?.length || 0)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600 flex items-center">
+                  <span className="text-gray-600 dark:text-gray-400 flex items-center">
                     <FaVideo className="w-4 h-4 mr-2 text-purple-500" />
                     Type:
                   </span>
-                  <span className="font-semibold text-gray-800">
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">
                     {webinarData.webinarType || "Live"}
                   </span>
                 </div>
@@ -275,40 +275,40 @@ const WebinarDetails = ({ id }) => {
             data-aos-delay="100"
             className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-lg ring-1 ring-indigo-100"
           >
-            <h3 className="text-lg font-bold mb-4 text-gray-800 flex items-center">
+            <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
               <span className="text-2xl mr-2">✨</span>
               What You'll Get
             </h3>
             <ul className="space-y-4">
-              <li className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
+              <li className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <FaVideo className="text-blue-600 w-4 h-4" />
                 </div>
-                <span className="text-gray-700 font-medium">
+                <span className="text-gray-700 dark:text-gray-300 font-medium">
                   Live interactive session
                 </span>
               </li>
-              <li className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
+              <li className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <div className="p-2 bg-green-100 rounded-lg">
                   <FaDownload className="text-green-600 w-4 h-4" />
                 </div>
-                <span className="text-gray-700 font-medium">
+                <span className="text-gray-700 dark:text-gray-300 font-medium">
                   Downloadable resources
                 </span>
               </li>
-              <li className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
+              <li className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <div className="p-2 bg-red-100 rounded-lg">
                   <FaPlayCircle className="text-red-600 w-4 h-4" />
                 </div>
-                <span className="text-gray-700 font-medium">
+                <span className="text-gray-700 dark:text-gray-300 font-medium">
                   Session recording
                 </span>
               </li>
-              <li className="flex items-center space-x-3 p-2 bg-white rounded-lg shadow-sm">
+              <li className="flex items-center space-x-3 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <div className="p-2 bg-purple-100 rounded-lg">
                   <FaUsers className="text-purple-600 w-4 h-4" />
                 </div>
-                <span className="text-gray-700 font-medium">
+                <span className="text-gray-700 dark:text-gray-300 font-medium">
                   Q&A with expert
                 </span>
               </li>

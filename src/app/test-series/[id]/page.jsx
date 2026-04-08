@@ -68,19 +68,19 @@ export default function TestSeriesDetailsPage({ params }) {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
           url={"/images/placeholders/1.svg"}
           title={"Test Series Details"}
           subtitle={"Unable to load test series information"}
         />
         <div className="max-w-4xl mx-auto p-4 mt-8">
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8 text-center">
             <div className="text-red-500 text-6xl mb-6">⚠️</div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Failed to Load Test Series
             </h1>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">{error}</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">{error}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={handleRetry}
@@ -90,7 +90,7 @@ export default function TestSeriesDetailsPage({ params }) {
               </button>
               <Link
                 href="/test-series"
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 transition-colors font-medium"
               >
                 Back to Test Series
               </Link>
@@ -104,19 +104,19 @@ export default function TestSeriesDetailsPage({ params }) {
   // No test series data
   if (!testSeries) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
           url={"/images/placeholders/1.svg"}
           title={"Test Series Details"}
           subtitle={"Test series not found"}
         />
         <div className="max-w-4xl mx-auto p-4 mt-8">
-          <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8 text-center">
             <div className="text-gray-400 text-6xl mb-6">📚</div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
               Test Series Not Found
             </h1>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
               The test series you're looking for doesn't exist or has been
               removed.
             </p>
@@ -133,7 +133,7 @@ export default function TestSeriesDetailsPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       <Banner
         url={testSeries.image || "/images/placeholders/1.svg"}
         title={testSeries.title || "Test Series"}

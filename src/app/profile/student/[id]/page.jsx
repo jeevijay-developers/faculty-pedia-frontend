@@ -105,7 +105,7 @@ const StudentDashboardPage = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <StudentDashboard
         studentData={studentData}
         loading={loading}

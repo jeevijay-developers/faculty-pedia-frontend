@@ -184,7 +184,7 @@ const OverviewTab = ({
           icon={FiBookOpen}
           title="Enrolled Courses"
           value={totalCourses}
-          bgColor="bg-blue-50"
+          bgColor="bg-blue-50 dark:bg-blue-900/20"
           borderColor="border-blue-100"
           iconColor="text-blue-600"
         />
@@ -192,7 +192,7 @@ const OverviewTab = ({
           icon={FiTarget}
           title="Tests Taken"
           value={totalResults}
-          bgColor="bg-green-50"
+          bgColor="bg-green-50 dark:bg-green-900/20"
           borderColor="border-green-100"
           iconColor="text-green-600"
         />
@@ -200,7 +200,7 @@ const OverviewTab = ({
           icon={FiUsers}
           title="Following"
           value={followingEducatorsLength}
-          bgColor="bg-purple-50"
+          bgColor="bg-purple-50 dark:bg-purple-900/20"
           borderColor="border-purple-100"
           iconColor="text-purple-600"
         />
@@ -208,10 +208,10 @@ const OverviewTab = ({
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Recent Activity */}
-        <div className="xl:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="p-6 border-b border-gray-100">
+        <div className="xl:col-span-2 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+          <div className="p-6 border-b border-gray-100 dark:border-gray-800">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                 Recent Tests
               </h3>
               {enrolledTests.length > 5 && (
@@ -228,7 +228,7 @@ const OverviewTab = ({
             {recentResults.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-sm font-semibold text-gray-800">
+                  <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                     Recent Test Performance
                   </p>
                   <button
@@ -246,31 +246,31 @@ const OverviewTab = ({
                     return (
                       <div
                         key={item.testId || idx}
-                        className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-3 py-3"
+                        className="flex items-center justify-between rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 px-3 py-3"
                       >
                         <div className="min-w-0">
                           <p
-                            className="text-sm font-semibold text-gray-900 truncate"
+                            className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate"
                             title={item.testTitle || "Test"}
                           >
                             {item.testTitle || "Test"}
                           </p>
-                          <p className="text-xs text-gray-500">{dateLabel}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{dateLabel}</p>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <div className="text-right">
-                            <p className="font-semibold text-gray-900">
+                            <p className="font-semibold text-gray-900 dark:text-gray-100">
                               {item.obtainedScore}/{item.totalScore}
                             </p>
-                            <p className="text-xs text-gray-500">Score</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">Score</p>
                           </div>
                           <div className="text-right">
                             <p className="font-semibold text-emerald-700">
                               {item.percentage}%
                             </p>
-                            <p className="text-xs text-gray-500">Accuracy</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">Accuracy</p>
                           </div>
-                          <div className="hidden sm:flex gap-2 text-xs text-gray-600">
+                          <div className="hidden sm:flex gap-2 text-xs text-gray-600 dark:text-gray-400">
                             <span>✓ {item.totalCorrect}</span>
                             <span>✕ {item.totalIncorrect}</span>
                           </div>
@@ -290,7 +290,7 @@ const OverviewTab = ({
                   return (
                     <div
                       key={test._id || index}
-                      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors duration-200"
+                      className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-800 hover:bg-gray-100 dark:bg-gray-800 transition-colors duration-200"
                     >
                       <div className="flex items-center">
                         <div className="p-2 rounded-lg bg-blue-100 border border-blue-200">
@@ -304,7 +304,7 @@ const OverviewTab = ({
                             const slug = series?.slug;
                             if (!title) {
                               return (
-                                <p className="text-sm font-semibold text-gray-900" title="Test series unavailable">
+                                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100" title="Test series unavailable">
                                   Test series unavailable
                                 </p>
                               );
@@ -319,7 +319,7 @@ const OverviewTab = ({
                               </Link>
                             ) : (
                               <p
-                                className="text-sm font-semibold text-gray-900"
+                                className="text-sm font-semibold text-gray-900 dark:text-gray-100"
                                 title={title}
                               >
                                 {title}
@@ -329,7 +329,7 @@ const OverviewTab = ({
                           {series && (
                             <div className="mt-1 flex items-center gap-2">
                               {series.subject && (
-                                <span className="inline-block px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 text-[10px] font-medium uppercase tracking-wide">
+                                <span className="inline-block px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-[10px] font-medium uppercase tracking-wide">
                                   {series.subject}
                                 </span>
                               )}
@@ -343,7 +343,7 @@ const OverviewTab = ({
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-semibold text-gray-900 mb-1">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
                           {series?.noOfTests
                             ? `${series.noOfTests} Tests`
                             : "Test Series"}
@@ -361,7 +361,7 @@ const OverviewTab = ({
                                   ? "bg-green-100 text-green-700"
                                   : test.status === "in-progress"
                                   ? "bg-blue-100 text-blue-700"
-                                  : "bg-gray-100 text-gray-700"
+                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
                               }`}
                             >
                               {test.status}
@@ -375,12 +375,12 @@ const OverviewTab = ({
               </div>
             ) : recentResults.length === 0 ? (
               <div className="text-center py-12 space-y-3">
-                <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
                   <FiAward className="w-8 h-8 text-gray-400" />
                 </div>
                 {hasEnrolledTests ? (
                   <div className="space-y-2">
-                    <p className="text-gray-600 font-semibold">
+                    <p className="text-gray-600 dark:text-gray-400 font-semibold">
                       You have enrolled tests ready to start.
                     </p>
                     <button
@@ -393,7 +393,7 @@ const OverviewTab = ({
                   </div>
                 ) : (
                   <>
-                    <p className="text-gray-500 font-medium">
+                    <p className="text-gray-500 dark:text-gray-400 font-medium">
                       No tests enrolled yet
                     </p>
                     <p className="text-sm text-gray-400">
@@ -407,13 +407,13 @@ const OverviewTab = ({
         </div>
 
         {/* Upcoming Live Class */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 h-full flex flex-col">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                 Upcoming Live Class
               </h3>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 Stay on top of your next session
               </p>
             </div>
@@ -428,7 +428,7 @@ const OverviewTab = ({
 
           <div className="p-6 flex-1 flex flex-col">
             {liveLoading ? (
-              <div className="flex items-center gap-3 text-gray-600">
+              <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                 <span className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
                 <span>Loading upcoming classes...</span>
               </div>
@@ -438,7 +438,7 @@ const OverviewTab = ({
               </div>
             ) : nextClass ? (
               <div className="flex flex-col gap-4 flex-1">
-                <div className="flex items-center gap-3 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 w-max">
+                <div className="flex items-center gap-3 rounded-full bg-blue-50 dark:bg-blue-900/20 px-3 py-1 text-xs font-semibold text-blue-700 w-max">
                   <FiVideo className="h-4 w-4" />
                   Upcoming session
                 </div>
@@ -448,8 +448,8 @@ const OverviewTab = ({
                   onClick={() => onTabChange?.("liveclasses")}
                   className="text-left"
                 >
-                  <div className="flex items-center gap-4 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 hover:bg-gray-100 transition-colors">
-                    <div className="shrink-0 h-14 w-14 rounded-full bg-blue-50 border border-blue-100 flex flex-col items-center justify-center text-blue-700">
+                  <div className="flex items-center gap-4 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 px-4 py-3 hover:bg-gray-100 dark:bg-gray-800 transition-colors">
+                    <div className="shrink-0 h-14 w-14 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-100 flex flex-col items-center justify-center text-blue-700">
                       <span className="text-[11px] font-semibold leading-tight uppercase">
                         {formatDateTime(nextClass?.classTiming, {
                           hour: "2-digit",
@@ -464,10 +464,10 @@ const OverviewTab = ({
                       </span>
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
                         {nextClass?.liveClassTitle || "Untitled live class"}
                       </p>
-                      <p className="text-xs text-gray-500 truncate">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                         {[
                           getInstructor(nextClass) || "Instructor TBD",
                           getLocation(nextClass) || "Online",
@@ -506,11 +506,11 @@ const OverviewTab = ({
               </div>
             ) : (
               <div className="text-center py-6">
-                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
+                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
                   <FiCalendar className="h-6 w-6 text-gray-400" />
                 </div>
-                <p className="text-gray-800 font-semibold">No classes today</p>
-                <p className="text-sm text-gray-500">
+                <p className="text-gray-800 dark:text-gray-200 font-semibold">No classes today</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   You are all caught up. Check your schedule for upcoming
                   sessions.
                 </p>

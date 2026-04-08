@@ -9,15 +9,15 @@ const QuestionSidebar = ({
   return (
     <div className="xl:col-span-1 order-1 xl:order-2">
       {/* Mobile Question Navigator */}
-      <div className="xl:hidden bg-white/80 backdrop-blur-lg rounded-xl shadow-lg border border-gray-200/50 p-4 mb-4">
+      <div className="xl:hidden bg-white dark:bg-gray-900/80 backdrop-blur-lg rounded-xl shadow-lg border border-gray-200 dark:border-gray-700/50 p-4 mb-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-gray-900">Progress</h3>
-          <span className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+          <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100">Progress</h3>
+          <span className="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
             {Object.values(answers).filter((a) => a.submitted).length}/
             {testData.questions.length}
           </span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div
             className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-300"
             style={{
@@ -32,12 +32,12 @@ const QuestionSidebar = ({
       </div>
 
       {/* Desktop Question Grid */}
-      <div className="hidden xl:block bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/50 p-6 sticky top-32">
+      <div className="hidden xl:block bg-white dark:bg-gray-900/80 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700/50 p-6 sticky top-32">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-bold text-gray-900">Questions</h3>
+          <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Questions</h3>
           <div className="flex items-center space-x-1">
             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className="text-xs text-gray-600">
+            <span className="text-xs text-gray-600 dark:text-gray-400">
               {Object.values(answers).filter((a) => a.submitted).length}/
               {testData.questions.length}
             </span>
@@ -58,7 +58,7 @@ const QuestionSidebar = ({
                     ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
                     : answer.selectedOption
                     ? "bg-gradient-to-r from-yellow-400 to-orange-400 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700"
                 }`}
               >
                 {index + 1}
@@ -69,23 +69,23 @@ const QuestionSidebar = ({
 
         {/* Legend */}
         <div className="mt-8 space-y-3">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">Legend</h4>
+          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Legend</h4>
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
               <div className="w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg"></div>
-              <span className="text-sm text-gray-600">Submitted</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Submitted</span>
             </div>
             <div className="flex items-center space-x-3">
               <div className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg"></div>
-              <span className="text-sm text-gray-600">Answered</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Answered</span>
             </div>
             <div className="flex items-center space-x-3">
               <div className="w-4 h-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg"></div>
-              <span className="text-sm text-gray-600">Current</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Current</span>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="w-4 h-4 bg-gray-100 rounded-lg border"></div>
-              <span className="text-sm text-gray-600">Not Visited</span>
+              <div className="w-4 h-4 bg-gray-100 dark:bg-gray-800 rounded-lg border"></div>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Not Visited</span>
             </div>
           </div>
         </div>

@@ -6,16 +6,16 @@ import { formatDate } from '@/utils/dateFormatter';
 const WorkExperienceSection = ({ workExperience }) => {
   if (!workExperience || workExperience.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Work Experience</h2>
-        <p className="text-gray-500 text-sm sm:text-base">No work experience information available.</p>
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">Work Experience</h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">No work experience information available.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
-      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Work Experience</h2>
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">Work Experience</h2>
       
       <div className="space-y-4 sm:space-y-6">
         {workExperience.map((exp, index) => (
@@ -26,20 +26,20 @@ const WorkExperienceSection = ({ workExperience }) => {
             {/* Timeline dot */}
             <div className="absolute -left-2 top-1 w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 rounded-full border-2 border-white"></div>
             
-            <div className="bg-gray-50 rounded-lg p-3 sm:p-4 md:p-6">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 sm:p-4 md:p-6">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-3">
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 flex items-center gap-2 mb-1">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2 mb-1">
                     <FaBriefcase className="text-blue-600 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                     <span className="truncate">{exp.title}</span>
                   </h3>
-                  <p className="text-base sm:text-lg text-gray-700 flex items-center gap-2">
-                    <FaBuilding className="text-gray-500 w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <FaBuilding className="text-gray-500 dark:text-gray-400 w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                     <span className="truncate">{exp.company}</span>
                   </p>
                 </div>
                 
-                <div className="flex items-center gap-2 text-gray-600 mt-2 md:mt-0 md:ml-4 flex-shrink-0">
+                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mt-2 md:mt-0 md:ml-4 flex-shrink-0">
                   <FaCalendarAlt className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="text-xs sm:text-sm font-medium">
                     {formatDate(exp.startDate, 'short')} - {exp.endDate ? formatDate(exp.endDate, 'short') : 'Present'}
@@ -48,7 +48,7 @@ const WorkExperienceSection = ({ workExperience }) => {
               </div>
               
               {/* Duration calculation */}
-              <div className="text-xs sm:text-sm text-gray-500 mb-2">
+              <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-2">
                 {(() => {
                   const start = new Date(exp.startDate);
                   const end = exp.endDate ? new Date(exp.endDate) : new Date();
@@ -68,7 +68,7 @@ const WorkExperienceSection = ({ workExperience }) => {
               </div>
               
               {exp.description && (
-                <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base leading-relaxed">
                   {exp.description}
                 </p>
               )}

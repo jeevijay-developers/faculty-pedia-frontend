@@ -121,9 +121,9 @@ const ViewProfile = ({ educatorData }) => {
   if (!educatorData) {
     console.error("ViewProfile: educatorData is null or undefined");
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-        <div className="bg-white rounded-lg shadow p-8 text-center max-w-md">
-          <p className="text-lg font-semibold text-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center max-w-md">
+          <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
             No educator data available
           </p>
         </div>
@@ -870,33 +870,33 @@ const ViewProfile = ({ educatorData }) => {
   );
 
   return (
-    <div className="w-full min-h-screen bg-[#f6f6f8]">
+    <div className="w-full min-h-screen bg-[#f6f6f8] dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
         {/* Breadcrumbs */}
-        <div className="flex flex-wrap items-center gap-2 text-sm text-[#636388] mb-6 font-medium">
-          <a className="hover:text-[#231fe5] transition-colors" href="/">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-[#636388] dark:text-gray-400 mb-6 font-medium">
+          <a className="hover:text-[#231fe5] dark:hover:text-blue-400 transition-colors" href="/">
             Home
           </a>
           <span className="text-gray-400">›</span>
           <a
-            className="hover:text-[#231fe5] transition-colors"
+            className="hover:text-[#231fe5] dark:hover:text-blue-400 transition-colors"
             href="/educators"
           >
             Educators
           </a>
           <span className="text-gray-400">›</span>
-          <span className="text-[#111118]">{`${educatorData.firstName} ${educatorData.lastName}`}</span>
+          <span className="text-[#111118] dark:text-gray-100">{`${educatorData.firstName} ${educatorData.lastName}`}</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
           {/* LEFT COLUMN (Profile & About) */}
           <div className="lg:col-span-4 flex flex-col gap-6">
             {/* Profile Header Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col items-center text-center relative overflow-hidden group">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 flex flex-col items-center text-center relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-24 bg-linear-to-r from-blue-50 to-indigo-50 opacity-50 z-0"></div>
 
               <div className="relative z-10 mt-4 mb-4">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-md ring-4 ring-white">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-md ring-4 ring-white dark:ring-gray-800">
                   <Image
                     src={avatarSrc}
                     alt={`${educatorData.firstName} ${educatorData.lastName}`}
@@ -907,26 +907,26 @@ const ViewProfile = ({ educatorData }) => {
                     priority
                   />
                   <div
-                    className="absolute bottom-1 right-1 bg-green-500 border-2 border-white rounded-full w-4 h-4 shadow-sm"
+                    className="absolute bottom-1 right-1 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full w-4 h-4 shadow-sm"
                     title="Online"
                   ></div>
                 </div>
               </div>
 
               <div className="relative z-10 flex flex-col items-center w-full">
-                <h1 className="text-[#111118] text-2xl font-bold tracking-tight">
+                <h1 className="text-[#111118] dark:text-gray-100 text-2xl font-bold tracking-tight">
                   {`${educatorData.firstName} ${educatorData.lastName}`}
                 </h1>
-                <p className="text-[#636388] text-sm font-medium mt-1">
+                <p className="text-[#636388] dark:text-gray-400 text-sm font-medium mt-1">
                   @{educatorData.username || "educator"}
                 </p>
 
-                <div className="flex items-center gap-1 mt-3 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-100">
+                <div className="flex items-center gap-1 mt-3 bg-yellow-50 dark:bg-yellow-900/30 px-2.5 py-1 rounded-full border border-yellow-100 dark:border-yellow-800">
                   <IoStarSharp className="text-yellow-500 text-[18px]" />
-                  <span className="text-[#111118] text-sm font-bold">
+                  <span className="text-[#111118] dark:text-gray-100 text-sm font-bold">
                     {ratingAverageSafe.toFixed(1)}
                   </span>
-                  <span className="text-[#636388] text-xs font-normal">
+                  <span className="text-[#636388] dark:text-gray-400 text-xs font-normal">
                     ({ratingCountSafe} reviews)
                   </span>
                 </div>
@@ -978,7 +978,7 @@ const ViewProfile = ({ educatorData }) => {
                     )}
                   </button>
 
-                  <div className="text-[#636388] text-xs font-medium">
+                  <div className="text-[#636388] dark:text-gray-400 text-xs font-medium">
                     {safeNumber(followerCount, 0).toLocaleString()} Followers
                   </div>
                 </div>
@@ -986,18 +986,18 @@ const ViewProfile = ({ educatorData }) => {
             </div>
 
             {/* About Section Card */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-[#111118] text-lg font-bold mb-4 flex items-center gap-2">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+              <h2 className="text-[#111118] dark:text-gray-100 text-lg font-bold mb-4 flex items-center gap-2">
                 <span className="text-[#231fe5] text-[22px]">ℹ️</span>
                 About Me
               </h2>
-              <div className="prose prose-sm text-[#636388] font-normal leading-relaxed mb-6">
+              <div className="prose prose-sm text-[#636388] dark:text-gray-400 dark:prose-invert font-normal leading-relaxed mb-6">
                 <p>{educatorData.bio || educatorData.description}</p>
               </div>
 
               <div className="flex flex-col gap-4">
                 <div>
-                  <p className="text-xs font-semibold text-[#111118] uppercase tracking-wider mb-2">
+                  <p className="text-xs font-semibold text-[#111118] dark:text-gray-100 uppercase tracking-wider mb-2">
                     Specialization
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -1005,13 +1005,13 @@ const ViewProfile = ({ educatorData }) => {
                       educatorData.specialization.map((spec, idx) => (
                         <span
                           key={idx}
-                          className="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium"
+                          className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium"
                         >
                           {spec}
                         </span>
                       ))
                     ) : educatorData.specialization ? (
-                      <span className="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium">
+                      <span className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium">
                         {educatorData.specialization}
                       </span>
                     ) : null}
@@ -1019,7 +1019,7 @@ const ViewProfile = ({ educatorData }) => {
                       educatorData.subject.map((subj, idx) => (
                         <span
                           key={`subj-${idx}`}
-                          className="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium"
+                          className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-medium"
                         >
                           {subj}
                         </span>
@@ -1028,12 +1028,12 @@ const ViewProfile = ({ educatorData }) => {
                 </div>
 
                 <div>
-                  <p className="text-xs font-semibold text-[#111118] uppercase tracking-wider mb-2">
+                  <p className="text-xs font-semibold text-[#111118] dark:text-gray-100 uppercase tracking-wider mb-2">
                     Experience
                   </p>
-                  <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
-                    <FaGraduationCap className="text-gray-500 w-4.5 h-4.5" />
-                    <span className="text-sm text-[#111118] font-medium">
+                  <div className="inline-flex items-center gap-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1.5 rounded-lg">
+                    <FaGraduationCap className="text-gray-500 dark:text-gray-400 w-4.5 h-4.5" />
+                    <span className="text-sm text-[#111118] dark:text-gray-100 font-medium">
                       {safeNumber(educatorData.yoe, 0)}+ Years
                       Experience
                     </span>
@@ -1044,8 +1044,8 @@ const ViewProfile = ({ educatorData }) => {
 
             {/* Rating Section for Students */}
             {canRate && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 className="text-[#111118] text-lg font-bold mb-4">
+              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+                <h3 className="text-[#111118] dark:text-gray-100 text-lg font-bold mb-4">
                   Rate This Educator
                 </h3>
                 <div className="flex items-center gap-4">
@@ -1075,7 +1075,7 @@ const ViewProfile = ({ educatorData }) => {
                       </button>
                     ))}
                   </div>
-                  <span className="text-sm text-[#636388]">
+                  <span className="text-sm text-[#636388] dark:text-gray-400">
                     {isSubmittingRating
                       ? "Submitting..."
                       : userRating
@@ -1087,13 +1087,13 @@ const ViewProfile = ({ educatorData }) => {
             )}
 
             {/* Enrolled Item Reviews */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                 <div>
-                  <h3 className="text-[#111118] text-lg font-bold">
+                  <h3 className="text-[#111118] dark:text-gray-100 text-lg font-bold">
                    Students Feedback
                   </h3>
-                  <p className="text-sm text-[#636388]">
+                  <p className="text-sm text-[#636388] dark:text-gray-400">
                     Feedback from students enrolled in this educator's content
                   </p>
                 </div>
@@ -1120,11 +1120,11 @@ const ViewProfile = ({ educatorData }) => {
               )}
 
               {itemReviewsLoading ? (
-                <div className="py-6 text-center text-sm text-[#636388]">
+                <div className="py-6 text-center text-sm text-[#636388] dark:text-gray-400">
                   Loading reviews...
                 </div>
               ) : itemReviews.length === 0 ? (
-                <div className="py-6 text-center text-sm text-[#636388]">
+                <div className="py-6 text-center text-sm text-[#636388] dark:text-gray-400">
                   No reviews yet. Be the first to share your experience.
                 </div>
               ) : (
@@ -1138,15 +1138,15 @@ const ViewProfile = ({ educatorData }) => {
                       return (
                         <div
                           key={`${review.itemType}-${review._id || review.itemId}`}
-                          className="min-w-70 max-w-[320px] bg-white border border-gray-100 rounded-lg p-4 shadow-sm"
+                          className="min-w-70 max-w-[320px] bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg p-4 shadow-sm"
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100 capitalize">
+                            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-700 border border-blue-100 capitalize">
                               {review.itemType === "testSeries"
                                 ? "Test Series"
                                 : review.itemType}
                             </span>
-                            <span className="text-xs text-[#636388]">
+                            <span className="text-xs text-[#636388] dark:text-gray-400">
                               {review.createdAt
                                 ? new Date(review.createdAt).toLocaleDateString("en-IN", {
                                     day: "2-digit",
@@ -1156,7 +1156,7 @@ const ViewProfile = ({ educatorData }) => {
                                 : ""}
                             </span>
                           </div>
-                          <p className="text-sm font-semibold text-[#111118] mb-1 line-clamp-2" title={review.itemTitle}>
+                          <p className="text-sm font-semibold text-[#111118] dark:text-gray-100 mb-1 line-clamp-2" title={review.itemTitle}>
                             {review.itemTitle || "Untitled"}
                           </p>
                           <div className="flex items-center gap-1 mb-2">
@@ -1170,20 +1170,20 @@ const ViewProfile = ({ educatorData }) => {
                                 }`}
                               />
                             ))}
-                            <span className="text-xs text-[#636388] ml-1">
+                            <span className="text-xs text-[#636388] dark:text-gray-400 ml-1">
                               {ratingValue.toFixed(1)}
                             </span>
                           </div>
                           {review.reviewText ? (
-                            <p className="text-sm text-[#111118] mb-3 line-clamp-3">
+                            <p className="text-sm text-[#111118] dark:text-gray-100 mb-3 line-clamp-3">
                               {review.reviewText}
                             </p>
                           ) : (
-                            <p className="text-sm text-[#636388] mb-3">
+                            <p className="text-sm text-[#636388] dark:text-gray-400 mb-3">
                               No comment provided.
                             </p>
                           )}
-                          <div className="text-xs text-[#636388] font-semibold">
+                          <div className="text-xs text-[#636388] dark:text-gray-400 font-semibold">
                             — {review.studentName || "Student"}
                           </div>
                         </div>
@@ -1198,7 +1198,7 @@ const ViewProfile = ({ educatorData }) => {
           {/* RIGHT COLUMN (Media, Stats, Experience, Actions) */}
           <div className="lg:col-span-8 flex flex-col gap-6">
             {/* Intro Media Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
               <div className="relative w-full aspect-video bg-linear-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
                 {educatorData.introVideoLink &&
                 extractVimeoId(educatorData.introVideoLink) ? (
@@ -1216,14 +1216,14 @@ const ViewProfile = ({ educatorData }) => {
                     <div className="w-20 h-20 bg-[#231fe5]/10 rounded-full flex items-center justify-center shadow-sm mb-6 border border-[#231fe5]/20">
                       <Video className="w-10 h-10 text-[#231fe5]" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2 text-center text-[#111118]">
+                    <h3 className="text-xl font-semibold mb-2 text-center text-[#111118] dark:text-gray-100">
                       Intro Video of {educatorData.firstName}{" "}
                       {educatorData.lastName}
                     </h3>
-                    <p className="text-sm text-[#636388] text-center max-w-md">
+                    <p className="text-sm text-[#636388] dark:text-gray-400 text-center max-w-md">
                       is not currently available. Check out soon!
                     </p>
-                    <div className="mt-6 flex items-center gap-2 text-xs text-[#636388]">
+                    <div className="mt-6 flex items-center gap-2 text-xs text-[#636388] dark:text-gray-400">
                       <div className="w-2 h-2 bg-[#231fe5] rounded-full animate-pulse"></div>
                       <span>Coming Soon</span>
                     </div>
@@ -1237,12 +1237,12 @@ const ViewProfile = ({ educatorData }) => {
               <button
                 type="button"
                 onClick={() => router.push(`/courses?educator=${educatorId}`)}
-                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
+                className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
               >
-                <div className="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mb-1">
+                <div className="w-10 h-10 rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-600 flex items-center justify-center mb-1">
                   <BookOpen className="w-5 h-5" />
                 </div>
-                <p className="text-2xl font-bold text-[#111118]">
+                <p className="text-2xl font-bold text-[#111118] dark:text-gray-100">
                   {isLoadingSummary
                     ? "..."
                     : safeNumber(
@@ -1250,7 +1250,7 @@ const ViewProfile = ({ educatorData }) => {
                         0,
                       )}
                 </p>
-                <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
+                <p className="text-xs text-[#636388] dark:text-gray-400 font-medium uppercase tracking-wide">
                   Courses
                 </p>
               </button>
@@ -1260,12 +1260,12 @@ const ViewProfile = ({ educatorData }) => {
                 onClick={() =>
                   router.push(`/test-series?educator=${educatorId}`)
                 }
-                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
+                className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
               >
-                <div className="w-10 h-10 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-1">
+                <div className="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 flex items-center justify-center mb-1">
                   <TestTube className="w-5 h-5" />
                 </div>
-                <p className="text-2xl font-bold text-[#111118]">
+                <p className="text-2xl font-bold text-[#111118] dark:text-gray-100">
                   {isLoadingSummary
                     ? "..."
                     : safeNumber(
@@ -1273,7 +1273,7 @@ const ViewProfile = ({ educatorData }) => {
                         0,
                       )}
                 </p>
-                <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
+                <p className="text-xs text-[#636388] dark:text-gray-400 font-medium uppercase tracking-wide">
                   Test Series
                 </p>
               </button>
@@ -1281,12 +1281,12 @@ const ViewProfile = ({ educatorData }) => {
               <button
                 type="button"
                 onClick={() => router.push(`/webinars?educator=${educatorId}`)}
-                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
+                className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
               >
-                <div className="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center mb-1">
+                <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 flex items-center justify-center mb-1">
                   <Calendar className="w-5 h-5" />
                 </div>
-                <p className="text-2xl font-bold text-[#111118]">
+                <p className="text-2xl font-bold text-[#111118] dark:text-gray-100">
                   {isLoadingSummary
                     ? "..."
                     : safeNumber(
@@ -1294,7 +1294,7 @@ const ViewProfile = ({ educatorData }) => {
                         0,
                       )}
                 </p>
-                <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
+                <p className="text-xs text-[#636388] dark:text-gray-400 font-medium uppercase tracking-wide">
                   Webinars
                 </p>
               </button>
@@ -1302,15 +1302,15 @@ const ViewProfile = ({ educatorData }) => {
               <button
                 type="button"
                 onClick={() => router.push(`/posts?educator=${educatorId}`)}
-                className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
+                className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
               >
-                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1">
+                <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center mb-1">
                   <FileQuestion className="w-5 h-5" />
                 </div>
-                <p className="text-2xl font-bold text-[#111118]">
+                <p className="text-2xl font-bold text-[#111118] dark:text-gray-100">
                   {safeNumber(postCount, 0).toLocaleString()}
                 </p>
-                <p className="text-xs text-[#636388] font-medium uppercase tracking-wide">
+                <p className="text-xs text-[#636388] dark:text-gray-400 font-medium uppercase tracking-wide">
                   Posts
                 </p>
               </button>
@@ -1319,12 +1319,12 @@ const ViewProfile = ({ educatorData }) => {
             {/* Experience & Qualifications Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Work Experience */}
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 className="text-[#111118] text-lg font-bold mb-6 flex items-center gap-2">
+              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+                <h3 className="text-[#111118] dark:text-gray-100 text-lg font-bold mb-6 flex items-center gap-2">
                   <Briefcase className="text-[#231fe5] w-5 h-5" />
                   Work Experience
                 </h3>
-                <div className="relative border-l-2 border-gray-100 ml-3 space-y-8">
+                <div className="relative border-l-2 border-gray-100 dark:border-gray-800 ml-3 space-y-8">
                   {educatorData.workExperience &&
                   educatorData.workExperience.length > 0 ? (
                     educatorData.workExperience.map((exp, index) => (
@@ -1334,26 +1334,26 @@ const ViewProfile = ({ educatorData }) => {
                             index === 0 ? "bg-[#231fe5]" : "bg-gray-300"
                           } border-4 border-white shadow-sm`}
                         ></div>
-                        <h4 className="text-[#111118] text-sm font-bold">
+                        <h4 className="text-[#111118] dark:text-gray-100 text-sm font-bold">
                           {exp.title}
                         </h4>
                         <p
                           className={`${
-                            index === 0 ? "text-[#231fe5]" : "text-[#636388]"
+                            index === 0 ? "text-[#231fe5]" : "text-[#636388] dark:text-gray-400"
                           } text-xs font-medium mb-1`}
                         >
                           {exp.company} • {safeYear(exp.startDate)} -{" "}
                           {safeYear(exp.endDate)}
                         </p>
                         {exp.description && (
-                          <p className="text-[#636388] text-xs">
+                          <p className="text-[#636388] dark:text-gray-400 text-xs">
                             {exp.description}
                           </p>
                         )}
                       </div>
                     ))
                   ) : (
-                    <p className="text-[#636388] text-sm">
+                    <p className="text-[#636388] dark:text-gray-400 text-sm">
                       No work experience listed
                     </p>
                   )}
@@ -1363,8 +1363,8 @@ const ViewProfile = ({ educatorData }) => {
               {/* Qualifications & Socials Wrapper */}
               <div className="flex flex-col gap-6">
                 {/* Qualifications */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                  <h3 className="text-[#111118] text-lg font-bold mb-4 flex items-center gap-2">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+                  <h3 className="text-[#111118] dark:text-gray-100 text-lg font-bold mb-4 flex items-center gap-2">
                     <FaGraduationCap className="text-[#231fe5] w-5 h-5" />
                     Qualifications
                   </h3>
@@ -1375,10 +1375,10 @@ const ViewProfile = ({ educatorData }) => {
                         <li key={index} className="flex items-start gap-3">
                           <div className="mt-1 w-2 h-2 rounded-full bg-blue-200"></div>
                           <div>
-                            <p className="text-[#111118] text-sm font-semibold">
+                            <p className="text-[#111118] dark:text-gray-100 text-sm font-semibold">
                               {qual.title}
                             </p>
-                            <p className="text-[#636388] text-xs">
+                            <p className="text-[#636388] dark:text-gray-400 text-xs">
                               {qual.institute},{" "}
                               {safeYear(qual.endDate || qual.startDate)}
                             </p>
@@ -1386,7 +1386,7 @@ const ViewProfile = ({ educatorData }) => {
                         </li>
                       ))
                     ) : (
-                      <p className="text-[#636388] text-sm">
+                      <p className="text-[#636388] dark:text-gray-400 text-sm">
                         No qualifications listed
                       </p>
                     )}
@@ -1394,19 +1394,19 @@ const ViewProfile = ({ educatorData }) => {
                 </div>
 
                 {/* Contact & Social */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                  <h3 className="text-[#111118] text-lg font-bold mb-4">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+                  <h3 className="text-[#111118] dark:text-gray-100 text-lg font-bold mb-4">
                     Connect
                   </h3>
                   <div className="space-y-3 mb-6">
                     {educatorData.email && (
-                      <div className="flex items-center gap-3 text-sm text-[#636388]">
+                      <div className="flex items-center gap-3 text-sm text-[#636388] dark:text-gray-400">
                         <IoMailSharp className="w-5 h-5" />
                         <span className="truncate">{educatorData.email}</span>
                       </div>
                     )}
                     {educatorData.mobileNumber && (
-                      <div className="flex items-center gap-3 text-sm text-[#636388]">
+                      <div className="flex items-center gap-3 text-sm text-[#636388] dark:text-gray-400">
                         <IoCallSharp className="w-5 h-5" />
                         <span>{educatorData.mobileNumber}</span>
                       </div>
@@ -1418,7 +1418,7 @@ const ViewProfile = ({ educatorData }) => {
                         href={educatorData.socials.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:bg-blue-900/20 hover:text-blue-600 transition-colors"
                       >
                         <FaLinkedin className="w-4 h-4" />
                       </a>
@@ -1428,7 +1428,7 @@ const ViewProfile = ({ educatorData }) => {
                         href={educatorData.socials.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-400 transition-colors"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:bg-blue-900/20 hover:text-blue-400 transition-colors"
                       >
                         <FaTwitter className="w-4 h-4" />
                       </a>
@@ -1438,7 +1438,7 @@ const ViewProfile = ({ educatorData }) => {
                         href={educatorData.socials.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-pink-50 hover:text-pink-600 transition-colors"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 dark:text-gray-400 hover:bg-pink-50 dark:bg-pink-900/20 hover:text-pink-600 transition-colors"
                       >
                         <FaInstagram className="w-4 h-4" />
                       </a>
@@ -1448,7 +1448,7 @@ const ViewProfile = ({ educatorData }) => {
                         href={educatorData.socials.youtube}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
                       >
                         <FaYoutube className="w-4 h-4" />
                       </a>
@@ -1458,7 +1458,7 @@ const ViewProfile = ({ educatorData }) => {
                         href={educatorData.socials.facebook}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:bg-blue-900/20 hover:text-blue-600 transition-colors"
                       >
                         <FaFacebook className="w-4 h-4" />
                       </a>
@@ -1468,7 +1468,7 @@ const ViewProfile = ({ educatorData }) => {
                         href={`https://wa.me/91${educatorData.whatsappNumber}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 text-gray-600  hover:text-green-600 transition-colors cursor-pointer"
+                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400  hover:text-green-600 transition-colors cursor-pointer"
                       >
                         <IoLogoWhatsapp className="w-5 h-5" />
                       </a>
@@ -1508,7 +1508,7 @@ const ViewProfile = ({ educatorData }) => {
                   <button
                     type="button"
                     onClick={() => setIsPayPerHourModalOpen(true)}
-                    className="w-full sm:w-auto bg-white text-[#231fe5] hover:bg-blue-50 font-bold py-3 px-8 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto bg-white dark:bg-gray-900 text-[#231fe5] hover:bg-blue-50 font-bold py-3 px-8 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                   >
                     <span>Book 1:1 Session</span>
                     <Calendar className="w-5 h-5" />
@@ -1521,13 +1521,13 @@ const ViewProfile = ({ educatorData }) => {
 
         {/* Courses Section */}
         {courseDetails && courseDetails.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
-            <h2 className="text-2xl font-bold text-[#111118] mb-6">
+          <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
+            <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
               Available Courses
             </h2>
             {loadingCourses ? (
               <div className="flex justify-center items-center py-8">
-                <div className="text-gray-500">Loading courses...</div>
+                <div className="text-gray-500 dark:text-gray-400">Loading courses...</div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1572,13 +1572,13 @@ const ViewProfile = ({ educatorData }) => {
 
         {/* Webinars Section */}
         {webinarDetails && webinarDetails.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
-            <h2 className="text-2xl font-bold text-[#111118] mb-6">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
+            <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
               Available Webinars
             </h2>
             {loadingWebinars ? (
               <div className="flex justify-center items-center py-8">
-                <div className="text-gray-500">Loading webinars...</div>
+                <div className="text-gray-500 dark:text-gray-400">Loading webinars...</div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1652,13 +1652,13 @@ const ViewProfile = ({ educatorData }) => {
 
         {/* Test Series Section */}
         {testSeriesDetails && testSeriesDetails.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6">
-            <h2 className="text-2xl font-bold text-[#111118] mb-6">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
+            <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
               Available Test Series
             </h2>
             {loadingTestSeries ? (
               <div className="flex justify-center items-center py-8">
-                <div className="text-gray-500">Loading test series...</div>
+                <div className="text-gray-500 dark:text-gray-400">Loading test series...</div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1711,20 +1711,20 @@ const ViewProfile = ({ educatorData }) => {
         {/* Item Review Modal */}
         {isReviewModalOpen && (
           <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 px-4">
-            <div className="bg-white w-full max-w-lg rounded-xl shadow-xl border border-gray-200 p-6">
+            <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-[#111118]">
+                  <h3 className="text-lg font-semibold text-[#111118] dark:text-gray-100">
                     Share Your Course / Webinar / Test Series Review
                   </h3>
-                  <p className="text-sm text-[#636388]">
+                  <p className="text-sm text-[#636388] dark:text-gray-400">
                     You can review only the items you are enrolled in.
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsReviewModalOpen(false)}
-                  className="text-gray-500 hover:text-gray-800"
+                  className="text-gray-500 dark:text-gray-400 hover:text-gray-800"
                   aria-label="Close review modal"
                 >
                   ×
@@ -1733,7 +1733,7 @@ const ViewProfile = ({ educatorData }) => {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-[#111118]">
+                  <label className="text-sm font-semibold text-[#111118] dark:text-gray-100">
                     Select Item
                   </label>
                   <select
@@ -1742,7 +1742,7 @@ const ViewProfile = ({ educatorData }) => {
                       const next = reviewableItems.find((item) => item.id === e.target.value);
                       setSelectedItemForReview(next || null);
                     }}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50"
                   >
                     <option value="" disabled>
                       Select a course, webinar, or test series
@@ -1756,7 +1756,7 @@ const ViewProfile = ({ educatorData }) => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-[#111118]">
+                  <label className="text-sm font-semibold text-[#111118] dark:text-gray-100">
                     Rating
                   </label>
                   <div className="flex items-center gap-2">
@@ -1777,21 +1777,21 @@ const ViewProfile = ({ educatorData }) => {
                         />
                       </button>
                     ))}
-                    <span className="text-xs text-[#636388]">
+                    <span className="text-xs text-[#636388] dark:text-gray-400">
                       {itemReviewRating ? `${itemReviewRating}/5` : "Select"}
                     </span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-[#111118]">
+                  <label className="text-sm font-semibold text-[#111118] dark:text-gray-100">
                     Review (optional)
                   </label>
                   <textarea
                     value={itemReviewText}
                     onChange={(e) => setItemReviewText(e.target.value)}
                     rows={4}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50"
                     placeholder="Share your experience..."
                   />
                 </div>
@@ -1800,7 +1800,7 @@ const ViewProfile = ({ educatorData }) => {
                   <button
                     type="button"
                     onClick={() => setIsReviewModalOpen(false)}
-                    className="px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-[#111118] hover:bg-gray-50"
+                    className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-[#111118] dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800"
                     disabled={isSubmittingItemReview}
                   >
                     Cancel
@@ -1832,11 +1832,11 @@ const ViewProfile = ({ educatorData }) => {
                   role="dialog"
                   aria-modal="true"
                   aria-label="Pay per hour session details"
-                  className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl"
+                  className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-2xl"
                   onClick={(event) => event.stopPropagation()}
                 >
                   <div className="flex flex-col max-h-[85vh]">
-                    <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-linear-to-r from-blue-600 to-indigo-600">
+                    <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4 bg-linear-to-r from-blue-600 to-indigo-600">
                       <div>
                         <h2 className="text-xl font-semibold text-white">
                           Pay Per Hour Session
@@ -1848,7 +1848,7 @@ const ViewProfile = ({ educatorData }) => {
                       <button
                         type="button"
                         onClick={() => setIsPayPerHourModalOpen(false)}
-                        className="rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white"
+                        className="rounded-full p-2 text-white/80 transition hover:bg-white dark:hover:bg-gray-800/10 hover:text-white"
                         aria-label="Close pay per hour details"
                       >
                         <svg
@@ -1874,13 +1874,13 @@ const ViewProfile = ({ educatorData }) => {
                           <p className="text-xs font-semibold uppercase tracking-wide text-[#231fe5]">
                             Hourly rate
                           </p>
-                          <p className="text-3xl font-bold text-[#111118]">
+                          <p className="text-3xl font-bold text-[#111118] dark:text-gray-100">
                             ₹
                             {payPerHourFeeValue.toLocaleString("en-IN", {
                               maximumFractionDigits: 0,
                             })}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
                             per hour session with {payPerHourDisplayName}
                           </p>
                         </div>
@@ -1888,33 +1888,33 @@ const ViewProfile = ({ educatorData }) => {
 
                       <div className="mt-6 grid gap-3">
                         {payPerHourSpecializations && (
-                          <div className="rounded-xl border border-gray-200 bg-white p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                               Specialisations
                             </p>
-                            <p className="mt-1 text-sm text-gray-700">
+                            <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
                               {payPerHourSpecializations}
                             </p>
                           </div>
                         )}
                         {payPerHourSubjects && (
-                          <div className="rounded-xl border border-gray-200 bg-white p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                               Subjects covered
                             </p>
-                            <p className="mt-1 text-sm text-gray-700">
+                            <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
                               {payPerHourSubjects}
                             </p>
                           </div>
                         )}
                         {educatorData?.yoe && (
-                          <div className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-4">
+                          <div className="flex items-start gap-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
                             <FaClock className="mt-1 h-4 w-4 text-[#231fe5]" />
                             <div>
-                              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                                 Experience
                               </p>
-                              <p className="text-sm text-gray-700">
+                              <p className="text-sm text-gray-700 dark:text-gray-300">
                                 {educatorData.yoe}+ years of
                                 mentoring students
                               </p>
@@ -1922,11 +1922,11 @@ const ViewProfile = ({ educatorData }) => {
                           </div>
                         )}
                         {payPerHourDescription && (
-                          <div className="rounded-lg border border-gray-200 bg-white p-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                               Session overview
                             </p>
-                            <p className="mt-1 text-sm text-gray-700 whitespace-pre-line">
+                            <p className="mt-1 text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">
                               {payPerHourDescription}
                             </p>
                           </div>
@@ -1947,7 +1947,7 @@ const ViewProfile = ({ educatorData }) => {
                         {payPerHourEmailLink && (
                           <a
                             href={payPerHourEmailLink}
-                            className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
+                            className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50 dark:bg-blue-900/20"
                           >
                             <IoMailSharp className="h-5 w-5" />
                             Email{" "}
@@ -1955,7 +1955,7 @@ const ViewProfile = ({ educatorData }) => {
                           </a>
                         )}
                         {!payPerHourWhatsAppLink && !payPerHourEmailLink && (
-                          <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-center text-sm text-gray-500">
+                          <div className="rounded-lg border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-4 text-center text-sm text-gray-500 dark:text-gray-400">
                             Contact details are currently unavailable. Please
                             try connecting via the follow button instead.
                           </div>
@@ -1963,7 +1963,7 @@ const ViewProfile = ({ educatorData }) => {
                       </div>
                     </div>
 
-                    <div className="border-t border-gray-200 bg-gray-50 px-6 py-4 text-right">
+                    <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-6 py-4 text-right">
                       <button
                         type="button"
                         onClick={() => setIsPayPerHourModalOpen(false)}

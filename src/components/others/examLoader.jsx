@@ -11,9 +11,9 @@ const CardRow = ({ count = 4 }) => (
 		{Array.from({ length: count }).map((_, idx) => (
 			<div
 				key={idx}
-				className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+				className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 shadow-sm"
 			>
-				<div className="relative mb-3 h-32 overflow-hidden rounded-lg bg-gray-100">
+				<div className="relative mb-3 h-32 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
 					<div className={`${shimmer} absolute inset-0 animate-pulse`} />
 				</div>
 				<Bar className="h-4 w-3/4 mb-2" />
@@ -26,10 +26,10 @@ const CardRow = ({ count = 4 }) => (
 
 const ExamLoader = () => {
 	return (
-		<div className="min-h-screen bg-gray-50">
+		<div className="min-h-screen bg-gray-50 dark:bg-gray-800">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
 				{/* Hero banner */}
-				<div className="relative overflow-hidden rounded-2xl h-56 sm:h-64 bg-gray-200">
+				<div className="relative overflow-hidden rounded-2xl h-56 sm:h-64 bg-gray-200 dark:bg-gray-700">
 					<div className={`${shimmer} absolute inset-0 animate-pulse`} />
 					<div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-10 space-y-3">
 						<Bar className="h-8 w-1/3" />

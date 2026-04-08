@@ -304,7 +304,7 @@ const Navbar = () => {
   };
 
   const hoverExamDropdown =
-    "hover:bg-gray-200 transition-colors duration-200 rounded-md p-2";
+    "hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 rounded-md p-2";
   const menuItems = [
     {
       name: "Exams",
@@ -331,7 +331,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
@@ -342,7 +342,7 @@ const Navbar = () => {
                 alt="Logo"
                 width={45}
                 height={45}
-                className="rounded-lg w-[45px] h-auto"
+                className="rounded-lg w-11.25 h-auto"
                 priority
               />
             </Link>
@@ -377,7 +377,7 @@ const Navbar = () => {
                     >
                       <div
                         href={item.href}
-                        className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-blue-50 relative group flex items-center space-x-1"
+                        className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-blue-50 relative group flex items-center space-x-1"
                       >
                         <span>{item.name}</span>
                         <svg
@@ -403,7 +403,7 @@ const Navbar = () => {
 
                       {/* Dropdown Menu */}
                       <div
-                        className={`absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 transition-all duration-300 transform origin-top ${
+                        className={`absolute top-full left-0 mt-1 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 transform origin-top ${
                           (item.dropdownKey === "exam" && isExamDropdownOpen) ||
                           (item.dropdownKey === "educator" && isEducatorDropdownOpen)
                             ? "opacity-100 scale-100 visible"
@@ -415,7 +415,7 @@ const Navbar = () => {
                             <Link
                               key={subItem.name}
                               href={subItem.href}
-                              className="block px-4 py-2 text-sm text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                              className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
                             >
                               {subItem.name}
                             </Link>
@@ -426,7 +426,7 @@ const Navbar = () => {
                   ) : (
                     <Link
                       href={item.href}
-                      className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-blue-50 relative group"
+                      className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-blue-50 relative group"
                     >
                       {item.name}
                       <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
@@ -448,7 +448,7 @@ const Navbar = () => {
                       aria-label="Notifications"
                       aria-expanded={isNotificationOpen}
                       onClick={handleNotificationToggle}
-                      className="relative inline-flex items-center justify-center rounded-full p-2 text-gray-600 transition hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="relative inline-flex items-center justify-center rounded-full p-2 text-gray-600 dark:text-gray-300 transition hover:bg-gray-100 dark:bg-gray-800 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <Bell className="h-5 w-5" />
                       {notificationState.unreadCount > 0 &&
@@ -461,9 +461,9 @@ const Navbar = () => {
                     </button>
 
                     {isNotificationOpen && (
-                      <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl">
-                        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-                          <span className="text-sm font-semibold text-gray-900">
+                      <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-xl">
+                        <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 px-4 py-3">
+                          <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                             Notifications
                           </span>
                           <button
@@ -482,7 +482,7 @@ const Navbar = () => {
                         </div>
                         <div className="max-h-80 overflow-y-auto">
                           {notificationState.loading ? (
-                            <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-gray-500">
+                            <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-gray-500 dark:text-gray-400">
                               <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
                               <span>Loading notifications...</span>
                             </div>
@@ -500,7 +500,7 @@ const Navbar = () => {
                               </button>
                             </div>
                           ) : notificationState.items.length === 0 ? (
-                            <div className="px-4 py-6 text-sm text-gray-500">
+                            <div className="px-4 py-6 text-sm text-gray-500 dark:text-gray-400">
                               You're all caught up! Follow your favourite
                               educators to get updates.
                             </div>
@@ -520,18 +520,18 @@ const Navbar = () => {
                                     </div>
                                     <div className="flex-1">
                                       <div className="flex items-center justify-between gap-2">
-                                        <span className="text-sm font-semibold text-gray-900 line-clamp-1">
+                                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-1">
                                           {item.title}
                                         </span>
                                         <span className="text-xs text-gray-400">
                                           {formatRelativeTime(item.createdAt)}
                                         </span>
                                       </div>
-                                      <p className="mt-1 text-xs text-gray-600">
+                                      <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
                                         {item.message}
                                       </p>
                                       <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-gray-400">
-                                        <span className="text-gray-500">
+                                        <span className="text-gray-500 dark:text-gray-400">
                                           {item.educatorName}
                                         </span>
                                         <span>•</span>
@@ -555,13 +555,13 @@ const Navbar = () => {
                         isBordered={true}
                         style={{ opacity: 1 }}
                         src={resolveAvatarSrc(userData)}
-                        className=" border-2 border-gray-300 rounded-full transition-transform hover:scale-105"
+                        className=" border-2 border-gray-300 dark:border-gray-600 rounded-full transition-transform hover:scale-105"
                       />
                     </DropdownTrigger>
                     <DropdownMenu
                       aria-label="Profile Actions"
                       variant="flat"
-                      className="w-52 shadow-lg rounded-lg bg-white p-2"
+                      className="w-52 shadow-lg rounded-lg bg-white dark:bg-gray-900 p-2"
                     >
                       <DropdownItem
                         key="profile_settings"
@@ -599,7 +599,7 @@ const Navbar = () => {
                 <>
                   <Link
                     href="/join-as-student"
-                    className="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50"
+                    className="text-gray-700 dark:text-gray-200 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50"
                   >
                     Join As Student
                   </Link>
@@ -618,7 +618,7 @@ const Navbar = () => {
           <div className="lg:hidden">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-200"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800/50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all duration-200"
               aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
@@ -668,14 +668,14 @@ const Navbar = () => {
             : "max-h-0 opacity-0 overflow-hidden"
         }`}
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 border-t border-gray-200">
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
           {menuItems.map((item) => (
             <div key={item.name}>
               {item.hasDropdown ? (
                 <div>
                   <div className="flex items-center">
                     <div
-                      className="text-gray-700 hover:text-blue-600 hover:bg-white flex-1 px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                      className="text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-white dark:hover:bg-gray-800 flex-1 px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {item.name}
@@ -686,7 +686,7 @@ const Navbar = () => {
                           ? toggleExamDropdown
                           : toggleEducatorDropdown
                       }
-                      className="text-gray-700 hover:text-blue-600 hover:bg-white px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                      className="text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-white dark:hover:bg-gray-800 px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                     >
                       <svg
                         className={`w-4 h-4 transition-transform duration-200 ${
@@ -723,7 +723,7 @@ const Navbar = () => {
                         <Link
                           key={subItem.name}
                           href={subItem.href}
-                          className="text-gray-600 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
+                          className="text-gray-600 dark:text-gray-300 hover:text-blue-600 hover:bg-white dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
                           onClick={() => {
                             setIsMenuOpen(false);
                             setIsExamDropdownOpen(false);
@@ -739,7 +739,7 @@ const Navbar = () => {
               ) : (
                 <Link
                   href={item.href}
-                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-white dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -747,7 +747,7 @@ const Navbar = () => {
               )}
             </div>
           ))}
-          <div className="border-t border-gray-200 pt-3 mt-3">
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3">
             {isLoggedIn && userData ? (
               <div className="px-3">
                 <div className="flex items-center space-x-3 pb-3">
@@ -757,15 +757,15 @@ const Navbar = () => {
                     size="sm"
                   />
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                       {userData.name || "User"}
                     </p>
-                    <p className="text-xs text-gray-500">{userData.email}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{userData.email}</p>
                   </div>
                 </div>
                 <Link
                   href="/profile"
-                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-white dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <span className="flex items-center">
@@ -774,7 +774,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   href="/my-courses"
-                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-white dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <span className="flex items-center">
@@ -783,7 +783,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   href="/settings"
-                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-white dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <span className="flex items-center">
@@ -806,7 +806,7 @@ const Navbar = () => {
               <>
                 <Link
                   href="/join-as-student"
-                  className="text-gray-700 hover:text-blue-600 hover:bg-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
+                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-white dark:hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Join As Student

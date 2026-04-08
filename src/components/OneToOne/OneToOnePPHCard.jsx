@@ -20,8 +20,8 @@ const OneToOnePPHCard = ({ item, detailsHref = "#" }) => {
   }, [item.postImage]);
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-      <div className="relative h-40 bg-gray-200 overflow-hidden flex-shrink-0">
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+      <div className="relative h-40 bg-gray-200 dark:bg-gray-700 overflow-hidden flex-shrink-0">
         <Image 
           src={imageSrc} 
           alt={item.educatorName || 'Educator'} 
@@ -31,29 +31,29 @@ const OneToOnePPHCard = ({ item, detailsHref = "#" }) => {
         />
       </div>
       <div className="p-5 flex flex-col flex-grow">
-        <h3 className="text-lg font-bold text-gray-800 mb-1 leading-tight overflow-hidden">{item.title}</h3>
+        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-1 leading-tight overflow-hidden">{item.title}</h3>
         <h4 className="text-base font-semibold text-blue-600 mb-1">{item.educatorName}</h4>
-        <div className="mb-2 text-sm text-gray-600">
+        <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">
           <span className="font-medium">Qualification: </span>
           {item.qualification}
         </div>
-        <div className="mb-2 text-sm text-gray-600">
+        <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">
           <span className="font-medium">Subject: </span>
           {item.subject}
         </div>
         {item.specialization && (
-          <div className="mb-4 text-sm text-gray-600">
+          <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
             <span className="font-medium">Specialization: </span>
             {item.specialization}
           </div>
         )}
         <div className="mb-4 text-xl font-bold text-black">
-          ₹{Number(item.fee).toLocaleString()}<span className="mb-4 font-medium text-sm text-gray-700"> per hour</span>
+          ₹{Number(item.fee).toLocaleString()}<span className="mb-4 font-medium text-sm text-gray-700 dark:text-gray-300"> per hour</span>
         </div>
         <div className="mt-auto">
           <Link
             href={detailsHref}
-            className="w-full border border-gray-300 bg-blue-600 text-white hover:bg-blue-700 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+            className="w-full border border-gray-300 dark:border-gray-600 bg-blue-600 text-white hover:bg-blue-700 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
           >
             View Detail
           </Link>

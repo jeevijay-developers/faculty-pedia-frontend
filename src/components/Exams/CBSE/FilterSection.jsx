@@ -12,7 +12,7 @@ const classes = Array.from({ length: 12 }, (_, i) => i + 1);
  */
 const FilterSection = ({ selectedClass = null, onChange = () => {} }) => {
   return (
-    <section className="bg-white border-y border-gray-100">
+    <section className="bg-white dark:bg-gray-900 border-y border-gray-100 dark:border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-end">
           <div className="flex items-center gap-3">
@@ -23,7 +23,7 @@ const FilterSection = ({ selectedClass = null, onChange = () => {} }) => {
                 const value = e.target.value;
                 onChange(value === '' ? null : Number(value));
               }}
-              className="min-w-[180px] bg-white border border-gray-300 text-gray-800 text-sm rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-2"
+              className="min-w-[180px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 text-sm rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-2"
             >
               <option value="">All Classes (1 - 12)</option>
               {classes.map((cls) => (

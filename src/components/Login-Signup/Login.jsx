@@ -152,25 +152,25 @@ const Login = ({
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center p-4">
       {/* Centered Split Container */}
-      <div className="w-full max-w-225 bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-160 border border-slate-100">
+      <div className="w-full max-w-225 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-160 border border-slate-100 dark:border-slate-800">
         {/* Left Panel - Brand/Welcome */}
-        <div className="relative w-full md:w-5/12 bg-linear-to-br from-blue-50 to-indigo-50 p-10 flex flex-col justify-between">
+        <div className="relative w-full md:w-5/12 bg-linear-to-br from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-900 p-10 flex flex-col justify-between">
           {/* Brand Label */}
           {/* <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/30">
               <LuGraduationCap className="h-5 w-5" />
             </div>
-            <span className="text-slate-900 text-sm font-bold tracking-tight">
+            <span className="text-slate-900 dark:text-white text-sm font-bold tracking-tight">
               Facultypedia
             </span>
           </div> */}
 
           {/* Welcome Content */}
           <div className="my-auto relative z-10 pt-8">
-            <h2 className="text-[#0e121b] tracking-tight text-[28px] font-bold leading-tight mb-3">
+            <h2 className="text-[#0e121b] dark:text-white tracking-tight text-[28px] font-bold leading-tight mb-3">
               Welcome Back
             </h2>
-            <p className="text-slate-600 text-base font-normal leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-400 text-base font-normal leading-relaxed">
               Continue your learning journey with us. Master new skills and
               track your progress.
             </p>
@@ -185,27 +185,27 @@ const Login = ({
                   objectFit="cover"
                 />
               </div>
-              <div className="absolute inset-0 bg-linear-to-t from-blue-100/50 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-blue-100/50 dark:from-slate-900/80 to-transparent"></div>
             </div>
           </div>
 
           {/* Copyright */}
           <div className="mt-4">
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
               © {new Date().getFullYear()} Facultypedia
             </p>
           </div>
         </div>
 
         {/* Right Panel - Login Form */}
-        <div className="w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-center bg-white">
+        <div className="w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-center bg-white dark:bg-slate-900">
           <div className="max-w-sm mx-auto w-full">
             {/* Header */}
             <div className="mb-8">
-              <h3 className="text-[#0e121b] tracking-tight text-2xl font-bold leading-tight mb-2">
+              <h3 className="text-[#0e121b] dark:text-white tracking-tight text-2xl font-bold leading-tight mb-2">
                 {title}
               </h3>
-              <p className="text-slate-500 text-sm">
+              <p className="text-slate-500 dark:text-slate-400 text-sm">
                 Enter your credentials to continue
               </p>
             </div>
@@ -216,13 +216,13 @@ const Login = ({
               <div className="space-y-1.5">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-semibold text-slate-700"
+                  className="block text-sm font-semibold text-slate-700 dark:text-slate-300"
                 >
                   Email address
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LuMail className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                    <LuMail className="h-5 w-5 text-slate-400 dark:text-slate-500 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors" />
                   </div>
                   <input
                     id="email"
@@ -233,7 +233,7 @@ const Login = ({
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={isLoading}
-                    className="block w-full pl-10 pr-3 py-2.5 h-11 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="block w-full pl-10 pr-3 py-2.5 h-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="name@company.com"
                   />
                 </div>
@@ -243,13 +243,13 @@ const Login = ({
               <div className="space-y-1.5">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-semibold text-slate-700"
+                  className="block text-sm font-semibold text-slate-700 dark:text-slate-300"
                 >
                   Password
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LuLock className="h-5 w-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                    <LuLock className="h-5 w-5 text-slate-400 dark:text-slate-500 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400 transition-colors" />
                   </div>
                   <input
                     id="password"
@@ -260,7 +260,7 @@ const Login = ({
                     value={formData.password}
                     onChange={handleInputChange}
                     disabled={isLoading}
-                    className="block w-full pl-10 pr-10 py-2.5 h-11 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 transition-all sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="block w-full pl-10 pr-10 py-2.5 h-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-600 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 transition-all sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="••••••••"
                   />
                   <button
@@ -268,7 +268,7 @@ const Login = ({
                     tabIndex={-1}
                     disabled={isLoading}
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
                     }
@@ -314,8 +314,8 @@ const Login = ({
             </form>
 
             {/* Footer */}
-            <div className="mt-8 text-center pt-2 border-t border-slate-50">
-              <p className="text-sm text-slate-500">
+            <div className="mt-8 text-center pt-2 border-t border-slate-50 dark:border-slate-800">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Don't have an account?{" "}
                 <Link
                   href={signupLink}

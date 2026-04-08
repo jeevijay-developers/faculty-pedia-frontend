@@ -26,11 +26,11 @@ const TestSeriesSection = () => {
     };
 
     return (
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-gray-50 dark:bg-gray-800">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Online Test Series</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">Online Test Series</h2>
                     <Link
                         href="/exams/neet/test-series"
                         className="group flex items-center text-blue-600 hover:text-blue-800 font-medium transition-all duration-300"
@@ -45,18 +45,18 @@ const TestSeriesSection = () => {
                     {/* Navigation Buttons */}
                     <button
                         onClick={prevSlide}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-transparent rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-transparent rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
                         aria-label="Previous slide"
                     >
-                        <MdOutlineKeyboardArrowLeft className='w-5 h-5 text-gray-500 hover:text-gray-900' />
+                        <MdOutlineKeyboardArrowLeft className='w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100' />
                     </button>
 
                     <button
                         onClick={nextSlide}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-10 bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-14 z-10 bg-white dark:bg-gray-900 rounded-full p-3 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700"
                         aria-label="Next slide"
                     >
-                        <MdOutlineKeyboardArrowRight className='w-5 h-5 text-gray-500 hover:text-gray-900' />
+                        <MdOutlineKeyboardArrowRight className='w-5 h-5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100' />
                     </button>
 
                     {/* Swiper Carousel */}
@@ -102,9 +102,9 @@ const TestSeriesSection = () => {
 // Test Series Card Component
 const TestSeriesCard = ({ testSeries }) => {
     return (
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden h-full flex flex-col">
             {/* Educator Photo */}
-            <div className="relative h-40 bg-gray-100">
+            <div className="relative h-40 bg-gray-100 dark:bg-gray-800">
                 <Image
                     src={testSeries.educatorPhoto}
                     alt={testSeries.educatorName}
@@ -115,22 +115,22 @@ const TestSeriesCard = ({ testSeries }) => {
 
             {/* Card Content */}
             <div className="p-5 flex flex-col flex-grow">
-                <h3 className="text-lg font-bold text-gray-800 mb-2 leading-tight">
+                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2 leading-tight">
                     {testSeries.title}
                 </h3>
                 <h4 className="text-base font-semibold text-blue-600 mb-1">
                     {testSeries.educatorName}
                 </h4>
-                <div className="mb-2 text-sm text-gray-600">
+                <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Qualification: </span>{testSeries.qualification}
                 </div>
-                <div className="mb-2 text-sm text-gray-600">
+                <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Subject: </span>{testSeries.subject}
                 </div>
-                <div className="mb-2 text-sm text-gray-600">
+                <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Number of Tests: </span>{testSeries.noOfTests}
                 </div>
-                <div className="mb-4 text-sm text-gray-600">
+                <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">Fee: </span>₹{testSeries.fee.toLocaleString()}
                 </div>
 
@@ -138,7 +138,7 @@ const TestSeriesCard = ({ testSeries }) => {
                 <div className="flex flex-row gap-2">
                     <Link
                         href={`/exams/neet/test-series/${testSeries.slug}`}
-                        className="w-full text-gray-700 border border-gray-300 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
+                        className="w-full text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-center block"
                     >
                         View details
                     </Link>

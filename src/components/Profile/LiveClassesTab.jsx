@@ -61,25 +61,25 @@ const getStatusMeta = (classTiming, durationMinutes) => {
   const now = new Date();
 
   if (!start || Number.isNaN(start.getTime())) {
-    return { label: "Scheduled", badgeClass: "bg-gray-100 text-gray-700" };
+    return { label: "Scheduled", badgeClass: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300" };
   }
 
   const durationMs = (Number(durationMinutes) || 0) * 60000;
   const end = new Date(start.getTime() + durationMs);
 
   if (now < start) {
-    return { label: "Upcoming", badgeClass: "bg-blue-50 text-blue-700" };
+    return { label: "Upcoming", badgeClass: "bg-blue-50 dark:bg-blue-900/20 text-blue-700" };
   }
 
   if (durationMs > 0 && now >= start && now <= end) {
-    return { label: "Live now", badgeClass: "bg-green-50 text-green-700" };
+    return { label: "Live now", badgeClass: "bg-green-50 dark:bg-green-900/20 text-green-700" };
   }
 
   if (durationMs === 0 && now >= start) {
-    return { label: "Started", badgeClass: "bg-green-50 text-green-700" };
+    return { label: "Started", badgeClass: "bg-green-50 dark:bg-green-900/20 text-green-700" };
   }
 
-  return { label: "Completed", badgeClass: "bg-gray-100 text-gray-600" };
+  return { label: "Completed", badgeClass: "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400" };
 };
 
 const getMeetingLink = (liveClass) =>
@@ -148,7 +148,7 @@ const LiveClassesTab = ({ studentId }) => {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-gray-600">Loading live classes...</span>
+        <span className="ml-3 text-gray-600 dark:text-gray-400">Loading live classes...</span>
       </div>
     );
   }
@@ -170,8 +170,8 @@ const LiveClassesTab = ({ studentId }) => {
   if (!sortedLiveClasses.length) {
     return (
       <div className="p-8 text-center">
-        <div className="text-gray-600 text-lg">No live classes found</div>
-        <p className="text-gray-500 mt-2">
+        <div className="text-gray-600 dark:text-gray-400 text-lg">No live classes found</div>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
           You have not enrolled in any live classes yet.
         </p>
       </div>
@@ -190,15 +190,15 @@ const LiveClassesTab = ({ studentId }) => {
           return (
             <div
               key={liveClass?._id || liveClass?.id}
-              className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+              className="bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow"
             >
               <div className="p-5 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                       Live Class
                     </p>
-                    <h3 className="font-semibold text-lg text-gray-900 leading-snug line-clamp-2">
+                    <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 leading-snug line-clamp-2">
                       {liveClass?.liveClassTitle || "Untitled live class"}
                     </h3>
                   </div>
@@ -209,11 +209,11 @@ const LiveClassesTab = ({ studentId }) => {
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-600 line-clamp-3">
+                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
                   {liveClass?.description || "No description provided."}
                 </p>
 
-                <div className="space-y-2 text-sm text-gray-700">
+                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                   <div className="flex items-center">
                     <FiCalendar className="w-4 h-4 mr-2 text-blue-600" />
                     <span>{formatDate(liveClass?.classTiming)}</span>
@@ -246,14 +246,14 @@ const LiveClassesTab = ({ studentId }) => {
                 </div>
 
                 {liveClass?.isCourseSpecific && liveClass?.assignInCourse && (
-                  <div className="flex items-center gap-2 rounded-md bg-blue-50 px-3 py-2 text-xs text-blue-700">
+                  <div className="flex items-center gap-2 rounded-md bg-blue-50 dark:bg-blue-900/20 px-3 py-2 text-xs text-blue-700">
                     <FiCheckCircle className="w-4 h-4" />
                     <span>Course specific</span>
                   </div>
                 )}
 
                 {liveClass?.isCompleted && (
-                  <div className="flex items-center gap-2 rounded-md bg-gray-50 px-3 py-2 text-xs text-gray-700">
+                  <div className="flex items-center gap-2 rounded-md bg-gray-50 dark:bg-gray-800 px-3 py-2 text-xs text-gray-700 dark:text-gray-300">
                     <FiAlertCircle className="w-4 h-4" />
                     <span>Marked as completed</span>
                   </div>
@@ -269,7 +269,7 @@ const LiveClassesTab = ({ studentId }) => {
                     Join Live Class
                   </a>
                 ) : (
-                  <div className="rounded-md border border-dashed border-gray-200 px-3 py-2 text-xs text-gray-500 text-center">
+                  <div className="rounded-md border border-dashed border-gray-200 dark:border-gray-700 px-3 py-2 text-xs text-gray-500 dark:text-gray-400 text-center">
                     Link will appear once provided
                   </div>
                 )}

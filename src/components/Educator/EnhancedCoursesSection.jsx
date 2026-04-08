@@ -34,12 +34,12 @@ const EnhancedCoursesSection = ({ courses, educatorName }) => {
 
   if (!courses || courses.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 sm:mb-6">
           Courses by {educatorName}
         </h2>
-        <div className="text-center py-8 sm:py-10 bg-gray-50 rounded-lg">
-          <p className="text-gray-500 text-sm sm:text-base">
+        <div className="text-center py-8 sm:py-10 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">
             No courses available from this educator yet.
           </p>
         </div>
@@ -48,9 +48,9 @@ const EnhancedCoursesSection = ({ courses, educatorName }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
           Courses by {educatorName}
         </h2>
         
@@ -59,17 +59,17 @@ const EnhancedCoursesSection = ({ courses, educatorName }) => {
           <div className="flex gap-2">
             <button
               onClick={prevSlide}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:bg-gray-700 transition-colors"
               disabled={currentSlide === 0}
             >
-              <FaChevronLeft className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+              <FaChevronLeft className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-400" />
             </button>
             <button
               onClick={nextSlide}
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:bg-gray-700 transition-colors"
               disabled={currentSlide === totalSlides - 1}
             >
-              <FaChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+              <FaChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-400" />
             </button>
           </div>
         )}
@@ -108,13 +108,13 @@ const CourseCard = ({ course }) => {
       'webinar': { label: 'Webinar', color: 'bg-purple-100 text-purple-800' },
     };
     
-    return typeMap[courseType] || { label: 'Course', color: 'bg-gray-100 text-gray-800' };
+    return typeMap[courseType] || { label: 'Course', color: 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200' };
   };
 
   const typeInfo = getCourseTypeTag(course.courseType);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group h-full flex flex-col">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group h-full flex flex-col">
       {/* Course Thumbnail */}
       <div className="relative h-40 sm:h-44 md:h-48 w-full overflow-hidden">
         <Image
@@ -134,8 +134,8 @@ const CourseCard = ({ course }) => {
         {/* Play Button for Video Preview */}
         {course.videos?.intro && (
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
-              <FaPlay className="text-gray-800 ml-1 w-3 h-3 sm:w-4 sm:h-4" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-gray-900/90 flex items-center justify-center shadow-lg">
+              <FaPlay className="text-gray-800 dark:text-gray-200 ml-1 w-3 h-3 sm:w-4 sm:h-4" />
             </div>
           </div>
         )}
@@ -143,28 +143,28 @@ const CourseCard = ({ course }) => {
 
       {/* Course Details */}
       <div className="p-4 sm:p-5 md:p-6 flex-1 flex flex-col">
-        <h3 className="font-bold text-base sm:text-lg text-gray-900 mb-2 line-clamp-2">
+        <h3 className="font-bold text-base sm:text-lg text-gray-900 dark:text-gray-100 mb-2 line-clamp-2">
           {course.title}
         </h3>
 
-        <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
+        <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
           {course.description?.shortDesc || 'No description available'}
         </p>
 
         {/* Course Info */}
         <div className="space-y-2 mb-3 sm:mb-4">
           <div className="flex items-center justify-between text-xs sm:text-sm">
-            <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+            <div className="flex items-center gap-1 sm:gap-2 text-gray-600 dark:text-gray-400">
               <FaUsers className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>{course.seatLimit} seats</span>
             </div>
-            <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+            <div className="flex items-center gap-1 sm:gap-2 text-gray-600 dark:text-gray-400">
               <FaClock className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>{course.classDuration}h/class</span>
             </div>
           </div>
           
-          <div className="flex items-center text-xs sm:text-sm text-gray-600">
+          <div className="flex items-center text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             <span className="truncate">
               {formatDate(course.startDate, 'short')} - {formatDate(course.endDate, 'short')}
             </span>
@@ -175,12 +175,12 @@ const CourseCard = ({ course }) => {
         <div className="mt-auto">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-1">
-              <FaRupeeSign className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
-              <span className="font-bold text-lg sm:text-xl text-gray-900">
+              <FaRupeeSign className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600 dark:text-gray-400" />
+              <span className="font-bold text-lg sm:text-xl text-gray-900 dark:text-gray-100">
                 {course.fees?.toLocaleString()}
               </span>
               {course.originalPrice && (
-                <span className="ml-1 sm:ml-2 text-gray-500 line-through text-xs sm:text-sm">
+                <span className="ml-1 sm:ml-2 text-gray-500 dark:text-gray-400 line-through text-xs sm:text-sm">
                   ₹{course.originalPrice.toLocaleString()}
                 </span>
               )}
@@ -190,7 +190,7 @@ const CourseCard = ({ course }) => {
           <div className="flex flex-col sm:flex-row gap-2">
             <Link
               href={`/details/course/${course._id}`}
-              className="flex-1 px-3 sm:px-4 py-2 text-xs sm:text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-center"
+              className="flex-1 px-3 sm:px-4 py-2 text-xs sm:text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 dark:bg-blue-900/20 transition-colors text-center"
             >
               View More
             </Link>

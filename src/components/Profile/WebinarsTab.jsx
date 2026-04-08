@@ -126,7 +126,7 @@ const WebinarsTab = ({ studentId }) => {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-gray-600">Loading webinars...</span>
+        <span className="ml-3 text-gray-600 dark:text-gray-400">Loading webinars...</span>
       </div>
     );
   }
@@ -148,8 +148,8 @@ const WebinarsTab = ({ studentId }) => {
   if (!webinars.length) {
     return (
       <div className="p-8 text-center">
-        <div className="text-gray-600 text-lg">No upcoming webinars found</div>
-        <p className="text-gray-500 mt-2">
+        <div className="text-gray-600 dark:text-gray-400 text-lg">No upcoming webinars found</div>
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
           You haven't enrolled in any upcoming webinars yet.
         </p>
       </div>
@@ -162,10 +162,10 @@ const WebinarsTab = ({ studentId }) => {
         {webinars.map((webinar) => (
           <div
             key={webinar._id}
-            className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+            className="bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-lg transition-shadow"
           >
             {/* Image */}
-            <div className="relative h-48 bg-gray-100">
+            <div className="relative h-48 bg-gray-100 dark:bg-gray-800">
               {getImageUrl(webinar.image) ? (
                 <Image
                   src={getImageUrl(webinar.image)}
@@ -175,7 +175,7 @@ const WebinarsTab = ({ studentId }) => {
                 />
               ) : (
                 <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-100 to-purple-100">
-                  <div className="text-gray-500 text-center">
+                  <div className="text-gray-500 dark:text-gray-400 text-center">
                     <FiUsers className="w-12 h-12 mx-auto mb-2" />
                     <span className="text-sm">Webinar</span>
                   </div>
@@ -205,18 +205,18 @@ const WebinarsTab = ({ studentId }) => {
 
             {/* Content */}
             <div className="p-4">
-              <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
+              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-2 line-clamp-2">
                 {webinar.title}
               </h3>
 
-              <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3">
                 {webinar.description?.short ||
                   webinar.description?.long ||
                   "No description available"}
               </p>
 
               {/* Details */}
-              <div className="space-y-2 text-xs text-gray-500">
+              <div className="space-y-2 text-xs text-gray-500 dark:text-gray-400">
                 <div className="flex items-center">
                   <FiCalendar className="w-4 h-4 mr-2" />
                   <span>{formatDate(webinar.date)}</span>
@@ -251,7 +251,7 @@ const WebinarsTab = ({ studentId }) => {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
+              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 space-y-2">
                 <button
                   onClick={() => {
                     window.location.href = `/student-webinars/${webinar._id}`;

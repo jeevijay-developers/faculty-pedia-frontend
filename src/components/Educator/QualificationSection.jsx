@@ -30,21 +30,21 @@ const QualificationSection = ({ education, experience }) => {
                 key={index}
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100"
+                className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-800"
               >
                 <div className="flex items-start space-x-3">
-                  <div className="p-2 bg-blue-50 rounded-lg">
+                  <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <FaUniversity className="text-blue-600 w-5 h-5" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg text-gray-800">
+                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
                       {edu.title}
                     </h3>
-                    <p className="text-gray-600 flex items-center mt-1">
+                    <p className="text-gray-600 dark:text-gray-400 flex items-center mt-1">
                       <FaBuilding className="w-4 h-4 mr-2 text-gray-400" />
                       {edu.institute}
                     </p>
-                    <div className="flex items-center mt-3 text-sm text-gray-500 gap-2">
+                    <div className="flex items-center mt-3 text-sm text-gray-500 dark:text-gray-400 gap-2">
                          <FaCalendarAlt />
                          <span className="flex-1">
                            {formatDate(edu.startDate)} -{" "}
@@ -60,9 +60,9 @@ const QualificationSection = ({ education, experience }) => {
       );
     } else {
       return (
-        <div className="text-center py-8 bg-gray-50 rounded-lg">
+        <div className="text-center py-8 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <FaGraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No education details available.</p>
+          <p className="text-gray-500 dark:text-gray-400">No education details available.</p>
         </div>
       );
     }
@@ -78,21 +78,21 @@ const QualificationSection = ({ education, experience }) => {
                 key={index}
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100"
+                className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-800"
               >
                 <div className="flex items-start space-x-3">
-                  <div className="p-2 bg-green-50 rounded-lg">
+                  <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <FaBriefcase className="text-green-600 w-5 h-5" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg text-gray-800">
+                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-200">
                       {exp.title}
                     </h3>
-                    <p className="text-gray-600 flex items-center mt-1">
+                    <p className="text-gray-600 dark:text-gray-400 flex items-center mt-1">
                       <FaBuilding className="w-4 h-4 mr-2 text-gray-400" />
                       {exp.company}
                     </p>
-                    <div className="flex items-center mt-3 text-sm text-gray-500 gap-1">
+                    <div className="flex items-center mt-3 text-sm text-gray-500 dark:text-gray-400 gap-1">
                       <FaCalendarAlt className="w-4 h-4 mr-2 text-green-500" />
                       <span className="flex-1">
                         {formatDate(exp.startDate)} -{" "}
@@ -108,32 +108,32 @@ const QualificationSection = ({ education, experience }) => {
       );
     } else {
       return (
-        <div className="text-center py-8 bg-gray-50 rounded-lg">
+        <div className="text-center py-8 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <FaBriefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No experience details available.</p>
+          <p className="text-gray-500 dark:text-gray-400">No experience details available.</p>
         </div>
       );
     }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
       <div className="mb-10" data-aos="fade-up">
         <div className="flex items-center mb-6">
-          <div className="p-3 bg-blue-50 rounded-lg mr-4">
+          <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg mr-4">
             <FaGraduationCap className="text-blue-600 w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800">Education</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">Education</h2>
         </div>
         {renderEducation()}
       </div>
 
       <div data-aos="fade-up" data-aos-delay="100">
         <div className="flex items-center mb-6">
-          <div className="p-3 bg-green-50 rounded-lg mr-4">
+          <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg mr-4">
             <FaBriefcase className="text-green-600 w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800">Experience</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">Experience</h2>
         </div>
         {renderExperience()}
       </div>

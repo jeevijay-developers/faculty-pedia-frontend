@@ -82,7 +82,7 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`w-full h-12 px-4 rounded-lg bg-white border border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all flex items-center justify-between ${
+        className={`w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-900 border border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all flex items-center justify-between ${
           disabled
             ? "bg-slate-50 text-slate-400 cursor-not-allowed"
             : "cursor-pointer hover:border-slate-300"
@@ -95,7 +95,7 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
       </button>
 
       {isOpen && !disabled && (
-        <div className="absolute top-full mt-2 z-50 bg-white border border-slate-200 rounded-xl shadow-xl p-4 w-80">
+        <div className="absolute top-full mt-2 z-50 bg-white dark:bg-gray-900 border border-slate-200 rounded-xl shadow-xl p-4 w-80">
           {/* Year Navigation */}
           <div className="flex items-center justify-between mb-4">
             <button
@@ -153,7 +153,7 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
                       : isSelected
                       ? "bg-blue-500 text-white shadow-md"
                       : isCurrent
-                      ? "bg-blue-50 text-blue-700 border border-blue-200"
+                      ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 border border-blue-200"
                       : "bg-slate-50 text-slate-700 hover:bg-slate-100"
                   }`}
                 >
@@ -175,7 +175,7 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
                 setSelectedYear(year);
                 setIsOpen(false);
               }}
-              className="flex-1 py-2 px-3 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              className="flex-1 py-2 px-3 text-sm font-medium text-blue-600 hover:bg-blue-50 dark:bg-blue-900/20 rounded-lg transition-colors"
             >
               This Month
             </button>

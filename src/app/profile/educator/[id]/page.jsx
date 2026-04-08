@@ -165,13 +165,13 @@ const Page = ({ params }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-        <div className="bg-white rounded-lg shadow p-8 text-center max-w-md">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center max-w-md">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <p className="text-lg font-semibold text-gray-800 mb-2">
+          <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
             Error Loading Profile
           </p>
-          <p className="text-sm text-gray-500 mt-2">{error}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -185,12 +185,12 @@ const Page = ({ params }) => {
 
   if (!educatorData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-        <div className="bg-white rounded-lg shadow p-8 text-center max-w-md">
-          <p className="text-lg font-semibold text-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-8 text-center max-w-md">
+          <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
             Educator profile unavailable
           </p>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
             We could not load the requested educator. Please verify the profile
             link and try again.
           </p>
@@ -212,7 +212,7 @@ const Page = ({ params }) => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="max-w-6xl mx-auto px-4 pt-6 flex justify-end">
         <ShareButton
           title={
@@ -237,17 +237,17 @@ const Page = ({ params }) => {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-80 bg-gray-200 rounded-lg animate-pulse"
+                className="h-80 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"
               />
             ))}
           </div>
         ) : courses.length > 0 ? (
           <>
             <div className="mb-10">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 One to One Live Course
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
                 Personalized live sessions for focused preparation
               </p>
               {oneToOneCourses.length > 0 ? (
@@ -269,8 +269,8 @@ const Page = ({ params }) => {
                   )}
                 </>
               ) : (
-                <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
-                  <p className="text-gray-600 text-lg">
+                <div className="text-center py-10 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <p className="text-gray-600 dark:text-gray-400 text-lg">
                     No one to one live course available yet
                   </p>
                 </div>
@@ -278,10 +278,10 @@ const Page = ({ params }) => {
             </div>
 
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 One to All Live Course
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
                 Interactive live classes designed for group learning
               </p>
               {oneToAllCourses.length > 0 ? (
@@ -303,8 +303,8 @@ const Page = ({ params }) => {
                   )}
                 </>
               ) : (
-                <div className="text-center py-10 bg-white rounded-lg border border-gray-200">
-                  <p className="text-gray-600 text-lg">
+                <div className="text-center py-10 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <p className="text-gray-600 dark:text-gray-400 text-lg">
                     No one to all live course available yet
                   </p>
                 </div>
@@ -312,9 +312,9 @@ const Page = ({ params }) => {
               </div>
           </>
         ) : (
-          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+          <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
             <div className="text-gray-400 text-5xl mb-4">📚</div>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
               No courses available yet
             </p>
           </div>
@@ -324,10 +324,10 @@ const Page = ({ params }) => {
       {/* Test Series Section */}
       <div className="max-w-7xl mx-auto px-4 pb-12">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Webinars by {educatorName}
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Join live and upcoming webinars by this educator
           </p>
         </div>
@@ -337,7 +337,7 @@ const Page = ({ params }) => {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-80 bg-gray-200 rounded-lg animate-pulse"
+                className="h-80 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"
               />
             ))}
           </div>
@@ -363,9 +363,9 @@ const Page = ({ params }) => {
             )}
           </>
         ) : (
-          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+          <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
             <div className="text-gray-400 text-5xl mb-4">📅</div>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
               No webinars available yet
             </p>
           </div>
@@ -375,10 +375,10 @@ const Page = ({ params }) => {
       {/* Test Series Section */}
       <div className="max-w-7xl mx-auto px-4 pb-12">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Test Series by {educatorName}
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Practice with comprehensive test series
           </p>
         </div>
@@ -388,7 +388,7 @@ const Page = ({ params }) => {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-80 bg-gray-200 rounded-lg animate-pulse"
+                className="h-80 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"
               />
             ))}
           </div>
@@ -411,9 +411,9 @@ const Page = ({ params }) => {
             )}
           </>
         ) : (
-          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+          <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
             <div className="text-gray-400 text-5xl mb-4">📝</div>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
               No test series available yet
             </p>
           </div>

@@ -46,8 +46,8 @@ const MainQuestion = ({
 
   if (!question) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-        <div className="text-center text-gray-500">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <div className="text-center text-gray-500 dark:text-gray-400">
           No question data available
         </div>
       </div>
@@ -55,11 +55,11 @@ const MainQuestion = ({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
       {/* Question Header */}
-      <div className="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+      <div className="bg-gray-50 dark:bg-gray-800 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
-          <h2 className="text-base sm:text-lg font-semibold text-gray-800">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-200">
             Question {questionNumber} of {totalQuestions}
           </h2>
         </div>
@@ -69,7 +69,7 @@ const MainQuestion = ({
       <div className="p-4 sm:p-6">
         {/* Question Text */}
         <div className="mb-4 sm:mb-6">
-          <h3 className="text-lg sm:text-xl font-medium text-gray-800 leading-relaxed">
+          <h3 className="text-lg sm:text-xl font-medium text-gray-800 dark:text-gray-200 leading-relaxed">
             {question.text ||
               question.question ||
               "Sample question text goes here"}
@@ -79,7 +79,7 @@ const MainQuestion = ({
               <img
                 src={getImageUrl(question.image)}
                 alt="Question illustration"
-                className="max-w-full h-auto rounded-lg border border-gray-200"
+                className="max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700"
               />
             </div>
           )}
@@ -106,11 +106,11 @@ const MainQuestion = ({
                 onClick={() => handleOptionClick(option)}
                 className={`
                   w-full text-left p-3 sm:p-4 rounded-lg border-2 transition-all duration-200
-                  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500
+                  hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500
                   ${
                     isSelected
-                      ? "border-green-500 bg-green-50 text-green-800"
-                      : "border-gray-200 bg-white text-gray-700"
+                      ? "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-800"
+                      : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
                   }
                 `}
               >
@@ -122,7 +122,7 @@ const MainQuestion = ({
                     ${
                       isSelected
                         ? "border-green-500 bg-green-500 text-white"
-                        : "border-gray-300 text-gray-600"
+                        : "border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400"
                     }
                   `}
                   >
@@ -138,7 +138,7 @@ const MainQuestion = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center pt-4 border-t border-gray-200 gap-3 sm:gap-0">
+        <div className="flex flex-col sm:flex-row items-center justify-center pt-4 border-t border-gray-200 dark:border-gray-700 gap-3 sm:gap-0">
           {/* Mobile: Stack buttons vertically, Desktop: Horizontal layout */}
           <div className="flex flex-col justify-center sm:flex-row items-center gap-3 w-full sm:w-auto">
             <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -151,8 +151,8 @@ const MainQuestion = ({
                 transition-colors duration-200 w-full sm:w-auto min-w-[100px]
                 ${
                   isFirstQuestion
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300"
                 }
               `}
               >
@@ -169,7 +169,7 @@ const MainQuestion = ({
                 transition-colors duration-200 w-full sm:w-auto min-w-[100px]
                 ${
                   isLastQuestion
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
                     : "bg-blue-600 text-white hover:bg-blue-700"
                 }
               `}
@@ -188,7 +188,7 @@ const MainQuestion = ({
                 ${
                   tempSelected
                     ? "bg-green-600 text-white hover:bg-green-700"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    : "bg-gray-300 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                 }
               `}
             >

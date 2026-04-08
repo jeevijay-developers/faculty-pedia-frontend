@@ -37,7 +37,7 @@ const WebinarCard = ({ webinar }) => {
 
   return (
     <div
-      className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+      className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
       data-aos="fade-up"
     >
       <div className="relative h-48 w-full">
@@ -58,27 +58,27 @@ const WebinarCard = ({ webinar }) => {
       </div>
 
       <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           {title
             .split("-")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ")}
         </h3>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{description}</p>
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">{description}</p>
 
         <div className="space-y-2 mb-4">
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-gray-600 dark:text-gray-400">
             <FaClock className="w-4 h-4 text-blue-500 mr-2" />
             <span>{webinar.duration || 0} minutes</span>
           </div>
 
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-gray-600 dark:text-gray-400">
             <FaUsers className="w-4 h-4 text-blue-500 mr-2" />
             <span>{webinar.seatLimit || 0} seats</span>
           </div>
 
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-gray-600 dark:text-gray-400">
             <FaRupeeSign className="w-4 h-4 text-blue-500 mr-2" />
             <span>₹{webinar.fees || 0}</span>
           </div>

@@ -141,25 +141,25 @@ const EducatorForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white">
+    <div className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-2">
           Educator Registration
         </h1>
-        <p className="text-gray-600">Complete your profile to get started</p>
+        <p className="text-gray-600 dark:text-gray-400">Complete your profile to get started</p>
       </div>
 
       <div className="space-y-8">
         {/* Personal Information */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
             <User className="mr-2" size={20} />
             Personal Information
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 First Name *
               </label>
               <input
@@ -168,7 +168,7 @@ const EducatorForm = () => {
                 value={formData.firstName}
                 onChange={handleInputChange}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.firstName ? "border-red-500" : "border-gray-300"
+                  errors.firstName ? "border-red-500" : "border-gray-300 dark:border-gray-600"
                 }`}
                 placeholder="Enter first name"
               />
@@ -178,7 +178,7 @@ const EducatorForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Last Name *
               </label>
               <input
@@ -187,7 +187,7 @@ const EducatorForm = () => {
                 value={formData.lastName}
                 onChange={handleInputChange}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.lastName ? "border-red-500" : "border-gray-300"
+                  errors.lastName ? "border-red-500" : "border-gray-300 dark:border-gray-600"
                 }`}
                 placeholder="Enter last name"
               />
@@ -197,7 +197,7 @@ const EducatorForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Mobile Number *
               </label>
               <input
@@ -206,7 +206,7 @@ const EducatorForm = () => {
                 value={formData.mobileNumber}
                 onChange={handleInputChange}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.mobileNumber ? "border-red-500" : "border-gray-300"
+                  errors.mobileNumber ? "border-red-500" : "border-gray-300 dark:border-gray-600"
                 }`}
                 placeholder="Enter mobile number"
               />
@@ -218,7 +218,7 @@ const EducatorForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email *
               </label>
               <input
@@ -227,7 +227,7 @@ const EducatorForm = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.email ? "border-red-500" : "border-gray-300"
+                  errors.email ? "border-red-500" : "border-gray-300 dark:border-gray-600"
                 }`}
                 placeholder="Enter email address"
               />
@@ -238,7 +238,7 @@ const EducatorForm = () => {
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Profile Image
             </label>
             <div className="flex items-center space-x-4">
@@ -247,10 +247,10 @@ const EducatorForm = () => {
                   <img
                     src={formData.image.url}
                     alt="Profile preview"
-                    className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
                   />
                 ) : (
-                  <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-200">
+                  <div className="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center border-2 border-gray-200 dark:border-gray-700">
                     <User className="w-8 h-8 text-gray-400" />
                   </div>
                 )}
@@ -260,9 +260,9 @@ const EducatorForm = () => {
                   type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 dark:bg-blue-900/20 file:text-blue-700 hover:file:bg-blue-100"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   Upload a profile image (JPG, PNG, GIF)
                 </p>
               </div>
@@ -270,7 +270,7 @@ const EducatorForm = () => {
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Bio *
             </label>
             <textarea
@@ -279,7 +279,7 @@ const EducatorForm = () => {
               onChange={handleInputChange}
               rows={4}
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.bio ? "border-red-500" : "border-gray-300"
+                errors.bio ? "border-red-500" : "border-gray-300 dark:border-gray-600"
               }`}
               placeholder="Tell us about yourself..."
             />
@@ -289,7 +289,7 @@ const EducatorForm = () => {
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Introduction Video Link
             </label>
             <input
@@ -297,29 +297,29 @@ const EducatorForm = () => {
               name="introVideoLink"
               value={formData.introVideoLink}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter video URL"
             />
           </div>
         </div>
 
         {/* Professional Information */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
             <Briefcase className="mr-2" size={20} />
             Professional Information
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Specialization *
               </label>
               <select
                 name="specialization"
                 value={formData.specialization}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="IIT-JEE">IIT-JEE</option>
                 <option value="NEET">NEET</option>
@@ -328,7 +328,7 @@ const EducatorForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Rating
               </label>
               <input
@@ -339,7 +339,7 @@ const EducatorForm = () => {
                 step="0.1"
                 value={formData.rating}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="0.0"
               />
             </div>
@@ -347,9 +347,9 @@ const EducatorForm = () => {
         </div>
 
         {/* Work Experience */}
-        <div className="bg-gray-50 p-6 rounded-lg">
+        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center">
               <Briefcase className="mr-2" size={20} />
               Work Experience
             </h2>
@@ -371,7 +371,7 @@ const EducatorForm = () => {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex flex-wrap border-b border-gray-200 mb-4">
+          <div className="flex flex-wrap border-b border-gray-200 dark:border-gray-700 mb-4">
             {formData.workExperience.map((_, index) => (
               <button
                 key={index}
@@ -379,8 +379,8 @@ const EducatorForm = () => {
                 onClick={() => setActiveExpTab(index)}
                 className={`px-4 py-2 text-sm font-medium border-b-2 mr-2 mb-2 ${
                   activeExpTab === index
-                    ? "border-blue-500 text-blue-600 bg-blue-50"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-blue-500 text-blue-600 bg-blue-50 dark:bg-blue-900/20"
+                    : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
                 Experience {index + 1}
@@ -389,9 +389,9 @@ const EducatorForm = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="bg-white border border-gray-200 p-4 rounded-md">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded-md">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium text-gray-800">
+              <h3 className="font-medium text-gray-800 dark:text-gray-200">
                 Experience {activeExpTab + 1}
               </h3>
               {formData.workExperience.length > 1 && (
@@ -410,7 +410,7 @@ const EducatorForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Title
                 </label>
                 <input
@@ -424,12 +424,12 @@ const EducatorForm = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Job title"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Company
                 </label>
                 <input
@@ -443,12 +443,12 @@ const EducatorForm = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Company name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Start Date
                 </label>
                 <input
@@ -462,11 +462,11 @@ const EducatorForm = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   End Date
                 </label>
                 <input
@@ -480,7 +480,7 @@ const EducatorForm = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -488,9 +488,9 @@ const EducatorForm = () => {
         </div>
 
         {/* Qualifications */}
-        <div className="bg-gray-50 p-6 rounded-lg">
+        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center">
               <GraduationCap className="mr-2" size={20} />
               Qualifications
             </h2>
@@ -512,7 +512,7 @@ const EducatorForm = () => {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex flex-wrap border-b border-gray-200 mb-4">
+          <div className="flex flex-wrap border-b border-gray-200 dark:border-gray-700 mb-4">
             {formData.qualification.map((_, index) => (
               <button
                 key={index}
@@ -520,8 +520,8 @@ const EducatorForm = () => {
                 onClick={() => setActiveQualTab(index)}
                 className={`px-4 py-2 text-sm font-medium border-b-2 mr-2 mb-2 ${
                   activeQualTab === index
-                    ? "border-blue-500 text-blue-600 bg-blue-50"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    ? "border-blue-500 text-blue-600 bg-blue-50 dark:bg-blue-900/20"
+                    : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
                 Qualification {index + 1}
@@ -530,9 +530,9 @@ const EducatorForm = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="bg-white border border-gray-200 p-4 rounded-md">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded-md">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium text-gray-800">
+              <h3 className="font-medium text-gray-800 dark:text-gray-200">
                 Qualification {activeQualTab + 1}
               </h3>
               {formData.qualification.length > 1 && (
@@ -551,7 +551,7 @@ const EducatorForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Title
                 </label>
                 <input
@@ -565,12 +565,12 @@ const EducatorForm = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Qualification title"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Institute
                 </label>
                 <input
@@ -584,12 +584,12 @@ const EducatorForm = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Institute name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Start Date
                 </label>
                 <input
@@ -603,11 +603,11 @@ const EducatorForm = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   End Date
                 </label>
                 <input
@@ -621,7 +621,7 @@ const EducatorForm = () => {
                       e.target.value
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -629,8 +629,8 @@ const EducatorForm = () => {
         </div>
 
         {/* Social Media */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
             <Link className="mr-2" size={20} />
             Social Media Links
           </h2>
@@ -638,7 +638,7 @@ const EducatorForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {Object.keys(formData.socials).map((platform) => (
               <div key={platform}>
-                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 capitalize">
                   {platform}
                 </label>
                 <input
@@ -647,7 +647,7 @@ const EducatorForm = () => {
                   onChange={(e) =>
                     handleNestedInputChange("socials", platform, e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder={`Enter ${platform} URL`}
                 />
               </div>

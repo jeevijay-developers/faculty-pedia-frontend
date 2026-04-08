@@ -310,8 +310,8 @@ const CourseDetails = ({ id }) => {
   if (!course) {
     return (
       <div className="max-w-7xl mx-auto p-4">
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
-          <p className="text-gray-500">Course not found.</p>
+        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 text-center">
+          <p className="text-gray-500 dark:text-gray-400">Course not found.</p>
         </div>
       </div>
     );
@@ -380,12 +380,12 @@ const CourseDetails = ({ id }) => {
   const isOneToOne = courseTypeValue === "one-to-one" || courseTypeValue === "oto";
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
+    <div className="max-w-7xl mx-auto p-4 text-gray-900 dark:text-gray-100">
       {showReviewSuccess && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Thanks for your review!</h3>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6 text-center">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Thanks for your review!</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
               Your rating has been recorded and will appear on the educator profile.
             </p>
             <button
@@ -402,14 +402,14 @@ const CourseDetails = ({ id }) => {
 
       <div className="mt-8">
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             <button
               onClick={() => setActiveTab("overview")}
               className={`${
                 activeTab === "overview"
                   ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  : "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
             >
               Overview
@@ -419,7 +419,7 @@ const CourseDetails = ({ id }) => {
               className={`${
                 activeTab === "classes"
                   ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  : "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
             >
               Classes
@@ -430,7 +430,7 @@ const CourseDetails = ({ id }) => {
                 className={`${
                   activeTab === "tests"
                     ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    : "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
               >
                 Test Series ({courseTests.length || 0})
@@ -449,11 +449,11 @@ const CourseDetails = ({ id }) => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Intro Video */}
                   {course.introVideo && (
-                    <div className="bg-white rounded-lg border border-gray-200 p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
                         Course Introduction
                       </h3>
-                      <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
+                      <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
                         <iframe
                           src={getIntroEmbedUrl(course.introVideo)}
                           title="Course Introduction"
@@ -469,11 +469,11 @@ const CourseDetails = ({ id }) => {
 
                   {/* Demo Videos */}
                   {course.videos && course.videos.length > 0 && course.videos[0]?.links?.[0] && (
-                    <div className="bg-white rounded-lg border border-gray-200 p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
                         Demo Video
                       </h3>
-                      <div className="aspect-video rounded-lg overflow-hidden bg-gray-100">
+                      <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
                         <iframe
                           src={getYouTubeEmbedUrl(course.videos[0].links[0])}
                           title={course.videos[0].title || "Course Demo"}
@@ -492,13 +492,13 @@ const CourseDetails = ({ id }) => {
                 {/* Course Objectives */}
                 {course.courseObjectives &&
                   course.courseObjectives.length > 0 && (
-                    <div className="bg-white rounded-lg border border-gray-200 p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
                         Course Feature
                       </h3>
                       <ul className="list-disc list-inside space-y-2">
                         {course.courseObjectives.map((objective, index) => (
-                          <li key={index} className="text-gray-700">
+                          <li key={index} className="text-gray-700 dark:text-gray-300">
                             {objective}
                           </li>
                         ))}
@@ -508,13 +508,13 @@ const CourseDetails = ({ id }) => {
 
                 {/* Prerequisites */}
                 {course.prerequisites && course.prerequisites.length > 0 && (
-                  <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                  <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
                       Prerequisites
                     </h3>
                     <ul className="list-disc list-inside space-y-2">
                       {course.prerequisites.map((prerequisite, index) => (
-                        <li key={index} className="text-gray-700">
+                        <li key={index} className="text-gray-700 dark:text-gray-300">
                           {prerequisite}
                         </li>
                       ))}
@@ -522,16 +522,16 @@ const CourseDetails = ({ id }) => {
                   </div>
                 )}
 
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
                     Give Review and rate this Course
                   </h3>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                     Reviews are limited to enrolled students. Your feedback appears on the educator profile.
                   </p>
                   <form className="space-y-4" onSubmit={handleCourseReviewSubmit}>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Tap to rate (half stars supported)
                       </span>
                       <div className="flex items-center gap-1">
@@ -557,11 +557,11 @@ const CourseDetails = ({ id }) => {
                             </button>
                           );
                         })}
-                        <span className="ml-2 text-sm text-gray-700">{reviewRating.toFixed(1)}</span>
+                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{reviewRating.toFixed(1)}</span>
                       </div>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-700" htmlFor="course-review-text">
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="course-review-text">
                         Your Review
                       </label>
                       <textarea
@@ -569,14 +569,14 @@ const CourseDetails = ({ id }) => {
                         value={reviewText}
                         onChange={(event) => setReviewText(event.target.value)}
                         rows={4}
-                        className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                        className="mt-2 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 px-3 py-2 text-sm"
                         placeholder="Share what you liked and what could improve."
                         disabled={!isEnrolled || isSubmittingReview}
                         required
                       />
                     </div>
                     {reviewStatus && (
-                      <p className="text-sm text-gray-700">{reviewStatus}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300">{reviewStatus}</p>
                     )}
                     <button
                       type="submit"
@@ -590,7 +590,7 @@ const CourseDetails = ({ id }) => {
                       {isSubmittingReview ? "Submitting..." : "Submit Review"}
                     </button>
                     {!isEnrolled && (
-                      <p className="text-sm text-red-600 font-medium">
+                      <p className="inline-flex items-center rounded-full border border-amber-300 dark:border-amber-700 bg-amber-100 dark:bg-amber-900/30 px-3 py-1 text-xs font-medium text-amber-800 dark:text-amber-200 ml-3">
                         Enroll in this course to submit a review.
                       </p>
                     )}
@@ -602,10 +602,10 @@ const CourseDetails = ({ id }) => {
             {activeTab === "classes" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-xl font-semibold text-gray-900">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                     Live Classes
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-400">
                     All scheduled live classes for this course
                   </p>
                 </div>
@@ -620,7 +620,7 @@ const CourseDetails = ({ id }) => {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">
+                    <p className="text-gray-500 dark:text-gray-400">
                       No live classes scheduled yet.
                     </p>
                   </div>
@@ -631,20 +631,20 @@ const CourseDetails = ({ id }) => {
             {activeTab === "tests" && (
               <div>
                 <div className="mb-6">
-                  <h3 className="text-xl font-semibold text-gray-900">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                     Test Series
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-400">
                     Practice tests and assessments for this course
                   </p>
                 </div>
                 {!hasTestSeries && !testsLoading && (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                     No test series assigned to this course yet.
                   </div>
                 )}
                 {testsLoading && (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                     Loading test series...
                   </div>
                 )}
@@ -662,20 +662,20 @@ const CourseDetails = ({ id }) => {
                       return (
                         <div
                           key={test._id || test.id || index}
-                          className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm"
+                          className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 shadow-sm"
                         >
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center justify-between">
-                              <h4 className="text-lg font-semibold text-gray-900 line-clamp-2">
+                              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
                                 {test.title || "Untitled Test Series"}
                               </h4>
                               {questionCount != null && (
-                                <span className="text-sm font-medium text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+                                <span className="text-sm font-medium text-blue-700 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full">
                                   {questionCount} questions
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm text-gray-600 whitespace-pre-line line-clamp-3">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line line-clamp-3">
                               {test.description || "No description provided."}
                             </p>
                           </div>
@@ -692,7 +692,7 @@ const CourseDetails = ({ id }) => {
           <div className="lg:col-span-1">
             <div className="sticky top-4">
               {/* Course Price and Enroll */}
-              <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-600 mb-4">
                     ₹{course.fees?.toLocaleString()}
@@ -714,48 +714,48 @@ const CourseDetails = ({ id }) => {
                   )}
 
                   {/* Course Stats */}
-                  <div className="space-y-3 pt-4 border-t border-gray-200">
+                  <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <div className="flex items-center text-sm">
-                      <span className="flex items-center mr-1 text-gray-600">
+                      <span className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
                         <FaClock className="w-4 h-4 mr-2" />  
                         <span>{course.courseDuration || "N/A"}</span>
                       </span>
-                      <span className="text-gray-500">Course Duration</span>
+                      <span className="text-gray-500 dark:text-gray-400">Course Duration</span>
                     </div>
                     <div className="flex items-center text-sm">
-                      <span className="flex items-center mr-1 text-gray-600">
+                      <span className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
                         <FaCalendarAlt className="w-4 h-4 mr-2" />
                         <span>{course.classesPerWeek || "N/A"}</span>
                       </span>
-                      <span className="text-gray-500">Classes / Week</span>
+                      <span className="text-gray-500 dark:text-gray-400">Classes / Week</span>
                     </div>
                     <div className="flex items-center text-sm">
-                      <span className="flex items-center mr-1 text-gray-600">
+                      <span className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
                         <FaClock className="w-4 h-4 mr-2" />
                         <span>{course.classDuration ? `${course.classDuration} min` : "N/A"}</span>
                       </span>
-                      <span className="text-gray-500">Per Class Duration</span>
+                      <span className="text-gray-500 dark:text-gray-400">Per Class Duration</span>
                     </div>
                     {course.classTiming && (
                       <div className="flex items-center text-sm">
-                        <span className="flex items-center mr-1 text-gray-600">
+                        <span className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
                           <FaClock className="w-4 h-4 mr-2" />
                           <span>{course.classTiming}</span>
                         </span>
-                        <span className="text-gray-500">Class Timing</span>
+                        <span className="text-gray-500 dark:text-gray-400">Class Timing</span>
                       </div>
                     )}
                     <div className="flex items-center text-sm">
-                      <span className="flex items-center  mr-1 text-gray-600">
+                      <span className="flex items-center  mr-1 text-gray-600 dark:text-gray-400">
                         <FaChair className="w-4 h-4 mr-2" />
                         <span>{course.enrolledStudents?.length || 0}</span>
                       </span>
-                      <span className="text-gray-500">Enrolled</span>
+                      <span className="text-gray-500 dark:text-gray-400">Enrolled</span>
                     </div>
                   </div>
 
                   {course.certificateAvailable && (
-                    <div className="text-sm text-gray-600 mt-4 pt-3 border-t border-gray-200">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
                       🎓 Certificate available upon completion
                     </div>
                   )}
@@ -764,9 +764,9 @@ const CourseDetails = ({ id }) => {
 
               {/* Talk to Educator WhatsApp Button - now visible for both 'One to One' and 'One to All' course types */}
               {!isEnrolled && educator?.whatsappNumber && (
-                <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200 p-5 shadow-sm">
+                <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-200 dark:border-green-800/50 p-5 shadow-sm">
                   <div className="text-center">
-                    <p className="text-sm text-gray-600 mb-3">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                       Worried about buying a course?
                     </p>
                     <a
@@ -778,7 +778,7 @@ const CourseDetails = ({ id }) => {
                       <FaWhatsapp className="w-5 h-5" />
                       Talk to Educator
                     </a>
-                    <p className="text-xs text-gray-500 mt-3">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
                       Connect directly with the educator to clarify your doubts
                     </p>
                   </div>
@@ -792,17 +792,17 @@ const CourseDetails = ({ id }) => {
       {showCoursePanel && isEnrolled && (
         <div
           ref={coursePanelRef}
-          className="mt-10 bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
+          className="mt-10 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden"
         >
           <div className="grid grid-cols-1 md:grid-cols-4">
-            <div className="border-b md:border-b-0 md:border-r bg-gray-50">
+            <div className="border-b md:border-b-0 md:border-r bg-gray-50 dark:bg-gray-800">
               <div className="flex md:flex-col">
                 <button
                   onClick={() => setPanelTab("videos")}
                   className={`flex-1 px-4 py-3 text-left text-sm font-medium border-b md:border-b-0 md:border-b-transparent md:border-l-4 transition-colors ${
                     panelTab === "videos"
-                      ? "bg-white text-blue-700 md:border-blue-600"
-                      : "text-gray-600 hover:text-gray-900 md:border-transparent"
+                      ? "bg-white dark:bg-gray-900 text-blue-700 md:border-blue-600"
+                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 md:border-transparent"
                   }`}
                 >
                   Videos
@@ -811,8 +811,8 @@ const CourseDetails = ({ id }) => {
                   onClick={() => setPanelTab("assets")}
                   className={`flex-1 px-4 py-3 text-left text-sm font-medium border-b md:border-b-0 md:border-l-4 transition-colors ${
                     panelTab === "assets"
-                      ? "bg-white text-blue-700 md:border-blue-600"
-                      : "text-gray-600 hover:text-gray-900 md:border-transparent"
+                      ? "bg-white dark:bg-gray-900 text-blue-700 md:border-blue-600"
+                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 md:border-transparent"
                   }`}
                 >
                   Assets
@@ -823,24 +823,24 @@ const CourseDetails = ({ id }) => {
             <div className="md:col-span-3 p-6 space-y-4">
               {panelTab === "videos" ? (
                 topics.length === 0 ? (
-                  <div className="text-center text-gray-500">
+                  <div className="text-center text-gray-500 dark:text-gray-400">
                     No course videos available.
                   </div>
                 ) : (
                   <div className="space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                           Course Videos
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                           Select a topic to browse its videos.
                         </p>
                       </div>
                       <select
                         value={selectedTopic}
                         onChange={(e) => handleTopicChange(e.target.value)}
-                        className="w-full sm:w-64 rounded-md border border-gray-300 px-3 py-2 text-sm"
+                        className="w-full sm:w-64 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 px-3 py-2 text-sm"
                       >
                         {topics.map((topic) => (
                           <option key={topic} value={topic}>
@@ -853,7 +853,7 @@ const CourseDetails = ({ id }) => {
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                       <div className="lg:col-span-3">
                         {selectedVideo ? (
-                          <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 border">
+                          <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border">
                             <iframe
                               src={getYouTubeEmbedUrl(
                                 selectedVideo.link || selectedVideo.url
@@ -871,14 +871,14 @@ const CourseDetails = ({ id }) => {
                             />
                           </div>
                         ) : (
-                          <div className="h-full min-h-60 flex items-center justify-center text-gray-500 border rounded-lg">
+                          <div className="h-full min-h-60 flex items-center justify-center text-gray-500 dark:text-gray-400 border rounded-lg">
                             Select a video to start watching.
                           </div>
                         )}
                       </div>
 
                       <div className="lg:col-span-2 space-y-3">
-                        <p className="text-sm font-semibold text-gray-800">
+                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                           Videos in this topic
                         </p>
                         <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
@@ -891,15 +891,15 @@ const CourseDetails = ({ id }) => {
                                 onClick={() => handleVideoSelect(video)}
                                 className={`w-full text-left p-3 rounded-md border transition-colors ${
                                   selectedVideo === video
-                                    ? "border-blue-200 bg-blue-50 text-blue-800"
-                                    : "border-gray-200 hover:border-blue-200 hover:bg-blue-50/60"
+                                    ? "border-blue-200 bg-blue-50 dark:bg-blue-900/20 text-blue-800"
+                                    : "border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                                 }`}
                               >
                                 <p className="text-sm font-medium line-clamp-1">
                                   {videoTitle}
                                 </p>
                                 {video.topic && (
-                                  <p className="text-xs text-gray-500 line-clamp-1">
+                                  <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
                                     {video.topic}
                                   </p>
                                 )}
@@ -912,16 +912,16 @@ const CourseDetails = ({ id }) => {
                   </div>
                 )
               ) : assets.length === 0 ? (
-                <div className="text-center text-gray-500">
+                <div className="text-center text-gray-500 dark:text-gray-400">
                   No assets shared for this course yet.
                 </div>
               ) : (
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                       Course Assets
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       Downloadable resources shared by the instructor.
                     </p>
                   </div>
@@ -936,7 +936,7 @@ const CourseDetails = ({ id }) => {
                           rel="noopener noreferrer"
                           className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
                             assetUrl
-                              ? "border-gray-200 hover:border-blue-200 hover:bg-blue-50/60"
+                              ? "border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                               : "border-red-200 bg-red-50/50 text-red-600 cursor-not-allowed"
                           }`}
                           onClick={(e) => {
@@ -944,10 +944,10 @@ const CourseDetails = ({ id }) => {
                           }}
                         >
                           <div className="flex-1">
-                            <p className="font-medium text-gray-900 line-clamp-1">
+                            <p className="font-medium text-gray-900 dark:text-gray-100 line-clamp-1">
                               {asset.title || asset.name || `Asset ${index + 1}`}
                             </p>
-                            <p className="text-sm text-gray-500 line-clamp-2">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
                               {asset.fileType || asset.type || asset.mimeType || "Resource"}
                             </p>
                             {!assetUrl && (

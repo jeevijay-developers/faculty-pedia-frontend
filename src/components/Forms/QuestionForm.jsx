@@ -101,10 +101,10 @@ export default function QuestionForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-800 flex items-center justify-center p-6">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-md w-full max-w-2xl space-y-4"
+        className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md w-full max-w-2xl space-y-4"
       >
         <h2 className="text-2xl font-bold">Create Question</h2>
 

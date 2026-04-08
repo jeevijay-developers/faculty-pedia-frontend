@@ -238,26 +238,26 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
     >
       <div 
         ref={modalRef}
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md my-8 max-h-[calc(100vh-2rem)] flex flex-col"
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md my-8 max-h-[calc(100vh-2rem)] flex flex-col"
         onClick={(e) => e.stopPropagation()}
         tabIndex={-1}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
-          <h2 className="text-xl font-semibold text-gray-900">Edit Profile</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Edit Profile</h2>
           <button
             onClick={handleClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-full transition-colors"
             disabled={loading}
           >
-            <FiX className="w-5 h-5 text-gray-500" />
+            <FiX className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
 
         {/* Content */}
         <div className="p-6 overflow-y-auto flex-1 min-h-0">
           {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 rounded-lg">
               <p className="text-green-800 text-sm flex items-center">
                 <FiCheckCircle className="w-4 h-4 mr-2" />
                 {success}
@@ -269,7 +269,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
             {/* Profile Image */}
             <div className="flex flex-col items-center">
               <div className="relative">
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-4 border-white shadow-lg relative">
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 border-4 border-white shadow-lg relative">
                   {imagePreview ? (
                     <Image
                       src={imagePreview}
@@ -306,7 +306,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
 
             {/* Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <FiUser className="w-4 h-4 inline mr-2" />
                 Name
               </label>
@@ -315,7 +315,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
                   errors.name ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your full name"
@@ -328,7 +328,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
 
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <FiMail className="w-4 h-4 inline mr-2" />
                 Email
               </label>
@@ -337,7 +337,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
                   errors.email ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your email address"
@@ -350,7 +350,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
 
             {/* Mobile Number Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <FiPhone className="w-4 h-4 inline mr-2" />
                 Mobile Number
               </label>
@@ -359,7 +359,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 name="mobileNumber"
                 value={formData.mobileNumber}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
                   errors.mobileNumber ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your mobile number"
@@ -382,7 +382,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
               <button
                 type="button"
                 onClick={handleClose}
-                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium"
                 disabled={loading}
               >
                 Cancel

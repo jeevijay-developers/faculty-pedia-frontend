@@ -694,13 +694,13 @@ const StudentDashboard = ({
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Error Loading Profile
           </h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
         </div>
       </div>
     );
@@ -708,13 +708,13 @@ const StudentDashboard = ({
 
   if (!studentData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
           <div className="text-gray-400 text-5xl mb-4">👤</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Student Not Found
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             The requested student profile could not be found.
           </p>
         </div>
@@ -841,7 +841,7 @@ const StudentDashboard = ({
               aria-label="Notifications"
               aria-expanded={isNotificationOpen}
               onClick={handleNotificationToggle}
-              className="relative inline-flex items-center justify-center rounded-full p-2.5 text-gray-600 transition hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="relative inline-flex items-center justify-center rounded-full p-2.5 text-gray-600 dark:text-gray-300 transition hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <Bell className="h-5 w-5" />
               {notificationState.unreadCount > 0 &&
@@ -854,16 +854,16 @@ const StudentDashboard = ({
             </button>
 
             {isNotificationOpen && (
-              <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl z-30">
-                <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-                  <span className="text-sm font-semibold text-gray-900">
+              <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1a2632] shadow-xl z-30">
+                <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 px-4 py-3">
+                  <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                     Notifications
                   </span>
                   <button
                     type="button"
                     onClick={handleNotificationRefresh}
                     disabled={notificationState.loading}
-                    className="flex items-center justify-center rounded-full p-1 text-blue-600 transition hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex items-center justify-center rounded-full p-1 text-blue-600 transition hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
                     aria-label="Refresh notifications"
                   >
                     {notificationState.loading ? (
@@ -875,7 +875,7 @@ const StudentDashboard = ({
                 </div>
                 <div className="max-h-80 overflow-y-auto">
                   {notificationState.loading ? (
-                    <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-gray-500">
+                    <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-gray-500 dark:text-gray-400">
                       <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
                       <span>Loading notifications...</span>
                     </div>
@@ -891,17 +891,17 @@ const StudentDashboard = ({
                       </button>
                     </div>
                   ) : notificationState.items.length === 0 ? (
-                    <div className="px-4 py-6 text-sm text-gray-500">
+                    <div className="px-4 py-6 text-sm text-gray-500 dark:text-gray-400">
                       You're all caught up! Follow your favourite educators to
                       get updates.
                     </div>
                   ) : (
-                    <ul className="divide-y divide-gray-100">
+                    <ul className="divide-y divide-gray-100 dark:divide-gray-700">
                       {notificationState.items.map((item) => (
                         <li key={item.id || item._id}>
                           <button
                             type="button"
-                            className="flex w-full gap-3 px-4 py-3 text-left transition hover:bg-blue-50 focus:outline-none"
+                            className="flex w-full gap-3 px-4 py-3 text-left transition hover:bg-blue-50 dark:hover:bg-blue-900/20 focus:outline-none"
                             onClick={() => handleNotificationSelect(item)}
                           >
                             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
@@ -909,18 +909,18 @@ const StudentDashboard = ({
                             </div>
                             <div className="flex-1">
                               <div className="flex items-center justify-between gap-2">
-                                <span className="text-sm font-semibold text-gray-900 line-clamp-1">
+                                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 line-clamp-1">
                                   {item.title}
                                 </span>
-                                <span className="text-xs text-gray-400">
+                                <span className="text-xs text-gray-400 dark:text-gray-500">
                                   {formatRelativeTime(item.createdAt)}
                                 </span>
                               </div>
-                              <p className="mt-1 text-xs text-gray-600">
+                              <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
                                 {item.message}
                               </p>
-                              <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-gray-400">
-                                <span className="text-gray-500">{item.educatorName}</span>
+                              <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                                <span className="text-gray-500 dark:text-gray-400">{item.educatorName}</span>
                                 <span>•</span>
                                 <span>{item.type}</span>
                               </div>
@@ -998,7 +998,7 @@ const StudentDashboard = ({
                     setIsProfileMenuOpen(false);
                     await handleLogout();
                   }}
-                  className="w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 flex items-center gap-2"
+                  className="w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-base">
                     logout

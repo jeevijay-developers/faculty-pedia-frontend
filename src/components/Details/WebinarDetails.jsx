@@ -200,9 +200,9 @@ const WebinarDetails = ({ webinar }) => {
     <div>
       {showReviewSuccess && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 text-center">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Thanks for your review!</h3>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6 text-center">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Thanks for your review!</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
               Your rating has been recorded and will appear on the educator profile.
             </p>
             <button
@@ -218,7 +218,7 @@ const WebinarDetails = ({ webinar }) => {
       <div className="max-w-7xl mx-auto p-4 space-y-8">
         {/* Header Section */}
         <div
-          className="bg-white rounded-xl shadow-lg overflow-hidden"
+          className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden"
           data-aos="fade-up"
         >
           <div className="relative h-64 w-full">
@@ -243,13 +243,13 @@ const WebinarDetails = ({ webinar }) => {
 
           <div className="p-6">
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 mb-4">
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                 {title
                   .split("-")
                   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                   .join(" ")}
               </h1>
-              <p className="text-sm text-gray-600">By {educatorName}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">By {educatorName}</p>
               <ShareButton
                 title={title || "Webinar"}
                 text={shareText}
@@ -257,21 +257,21 @@ const WebinarDetails = ({ webinar }) => {
                 size="sm"
               />
             </div>
-            <p className="text-gray-600 mb-6 leading-relaxed">{description}</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">{description}</p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaChalkboardTeacher className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Educator</p>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Educator</p>
                   <p className="font-semibold">{educatorName}</p>
                 </div>
               </div>
 
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaCalendarAlt className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Date</p>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Date</p>
                   <p className="font-semibold">
                     {timing.toLocaleDateString("en-US", {
                       weekday: "short",
@@ -280,7 +280,7 @@ const WebinarDetails = ({ webinar }) => {
                       day: "numeric",
                     })}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     {timing.toLocaleTimeString("en-US", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -289,32 +289,32 @@ const WebinarDetails = ({ webinar }) => {
                 </div>
               </div>
 
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaClock className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Duration</p>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Duration</p>
                   <p className="font-semibold">{duration} hours</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     {duration * 60} minutes
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaUsers className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Seats</p>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Seats</p>
                   <p className="font-semibold">{seatsAvailable} available</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     {enrolledCount} enrolled
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center text-gray-700">
+              <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <FaRupeeSign className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Price</p>
+                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Price</p>
                   <p className="font-semibold">₹{fees}</p>
                   {fees === 0 && <p className="text-sm text-green-600">Free</p>}
                 </div>
@@ -329,8 +329,8 @@ const WebinarDetails = ({ webinar }) => {
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          {/* <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+          {/* <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
             <FaBook className="w-5 h-5 mr-2 text-blue-500" />
             Topics Covered
           </h2>
@@ -345,8 +345,8 @@ const WebinarDetails = ({ webinar }) => {
           </ul>
         </div> */}
 
-          {/* <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+          {/* <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
             <FaGraduationCap className="w-5 h-5 mr-2 text-blue-500" />
             What You'll Learn
           </h2>
@@ -363,52 +363,52 @@ const WebinarDetails = ({ webinar }) => {
 
         {/* Additional Information */}
         <div
-          className="bg-white rounded-xl shadow-lg p-6"
+          className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6"
           data-aos="fade-up"
           data-aos-delay="100"
         >
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
             <FaGraduationCap className="w-5 h-5 mr-2 text-blue-500" />
             Webinar Information
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h3 className="font-semibold text-gray-800 mb-2">
+              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
                 Specialization
               </h3>
-              <p className="text-gray-600">{specialization}</p>
+              <p className="text-gray-600 dark:text-gray-400">{specialization}</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-800 mb-2">Subject</h3>
-              <p className="text-gray-600 capitalize">{subject}</p>
+              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Subject</h3>
+              <p className="text-gray-600 dark:text-gray-400 capitalize">{subject}</p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-800 mb-2">Type</h3>
-              <p className="text-gray-600 capitalize">
+              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Type</h3>
+              <p className="text-gray-600 dark:text-gray-400 capitalize">
                 {webinarType.replace("-", " ")}
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-800 mb-2">Format</h3>
-              <p className="text-gray-600">Live Online Webinar</p>
+              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Format</h3>
+              <p className="text-gray-600 dark:text-gray-400">Live Online Webinar</p>
             </div>
           </div>
         </div>
 
         <div
-          className="bg-white rounded-xl shadow-lg p-6"
+          className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6"
           data-aos="fade-up"
           data-aos-delay="130"
         >
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Give Review and rate this Webinar
           </h2>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
             Share your experience. Only enrolled students can submit a review, and it will show on the educator profile.
           </p>
           <form className="space-y-4" onSubmit={handleWebinarReviewSubmit}>
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Tap to rate (half stars supported)
               </span>
               <div className="flex items-center gap-1">
@@ -434,11 +434,11 @@ const WebinarDetails = ({ webinar }) => {
                     </button>
                   );
                 })}
-                <span className="ml-2 text-sm text-gray-700">{reviewRating.toFixed(1)}</span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{reviewRating.toFixed(1)}</span>
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-gray-700" htmlFor="webinar-review-text">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="webinar-review-text">
                 Your Review
               </label>
               <textarea
@@ -446,14 +446,14 @@ const WebinarDetails = ({ webinar }) => {
                 value={reviewText}
                 onChange={(event) => setReviewText(event.target.value)}
                 rows={4}
-                className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                className="mt-2 w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm"
                 placeholder="Tell others about the content, delivery, and outcomes."
                 disabled={!isAlreadyEnrolled || isSubmittingReview}
                 required
               />
             </div>
             {reviewStatus && (
-              <p className="text-sm text-gray-700">{reviewStatus}</p>
+              <p className="text-sm text-gray-700 dark:text-gray-300">{reviewStatus}</p>
             )}
             <button
               type="submit"
@@ -477,11 +477,11 @@ const WebinarDetails = ({ webinar }) => {
         {/* Assets Section */}
         {webinar.assetsLink && webinar.assetsLink.length > 0 && (
           <div
-            className="bg-white rounded-xl shadow-lg p-6"
+            className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6"
             data-aos="fade-up"
             data-aos-delay="150"
           >
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
               <FaBook className="w-5 h-5 mr-2 text-blue-500" />
               Study Materials
             </h2>
@@ -492,16 +492,16 @@ const WebinarDetails = ({ webinar }) => {
                   href={asset}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                  className="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:bg-gray-800 transition-colors duration-200"
                 >
                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                     <FaBook className="w-4 h-4 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
                       Material {index + 1}
                     </p>
-                    <p className="text-sm text-gray-500">Study Resource</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Study Resource</p>
                   </div>
                 </a>
               ))}
@@ -511,11 +511,11 @@ const WebinarDetails = ({ webinar }) => {
 
         {/* Educator Section */}
         {/* <div
-        className="bg-white rounded-xl shadow-lg p-6"
+        className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6"
         data-aos="fade-up"
         data-aos-delay="200"
       >
-        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
           <FaChalkboardTeacher className="w-5 h-5 mr-2 text-blue-500" />
           About the Educator
         </h2>
@@ -530,8 +530,8 @@ const WebinarDetails = ({ webinar }) => {
           </div>
           <div>
             <h3 className="font-semibold text-lg">{webinar.educator.name}</h3>
-            <p className="text-gray-600">{webinar.educator.qualification}</p>
-            <p className="text-gray-600 mt-2">{webinar.educator.bio}</p>
+            <p className="text-gray-600 dark:text-gray-400">{webinar.educator.qualification}</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-2">{webinar.educator.bio}</p>
           </div>
         </div>
       </div> */}

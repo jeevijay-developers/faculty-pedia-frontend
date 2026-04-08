@@ -27,12 +27,12 @@ const ImageModal = ({ enlargedImage, setEnlargedImage }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative max-w-4xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden">
         <button
           onClick={() => setEnlargedImage(null)}
-          className="absolute top-4 right-4 z-10 p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full shadow-lg transition-all duration-200"
+          className="absolute top-4 right-4 z-10 p-2 bg-white dark:bg-gray-900/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 rounded-full shadow-lg transition-all duration-200"
         >
-          <FiX className="w-6 h-6 text-gray-600" />
+          <FiX className="w-6 h-6 text-gray-600 dark:text-gray-400" />
         </button>
         <div className="p-6">
           <Image

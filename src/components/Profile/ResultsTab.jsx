@@ -87,17 +87,17 @@ const ResultsTab = ({
   const sparkData = dedupedByTest.slice(0, 8);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-      <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-        <h3 className="text-xl font-semibold text-gray-900">Test Results</h3>
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+      <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Test Results</h3>
         <div className="flex items-center gap-4">
           {seriesLoading && (
-            <span className="text-xs text-gray-500 animate-pulse">
+            <span className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">
               Loading series...
             </span>
           )}
           {resultsLoading && (
-            <span className="text-xs text-gray-500 animate-pulse">
+            <span className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">
               Loading results...
             </span>
           )}
@@ -113,32 +113,32 @@ const ResultsTab = ({
       {dedupedByTest.length > 0 && (
         <div className="px-6 pb-4">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-              <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold">Attempts</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.attempts}</p>
-              <p className="text-xs text-gray-500">Total submissions</p>
+            <div className="rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4">
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold">Attempts</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.attempts}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Total submissions</p>
             </div>
-            <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-              <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold">Avg %</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.avgPercent}%</p>
-              <p className="text-xs text-gray-500">Average accuracy</p>
+            <div className="rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4">
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold">Avg %</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.avgPercent}%</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Average accuracy</p>
             </div>
-            <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-              <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold">Avg Score</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.avgScore}</p>
-              <p className="text-xs text-gray-500">Per test</p>
+            <div className="rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4">
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold">Avg Score</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">{stats.avgScore}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Per test</p>
             </div>
-            <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-              <p className="text-xs uppercase tracking-wide text-gray-500 font-semibold">Best %</p>
+            <div className="rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4">
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold">Best %</p>
               <p className="text-2xl font-bold text-emerald-700 mt-1">{stats.bestPercent}%</p>
-              <p className="text-xs text-gray-500">Top performance</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Top performance</p>
             </div>
           </div>
 
-          {/* <div className="mt-4 rounded-xl border border-gray-100 bg-white p-4">
+          {/* <div className="mt-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-semibold text-gray-800">Recent performance</p>
-              <p className="text-xs text-gray-500">Last {sparkData.length} attempts</p>
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">Recent performance</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Last {sparkData.length} attempts</p>
             </div>
             <div className="flex items-end gap-2 h-24">
               {sparkData.map((r, idx) => {
@@ -153,14 +153,14 @@ const ResultsTab = ({
                       style={{ height: `${height}%`, minHeight: "8px" }}
                       title={`${r.percentage}% on ${dateLabel}`}
                     />
-                    <span className="text-[10px] text-gray-500" title={dateLabel}>
+                    <span className="text-[10px] text-gray-500 dark:text-gray-400" title={dateLabel}>
                       {r.percentage}%
                     </span>
                   </div>
                 );
               })}
               {sparkData.length === 0 && (
-                <div className="text-xs text-gray-500">No attempts yet</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">No attempts yet</div>
               )}
             </div>
           </div> */}
@@ -170,29 +170,29 @@ const ResultsTab = ({
         {dedupedByTest.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                     Test
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                     Score
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                     Correct
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                     Incorrect
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                     Performance
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200">
                 {dedupedByTest.map((entry, index) => {
                   const result = entry.raw;
                   const resultId = getResultId(result);
@@ -214,13 +214,13 @@ const ResultsTab = ({
           </div>
         ) : (
           <div className="text-center py-16">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+            <div className="w-20 h-20 mx-auto mb-6 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
               <FiAward className="w-10 h-10 text-gray-400" />
             </div>
-            <h4 className="text-lg font-semibold text-gray-900 mb-2">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
               No test results available
             </h4>
-            <p className="text-gray-500 mb-6">
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
               Take your first test to see detailed results and analytics
             </p>
             <button

@@ -23,7 +23,7 @@ const PostDetails = ({ postData }) => {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center">
-          <p className="text-gray-500">No blog post data available</p>
+          <p className="text-gray-500 dark:text-gray-400">No blog post data available</p>
         </div>
       </div>
     );
@@ -60,7 +60,7 @@ const PostDetails = ({ postData }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 text-gray-900 dark:text-gray-100">
       <div className="grid lg:grid-cols-4 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-8">
@@ -74,16 +74,16 @@ const PostDetails = ({ postData }) => {
                 postData.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm"
+                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full text-sm"
                   >
                     #{tag}
                   </span>
                 ))}
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 leading-tight">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
               {postData.title || "Blog Post Title"}
             </h1>
-            <p className="text-xl text-gray-600 leading-relaxed">
+            <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
               {postData.content?.short || "No description available"}
             </p>
           </div>
@@ -92,7 +92,7 @@ const PostDetails = ({ postData }) => {
           <div
             data-aos="fade-up"
             data-aos-delay="100"
-            className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl shadow-lg"
+            className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-xl shadow-lg"
           >
             <div className="grid md:grid-cols-3 gap-6">
               <div className="flex items-center space-x-3">
@@ -100,8 +100,8 @@ const PostDetails = ({ postData }) => {
                   <FaUser className="text-white text-lg" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Author</p>
-                  <p className="font-semibold text-gray-800">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Author</p>
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">
                     {postData.author
                       ? `${postData.author.firstName} ${postData.author.lastName}`
                       : "Anonymous"}
@@ -113,8 +113,8 @@ const PostDetails = ({ postData }) => {
                   <FaCalendarAlt className="text-white text-lg" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Published</p>
-                  <p className="font-semibold text-gray-800">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Published</p>
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">
                     {getPublishDate()}
                   </p>
                 </div>
@@ -124,8 +124,8 @@ const PostDetails = ({ postData }) => {
                   <FaClock className="text-white text-lg" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Reading Time</p>
-                  <p className="font-semibold text-gray-800">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Reading Time</p>
+                  <p className="font-semibold text-gray-800 dark:text-gray-200">
                     {getReadingTime()}
                   </p>
                 </div>
@@ -150,11 +150,11 @@ const PostDetails = ({ postData }) => {
           <div
             data-aos="fade-up"
             data-aos-delay="300"
-            className="bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-lg overflow-hidden"
+            className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden"
           >
             <div className="p-8">
               <div
-                className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+                className="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html:
                     postData.content?.long ||
@@ -170,9 +170,9 @@ const PostDetails = ({ postData }) => {
             <div
               data-aos="fade-up"
               data-aos-delay="400"
-              className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl shadow-lg"
+              className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-100 dark:border-blue-800/40 p-8 rounded-xl shadow-lg"
             >
-              <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center">
                 <FaUser className="mr-3 text-blue-600" />
                 About the Author
               </h2>
@@ -188,13 +188,13 @@ const PostDetails = ({ postData }) => {
                   />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
                     {postData.author.firstName} {postData.author.lastName}
                   </h3>
                   <p className="text-blue-600 font-medium mb-3">
                     {postData.author.specialization || "Expert Educator"}
                   </p>
-                  <p className="text-gray-700 leading-relaxed mb-4">
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                     {postData.author.bio ||
                       "Passionate educator dedicated to helping students achieve their academic goals."}
                   </p>
@@ -204,7 +204,7 @@ const PostDetails = ({ postData }) => {
                       <span className="font-semibold">
                         {postData.author.rating}
                       </span>
-                      <span className="text-gray-600">
+                      <span className="text-gray-600 dark:text-gray-400">
                         ({postData.author.reviewCount || 0} reviews)
                       </span>
                     </div>
@@ -220,9 +220,9 @@ const PostDetails = ({ postData }) => {
             <div
               data-aos="fade-up"
               data-aos-delay="500"
-              className="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl shadow-lg"
+              className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-100 dark:border-green-800/40 p-8 rounded-xl shadow-lg"
             >
-              <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center">
                 <FaGraduationCap className="mr-3 text-green-600" />
                 Explore More from This Author
               </h2>
@@ -231,7 +231,7 @@ const PostDetails = ({ postData }) => {
                   postData.author.courses.slice(0, 4).map((course, index) => (
                     <div
                       key={index}
-                      className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                      className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
                     >
                       <div className="flex items-start space-x-3">
                         <img
@@ -242,10 +242,10 @@ const PostDetails = ({ postData }) => {
                           className="w-16 h-16 rounded-lg object-cover"
                         />
                         <div className="flex-1">
-                          <h4 className="font-semibold text-gray-800 capitalize">
+                          <h4 className="font-semibold text-gray-800 dark:text-gray-200 capitalize">
                             {course.title}
                           </h4>
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                             {course.description?.shortDesc}
                           </p>
                           <p className="text-blue-600 font-medium mt-2">
@@ -267,7 +267,7 @@ const PostDetails = ({ postData }) => {
             data-aos="fade-left"
             className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-xl ring-1 ring-gray-100"
           >
-            <h3 className="text-lg font-bold mb-4 text-gray-800">
+            <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200">
               Quick Actions
             </h3>
             <div className="space-y-3">
@@ -275,11 +275,11 @@ const PostDetails = ({ postData }) => {
                 <FaHeart className="text-sm" />
                 <span>Like Post</span>
               </button>
-              <button className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 flex items-center justify-center space-x-2">
+              <button className="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-xl font-semibold hover:bg-gray-200 dark:bg-gray-700 transition-all duration-300 flex items-center justify-center space-x-2">
                 <FaBookmark className="text-sm" />
                 <span>Save for Later</span>
               </button>
-              <button className="w-full bg-gray-100 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-200 transition-all duration-300 flex items-center justify-center space-x-2">
+              <button className="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-xl font-semibold hover:bg-gray-200 dark:bg-gray-700 transition-all duration-300 flex items-center justify-center space-x-2">
                 <FaShare className="text-sm" />
                 <span>Share Post</span>
               </button>
@@ -292,38 +292,38 @@ const PostDetails = ({ postData }) => {
             data-aos-delay="100"
             className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl shadow-lg ring-1 ring-purple-100"
           >
-            <h3 className="text-lg font-bold mb-4 text-gray-800 flex items-center">
+            <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
               <span className="text-2xl mr-2">📊</span>
               Post Statistics
             </h3>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <div className="flex items-center space-x-2">
                   <FaEye className="text-blue-500" />
-                  <span className="text-gray-700 font-medium">Views</span>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Views</span>
                 </div>
-                <span className="font-semibold text-gray-800">1,234</span>
+                <span className="font-semibold text-gray-800 dark:text-gray-200">1,234</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <div className="flex items-center space-x-2">
                   <FaHeart className="text-red-500" />
-                  <span className="text-gray-700 font-medium">Likes</span>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Likes</span>
                 </div>
-                <span className="font-semibold text-gray-800">89</span>
+                <span className="font-semibold text-gray-800 dark:text-gray-200">89</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <div className="flex items-center space-x-2">
                   <FaBookmark className="text-green-500" />
-                  <span className="text-gray-700 font-medium">Saves</span>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Saves</span>
                 </div>
-                <span className="font-semibold text-gray-800">45</span>
+                <span className="font-semibold text-gray-800 dark:text-gray-200">45</span>
               </div>
-              <div className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
+              <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
                 <div className="flex items-center space-x-2">
                   <FaShare className="text-purple-500" />
-                  <span className="text-gray-700 font-medium">Shares</span>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Shares</span>
                 </div>
-                <span className="font-semibold text-gray-800">23</span>
+                <span className="font-semibold text-gray-800 dark:text-gray-200">23</span>
               </div>
             </div>
           </div> */}
@@ -332,17 +332,17 @@ const PostDetails = ({ postData }) => {
           <div
             data-aos="fade-left"
             data-aos-delay="200"
-            className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl shadow-lg ring-1 ring-orange-100"
+            className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-6 rounded-xl shadow-lg ring-1 ring-orange-100 dark:ring-orange-800/40"
           >
-            <h3 className="text-lg font-bold mb-4 text-gray-800 flex items-center">
+            <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
               <FaTag className="mr-2 text-orange-600" />
               Category
             </h3>
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <span className="inline-block bg-orange-100 text-orange-600 px-3 py-2 rounded-full font-medium">
+            <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
+              <span className="inline-block bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-300 px-3 py-2 rounded-full font-medium">
                 {postData.category || "General"}
               </span>
-              <p className="text-gray-600 text-sm mt-3">
+              <p className="text-gray-600 dark:text-gray-400 text-sm mt-3">
                 Explore more posts in this category to deepen your understanding
                 and knowledge.
               </p>
@@ -354,16 +354,16 @@ const PostDetails = ({ postData }) => {
             <div
               data-aos="fade-left"
               data-aos-delay="300"
-              className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl shadow-lg ring-1 ring-indigo-100"
+              className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 p-6 rounded-xl shadow-lg ring-1 ring-indigo-100 dark:ring-indigo-800/40"
             >
-              <h3 className="text-lg font-bold mb-4 text-gray-800">
+              <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200">
                 Related Tags
               </h3>
               <div className="flex flex-wrap gap-2">
                 {postData.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="bg-white text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors duration-300 cursor-pointer"
+                    className="bg-white dark:bg-gray-900 text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-indigo-600 hover:text-white transition-colors duration-300 cursor-pointer"
                   >
                     #{tag}
                   </span>

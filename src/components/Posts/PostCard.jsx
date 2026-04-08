@@ -55,7 +55,7 @@ const PostCard = ({ post, activeSpecialization }) => {
       case "CBSE":
         return "bg-purple-100 text-purple-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200";
     }
   };
 
@@ -115,21 +115,21 @@ const PostCard = ({ post, activeSpecialization }) => {
   }, [educator?.profilePicture, educator?.image?.url]);
 
   return (
-    <div className="group relative flex flex-col rounded-2xl bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
+    <div className="group relative flex flex-col rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Content */}
       <div className="flex flex-col grow">
         {/* Title */}
-        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors line">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors line">
           {title}
         </h3>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 grow">
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2 grow">
           {description}
         </p>
 
         {/* Meta Info */}
-        <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-1">
               <FaRegCalendarAlt className="h-4 w-4" />
@@ -148,7 +148,7 @@ const PostCard = ({ post, activeSpecialization }) => {
         </div>
 
         {/* Faculty Info */}
-        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
           <div className="flex items-center space-x-3">
             <div className="relative h-10 w-10 rounded-full overflow-hidden shrink-0">
               <Image
@@ -163,13 +163,13 @@ const PostCard = ({ post, activeSpecialization }) => {
               {educator?._id ? (
                 <Link
                   href={`/profile/educator/${educator._id}`}
-                  className="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                  className="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {educator?.fullName || "Educator"}
                 </Link>
               ) : (
-                <span className="text-sm font-semibold text-gray-900">
+                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                   {educator?.fullName || "Educator"}
                 </span>
               )}
@@ -212,17 +212,17 @@ const PostCard = ({ post, activeSpecialization }) => {
                 role="dialog"
                 aria-modal="true"
                 aria-label={`${title} details`}
-                className="relative z-10 w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+                className="relative z-10 w-full max-w-3xl overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-2xl"
               >
                 <div className="flex flex-col max-h-[85vh]">
-                  <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-                    <h2 className="text-xl font-semibold text-gray-900">
+                  <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                       {title}
                     </h2>
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+                      className="rounded-full p-2 text-gray-500 dark:text-gray-400 transition hover:bg-gray-100 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300"
                       aria-label="Close"
                     >
                       <svg
@@ -242,7 +242,7 @@ const PostCard = ({ post, activeSpecialization }) => {
                   </div>
 
                   <div className="overflow-y-auto px-6 pb-6 pt-4">
-                    <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                       <div className="flex items-center space-x-1">
                         <FaRegCalendarAlt className="h-4 w-4" />
                         <span>{formatDate(publishDate)}</span>
@@ -257,12 +257,12 @@ const PostCard = ({ post, activeSpecialization }) => {
                       {educator?._id ? (
                         <Link
                           href={`/profile/educator/${educator._id}`}
-                          className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors"
+                          className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-blue-600 transition-colors"
                         >
                           {educator?.fullName || "Educator"}
                         </Link>
                       ) : (
-                        <span className="text-sm font-semibold text-gray-700">
+                        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                           {educator?.fullName || "Educator"}
                         </span>
                       )}
@@ -281,13 +281,13 @@ const PostCard = ({ post, activeSpecialization }) => {
 
                     <div className="mt-6 space-y-4">
                       {typeof fullContent === "string" ? (
-                        <p className="whitespace-pre-line text-sm leading-relaxed text-gray-700">
+                        <p className="whitespace-pre-line text-sm leading-relaxed text-gray-700 dark:text-gray-300">
                           {fullContent}
                         </p>
                       ) : null}
 
                       {Array.isArray(fullContent) && fullContent.length > 0 && (
-                        <div className="space-y-3 text-sm leading-relaxed text-gray-700">
+                        <div className="space-y-3 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
                           {fullContent.map((paragraph, index) => (
                             <p key={index} className="whitespace-pre-line">
                               {paragraph}
@@ -298,7 +298,7 @@ const PostCard = ({ post, activeSpecialization }) => {
                     </div>
                   </div>
 
-                  <div className="border-t border-gray-200 bg-gray-50 px-6 py-4 text-right">
+                  <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-6 py-4 text-right">
                     <button
                       type="button"
                       onClick={handleCloseModal}

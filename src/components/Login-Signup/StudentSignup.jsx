@@ -4,7 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import EmailVerificationModal from "./EmailVerificationModal";
-import { signupStudent } from "../server/auth/auth.routes";
+import {
+  requestPreSignupVerification,
+  signupStudent,
+} from "../server/auth/auth.routes";
 import toast from "react-hot-toast";
 import {
   LuLoaderCircle,
@@ -35,6 +38,8 @@ const CLASS_OPTIONS = [
   { label: "Dropper", value: "dropper" },
 ];
 
+const OTP_COOLDOWN_SECONDS = 60;
+
 const StudentSignup = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +52,7 @@ const StudentSignup = () => {
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [verifiedEmail, setVerifiedEmail] = useState("");
+  const [otpModalCooldown, setOtpModalCooldown] = useState(0);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -138,7 +144,7 @@ const StudentSignup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -151,19 +157,68 @@ const StudentSignup = () => {
     setVerifiedEmail("");
 
     // Prepare data for signup after OTP verification
+    const normalizedEmail = formData.email.trim().toLowerCase();
+
     const submitData = {
       name: formData.name.trim(),
       username: formData.username.trim(),
-      email: formData.email.trim(),
+      email: normalizedEmail,
       password: formData.password,
       mobileNumber: formData.mobileNumber.trim(),
       specialization: formData.specialization,
       class: formData.classLevel,
     };
 
-    setPendingSubmitData(submitData);
-    setPendingUser({ email: submitData.email, userType: "student" });
-    setShowVerificationModal(true);
+    try {
+      await requestPreSignupVerification({
+        email: normalizedEmail,
+        userType: "student",
+      });
+
+      setOtpModalCooldown(OTP_COOLDOWN_SECONDS);
+      setPendingSubmitData(submitData);
+      setPendingUser({ email: submitData.email, userType: "student" });
+      setShowVerificationModal(true);
+    } catch (error) {
+      const statusCode = error?.response?.status;
+      const backendMessage = error?.response?.data?.message || "";
+      const duplicateDetected =
+        statusCode === 409 ||
+        /already exists|already registered|user exists|email already/i.test(
+          backendMessage
+        );
+
+      if (duplicateDetected) {
+        setErrors({
+          email: "Email is already registered",
+          submit: "Student with this email already exists",
+        });
+        toast.error("Student with this email already exists");
+        return;
+      }
+
+      // OTP already sent recently: open modal and let user verify using same code.
+      if (statusCode === 429) {
+        const retryAfterMs = error?.response?.data?.retryAfterMs;
+        setOtpModalCooldown(
+          retryAfterMs && typeof retryAfterMs === "number"
+            ? Math.ceil(retryAfterMs / 1000)
+            : OTP_COOLDOWN_SECONDS
+        );
+        setPendingSubmitData(submitData);
+        setPendingUser({ email: submitData.email, userType: "student" });
+        setShowVerificationModal(true);
+        toast("A verification code was already sent. Please use that code.");
+        return;
+      }
+
+      const message =
+        backendMessage ||
+        error?.message ||
+        "Unable to start email verification. Please try again.";
+      setErrors({ submit: message });
+      toast.error(message);
+    }
   };
 
   const handleEmailVerificationSuccess = async () => {
@@ -275,14 +330,14 @@ const StudentSignup = () => {
 
   return (
     <>
-      <div className="relative min-h-screen w-full flex items-center justify-center p-4 lg:p-8 bg-linear-to-br from-[#F9FAFB] to-[#EEF2FF]">
+      <div className="relative min-h-screen w-full flex items-center justify-center p-4 lg:p-8 bg-linear-to-br from-[#F9FAFB] to-[#EEF2FF] dark:from-gray-950 dark:to-gray-900">
         {/* Main Container */}
-        <div className="w-full max-w-250 rounded-3xl bg-white shadow-xl shadow-blue-900/5 overflow-hidden flex flex-col lg:flex-row min-h-175">
+        <div className="w-full max-w-250 rounded-3xl bg-white dark:bg-gray-900 shadow-xl shadow-blue-900/5 overflow-hidden flex flex-col lg:flex-row min-h-175">
           {/* Left Panel - Benefits */}
           <div className="relative flex flex-col justify-between w-full lg:w-[40%] bg-blue-600 p-8 lg:p-10 text-white overflow-hidden">
             {/* Background Gradient Effects */}
             <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-              <div className="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] rounded-full bg-white blur-[100px]"></div>
+              <div className="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] rounded-full bg-white dark:bg-gray-900 blur-[100px]"></div>
               <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-blue-300 blur-[80px]"></div>
             </div>
 
@@ -308,7 +363,7 @@ const StudentSignup = () => {
               {/* Benefits List */}
               <div className="flex flex-col gap-6 mt-auto">
                 <div className="flex gap-4 items-start">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-gray-900/10 backdrop-blur-sm">
                     <LuVideo className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex flex-col">
@@ -322,7 +377,7 @@ const StudentSignup = () => {
                 </div>
 
                 <div className="flex gap-4 items-start">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-gray-900/10 backdrop-blur-sm">
                     <LuFileText className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex flex-col">
@@ -336,7 +391,7 @@ const StudentSignup = () => {
                 </div>
 
                 <div className="flex gap-4 items-start">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-gray-900/10 backdrop-blur-sm">
                     <LuBookOpen className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex flex-col">
@@ -350,7 +405,7 @@ const StudentSignup = () => {
                 </div>
 
                 <div className="flex gap-4 items-start">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-gray-900/10 backdrop-blur-sm">
                     <LuCircleCheck className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex flex-col">
@@ -367,14 +422,14 @@ const StudentSignup = () => {
           </div>
 
           {/* Right Panel - Form */}
-          <div className="flex-1 bg-white p-8 lg:p-12 flex flex-col justify-center overflow-y-auto">
+          <div className="flex-1 bg-white dark:bg-gray-900 p-8 lg:p-12 flex flex-col justify-center overflow-y-auto">
             <div className="w-full max-w-lg mx-auto">
               {/* Form Header */}
               <div className="mb-8">
-                <h2 className="text-[#0e121b] tracking-tight text-[28px] font-bold leading-tight">
+                <h2 className="text-[#0e121b] dark:text-gray-100 tracking-tight text-[28px] font-bold leading-tight">
                   Create Student Account
                 </h2>
-                <p className="text-[#4d6599] text-base font-normal leading-normal mt-2">
+                <p className="text-[#4d6599] dark:text-gray-400 text-base font-normal leading-normal mt-2">
                   Join thousands of students learning smarter
                 </p>
               </div>
@@ -382,7 +437,7 @@ const StudentSignup = () => {
               {/* Success Banner */}
               {successMessage && (
                 <div className="mb-6">
-                  <div className="flex items-center gap-3 rounded-xl bg-green-50 p-4 border border-green-100">
+                  <div className="flex items-center gap-3 rounded-xl bg-green-50 dark:bg-green-900/20 p-4 border border-green-100">
                     <LuCircleCheck className="h-5 w-5 text-green-600" />
                     <div>
                       <p className="text-green-800 text-sm font-medium">
@@ -401,7 +456,7 @@ const StudentSignup = () => {
                 {/* Row 1: Name and Username */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-[#0e121b] text-sm font-medium">
+                    <span className="text-[#0e121b] dark:text-gray-100 text-sm font-medium">
                       Full Name
                     </span>
                     <div className="relative group">
@@ -412,8 +467,8 @@ const StudentSignup = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
-                          errors.name ? "border-red-300" : "border-[#d0d7e7]"
+                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] dark:bg-gray-800 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] dark:placeholder:text-gray-500 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
+                          errors.name ? "border-red-300" : "border-[#d0d7e7] dark:border-gray-700"
                         }`}
                         placeholder="John Doe"
                       />
@@ -426,7 +481,7 @@ const StudentSignup = () => {
                   </label>
 
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-[#0e121b] text-sm font-medium">
+                    <span className="text-[#0e121b] dark:text-gray-100 text-sm font-medium">
                       Username
                     </span>
                     <div className="relative group">
@@ -437,10 +492,10 @@ const StudentSignup = () => {
                         name="username"
                         value={formData.username}
                         onChange={handleInputChange}
-                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
+                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] dark:bg-gray-800 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] dark:placeholder:text-gray-500 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
                           errors.username
                             ? "border-red-300"
-                            : "border-[#d0d7e7]"
+                            : "border-[#d0d7e7] dark:border-gray-700"
                         }`}
                         placeholder="johndoe123"
                       />
@@ -456,7 +511,7 @@ const StudentSignup = () => {
                 {/* Row 2: Email and Mobile */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-[#0e121b] text-sm font-medium">
+                    <span className="text-[#0e121b] dark:text-gray-100 text-sm font-medium">
                       Email Address (Gmail only)
                     </span>
                     <div className="relative group">
@@ -467,12 +522,12 @@ const StudentSignup = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
+                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] dark:bg-gray-800 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] dark:placeholder:text-gray-500 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
                           isEmailVerified
                             ? "border-green-400"
                             : errors.email
                             ? "border-red-300"
-                            : "border-[#d0d7e7]"
+                            : "border-[#d0d7e7] dark:border-gray-700"
                         }`}
                         placeholder="john@gmail.com"
                       />
@@ -493,7 +548,7 @@ const StudentSignup = () => {
                   </label>
 
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-[#0e121b] text-sm font-medium">
+                    <span className="text-[#0e121b] dark:text-gray-100 text-sm font-medium">
                       Mobile Number
                     </span>
                     <div className="relative group">
@@ -504,10 +559,10 @@ const StudentSignup = () => {
                         name="mobileNumber"
                         value={formData.mobileNumber}
                         onChange={handleInputChange}
-                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
+                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] dark:bg-gray-800 pl-10 pr-4 text-sm outline-none transition-all placeholder:text-[#94a3b8] dark:placeholder:text-gray-500 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
                           errors.mobileNumber
                             ? "border-red-300"
-                            : "border-[#d0d7e7]"
+                            : "border-[#d0d7e7] dark:border-gray-700"
                         }`}
                         placeholder="9876543210"
                       />
@@ -523,7 +578,7 @@ const StudentSignup = () => {
                 {/* Row 3: Specialization and Class */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-[#0e121b] text-sm font-medium">
+                    <span className="text-[#0e121b] dark:text-gray-100 text-sm font-medium">
                       Exam
                     </span>
                     <div className="relative group">
@@ -533,10 +588,10 @@ const StudentSignup = () => {
                         name="specialization"
                         value={formData.specialization}
                         onChange={handleInputChange}
-                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-10 text-sm outline-none transition-all text-[#0e121b] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 appearance-none cursor-pointer ${
+                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] dark:bg-gray-800 pl-10 pr-10 text-sm outline-none transition-all text-[#0e121b] dark:text-gray-100 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 appearance-none cursor-pointer ${
                           errors.specialization
                             ? "border-red-300"
-                            : "border-[#d0d7e7]"
+                            : "border-[#d0d7e7] dark:border-gray-700"
                         }`}
                       >
                         <option value="" disabled>
@@ -557,7 +612,7 @@ const StudentSignup = () => {
                   </label>
 
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-[#0e121b] text-sm font-medium">
+                    <span className="text-[#0e121b] dark:text-gray-100 text-sm font-medium">
                       Class/Grade
                     </span>
                     <div className="relative group">
@@ -567,10 +622,10 @@ const StudentSignup = () => {
                         name="classLevel"
                         value={formData.classLevel}
                         onChange={handleInputChange}
-                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-10 text-sm outline-none transition-all text-[#0e121b] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 appearance-none cursor-pointer ${
+                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] dark:bg-gray-800 pl-10 pr-10 text-sm outline-none transition-all text-[#0e121b] dark:text-gray-100 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 appearance-none cursor-pointer ${
                           errors.classLevel
                             ? "border-red-300"
-                            : "border-[#d0d7e7]"
+                            : "border-[#d0d7e7] dark:border-gray-700"
                         }`}
                       >
                         <option value="" disabled>
@@ -594,7 +649,7 @@ const StudentSignup = () => {
                 {/* Row 4: Passwords */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-[#0e121b] text-sm font-medium">
+                    <span className="text-[#0e121b] dark:text-gray-100 text-sm font-medium">
                       Password
                     </span>
                     <div className="relative group">
@@ -605,16 +660,16 @@ const StudentSignup = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-10 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
+                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] dark:bg-gray-800 pl-10 pr-10 text-sm outline-none transition-all placeholder:text-[#94a3b8] dark:placeholder:text-gray-500 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
                           errors.password
                             ? "border-red-300"
-                            : "border-[#d0d7e7]"
+                            : "border-[#d0d7e7] dark:border-gray-700"
                         }`}
                         placeholder="••••••••"
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-300 focus:outline-none"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -632,7 +687,7 @@ const StudentSignup = () => {
                   </label>
 
                   <label className="flex flex-col gap-1.5">
-                    <span className="text-[#0e121b] text-sm font-medium">
+                    <span className="text-[#0e121b] dark:text-gray-100 text-sm font-medium">
                       Confirm Password
                     </span>
                     <div className="relative group">
@@ -643,16 +698,16 @@ const StudentSignup = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] pl-10 pr-10 text-sm outline-none transition-all placeholder:text-[#94a3b8] focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
+                        className={`w-full h-12 rounded-xl border bg-[#f8f9fc] dark:bg-gray-800 pl-10 pr-10 text-sm outline-none transition-all placeholder:text-[#94a3b8] dark:placeholder:text-gray-500 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/10 ${
                           errors.confirmPassword
                             ? "border-red-300"
-                            : "border-[#d0d7e7]"
+                            : "border-[#d0d7e7] dark:border-gray-700"
                         }`}
                         placeholder="••••••••"
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:text-gray-300 focus:outline-none"
                         onClick={() => setShowConfirmPassword((prev) => !prev)}
                         aria-label={
                           showConfirmPassword
@@ -723,7 +778,7 @@ const StudentSignup = () => {
 
               {/* Footer Link */}
               <div className="mt-6 text-center">
-                <p className="text-sm text-[#4d6599]">
+                <p className="text-sm text-[#4d6599] dark:text-gray-400">
                   Already have an account?{" "}
                   <Link
                     href="/login"
@@ -739,11 +794,16 @@ const StudentSignup = () => {
 
         <EmailVerificationModal
           isOpen={showVerificationModal}
-          onClose={() => setShowVerificationModal(false)}
+          onClose={() => {
+            setShowVerificationModal(false);
+            setOtpModalCooldown(0);
+          }}
           email={pendingUser?.email}
           userType="student"
           onVerified={handleEmailVerificationSuccess}
           isPreSignup={true}
+          skipInitialRequest={true}
+          initialCooldown={otpModalCooldown}
         />
       </div>
     </>

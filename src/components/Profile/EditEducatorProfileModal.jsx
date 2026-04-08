@@ -254,26 +254,26 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
       <div 
         ref={modalRef}
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md my-8 max-h-[calc(100vh-2rem)] flex flex-col"
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl w-full max-w-md my-8 max-h-[calc(100vh-2rem)] flex flex-col"
         onClick={(e) => e.stopPropagation()}
         tabIndex={-1}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
-          <h2 className="text-xl font-semibold text-gray-900">Edit Profile</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Edit Profile</h2>
           <button
             onClick={handleClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-full transition-colors"
             disabled={loading}
           >
-            <FiX className="w-5 h-5 text-gray-500" />
+            <FiX className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </button>
         </div>
 
         {/* Content */}
         <div className="p-6 overflow-y-auto flex-1 min-h-0">
           {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 rounded-lg">
               <p className="text-green-800 text-sm flex items-center">
                 <FiCheckCircle className="w-4 h-4 mr-2" />
                 {success}
@@ -285,7 +285,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
             {/* Profile Image */}
             <div className="flex flex-col items-center">
               <div className="relative">
-                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-4 border-white shadow-lg relative">
+                <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 border-4 border-white shadow-lg relative">
                   {imagePreview ? (
                     <Image
                       src={imagePreview}
@@ -322,7 +322,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
 
             {/* First Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <FiUser className="w-4 h-4 inline mr-2" />
                 First Name
               </label>
@@ -331,7 +331,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
                   errors.firstName ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your first name"
@@ -344,7 +344,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
 
             {/* Last Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <FiUser className="w-4 h-4 inline mr-2" />
                 Last Name
               </label>
@@ -353,7 +353,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
                   errors.lastName ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your last name"
@@ -366,7 +366,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
 
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <FiMail className="w-4 h-4 inline mr-2" />
                 Email
               </label>
@@ -375,7 +375,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
                   errors.email ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your email address"
@@ -388,7 +388,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
 
             {/* Mobile Number Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 <FiPhone className="w-4 h-4 inline mr-2" />
                 Mobile Number
               </label>
@@ -397,7 +397,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
                 name="mobileNumber"
                 value={formData.mobileNumber}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
                   errors.mobileNumber ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Enter your mobile number"
@@ -410,7 +410,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
 
             {/* Bio Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Bio
               </label>
               <textarea
@@ -418,7 +418,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
                 value={formData.bio}
                 onChange={handleChange}
                 rows={3}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
                   errors.bio ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="Tell us about yourself..."
@@ -431,7 +431,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
 
             {/* Intro Video Link Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Intro Video Link (Optional)
               </label>
               <input
@@ -439,7 +439,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
                 name="introVideoLink"
                 value={formData.introVideoLink}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
+                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors ${
                   errors.introVideoLink ? 'border-red-500 bg-red-50' : ''
                 }`}
                 placeholder="https://youtube.com/watch?v=..."
@@ -462,7 +462,7 @@ const EditEducatorProfileModal = ({ isOpen, onClose, educatorData, onSave }) => 
               <button
                 type="button"
                 onClick={handleClose}
-                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-medium"
                 disabled={loading}
               >
                 Cancel

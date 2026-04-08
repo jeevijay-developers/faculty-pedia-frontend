@@ -72,10 +72,10 @@ export default function LiveTestForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-800 flex items-center justify-center p-6">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-md w-full max-w-lg space-y-4"
+        className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md w-full max-w-lg space-y-4"
       >
         <h2 className="text-2xl font-bold mb-4">Create Live Test</h2>
 
@@ -87,7 +87,7 @@ export default function LiveTestForm() {
             required
             value={formData.title}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -98,7 +98,7 @@ export default function LiveTestForm() {
             required
             value={formData.description.short}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
         <div>
@@ -108,7 +108,7 @@ export default function LiveTestForm() {
             required
             value={formData.description.long}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -118,7 +118,7 @@ export default function LiveTestForm() {
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
           {formData.image.url && (
             <img
@@ -137,7 +137,7 @@ export default function LiveTestForm() {
             required
             value={formData.subject}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -149,7 +149,7 @@ export default function LiveTestForm() {
             required
             value={formData.startDate}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -162,7 +162,7 @@ export default function LiveTestForm() {
             min="1"
             value={formData.duration}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -174,7 +174,7 @@ export default function LiveTestForm() {
             required
             value={formData.overallMarks.positive}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
         <div>
@@ -185,7 +185,7 @@ export default function LiveTestForm() {
             required
             value={formData.overallMarks.negative}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           />
         </div>
 
@@ -195,7 +195,7 @@ export default function LiveTestForm() {
             name="markingType"
             value={formData.markingType}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg p-2"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2"
           >
             <option value="OAM">Overall Marks</option>
             <option value="PQM">Per Question Marks</option>

@@ -135,10 +135,10 @@ const StudentCourseDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading course...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading course...</p>
         </div>
       </div>
     );
@@ -146,15 +146,15 @@ const StudentCourseDetail = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
           <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
             <FiFileText className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Unable to Load Course
           </h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => router.back()}
@@ -177,15 +177,15 @@ const StudentCourseDetail = () => {
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
             <FiFileText className="w-8 h-8 text-gray-400" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Course Not Found
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
             The course you're looking for doesn't exist or has been removed.
           </p>
           <button
@@ -201,14 +201,14 @@ const StudentCourseDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
             <button
               onClick={() => router.back()}
-              className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
             >
               <FiArrowLeft className="w-5 h-5 mr-2" />
               Back to Courses
@@ -216,7 +216,7 @@ const StudentCourseDetail = () => {
           </div>
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {course.title}
               </h1>
               <div className="flex flex-wrap items-center gap-3 text-sm">
@@ -237,7 +237,7 @@ const StudentCourseDetail = () => {
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-6 text-sm text-gray-600">
+            <div className="flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
               <div className="text-center">
                 <p className="text-lg font-bold text-blue-600">
                   {course.classes?.length || 0}
@@ -266,7 +266,7 @@ const StudentCourseDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Course Overview */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
               {course.image?.url ? (
                 <div className="relative h-48">
                   <Image
@@ -279,10 +279,10 @@ const StudentCourseDetail = () => {
               ) : (
                 <div className="h-48 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-3 bg-white rounded-full flex items-center justify-center shadow-sm">
+                    <div className="w-16 h-16 mx-auto mb-3 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-sm">
                       <FiBookOpen className="w-8 h-8 text-blue-600" />
                     </div>
-                    <h2 className="text-lg font-semibold text-gray-700">
+                    <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
                       Live Course
                     </h2>
                   </div>
@@ -290,10 +290,10 @@ const StudentCourseDetail = () => {
               )}
 
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                   About this Course
                 </h2>
-                <div className="text-gray-700 mb-6">
+                <div className="text-gray-700 dark:text-gray-300 mb-6">
                   {course.description?.longDesc ||
                     course.description?.shortDesc ||
                     "This comprehensive course is designed to help you excel in your studies with live classes and tests."}
@@ -301,31 +301,31 @@ const StudentCourseDetail = () => {
 
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                  <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <FiCalendar className="w-6 h-6 text-blue-600 mx-auto mb-1" />
-                    <p className="text-xs text-gray-600 mb-1">Start Date</p>
-                    <p className="font-semibold text-gray-900 text-sm">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Start Date</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
                       {formatDate(course.startDate)}
                     </p>
                   </div>
-                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                  <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <FiClock className="w-6 h-6 text-green-600 mx-auto mb-1" />
-                    <p className="text-xs text-gray-600 mb-1">End Date</p>
-                    <p className="font-semibold text-gray-900 text-sm">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">End Date</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
                       {formatDate(course.endDate)}
                     </p>
                   </div>
-                  <div className="text-center p-3 bg-purple-50 rounded-lg">
+                  <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
                     <FiUsers className="w-6 h-6 text-purple-600 mx-auto mb-1" />
-                    <p className="text-xs text-gray-600 mb-1">Enrolled</p>
-                    <p className="font-semibold text-gray-900 text-sm">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Enrolled</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
                       {course.enrolledStudents?.length || 0}
                     </p>
                   </div>
-                  <div className="text-center p-3 bg-orange-50 rounded-lg">
+                  <div className="text-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
                     <FiClock className="w-6 h-6 text-orange-600 mx-auto mb-1" />
-                    <p className="text-xs text-gray-600 mb-1">Duration</p>
-                    <p className="font-semibold text-gray-900 text-sm">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Duration</p>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
                       {course.classDuration}h per class
                     </p>
                   </div>
@@ -335,8 +335,8 @@ const StudentCourseDetail = () => {
           </div>
 
           {/* Instructor Card */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h4 className="font-bold text-gray-900 mb-4">Your Instructor</h4>
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-4">Your Instructor</h4>
             {course.educatorId ? (
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -355,12 +355,12 @@ const StudentCourseDetail = () => {
                     </div>
                   )}
                   <div>
-                    <h5 className="font-semibold text-gray-900 capitalize">
+                    <h5 className="font-semibold text-gray-900 dark:text-gray-100 capitalize">
                       {course.educatorId.firstName} {course.educatorId.lastName}
                     </h5>
                     <div className="flex items-center mt-1">
                       <FiStar className="w-4 h-4 text-yellow-400 mr-1" />
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">
                         Expert Instructor
                       </span>
                     </div>
@@ -370,23 +370,23 @@ const StudentCourseDetail = () => {
             ) : (
               <div className="text-center py-4">
                 <FiUser className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500">Instructor info not available</p>
+                <p className="text-gray-500 dark:text-gray-400">Instructor info not available</p>
               </div>
             )}
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           {/* Tab Headers */}
-          <div className="border-b border-gray-200">
+          <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8 px-6">
               <button
                 onClick={() => setActiveTab("classes")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === "classes"
                     ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
                 <FiBookOpen className="w-4 h-4 inline mr-2" />
@@ -397,7 +397,7 @@ const StudentCourseDetail = () => {
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === "tests"
                     ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
                 <FiFileText className="w-4 h-4 inline mr-2" />
@@ -414,7 +414,7 @@ const StudentCourseDetail = () => {
                   course.classes.map((liveClass, index) => (
                     <div
                       key={liveClass._id}
-                      className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
@@ -423,16 +423,16 @@ const StudentCourseDetail = () => {
                               {index + 1}
                             </div>
                             <div>
-                              <h4 className="font-semibold text-gray-900">
+                              <h4 className="font-semibold text-gray-900 dark:text-gray-100">
                                 {liveClass.title}
                               </h4>
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
                                 {liveClass.topic}
                               </p>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-6 text-sm text-gray-500 mb-3">
+                          <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-3">
                             <span className="inline-flex items-center">
                               <FiCalendar className="w-4 h-4 mr-1" />
                               {formatDate(liveClass.date)}
@@ -447,7 +447,7 @@ const StudentCourseDetail = () => {
                             </span>
                           </div>
 
-                          <p className="text-gray-700 text-sm mb-4">
+                          <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">
                             {liveClass.description}
                           </p>
 
@@ -456,7 +456,7 @@ const StudentCourseDetail = () => {
                             liveClass.assetsLinks.length > 0 &&
                             isClassAvailable(liveClass.date) && (
                               <div className="mb-4">
-                                <h5 className="font-medium text-gray-900 mb-2">
+                                <h5 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
                                   Assets:
                                 </h5>
                                 <div className="flex flex-wrap gap-2">
@@ -467,7 +467,7 @@ const StudentCourseDetail = () => {
                                         href={asset.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition-colors"
+                                        className="inline-flex items-center px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-gray-200 dark:bg-gray-700 transition-colors"
                                       >
                                         <FiDownload className="w-3 h-3 mr-1" />
                                         {asset.name}
@@ -498,7 +498,7 @@ const StudentCourseDetail = () => {
                             <div className="text-center">
                               <button
                                 disabled
-                                className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-500 font-medium rounded-lg cursor-not-allowed"
+                                className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium rounded-lg cursor-not-allowed"
                               >
                                 <FiClock className="w-4 h-4 mr-2" />
                                 Not Available
@@ -514,13 +514,13 @@ const StudentCourseDetail = () => {
                   ))
                 ) : (
                   <div className="text-center py-8">
-                    <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
                       <FiBookOpen className="w-6 h-6 text-gray-400" />
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
                       No Classes Available
                     </h4>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
                       Classes will be added to this course soon.
                     </p>
                   </div>
@@ -534,7 +534,7 @@ const StudentCourseDetail = () => {
                   course.tests.map((test, index) => (
                     <div
                       key={test._id}
-                      className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -542,10 +542,10 @@ const StudentCourseDetail = () => {
                             {index + 1}
                           </div>
                           <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900 mb-1">
+                            <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
                               {test.title}
                             </h4>
-                            <div className="flex items-center gap-4 text-sm text-gray-500 mb-2">
+                            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-2">
                               <span className="inline-flex items-center">
                                 <FiCalendar className="w-4 h-4 mr-1" />
                                 {formatDate(test.startDate)}
@@ -555,7 +555,7 @@ const StudentCourseDetail = () => {
                                 {test.duration} minutes
                               </span>
                             </div>
-                            <p className="text-gray-700 text-sm">
+                            <p className="text-gray-700 dark:text-gray-300 text-sm">
                               {test.description?.short ||
                                 test.description?.long ||
                                 "Test description not available"}
@@ -578,7 +578,7 @@ const StudentCourseDetail = () => {
                             <div className="text-center">
                               <button
                                 disabled
-                                className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-500 font-medium rounded-lg cursor-not-allowed"
+                                className="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium rounded-lg cursor-not-allowed"
                               >
                                 <FiClock className="w-4 h-4 mr-2" />
                                 Not Available
@@ -594,13 +594,13 @@ const StudentCourseDetail = () => {
                   ))
                 ) : (
                   <div className="text-center py-8">
-                    <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                    <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
                       <FiFileText className="w-6 h-6 text-gray-400" />
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
                       No Tests Available
                     </h4>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
                       Tests will be added to this course soon.
                     </p>
                   </div>

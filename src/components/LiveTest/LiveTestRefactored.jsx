@@ -332,7 +332,7 @@ const LiveTest = ({ testId }) => {
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 lg:gap-8">
           {/* Main Content */}
           <div className="xl:col-span-3 order-2 xl:order-1">
-            <div className="bg-white/80 backdrop-blur-lg rounded-xl lg:rounded-2xl shadow-xl border border-gray-200/50 p-4 sm:p-6 lg:p-8">
+            <div className="bg-white dark:bg-gray-900/80 backdrop-blur-lg rounded-xl lg:rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700/50 p-4 sm:p-6 lg:p-8">
               <QuestionDisplay
                 currentQuestion={currentQuestion}
                 currentQuestionIndex={currentQuestionIndex}

@@ -12,8 +12,8 @@ import {
 const VARIANT_CLASSNAMES = {
   solid: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
   outline:
-    "border border-blue-600 text-blue-600 hover:bg-blue-50 focus:ring-blue-500",
-  ghost: "text-blue-600 hover:bg-blue-50 focus:ring-blue-500",
+    "border border-blue-600 text-blue-600 hover:bg-blue-50 dark:bg-blue-900/20 focus:ring-blue-500",
+  ghost: "text-blue-600 hover:bg-blue-50 dark:bg-blue-900/20 focus:ring-blue-500",
 };
 
 const SIZE_CLASSNAMES = {
@@ -183,11 +183,11 @@ const ShareButton = ({
             aria-hidden="true"
             onClick={handleCloseModal}
           />
-          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-2xl animate-in zoom-in-95 duration-200">
             <button
               type="button"
               onClick={handleCloseModal}
-              className="absolute right-4 top-4 rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all active:scale-95"
+              className="absolute right-4 top-4 rounded-full p-2 text-gray-400 hover:bg-gray-100 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 transition-all active:scale-95"
               aria-label="Close share dialog"
             >
               <FiX className="h-5 w-5" />
@@ -195,25 +195,25 @@ const ShareButton = ({
             
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-blue-50 rounded-lg">
+                <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <FiShare2 className="h-6 w-6 text-blue-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                   Share this page
                 </h2>
               </div>
-              <p className="text-sm text-gray-600 ml-14">
+              <p className="text-sm text-gray-600 dark:text-gray-400 ml-14">
                 Copy the link or choose a platform to share directly.
               </p>
             </div>
 
             <div className="mb-6">
-              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">
+              <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-2">
                 Page URL
               </label>
               <div className="flex items-center gap-2">
                 <div
-                  className="flex-1 rounded-lg border-2 border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 overflow-hidden hover:border-gray-300 transition-colors"
+                  className="flex-1 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 overflow-hidden hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
                   title={shareUrl}
                 >
                   <div className="truncate font-medium">{shareUrl}</div>
@@ -223,8 +223,8 @@ const ShareButton = ({
                   onClick={handleCopyLink}
                   className={`flex items-center justify-center h-12 w-12 rounded-lg border-2 transition-all active:scale-95 ${
                     copyStatus === "copied"
-                      ? "bg-green-50 border-green-500 text-green-600"
-                      : "bg-white border-gray-300 text-gray-600 hover:bg-blue-50 hover:border-blue-500 hover:text-blue-600"
+                      ? "bg-green-50 dark:bg-green-900/20 border-green-500 text-green-600"
+                      : "bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:bg-blue-900/20 hover:border-blue-500 hover:text-blue-600"
                   }`}
                   title={copyStatus === "copied" ? "Copied!" : "Copy to clipboard"}
                   aria-label={copyStatus === "copied" ? "Copied" : "Copy link"}
@@ -252,7 +252,7 @@ const ShareButton = ({
 
             {socialLinks.length > 0 && (
               <div>
-                <p className="mb-4 text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                <p className="mb-4 text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
                   Share via social media
                 </p>
                 <div className="grid grid-cols-4 gap-3">
@@ -272,10 +272,10 @@ const ShareButton = ({
                           })
                         }
                       >
-                        <div className="flex h-14 w-14 items-center justify-center rounded-xl border-2 border-gray-200 bg-white shadow-sm transition-all group-hover:scale-110 group-hover:border-blue-400 group-hover:shadow-md group-active:scale-95">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm transition-all group-hover:scale-110 group-hover:border-blue-400 group-hover:shadow-md group-active:scale-95">
                           <SocialIcon className={`h-6 w-6 ${color}`} />
                         </div>
-                        <span className="text-xs font-medium text-gray-600 group-hover:text-gray-900">
+                        <span className="text-xs font-medium text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:hover:text-gray-100">
                           {name}
                         </span>
                       </a>

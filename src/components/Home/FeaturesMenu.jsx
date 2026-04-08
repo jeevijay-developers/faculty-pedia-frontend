@@ -7,10 +7,10 @@ const FeaturesMenu = () => {
     <section className="my-20 px-4">
       {/* Heading Section */}
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-gray-800 mb-4">
+        <h2 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           Why Choose Facultypedia
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           Explore our comprehensive learning features designed to help you excel
           in your academic journey
         </p>
@@ -20,7 +20,7 @@ const FeaturesMenu = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
         <div className="group font-bold text-2xl bg-linear-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl">
           <div className="text-center flex flex-col items-center">
-            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
+            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-gray-900 bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
               <Image
                 src={"/features/live-classes.png"}
                 width={40}
@@ -37,7 +37,7 @@ const FeaturesMenu = () => {
 
         <div className="group font-bold text-2xl bg-linear-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl">
           <div className="text-center flex flex-col items-center">
-            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
+            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-gray-900 bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
               <Image
                 src={"/features/1-1-live.png"}
                 width={40}
@@ -54,7 +54,7 @@ const FeaturesMenu = () => {
 
         <div className="group font-bold text-2xl bg-linear-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl">
           <div className="text-center flex flex-col items-center">
-            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
+            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-gray-900 bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
               <Image
                 src={"/features/webinars.png"}
                 width={40}
@@ -71,7 +71,7 @@ const FeaturesMenu = () => {
 
         <div className="group font-bold text-2xl bg-linear-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl">
           <div className="text-center flex flex-col items-center">
-            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
+            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-gray-900 bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
               <Image
                 src={"/features/study-material.png"}
                 width={40}
@@ -88,7 +88,7 @@ const FeaturesMenu = () => {
 
         <div className="group font-bold text-2xl bg-linear-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl">
           <div className="text-center flex flex-col items-center">
-            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
+            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-gray-900 bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
               <Image
                 src={"/features/live-test.png"}
                 width={40}
@@ -105,7 +105,7 @@ const FeaturesMenu = () => {
 
         <div className="group font-bold text-2xl bg-linear-to-br from-blue-500 to-blue-600 text-white p-4 rounded-xl hover:scale-102 transition-all duration-300 shadow-lg hover:shadow-xl">
           <div className="text-center flex flex-col items-center">
-            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
+            <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white dark:bg-gray-900 bg-opacity-20 border border-white border-opacity-30 shadow-md text-blue-600">
               <Image
                 src={"/features/CBSE.png"}
                 width={40}

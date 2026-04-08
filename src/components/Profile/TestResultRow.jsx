@@ -72,14 +72,14 @@ const TestResultRow = ({
     currentResult.test?.series?.slug;
 
   return (
-    <tr className="hover:bg-gray-50 transition-colors">
+    <tr className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex items-center">
           <div className="p-2 bg-blue-100 rounded-lg mr-3">
             <FiAward className="w-4 h-4 text-blue-600" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-900">
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
               {currentResult.testId?.title ||
                 currentResult.testTitle ||
                 `Test #${
@@ -98,7 +98,7 @@ const TestResultRow = ({
                   {title}
                 </Link>
               ) : (
-                <p className="text-xs text-gray-500" title={title}>
+                <p className="text-xs text-gray-500 dark:text-gray-400" title={title}>
                   {title}
                 </p>
               );
@@ -108,12 +108,12 @@ const TestResultRow = ({
               return (
                 <div className="mt-1 flex flex-wrap gap-1">
                   {series.subject && (
-                    <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px] font-medium">
+                    <span className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-[10px] font-medium">
                       {series.subject}
                     </span>
                   )}
                   {series.specialization && (
-                    <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 text-[10px] font-medium">
+                    <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-[10px] font-medium">
                       {series.specialization}
                     </span>
                   )}
@@ -124,10 +124,10 @@ const TestResultRow = ({
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm font-bold text-gray-900">
+        <div className="text-sm font-bold text-gray-900 dark:text-gray-100">
           {obtainedScore}/{totalScore}
         </div>
-        <div className="text-xs text-gray-500">{percentage}% scored</div>
+        <div className="text-xs text-gray-500 dark:text-gray-400">{percentage}% scored</div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -139,7 +139,7 @@ const TestResultRow = ({
           {totalIncorrect}
         </span>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
         {new Date(
           currentResult.createdAt || currentResult.submittedAt || currentResult.date || Date.now()
         ).toLocaleDateString("en-US", {

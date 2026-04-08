@@ -29,22 +29,22 @@ const StatsSection = ({ stats }) => {
   ];
 
   return (
-    <div className="bg-gray-50 rounded-xl p-6 mb-8">
-      <h2 className="text-xl font-semibold text-gray-800 mb-6">Educator Stats</h2>
+    <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 mb-8">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Educator Stats</h2>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {statItems.map((item, index) => (
           <div 
             key={index} 
-            className="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+            className="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
           >
             <div className="mb-2">
               {item.icon}
             </div>
-            <div className="text-xl font-bold text-gray-800">
+            <div className="text-xl font-bold text-gray-800 dark:text-gray-200">
               {item.value}
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               {item.label}
             </div>
           </div>

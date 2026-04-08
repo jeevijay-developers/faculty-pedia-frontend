@@ -32,7 +32,7 @@ const ClassCard = ({ classData }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border-b">
         <div className="flex items-center justify-between">
@@ -41,19 +41,19 @@ const ClassCard = ({ classData }) => {
               <FaChalkboardTeacher className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">{classData.title}</h3>
-              <p className="text-sm text-gray-600 flex items-center">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{classData.title}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
                 <FaBook className="w-4 h-4 mr-1" />
                 {classData.topic}
               </p>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-600 flex items-center justify-end">
+            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center justify-end">
               <FaCalendarAlt className="w-4 h-4 mr-1" />
               {formatDate(classData.date)}
             </p>
-            <p className="text-sm text-gray-600 flex items-center justify-end">
+            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center justify-end">
               <FaClock className="w-4 h-4 mr-1" />
               {formatTime(classData.time)}
             </p>
@@ -63,21 +63,21 @@ const ClassCard = ({ classData }) => {
 
       {/* Content */}
       <div className="p-4">
-        <p className="text-gray-700 text-sm mb-4">{classData.description}</p>
+        <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">{classData.description}</p>
         
         {/* Class Details */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="flex items-center">
             <FaBook className="w-4 h-4 mr-2 text-blue-500" />
             <div>
-              <p className="text-xs text-gray-500">Subject</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Subject</p>
               <p className="text-sm font-medium">{classData.subject}</p>
             </div>
           </div>
           <div className="flex items-center">
             <FaClock className="w-4 h-4 mr-2 text-green-500" />
             <div>
-              <p className="text-xs text-gray-500">Duration</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Duration</p>
               <p className="text-sm font-medium">{classData.duration} minutes</p>
             </div>
           </div>
@@ -101,7 +101,7 @@ const ClassCard = ({ classData }) => {
         {/* Assets Links */}
         {classData.assetsLinks && classData.assetsLinks.length > 0 && (
           <div className="mt-4 pt-4 border-t">
-            <p className="text-sm font-medium text-gray-700 mb-2">Course Materials:</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Course Materials:</p>
             <div className="flex flex-wrap gap-2">
               {classData.assetsLinks.map((asset, index) => (
                 <a
@@ -109,7 +109,7 @@ const ClassCard = ({ classData }) => {
                   href={asset.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors duration-200"
+                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-gray-700 transition-colors duration-200"
                 >
                   <FaDownload className="w-3 h-3 mr-1" />
                   {asset.name}

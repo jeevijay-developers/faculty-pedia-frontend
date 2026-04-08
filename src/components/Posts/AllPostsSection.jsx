@@ -87,7 +87,7 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {/* Banner Section */}
       <Banner
         url="/images/Banner/1.png"
@@ -103,10 +103,10 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
           {/* Header with Filter */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {educatorId ? (educatorName ? `Posts by ${educatorName}` : "Educator Posts") : "Educational Posts"}
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 Showing {postsToShow.length} of {allFilteredPosts.length}{" "}
                 {selectedCategory === "All Posts" ? "" : selectedCategory} posts
               </p>
@@ -116,7 +116,7 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <label
                 htmlFor="category-select"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Filter by Category:
               </label>
@@ -124,7 +124,7 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
                 id="category-select"
                 value={selectedCategory}
                 onChange={(e) => handleCategoryChange(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 min-w-37.5"
+                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-w-37.5"
               >
                 {categories.map((category) => (
                   <option key={category} value={category}>
@@ -157,7 +157,7 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
                 {error}
               </h3>
             </div>
@@ -185,7 +185,7 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
               {/* Show all loaded message */}
               {!hasMorePosts && allFilteredPosts.length > 9 && (
                 <div className="text-center mt-12">
-                  <p className="text-gray-600 font-medium">
+                  <p className="text-gray-600 dark:text-gray-400 font-medium">
                     All {allFilteredPosts.length} posts loaded
                   </p>
                 </div>
@@ -208,10 +208,10 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
                 No posts found
               </h3>
-              <p className="text-gray-500">
+              <p className="text-gray-500 dark:text-gray-400">
                 There are no posts available for the selected category.
               </p>
             </div>

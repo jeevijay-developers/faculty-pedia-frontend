@@ -33,7 +33,7 @@ const Spinner = ({ size = 56 }) => (
 );
 
 const CardSkeleton = () => (
-  <div className="relative flex flex-col overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm ring-1 ring-white/10 p-4 gap-4 shadow-md">
+  <div className="relative flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-gray-900/5 backdrop-blur-sm ring-1 ring-white/10 p-4 gap-4 shadow-md">
     <div className="h-28 rounded-xl bg-gradient-to-br from-slate-700/40 to-slate-600/20" />
     <div className="h-4 w-3/4 rounded bg-slate-600/40" />
     <div className="h-3 w-1/2 rounded bg-slate-600/30" />
@@ -62,7 +62,7 @@ const Loading = ({
   const wrapperPadding = tight ? "py-6" : "py-16";
   return (
     <div
-      className={`${baseWrapper} ${wrapperPadding} px-6 bg-white ${className}`}
+      className={`${baseWrapper} ${wrapperPadding} px-6 bg-white dark:bg-gray-900 ${className}`}
       role="status"
       aria-live="polite"
     >
@@ -90,7 +90,7 @@ const Loading = ({
             {Array.from({ length: count }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm space-y-4"
+                className="rounded-2xl border border-slate-200 bg-white dark:bg-gray-900 p-4 shadow-sm space-y-4"
               >
                 <SkeletonBlock height="h-28" />
                 <SkeletonBlock width="w-3/4" />
