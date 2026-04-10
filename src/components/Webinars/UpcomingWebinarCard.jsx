@@ -43,29 +43,50 @@ const deriveEducatorName = (webinar) => {
 };
 
 const UpcomingWebinarCard = ({ item }) => {
+  const webinar =
+    (item?.data && typeof item.data === "object" ? item.data : null) || item;
+
+  const webinarTiming = webinar?.timing || webinar?.date || webinar?.startDate;
+
   // Format timing date
-  const webinarDate = item.timing
-    ? new Date(item.timing).toLocaleDateString("en-IN", {
+  const webinarDate = webinarTiming
+    ? new Date(webinarTiming).toLocaleDateString("en-IN", {
         year: "numeric",
         month: "short",
         day: "numeric",
       })
     : "N/A";
 
-  const webinarTime = item.timing
-    ? new Date(item.timing).toLocaleTimeString("en-IN", {
+  const webinarTime = webinarTiming
+    ? new Date(webinarTiming).toLocaleTimeString("en-IN", {
         hour: "2-digit",
         minute: "2-digit",
       })
     : "N/A";
 
-  const initialEducatorName = deriveEducatorName(item);
+  const resolvedImage =
+    (typeof webinar?.image === "string" && webinar.image) ||
+    (typeof webinar?.image?.url === "string" && webinar.image.url) ||
+    "/images/placeholders/1.svg";
+
+  const durationValue =
+    webinar?.duration || webinar?.totalHours || webinar?.timeRange || null;
+  const durationLabel =
+    typeof durationValue === "number"
+      ? `${durationValue} hours`
+      : typeof durationValue === "string" && durationValue.trim()
+      ? durationValue
+      : "N/A";
+
+  const webinarFees = Number(webinar?.fees ?? webinar?.fee ?? 0);
+
+  const initialEducatorName = deriveEducatorName(webinar);
   const [educatorName, setEducatorName] = useState(initialEducatorName);
 
   useEffect(() => {
     const educatorIdString =
-      (typeof item?.educatorID === "string" && item.educatorID) ||
-      (typeof item?.educatorId === "string" && item.educatorId) ||
+      (typeof webinar?.educatorID === "string" && webinar.educatorID) ||
+      (typeof webinar?.educatorId === "string" && webinar.educatorId) ||
       null;
 
     if (!educatorIdString) return;
@@ -92,42 +113,44 @@ const UpcomingWebinarCard = ({ item }) => {
     return () => {
       isMounted = false;
     };
-  }, [item?.educatorID, item?.educatorId, educatorName]);
+  }, [webinar?.educatorID, webinar?.educatorId, educatorName]);
 
   return (
     <div className="group relative flex flex-col rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       <div className="relative h-40 bg-gray-100 dark:bg-gray-800 rounded-xl mb-4">
         <Image
-          src={item.image || "/images/placeholders/1.svg"}
-          alt={item.title || "Webinar"}
+          src={resolvedImage}
+          alt={webinar?.title || "Webinar"}
           fill
           className="object-cover"
         />
-        {item.specialization && (
+        {webinar?.specialization && (
           <div className="absolute top-3 left-3">
             <span className="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-medium">
-              {Array.isArray(item.specialization)
-                ? item.specialization[0]
-                : item.specialization}
+              {Array.isArray(webinar.specialization)
+                ? webinar.specialization[0]
+                : webinar.specialization}
             </span>
           </div>
         )}
-        {item.webinarType && (
+        {webinar?.webinarType && (
           <div className="absolute top-3 right-3">
             <span className="bg-green-600 text-white px-2 py-1 rounded-md text-xs font-medium capitalize">
-              {item.webinarType.replace("-", " ")}
+              {webinar.webinarType.replace("-", " ")}
             </span>
           </div>
         )}
       </div>
       <div className="flex flex-col grow">
         <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2 leading-tight line-clamp-2">
-          {item.title || "Webinar Title"}
+          {webinar?.title || "Webinar Title"}
         </h3>
 
-        {item.description && (
+        {webinar?.description && (
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-            {item.description}
+            {typeof webinar.description === "string"
+              ? webinar.description
+              : webinar.description?.short || ""}
           </p>
         )}
 
@@ -148,7 +171,7 @@ const UpcomingWebinarCard = ({ item }) => {
               <span className="font-medium">Duration:</span>
             </div>
             <span className="text-sm text-gray-800 dark:text-gray-200 font-medium">
-              {item.duration ? `${item.duration} hours` : "N/A"}
+              {durationLabel}
             </span>
           </div>
 
@@ -172,28 +195,28 @@ const UpcomingWebinarCard = ({ item }) => {
             </span>
           </div>
 
-          {item.subject && (
+          {webinar?.subject && (
             <div className="flex items-center justify-between">
               <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                 <MdSchool className="w-4 h-4 mr-2 text-blue-600" />
                 <span className="font-medium">Subject:</span>
               </div>
               <span className="text-sm text-gray-800 dark:text-gray-200 font-medium capitalize">
-                {Array.isArray(item.subject)
-                  ? item.subject.join(", ")
-                  : item.subject}
+                {Array.isArray(webinar.subject)
+                  ? webinar.subject.join(", ")
+                  : webinar.subject}
               </span>
             </div>
           )}
         </div>
 
-        {item.seatLimit && (
+        {webinar?.seatLimit && (
           <div className="flex items-center justify-between mb-4 p-2 bg-gray-50 dark:bg-gray-800 rounded">
             <span className="text-sm text-gray-600 dark:text-gray-400">Available Seats:</span>
             <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-              {item.seatsAvailable ||
-                item.seatLimit - (item.enrolledCount || 0)}{" "}
-              / {item.seatLimit}
+              {webinar.seatsAvailable ||
+                webinar.seatLimit - (webinar.enrolledCount || 0)}{" "}
+              / {webinar.seatLimit}
             </span>
           </div>
         )}
@@ -202,13 +225,13 @@ const UpcomingWebinarCard = ({ item }) => {
           <div className="flex items-center space-x-2">
             <div className="flex items-baseline space-x-2">
               <span className="text-xl font-bold text-blue-600">
-                {item.fees && item.fees > 0 ? `₹${Number(item.fees).toLocaleString("en-IN")}` : "Free"}
+                {webinarFees > 0 ? `₹${webinarFees.toLocaleString("en-IN")}` : "Free"}
               </span>
             </div>
           </div>
         </div>
         <Link
-          href={`/webinars/${item._id || item.id}`}
+          href={`/webinars/${webinar?._id || webinar?.id}`}
           className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center block"
         >
           View Details

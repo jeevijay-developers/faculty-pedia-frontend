@@ -6,7 +6,7 @@
  */
 
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   createPaymentOrder,
   verifyPayment,
@@ -187,11 +187,7 @@ export const StudentPaymentHistory = ({ studentId }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    loadPayments();
-  }, [page]);
-
-  const loadPayments = async () => {
+  const loadPayments = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getStudentPayments(studentId, page, 10);
@@ -205,7 +201,11 @@ export const StudentPaymentHistory = ({ studentId }) => {
       console.error("Error loading payments:", error);
       setLoading(false);
     }
-  };
+  }, [studentId, page]);
+
+  useEffect(() => {
+    loadPayments();
+  }, [loadPayments]);
 
   if (loading) {
     return <div className="text-center py-8">Loading payment history...</div>;
@@ -296,11 +296,7 @@ export const EducatorRevenueDashboard = ({ educatorId }) => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all"); // all, pending, settled
 
-  useEffect(() => {
-    loadRevenueData();
-  }, [filter]);
-
-  const loadRevenueData = async () => {
+  const loadRevenueData = useCallback(async () => {
     try {
       setLoading(true);
       const isSettled = filter === "all" ? null : filter === "settled";
@@ -315,7 +311,11 @@ export const EducatorRevenueDashboard = ({ educatorId }) => {
       console.error("Error loading revenue data:", error);
       setLoading(false);
     }
-  };
+  }, [educatorId, filter]);
+
+  useEffect(() => {
+    loadRevenueData();
+  }, [loadRevenueData]);
 
   if (loading) {
     return <div className="text-center py-8">Loading revenue data...</div>;

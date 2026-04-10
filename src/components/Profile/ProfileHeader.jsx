@@ -37,7 +37,7 @@ const ProfileHeader = ({
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-6 md:space-y-0">
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
             {/* Profile Image */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               {resolvedImageSrc ? (
                 <div className="w-28 h-28 relative">
                   <Image
@@ -48,7 +48,7 @@ const ProfileHeader = ({
                   />
                 </div>
               ) : (
-                <div className="w-28 h-28 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center border-4 border-white shadow-xl ring-4 ring-blue-100">
+                <div className="w-28 h-28 bg-linear-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center border-4 border-white shadow-xl ring-4 ring-blue-100">
                   <FiUser className="w-14 h-14 text-white" />
                 </div>
               )}
@@ -103,7 +103,7 @@ const ProfileHeader = ({
             {isOwnProfile && (
               <button
                 onClick={onEditClick}
-                className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors font-medium"
+                className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 transition-colors font-medium"
               >
                 <svg
                   className="w-4 h-4 mr-2"

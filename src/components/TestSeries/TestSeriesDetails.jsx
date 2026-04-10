@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FaCalendarAlt,
@@ -16,7 +16,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import EnrollButton from "../Common/EnrollButton";
 import { useRouter } from "next/navigation";
-import { createItemReview } from "../server/reviews.routes";
+import { createItemReview, getItemReviews } from "../server/reviews.routes";
 
 const TestSeriesDetails = ({ testSeriesData }) => {
   const [activeTab, setActiveTab] = useState("description");
@@ -28,6 +28,9 @@ const TestSeriesDetails = ({ testSeriesData }) => {
   const [reviewStatus, setReviewStatus] = useState("");
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [showReviewSuccess, setShowReviewSuccess] = useState(false);
+  const [itemReviews, setItemReviews] = useState([]);
+  const [reviewsLoaded, setReviewsLoaded] = useState(false);
+  const [hasTouchedReviewInput, setHasTouchedReviewInput] = useState(false);
   const router = useRouter();
 
   // Check if testSeriesData exists
@@ -277,8 +280,18 @@ const TestSeriesDetails = ({ testSeriesData }) => {
         reviewText,
       });
       setReviewStatus("Review submitted successfully.");
-      setReviewText("");
+      setHasTouchedReviewInput(false);
       setShowReviewSuccess(true);
+
+      // Pull latest reviews immediately so both form and sidebar stay in sync.
+      if (itemId) {
+        const response = await getItemReviews("testSeries", itemId, { limit: 100 });
+        const latestReviews = Array.isArray(response?.data?.reviews)
+          ? response.data.reviews
+          : [];
+        setItemReviews(latestReviews);
+        setReviewsLoaded(true);
+      }
     } catch (submitError) {
       const message =
         submitError?.response?.data?.message ||
@@ -294,6 +307,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const isLeftHalf = event.clientX - rect.left <= rect.width / 2;
     const nextRating = index + (isLeftHalf ? 0.5 : 1);
+    setHasTouchedReviewInput(true);
     setReviewRating(nextRating);
   };
 
@@ -317,13 +331,129 @@ const TestSeriesDetails = ({ testSeriesData }) => {
     [router, studentId, testSeriesData?.courseId, testSeriesData?.isCourseSpecific]
   );
 
+  const itemId = useMemo(
+    () => testSeriesData?._id || testSeriesData?.id || null,
+    [testSeriesData?._id, testSeriesData?.id]
+  );
+
+  const fetchItemReviewFeed = useCallback(async () => {
+    if (!itemId) return;
+    try {
+      const response = await getItemReviews("testSeries", itemId, { limit: 100 });
+      const latestReviews = Array.isArray(response?.data?.reviews)
+        ? response.data.reviews
+        : [];
+      setItemReviews(latestReviews);
+      setReviewsLoaded(true);
+    } catch (error) {
+      console.warn("Failed to fetch item reviews:", error);
+    }
+  }, [itemId]);
+
+  useEffect(() => {
+    if (!itemId) return;
+
+    fetchItemReviewFeed();
+
+    const intervalId = window.setInterval(() => {
+      if (document.hidden) return;
+      fetchItemReviewFeed();
+    }, 15000);
+
+    return () => window.clearInterval(intervalId);
+  }, [itemId, fetchItemReviewFeed]);
+
+  useEffect(() => {
+    if (!studentId || hasTouchedReviewInput) return;
+
+    const reviewSource = reviewsLoaded
+      ? itemReviews
+      : Array.isArray(testSeriesData?.reviews)
+      ? testSeriesData.reviews
+      : [];
+
+    const ownReview = reviewSource.find((review) => {
+      const reviewStudentId =
+        review?.student?._id ||
+        review?.student?.id ||
+        review?.student ||
+        review?.studentId ||
+        review?.studentID ||
+        null;
+
+      return reviewStudentId && String(reviewStudentId) === String(studentId);
+    });
+
+    if (!ownReview) return;
+
+    const ownRating = Number(ownReview.rating);
+    if (Number.isFinite(ownRating) && ownRating >= 0 && ownRating <= 5) {
+      setReviewRating(ownRating);
+    }
+
+    if (typeof ownReview.reviewText === "string") {
+      setReviewText(ownReview.reviewText);
+    }
+  }, [
+    studentId,
+    hasTouchedReviewInput,
+    reviewsLoaded,
+    itemReviews,
+    testSeriesData?.reviews,
+  ]);
+
+  const reviewSummary = useMemo(() => {
+    if (reviewsLoaded) {
+      const count = itemReviews.length;
+      const average = count
+        ? itemReviews.reduce((sum, review) => sum + Number(review?.rating || 0), 0) / count
+        : 0;
+
+      return {
+        average,
+        count,
+      };
+    }
+
+    const parsedRating = Number(testSeriesData?.rating);
+    const hasValidRating = Number.isFinite(parsedRating) && parsedRating > 0;
+
+    const parsedRatingCount = Number(testSeriesData?.ratingCount);
+    let count = Number.isFinite(parsedRatingCount) && parsedRatingCount >= 0
+      ? parsedRatingCount
+      : null;
+
+    if (count === null && Array.isArray(testSeriesData?.reviews)) {
+      count = testSeriesData.reviews.length;
+    }
+
+    if (count === null) {
+      count = hasValidRating ? 1 : 0;
+    }
+
+    const average = count > 0 && hasValidRating
+      ? Math.min(5, Math.max(0, parsedRating))
+      : 0;
+
+    return {
+      average,
+      count,
+    };
+  }, [
+    reviewsLoaded,
+    itemReviews,
+    testSeriesData?.rating,
+    testSeriesData?.ratingCount,
+    testSeriesData?.reviews,
+  ]);
+
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6">
+    <div className="max-w-7xl mx-auto px-6 py-6 text-gray-900 dark:text-gray-100">
       {showReviewSuccess && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6 text-center">
-            <h3 className="text-xl font-semibold text-[#0e151b] mb-2">Thanks for your review!</h3>
-            <p className="text-[#4e7597] mb-4">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Thanks for your review!</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               Your rating has been recorded and will appear on the educator profile.
             </p>
             <button
@@ -338,14 +468,14 @@ const TestSeriesDetails = ({ testSeriesData }) => {
       )}
       {/* Breadcrumbs */}
       <div className="flex flex-wrap gap-2 mb-6">
-        <a className="text-[#4e7597] text-sm font-medium hover:text-[#1E88E5] transition-colors" href="/">
+        <a className="text-gray-600 dark:text-gray-300 text-sm font-medium hover:text-[#1E88E5] transition-colors" href="/">
           Home
         </a>
-        <span className="text-[#4e7597] text-sm">/</span>
-        <a className="text-[#4e7597] text-sm font-medium hover:text-[#1E88E5] transition-colors" href="/test-series">
+        <span className="text-gray-600 dark:text-gray-300 text-sm">/</span>
+        <a className="text-gray-600 dark:text-gray-300 text-sm font-medium hover:text-[#1E88E5] transition-colors" href="/test-series">
           Test Series
         </a>
-        <span className="text-[#4e7597] text-sm">/</span>
+        <span className="text-gray-600 dark:text-gray-300 text-sm">/</span>
         <span className="text-[#1E88E5] text-sm font-medium">{testSeriesData.title}</span>
       </div>
 
@@ -353,7 +483,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
         {/* Main Content */}
         <div className="lg:col-span-2">
           {/* Hero Banner */}
-          <div className="relative overflow-hidden rounded-md h-80 mb-8 border border-[#e7eef3]">
+          <div className="relative overflow-hidden rounded-md h-80 mb-8 border border-gray-200 dark:border-gray-700">
             <div className="absolute inset-0 bg-linear-to-br from-[#1E88E5]/10 to-[#1E88E5]/5"></div>
             <div className="relative z-10 p-8 flex flex-col justify-center h-full">
               <div className="flex gap-2 mb-6">
@@ -372,15 +502,15 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                   </span>
                 )}
               </div>
-              <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4 max-w-2xl text-[#0e151b]">
+              <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4 max-w-2xl text-gray-900 dark:text-gray-100">
                 {testSeriesData.title || "Test Series Title"}
               </h1>
-              <p className="text-lg text-[#4e7597] max-w-xl">
+              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-xl">
                 {descriptionText || "Master your exam preparation with comprehensive mock tests designed by expert faculty."}
               </p>
             </div>
             <div className="absolute -right-5 -bottom-5 opacity-[0.03]">
-              <FaBookOpen className="text-[240px] text-[#0e151b]" />
+              <FaBookOpen className="text-[240px] text-gray-900 dark:text-gray-100" />
             </div>
           </div>
 
@@ -391,30 +521,30 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                 <span className="w-1 h-6 bg-[#1E88E5] rounded-full"></span>
                 About this Test Series
               </h3>
-              <p className="text-[#4e7597] leading-relaxed mb-6 text-lg whitespace-pre-line">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6 text-lg whitespace-pre-line">
                 {descriptionText || "No detailed description available."}
               </p>
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-gray-200 dark:border-gray-700">
                   <FaFileAlt className="text-[#1E88E5] mb-3 text-2xl" />
-                  <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Total Tests</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 uppercase font-bold tracking-tight">Total Tests</p>
                   <p className="text-lg font-bold">{testsCount} Full Length</p>
                 </div>
-                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-gray-200 dark:border-gray-700">
                   <FaChartLine className="text-[#1E88E5] mb-3 text-2xl" />
-                  <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Analytics</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 uppercase font-bold tracking-tight">Analytics</p>
                   <p className="text-lg font-bold">Detailed</p>
                 </div>
-                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-gray-200 dark:border-gray-700">
                   <FaClock className="text-[#1E88E5] mb-3 text-2xl" />
-                  <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Validity</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 uppercase font-bold tracking-tight">Validity</p>
                   <p className="text-lg font-bold">{formatValidity(testSeriesData.validity)}</p>
                 </div>
-                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-[#e7eef3]">
+                <div className="bg-white dark:bg-gray-900 p-5 rounded-md shadow-sm border border-gray-200 dark:border-gray-700">
                   <FaTrophy className="text-[#1E88E5] mb-3 text-2xl" />
-                  <p className="text-xs text-[#4e7597] uppercase font-bold tracking-tight">Ranking</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 uppercase font-bold tracking-tight">Ranking</p>
                   <p className="text-lg font-bold">All India</p>
                 </div>
               </div>
@@ -445,13 +575,13 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                     return (
                       <div 
                         key={testId}
-                        className={`bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] group hover:border-[#1E88E5]/30 transition-colors gap-4 ${!isEnrolled && !isFirstTest ? 'opacity-80' : ''}`}
+                        className={`bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-gray-200 dark:border-gray-700 group hover:border-[#1E88E5]/30 transition-colors gap-4 ${!isEnrolled && !isFirstTest ? 'opacity-80' : ''}`}
                       >
                         <div className="flex items-center gap-4 flex-1">
                           <div className={`size-11 rounded-md flex items-center justify-center shrink-0 ${
                             isEnrolled || isFirstTest 
                               ? 'bg-green-100 text-green-600' 
-                              : 'bg-slate-100 text-slate-400'
+                              : 'bg-slate-100 dark:bg-gray-800 text-slate-400'
                           }`}>
                             {isEnrolled || isFirstTest ? (
                               <FaCheckCircle className="text-xl" />
@@ -463,13 +593,13 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                             <h4 className="font-bold group-hover:text-[#1E88E5] transition-colors">
                               {testTitle}
                             </h4>
-                            <p className="text-sm text-[#4e7597]">
-                              {testDuration} Mins • {testMarks} Marks
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                              {testDuration} Mins | {testMarks} Marks
                               {isFirstTest && !isEnrolled && (
-                                <span className="text-green-600 font-medium"> • Free Demo</span>
+                                <span className="text-green-600 font-medium"> | Free Demo</span>
                               )}
                               {test?.negativeMarking && (
-                                <span className="text-orange-500 font-medium"> • Negative Marking</span>
+                                <span className="text-orange-500 font-medium"> | Negative Marking</span>
                               )}
                             </p>
                           </div>
@@ -503,7 +633,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                 ) : (
                   /* Fallback placeholder tests when no actual tests are populated */
                   <>
-                    <div className="bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] group hover:border-[#1E88E5]/30 transition-colors gap-4">
+                    <div className="bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-gray-200 dark:border-gray-700 group hover:border-[#1E88E5]/30 transition-colors gap-4">
                       <div className="flex items-center gap-4 flex-1">
                         <div className="size-11 rounded-md bg-green-100 flex items-center justify-center text-green-600 shrink-0">
                           <FaCheckCircle className="text-xl" />
@@ -512,8 +642,8 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                           <h4 className="font-bold group-hover:text-[#1E88E5] transition-colors">
                             Mock Test 01: Complete Syllabus
                           </h4>
-                          <p className="text-sm text-[#4e7597]">
-                            180 Mins • 300 Marks • <span className="text-green-600 font-medium">Free Demo</span>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">
+                            180 Mins | 300 Marks | <span className="text-green-600 font-medium">Free Demo</span>
                           </p>
                         </div>
                       </div>
@@ -528,14 +658,14 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                     {testsCount > 1 && (
                       <>
                         {Array.from({ length: Math.min(testsCount - 1, 2) }).map((_, idx) => (
-                          <div key={idx} className="bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-[#e7eef3] gap-4">
+                          <div key={idx} className="bg-white dark:bg-gray-900 p-4 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between shadow-sm border border-gray-200 dark:border-gray-700 gap-4">
                             <div className="flex items-center gap-4 flex-1">
-                              <div className="size-11 rounded-md bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+                              <div className="size-11 rounded-md bg-slate-100 dark:bg-gray-800 flex items-center justify-center text-slate-400 shrink-0">
                                 <FaFileAlt className="text-xl" />
                               </div>
                               <div>
                                 <h4 className="font-bold">Mock Test {String(idx + 2).padStart(2, '0')}</h4>
-                                <p className="text-sm text-[#4e7597]">180 Mins • 300 Marks</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-300">180 Mins | 300 Marks</p>
                               </div>
                             </div>
                             {!isEnrolled ? (
@@ -551,17 +681,17 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                         ))}
 
                         {testsCount > 3 && (
-                          <div className="bg-white dark:bg-gray-900 p-4 rounded-md flex items-center justify-between shadow-sm border border-[#e7eef3] opacity-60">
+                          <div className="bg-white dark:bg-gray-900 p-4 rounded-md flex items-center justify-between shadow-sm border border-gray-200 dark:border-gray-700 opacity-60">
                             <div className="flex items-center gap-4">
-                              <div className="size-11 rounded-md bg-slate-100 flex items-center justify-center text-slate-400">
+                              <div className="size-11 rounded-md bg-slate-100 dark:bg-gray-800 flex items-center justify-center text-slate-400">
                                 <FaFileAlt className="text-xl" />
                               </div>
                               <div>
                                 <h4 className="font-bold">+{testsCount - 3} More Tests</h4>
-                                <p className="text-sm text-[#4e7597]">Enroll to view all</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-300">Enroll to view all</p>
                               </div>
                             </div>
-                            <span className="text-slate-400">•••</span>
+                            <span className="text-slate-400">...</span>
                           </div>
                         )}
                       </>
@@ -571,16 +701,16 @@ const TestSeriesDetails = ({ testSeriesData }) => {
               </div>
             </section>
 
-            <section className="bg-white dark:bg-gray-900 rounded-md shadow-sm border border-[#e7eef3] p-6">
-              <h3 className="text-2xl font-bold mb-2 text-[#0e151b]">
+            <section className="bg-white dark:bg-gray-900 rounded-md shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-gray-100">
                 Give Review and rate this Test Series
               </h3>
-              <p className="text-sm text-[#4e7597] mb-4">
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                 Reviews are limited to enrolled students and will appear on the educator profile.
               </p>
               <form className="space-y-4" onSubmit={handleTestSeriesReviewSubmit}>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                  <span className="text-sm font-medium text-[#0e151b]">
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     Tap to rate (half stars supported)
                   </span>
                   <div className="flex items-center gap-1">
@@ -606,26 +736,29 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                         </button>
                       );
                     })}
-                    <span className="ml-2 text-sm text-[#0e151b]">{reviewRating.toFixed(1)}</span>
+                    <span className="ml-2 text-sm text-gray-900 dark:text-gray-100">{reviewRating.toFixed(1)}</span>
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-[#0e151b]" htmlFor="testseries-review-text">
+                  <label className="text-sm font-medium text-gray-900 dark:text-gray-100" htmlFor="testseries-review-text">
                     Your Review
                   </label>
                   <textarea
                     id="testseries-review-text"
                     value={reviewText}
-                    onChange={(event) => setReviewText(event.target.value)}
+                    onChange={(event) => {
+                      setHasTouchedReviewInput(true);
+                      setReviewText(event.target.value);
+                    }}
                     rows={4}
-                    className="mt-2 w-full rounded-md border border-[#e7eef3] px-3 py-2 text-sm"
+                    className="mt-2 w-full rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm"
                     placeholder="Share your experience with this test series."
                     disabled={!isEnrolled || isSubmittingReview}
                     required
                   />
                 </div>
                 {reviewStatus && (
-                  <p className="text-sm text-[#0e151b]">{reviewStatus}</p>
+                  <p className="text-sm text-gray-900 dark:text-gray-100">{reviewStatus}</p>
                 )}
                 <button
                   type="submit"
@@ -653,7 +786,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
           {/* Pricing Card */}
           <div
             data-aos="fade-left"
-            className="bg-white dark:bg-gray-900 rounded-md shadow-md overflow-hidden border border-[#e7eef3]"
+            className="bg-white dark:bg-gray-900 rounded-md shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
           >
             <div 
               className="h-44 bg-center bg-cover bg-no-repeat" 
@@ -665,13 +798,13 @@ const TestSeriesDetails = ({ testSeriesData }) => {
             ></div>
             <div className="p-6">
               <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-3xl font-black text-[#0e151b]">
-                  ₹{testSeriesData.price?.toLocaleString() || 0}
+                <span className="text-3xl font-black text-gray-900 dark:text-gray-100">
+                  &#8377;{testSeriesData.price?.toLocaleString() || 0}
                 </span>
                 {testSeriesData.originalPrice && testSeriesData.originalPrice > testSeriesData.price && (
                   <>
-                    <span className="text-lg text-[#4e7597] line-through">
-                      ₹{testSeriesData.originalPrice.toLocaleString()}
+                    <span className="text-lg text-gray-600 dark:text-gray-300 line-through">
+                      &#8377;{testSeriesData.originalPrice.toLocaleString()}
                     </span>
                     <span className="text-sm font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-md">
                       {Math.round(((testSeriesData.originalPrice - testSeriesData.price) / testSeriesData.originalPrice) * 100)}% OFF
@@ -698,8 +831,8 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                 />
               </div>
 
-              <div className="mt-6 pt-6 border-t border-[#e7eef3]">
-                <div className="flex items-center gap-2 text-sm text-[#4e7597]">
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                   <FaUsers className="text-base" />
                   <span className="font-medium">
                     {testSeriesData.enrolledStudents?.length?.toLocaleString() || 0} Students enrolled
@@ -714,7 +847,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
             <div
               data-aos="fade-left"
               data-aos-delay="100"
-              className="bg-white dark:bg-gray-900 p-6 rounded-md shadow-sm border border-[#e7eef3]"
+              className="bg-white dark:bg-gray-900 p-6 rounded-md shadow-sm border border-gray-200 dark:border-gray-700"
             >
               {(() => {
                 // Support both populated educator object and educatorId reference
@@ -736,12 +869,12 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                 
                 return (
                   <>
-                    <h4 className="font-bold mb-5 text-[#0e151b] border-b border-[#e7eef3] pb-3">
+                    <h4 className="font-bold mb-5 text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700 pb-3">
                       Meet your Mentor
                     </h4>
                     <div className="flex items-center gap-4 mb-4">
                       <div 
-                        className="size-16 rounded-md bg-cover bg-center border border-[#e7eef3]"
+                        className="size-16 rounded-md bg-cover bg-center border border-gray-200 dark:border-gray-700"
                         style={{
                           backgroundImage: educatorImage 
                             ? `url("${educatorImage}")` 
@@ -757,13 +890,13 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                         </p>
                       </div>
                     </div>
-                    <p className="text-sm text-[#4e7597] leading-relaxed mb-6 line-clamp-3">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-6 line-clamp-3">
                       {educatorBio}
                     </p>
                     {educatorId && (
                       <button 
-                        onClick={() => router.push(`/educators/${educatorId}`)}
-                        className="w-full border-2 border-[#e7eef3] py-2.5 rounded-md text-sm font-bold hover:bg-slate-50 transition-colors text-[#0e151b]"
+                        onClick={() => router.push(`/profile/educator/${educatorId}`)}
+                        className="w-full border-2 border-gray-200 dark:border-gray-700 py-2.5 rounded-md text-sm font-bold hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors text-gray-900 dark:text-gray-100"
                       >
                         View Profile
                       </button>
@@ -778,49 +911,58 @@ const TestSeriesDetails = ({ testSeriesData }) => {
           <div
             data-aos="fade-left"
             data-aos-delay="150"
-            className="bg-white dark:bg-gray-900 p-6 rounded-md shadow-sm border border-[#e7eef3]"
+            className="bg-white dark:bg-gray-900 p-6 rounded-md shadow-sm border border-gray-200 dark:border-gray-700"
           >
             <div className="flex items-center justify-between mb-6">
-              <h4 className="font-bold text-[#0e151b]">Student Reviews</h4>
-              <div className="flex items-center text-yellow-500 bg-yellow-50 px-2 py-1 rounded-md">
+              <h4 className="font-bold text-gray-900 dark:text-gray-100">Student Reviews</h4>
+              <div className="flex items-center text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 px-2 py-1 rounded-md">
                 <FaTrophy className="text-base mr-1" />
                 <span className="text-sm font-bold">
-                  {testSeriesData.rating ? Number(testSeriesData.rating).toFixed(1) : '5.0'}/5
+                  {reviewSummary.average.toFixed(1)}/5
                 </span>
               </div>
             </div>
-            <div className="space-y-4">
-              {/* Dynamic rating bars based on actual rating */}
-              {(() => {
-                const rating = Number(testSeriesData.rating) || 5;
-                const ratingCount = testSeriesData.ratingCount || testSeriesData.enrolledStudents?.length || 0;
-                
-                // Generate approximate distribution based on average rating
-                const getBarWidth = (star) => {
-                  if (ratingCount === 0) return star === 5 ? 100 : 0;
-                  const diff = Math.abs(star - rating);
-                  if (diff < 0.5) return 85;
-                  if (diff < 1) return 10;
-                  if (diff < 1.5) return 3;
-                  return 2;
-                };
-                
-                return [5, 4, 3, 2, 1].map((star) => (
-                  <div key={star} className="flex items-center gap-3">
-                    <span className="text-xs font-bold w-4">{star}</span>
-                    <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                      <div 
-                        className="bg-yellow-500 h-full rounded-full transition-all" 
-                        style={{ width: `${getBarWidth(star)}%` }}
-                      ></div>
+            {reviewSummary.count === 0 ? (
+              <div className="rounded-md border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/60 px-4 py-8 text-center">
+                <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                  No reviews yet
+                </p>
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  Be the first enrolled student to rate this test series.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Dynamic rating bars based on actual rating */}
+                {(() => {
+                  const rating = reviewSummary.average;
+
+                  // Generate approximate distribution based on average rating
+                  const getBarWidth = (star) => {
+                    const diff = Math.abs(star - rating);
+                    if (diff < 0.5) return 85;
+                    if (diff < 1) return 10;
+                    if (diff < 1.5) return 3;
+                    return 0;
+                  };
+
+                  return [5, 4, 3, 2, 1].map((star) => (
+                    <div key={star} className="flex items-center gap-3">
+                      <span className="text-xs font-bold w-4">{star}</span>
+                      <div className="flex-1 h-2 bg-slate-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                        <div
+                          className="bg-yellow-500 h-full rounded-full transition-all"
+                          style={{ width: `${getBarWidth(star)}%` }}
+                        ></div>
+                      </div>
                     </div>
-                  </div>
-                ));
-              })()}
-            </div>
-            <div className="mt-6 pt-4 border-t border-[#e7eef3] text-center">
-              <p className="text-[11px] text-[#4e7597] font-bold uppercase tracking-wider">
-                Based on {testSeriesData.ratingCount || testSeriesData.enrolledStudents?.length || 0} verified reviews
+                  ));
+                })()}
+              </div>
+            )}
+            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
+              <p className="text-[11px] text-gray-600 dark:text-gray-300 font-bold uppercase tracking-wider">
+                Based on {reviewSummary.count} verified reviews
               </p>
             </div>
           </div>
@@ -831,3 +973,4 @@ const TestSeriesDetails = ({ testSeriesData }) => {
 };
 
 export default TestSeriesDetails;
+

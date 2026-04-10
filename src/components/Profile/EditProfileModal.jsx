@@ -243,11 +243,11 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
         tabIndex={-1}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Edit Profile</h2>
           <button
             onClick={handleClose}
-            className="p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
             disabled={loading}
           >
             <FiX className="w-5 h-5 text-gray-500 dark:text-gray-400" />
@@ -255,10 +255,10 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto flex-1 min-h-0">
+        <div className="p-6 overflow-y-auto flex-1 min-h-0 text-gray-900 dark:text-gray-100">
           {success && (
-            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 rounded-lg">
-              <p className="text-green-800 text-sm flex items-center">
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+              <p className="text-green-800 dark:text-green-300 text-sm flex items-center">
                 <FiCheckCircle className="w-4 h-4 mr-2" />
                 {success}
               </p>
@@ -278,7 +278,7 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600">
+                    <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-blue-400 to-blue-600">
                       <FiUser className="w-8 h-8 text-white" />
                     </div>
                   )}
@@ -315,8 +315,8 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                  errors.name ? 'border-red-500 bg-red-50' : ''
+                className={`w-full px-4 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                  errors.name ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : ''
                 }`}
                 placeholder="Enter your full name"
                 disabled={loading}
@@ -337,8 +337,8 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                  errors.email ? 'border-red-500 bg-red-50' : ''
+                className={`w-full px-4 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                  errors.email ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : ''
                 }`}
                 placeholder="Enter your email address"
                 disabled={loading}
@@ -359,8 +359,8 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
                 name="mobileNumber"
                 value={formData.mobileNumber}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                  errors.mobileNumber ? 'border-red-500 bg-red-50' : ''
+                className={`w-full px-4 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                  errors.mobileNumber ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : ''
                 }`}
                 placeholder="Enter your mobile number"
                 disabled={loading}
@@ -372,8 +372,8 @@ const EditProfileModal = ({ isOpen, onClose, studentData, onSave }) => {
 
             {/* Submit Error */}
             {errors.submit && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-600 text-sm">{errors.submit}</p>
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <p className="text-red-600 dark:text-red-300 text-sm">{errors.submit}</p>
               </div>
             )}
 

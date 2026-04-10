@@ -7,9 +7,13 @@ import "aos/dist/aos.css";
 import { fetchTestSeriesById } from "@/components/server/exams/iit-jee/routes";
 import Banner from "@/components/Common/Banner";
 import Link from "next/link";
+import Image from "next/image";
+import { useParams } from "next/navigation";
 
-export default function TestSeriesDetailsPage({ params }) {
-  const id = React.use(params).id;
+const TestSeriesDetailPage = () => {
+  const params = useParams();
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+
   const [isLoading, setIsLoading] = useState(true);
   const [testSeries, setTestSeries] = useState(null);
   const [error, setError] = useState(null);
@@ -68,7 +72,7 @@ export default function TestSeriesDetailsPage({ params }) {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Banner
           url={"/images/placeholders/1.svg"}
           title={"Test Series Details"}
@@ -104,7 +108,7 @@ export default function TestSeriesDetailsPage({ params }) {
   // No test series data
   if (!testSeries) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Banner
           url={"/images/placeholders/1.svg"}
           title={"Test Series Details"}
@@ -133,15 +137,31 @@ export default function TestSeriesDetailsPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
-      <Banner
-        url={testSeries.image || "/images/placeholders/1.svg"}
-        title={testSeries.title || "Test Series"}
-        subtitle={`Master your preparation with ${
-          testSeries.numberOfTests || testSeries.noOfTests || 0
-        } comprehensive tests`}
-      />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Custom Hero Section optimized for 1200x400 banner */}
+      <div className="px-4 pt-4 sm:px-6 sm:pt-6">
+        <div className="relative mx-auto w-full max-w-[1200px] aspect-[3/1] overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-900">
+          <Image
+            src={testSeries.image || "/images/placeholders/1.svg"}
+            alt={testSeries.title || "Test Series"}
+            fill
+            className="object-cover"
+            priority
+            sizes="(max-width: 768px) 100vw, 1200px"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/45 to-black/15 flex flex-col items-center justify-end pb-5 sm:pb-8 md:pb-10 px-4 sm:px-8 text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-2 sm:mb-3 max-w-4xl tracking-wide leading-tight drop-shadow-md" data-aos="fade-up">
+              {testSeries.title || "Test Series"}
+            </h1>
+            <p className="text-sm sm:text-base md:text-xl text-gray-100 max-w-2xl leading-relaxed font-medium" data-aos="fade-up" data-aos-delay="100">
+              Master your preparation with {testSeries.numberOfTests || testSeries.noOfTests || 0} comprehensive tests
+            </p>
+          </div>
+        </div>
+      </div>
       <TestSeriesDetails testSeriesData={testSeries} />
     </div>
   );
-}
+};
+
+export default TestSeriesDetailPage;

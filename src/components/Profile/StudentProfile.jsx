@@ -72,7 +72,7 @@ const StudentDashboard = ({
   const profileMenuRef = useRef(null);
   const notificationPanelRef = useRef(null);
   const [notificationState, setNotificationState] = useState(
-    INITIAL_NOTIFICATION_STATE
+    INITIAL_NOTIFICATION_STATE,
   );
 
   const handleLogout = async () => {
@@ -143,7 +143,10 @@ const StudentDashboard = ({
 
       const mergedResults = Array.from(mergedMap.values());
       if (legacyResults.length && mergedResults.length) {
-        window.localStorage.setItem(perStudentKey, JSON.stringify(mergedResults));
+        window.localStorage.setItem(
+          perStudentKey,
+          JSON.stringify(mergedResults),
+        );
       }
 
       setLocalResults(mergedResults);
@@ -311,7 +314,7 @@ const StudentDashboard = ({
         }));
       }
     },
-    [studentId]
+    [studentId],
   );
 
   const handleNotificationRefresh = () => {
@@ -334,7 +337,7 @@ const StudentDashboard = ({
       if (notificationId && studentId) {
         setNotificationState((prev) => {
           const filteredItems = prev.items.filter(
-            (entry) => entry.id !== notificationId
+            (entry) => entry.id !== notificationId,
           );
           const nextUnread = Math.max(prev.unreadCount - 1, 0);
           return {
@@ -354,7 +357,7 @@ const StudentDashboard = ({
         router.push(item.link);
       }
     },
-    [studentId, router, fetchNotifications]
+    [studentId, router, fetchNotifications],
   );
 
   useEffect(() => {
@@ -415,7 +418,7 @@ const StudentDashboard = ({
       if (result && result.student) {
         localStorage.setItem(
           "faculty-pedia-student-data",
-          JSON.stringify(result.student)
+          JSON.stringify(result.student),
         );
         setStudentState(result.student);
         if (typeof window !== "undefined") {
@@ -463,7 +466,7 @@ const StudentDashboard = ({
 
     const fallbackCourses = normalizedCourses.filter(
       (course) =>
-        typeof course === "object" && course?.title && isCourseActive(course)
+        typeof course === "object" && course?.title && isCourseActive(course),
     );
 
     let isCancelled = false;
@@ -495,7 +498,7 @@ const StudentDashboard = ({
 
           const mergedCourses = [...fetchedActive];
           const seen = new Set(
-            fetchedActive.map((course) => course?._id).filter(Boolean)
+            fetchedActive.map((course) => course?._id).filter(Boolean),
           );
 
           fallbackCourses.forEach((course) => {
@@ -609,7 +612,7 @@ const StudentDashboard = ({
                 { _id: seriesId, title: "Series unavailable", error: true },
               ];
             }
-          })
+          }),
         );
 
         if (!cancelled) {
@@ -665,7 +668,7 @@ const StudentDashboard = ({
               console.warn(`Failed to fetch result ${resultId}:`, e);
               return [resultId, { _id: resultId, error: true }];
             }
-          })
+          }),
         );
 
         if (!cancelled) {
@@ -827,7 +830,13 @@ const StudentDashboard = ({
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3 text-blue-600">
             <div className="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
-              <Image src="/logo/finalLogo.png" alt="Facultypedia Logo" width={32} height={32} className="m-2 w-8 h-auto" />
+              <Image
+                src="/logo/finalLogo.png"
+                alt="Facultypedia Logo"
+                width={32}
+                height={32}
+                className="m-2 w-8 h-auto"
+              />
             </div>
             <h2 className="text-gray-900 dark:text-white text-xl font-bold tracking-tight">
               Facultypedia
@@ -920,7 +929,9 @@ const StudentDashboard = ({
                                 {item.message}
                               </p>
                               <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
-                                <span className="text-gray-500 dark:text-gray-400">{item.educatorName}</span>
+                                <span className="text-gray-500 dark:text-gray-400">
+                                  {item.educatorName}
+                                </span>
                                 <span>•</span>
                                 <span>{item.type}</span>
                               </div>
@@ -934,7 +945,7 @@ const StudentDashboard = ({
               </div>
             )}
           </div>
-          
+
           <div className="pl-4 border-l border-gray-100 dark:border-gray-700 flex items-center gap-3 relative">
             <div className="text-right hidden lg:block">
               <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
@@ -1052,8 +1063,6 @@ const StudentDashboard = ({
                 </button>
               );
             })}
-
-           
           </div>
         </nav>
 

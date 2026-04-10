@@ -105,10 +105,10 @@ const Footer = () => {
                 <IoMail className="text-blue-600 dark:text-blue-400 shrink-0" />
 
                 <a
-                  href="mailto:facultypedia20@gmail.com"
+                  href="mailto:Facultypedia02@gmail.com"
                   className="text-sm text-gray-800 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:underline"
                 >
-                  facultypedia20@gmail.com
+                  Facultypedia02@gmail.com
                 </a>
               </div>
             </div>

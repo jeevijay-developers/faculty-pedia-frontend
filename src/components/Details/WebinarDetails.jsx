@@ -56,6 +56,33 @@ const deriveEducatorName = (webinar) => {
   return candidate || "Educator";
 };
 
+const parseDurationMinutes = (value) => {
+  if (typeof value === "number" && Number.isFinite(value) && value > 0) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    const numericValue = Number(value.replace(/[^\d.]/g, "").trim());
+    if (Number.isFinite(numericValue) && numericValue > 0) {
+      return numericValue;
+    }
+  }
+
+  return null;
+};
+
+const formatHoursFromMinutes = (minutes) => {
+  if (!Number.isFinite(minutes) || minutes <= 0) {
+    return "N/A";
+  }
+
+  const hours = minutes / 60;
+  const rounded = Math.round(hours * 100) / 100;
+  return Number.isInteger(rounded)
+    ? String(rounded)
+    : String(rounded).replace(/\.0+$/, "");
+};
+
 const WebinarDetails = ({ webinar }) => {
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
   const [educatorName, setEducatorName] = useState(deriveEducatorName(webinar));
@@ -139,7 +166,8 @@ const WebinarDetails = ({ webinar }) => {
   const title = webinar.title || "Webinar Title";
   const description = webinar.description || "No description available";
   const timing = webinar.timing ? new Date(webinar.timing) : new Date();
-  const duration = webinar.duration || 1; // duration in hours
+  const durationInMinutes = parseDurationMinutes(webinar.duration);
+  const durationInHours = formatHoursFromMinutes(durationInMinutes);
   const seatLimit = webinar.seatLimit || 0;
   const fees = webinar.fees || 0;
   const subject = Array.isArray(webinar.subject)
@@ -293,9 +321,8 @@ const WebinarDetails = ({ webinar }) => {
                 <FaClock className="w-5 h-5 mr-3 text-blue-500" />
                 <div>
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Duration</p>
-                  <p className="font-semibold">{duration} hours</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {duration * 60} minutes
+                  <p className="font-semibold">
+                    {durationInHours === "N/A" ? "N/A" : `${durationInHours} hours`}
                   </p>
                 </div>
               </div>
@@ -492,7 +519,7 @@ const WebinarDetails = ({ webinar }) => {
                   href={asset}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:bg-gray-800 transition-colors duration-200"
+                  className="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                     <FaBook className="w-4 h-4 text-blue-600" />

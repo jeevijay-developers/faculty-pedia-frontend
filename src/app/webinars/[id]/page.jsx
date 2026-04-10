@@ -90,7 +90,7 @@ export default function WebinarDetailsPage({ params }) {
               </button>
               <Link
                 href="/webinars"
-                className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:bg-gray-700 transition-colors duration-300 font-medium"
+                className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 transition-colors duration-300 font-medium"
               >
                 Back to Webinars
               </Link>

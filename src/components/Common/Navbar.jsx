@@ -448,7 +448,7 @@ const Navbar = () => {
                       aria-label="Notifications"
                       aria-expanded={isNotificationOpen}
                       onClick={handleNotificationToggle}
-                      className="relative inline-flex items-center justify-center rounded-full p-2 text-gray-600 dark:text-gray-300 transition hover:bg-gray-100 dark:bg-gray-800 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="relative inline-flex items-center justify-center rounded-full p-2 text-gray-600 dark:text-gray-300 transition hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <Bell className="h-5 w-5" />
                       {notificationState.unreadCount > 0 &&
@@ -461,7 +461,8 @@ const Navbar = () => {
                     </button>
 
                     {isNotificationOpen && (
-                      <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-xl">
+                      <div className="absolute right-0 mt-3 w-96 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-xl">
+                        <style>{".nav-no-scrollbar::-webkit-scrollbar { display: none; margin: 0; width: 0; } .nav-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }"}</style>
                         <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 px-4 py-3">
                           <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                             Notifications
@@ -470,7 +471,7 @@ const Navbar = () => {
                             type="button"
                             onClick={handleNotificationRefresh}
                             disabled={notificationState.loading}
-                            className="flex items-center justify-center rounded-full p-1 text-blue-600 transition hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="flex items-center justify-center rounded-full p-1 text-blue-600 transition hover:bg-blue-50 dark:hover:bg-gray-800 hover:text-blue-700 dark:hover:text-blue-400 disabled:cursor-not-allowed disabled:opacity-60"
                             aria-label="Refresh notifications"
                           >
                             {notificationState.loading ? (
@@ -480,7 +481,7 @@ const Navbar = () => {
                             )}
                           </button>
                         </div>
-                        <div className="max-h-80 overflow-y-auto">
+                        <div className="nav-no-scrollbar max-h-80 overflow-y-auto overflow-x-hidden">
                           {notificationState.loading ? (
                             <div className="flex items-center justify-center gap-2 px-4 py-6 text-sm text-gray-500 dark:text-gray-400">
                               <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
@@ -505,12 +506,12 @@ const Navbar = () => {
                               educators to get updates.
                             </div>
                           ) : (
-                            <ul className="divide-y divide-gray-100">
+                            <ul className="divide-y divide-gray-100 dark:divide-gray-800">
                               {notificationState.items.map((item) => (
                                 <li key={item.id}>
                                   <button
                                     type="button"
-                                    className="flex w-full gap-3 px-4 py-3 text-left transition hover:bg-blue-50 focus:outline-none"
+                                    className="flex w-full gap-3 px-4 py-3 text-left transition hover:bg-blue-50 dark:hover:bg-gray-800 focus:outline-none"
                                     onClick={() =>
                                       handleNotificationSelect(item)
                                     }

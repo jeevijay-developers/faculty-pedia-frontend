@@ -83,6 +83,18 @@ const safeYear = (value, fallback = new Date().getFullYear()) => {
   return Number.isFinite(year) ? year : fallback;
 };
 
+const normalizeWebinarPayload = (payload) => {
+  if (!payload || typeof payload !== "object") return null;
+
+  const webinar =
+    payload?.data?.webinar ||
+    payload?.data ||
+    payload?.webinar ||
+    payload;
+
+  return webinar && typeof webinar === "object" ? webinar : null;
+};
+
 const RATING_STORAGE_KEY = "faculty-pedia-educator-ratings";
 
 const getStoredEducatorRating = (educatorId, studentId) => {
@@ -393,8 +405,15 @@ const ViewProfile = ({ educatorData }) => {
               return null;
             })
           );
-          const webinars = await Promise.all(webinarPromises);
-          setWebinarDetails(webinars.filter((webinar) => webinar)); // Filter out any null/undefined results
+          const webinarResponses = await Promise.all(webinarPromises);
+          const webinars = webinarResponses
+            .map((response) => normalizeWebinarPayload(response))
+            .filter(
+              (webinar) =>
+                webinar && typeof webinar === "object" && (webinar._id || webinar.id)
+            );
+
+          setWebinarDetails(webinars);
         } catch (error) {
           console.error("Error fetching webinar details:", error);
           setWebinarDetails([]);
@@ -1588,9 +1607,20 @@ const ViewProfile = ({ educatorData }) => {
                     <UpcomingWebinarCard
                       key={webinar._id || index}
                       item={{
-                        id: webinar._id,
-                        title: webinar.title,
-                        description: webinar.description,
+                        _id: webinar._id || webinar.id,
+                        id: webinar._id || webinar.id,
+                        title:
+                          webinar.title ||
+                          webinar.webinarTitle ||
+                          webinar.name ||
+                          "",
+                        description:
+                          typeof webinar.description === "string"
+                            ? webinar.description
+                            : webinar.description?.short ||
+                              webinar.description?.long ||
+                              webinar.description?.full ||
+                              "",
                         educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
                         educatorPhoto:
                           educatorData.image?.url ||
@@ -1601,29 +1631,17 @@ const ViewProfile = ({ educatorData }) => {
                         specialization:
                           webinar.specialization || educatorData.specialization,
                         subject: webinar.subject,
-                        totalHours: (() => {
-                          const durationMinutes = safeNumber(
-                            webinar.duration,
-                            0,
-                          );
-                          const hours = Math.floor(durationMinutes / 60);
-                          const minutes = durationMinutes % 60;
-                          return `${hours}h ${minutes}m`;
-                        })(),
-                        timeRange: webinar.time,
-                        date: new Date(webinar.date).toLocaleDateString(
-                          "en-US",
-                          {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          },
-                        ),
-                        fee: webinar.fees?.toString() || "0",
+                        timing:
+                          webinar.timing || webinar.date || webinar.startDate || null,
+                        duration: webinar.duration,
+                        fees: safeNumber(webinar.fees ?? webinar.fee, 0),
                         detailsLink: `/webinars/${webinar._id}`,
                         image:
-                          webinar.image?.url || "/images/placeholders/1.svg",
+                          webinar.image?.url ||
+                          webinar.image ||
+                          webinar.banner?.url ||
+                          webinar.banner ||
+                          "/images/placeholders/1.svg",
                         seatLimit: webinar.seatLimit,
                         enrolledCount: webinar.enrolledStudents?.length || 0,
                         webinarType: webinar.webinarType,

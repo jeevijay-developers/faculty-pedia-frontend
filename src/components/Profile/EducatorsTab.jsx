@@ -35,6 +35,119 @@ const deriveEducatorName = (educator) => {
   return candidates[0] || "";
 };
 
+const KNOWN_SUBJECTS = [
+  "mathematics",
+  "physics",
+  "chemistry",
+  "biology",
+  "english",
+  "hindi",
+  "science",
+  "social science",
+  "history",
+  "geography",
+  "economics",
+  "accountancy",
+  "computer science",
+  "political science",
+];
+
+const toTitleCase = (value) =>
+  value
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join(" ");
+
+const splitConcatenatedKnownSubjects = (value) => {
+  const compactValue = value.toLowerCase().replace(/[^a-z]/g, "");
+  if (!compactValue) return [];
+
+  const compactKnownSubjects = KNOWN_SUBJECTS.map((subject) => ({
+    compact: subject.replace(/[^a-z]/g, ""),
+    label: toTitleCase(subject),
+  })).sort((a, b) => b.compact.length - a.compact.length);
+
+  const parsed = [];
+  let index = 0;
+
+  while (index < compactValue.length) {
+    let matched = false;
+
+    for (const subject of compactKnownSubjects) {
+      if (compactValue.startsWith(subject.compact, index)) {
+        parsed.push(subject.label);
+        index += subject.compact.length;
+        matched = true;
+        break;
+      }
+    }
+
+    if (!matched) {
+      return [];
+    }
+  }
+
+  return parsed;
+};
+
+const deriveEducatorSubjects = (educator) => {
+  if (!educator || typeof educator !== "object") {
+    return [];
+  }
+
+  const subjectCandidates = [
+    educator.subjects,
+    educator.subject,
+    educator.personalInfo?.subjects,
+    educator.profile?.subjects,
+  ];
+
+  const normalized = [];
+
+  subjectCandidates.forEach((candidate) => {
+    if (Array.isArray(candidate)) {
+      candidate.forEach((item) => {
+        if (typeof item === "string") {
+          normalized.push(item);
+        }
+      });
+      return;
+    }
+
+    if (typeof candidate === "string") {
+      normalized.push(candidate);
+    }
+  });
+
+  const subjects = [];
+
+  normalized.forEach((value) => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+
+    const hasSeparator = /,|\/|\||&|\band\b/i.test(trimmed);
+    if (hasSeparator) {
+      trimmed
+        .split(/,|\/|\||&|\band\b/gi)
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .forEach((part) => subjects.push(toTitleCase(part)));
+      return;
+    }
+
+    const splitKnownSubjects = splitConcatenatedKnownSubjects(trimmed);
+    if (splitKnownSubjects.length > 1) {
+      splitKnownSubjects.forEach((subject) => subjects.push(subject));
+      return;
+    }
+
+    subjects.push(toTitleCase(trimmed));
+  });
+
+  return Array.from(new Set(subjects));
+};
+
 const EducatorsTab = ({ followingEducators }) => {
   const router = useRouter();
   const [studentId, setStudentId] = useState(null);
@@ -167,6 +280,7 @@ const EducatorsTab = ({ followingEducators }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {displayEducators.map((educator) => {
             const educatorName = deriveEducatorName(educator);
+            const educatorSubjects = deriveEducatorSubjects(educator);
             const profileImage =
               educator.profileImage?.url || educator.image?.url;
             const educatorId = educator._id;
@@ -207,11 +321,14 @@ const EducatorsTab = ({ followingEducators }) => {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600 dark:text-gray-400 mb-3">
-                  {educator.subject && (
-                    <span className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 font-medium">
-                      {educator.subject}
+                  {educatorSubjects.map((subject) => (
+                    <span
+                      key={`${educatorId}-${subject}`}
+                      className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1 font-medium"
+                    >
+                      {subject}
                     </span>
-                  )}
+                  ))}
                   {educator.followedAt && (
                     <span className="inline-flex items-center rounded-full bg-blue-50 text-blue-700 px-3 py-1 font-medium">
                       Following since{" "}

@@ -14,3 +14,14 @@ export const getEducatorItemReviews = async (educatorId, params = {}) => {
   );
   return response.data;
 };
+
+export const getItemReviews = async (itemType, itemId, params = {}) => {
+  const response = await API_CLIENT.get(`${REVIEWS_BASE_PATH}/item`, {
+    params: {
+      itemType,
+      itemId,
+      ...params,
+    },
+  });
+  return response.data;
+};
