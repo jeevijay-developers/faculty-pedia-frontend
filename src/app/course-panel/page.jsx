@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -296,7 +296,12 @@ const CoursePanelPage = () => {
       unique.push(v);
     });
 
-    return unique;
+    return unique.sort((a, b) =>
+      (a?.title || "").localeCompare(b?.title || "", undefined, {
+        numeric: true,
+        sensitivity: "base",
+      })
+    );
   }, [courseData, courseVideos]);
 
   const assets = useMemo(() => {
@@ -571,7 +576,7 @@ const CoursePanelPage = () => {
   const renderTests = () => {
     if (testsLoading && courseTests.length === 0) {
       return (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 text-center text-slate-500">
+        <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-sm p-5 text-center text-gray-400">
           Loading test series...
         </div>
       );
@@ -579,17 +584,17 @@ const CoursePanelPage = () => {
 
     if (!hasCourseTests) {
       return (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 text-center text-slate-500">
+        <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-sm p-5 text-center text-gray-400">
           No test series assigned to this course yet.
         </div>
       );
     }
 
     return (
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+      <div className="bg-gray-900 rounded-xl border border-gray-800 shadow-sm p-5 space-y-4">
         <div className="flex flex-col gap-1">
-          <h2 className="text-lg font-semibold text-slate-900">Test Series</h2>
-          <p className="text-sm text-slate-600">
+          <h2 className="text-lg font-semibold text-white">Test Series</h2>
+          <p className="text-sm text-gray-400">
             Course-specific tests and assessments.
           </p>
         </div>
@@ -604,18 +609,18 @@ const CoursePanelPage = () => {
             return (
               <div
                 key={ts._id || ts.id || index}
-                className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm flex flex-col gap-3"
+                className="border border-gray-800 rounded-xl p-4 bg-gray-900 shadow-sm flex flex-col gap-3"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-2">
-                    <h3 className="text-base font-semibold text-slate-900 line-clamp-2">
+                    <h3 className="text-base font-semibold text-white line-clamp-2">
                       {ts.title || "Untitled Test Series"}
                     </h3>
-                    <p className="text-sm text-slate-600 whitespace-pre-line line-clamp-3">
+                    <p className="text-sm text-gray-400 whitespace-pre-line line-clamp-3">
                       {ts.description || "No description provided."}
                     </p>
-                    <div className="flex items-center gap-2 text-sm text-slate-700">
-                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-700">
+                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-300">
                         <FiFileText className="w-4 h-4" />
                       </span>
                       <span className="font-medium">{testsCount} tests</span>
@@ -624,7 +629,7 @@ const CoursePanelPage = () => {
                   <button
                     onClick={() => handleToggleSeries(ts)}
                     aria-label={isExpanded ? "Hide tests" : "Show tests"}
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-indigo-200 hover:text-indigo-700 transition-transform duration-200 shadow-sm"
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 bg-gray-900 text-gray-300 hover:border-indigo-500 hover:text-indigo-400 transition-transform duration-200 shadow-sm"
                   >
                     <FiChevronDown
                       className={`w-5 h-5 transition-transform duration-200 ${
@@ -635,9 +640,9 @@ const CoursePanelPage = () => {
                 </div>
 
                 {isExpanded && (
-                  <div className="border border-slate-100 rounded-lg bg-slate-50 p-3 space-y-3">
+                  <div className="border border-gray-800 rounded-lg bg-gray-800/50 p-3 space-y-3">
                     {seriesTestsLoading[seriesKey] ? (
-                      <div className="flex items-center gap-2 text-sm text-slate-500">
+                      <div className="flex items-center gap-2 text-sm text-gray-400">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-600"></div>
                         <span>Loading tests...</span>
                       </div>
@@ -650,13 +655,13 @@ const CoursePanelPage = () => {
                         return (
                           <div
                             key={test._id || test.id || test.slug}
-                            className="bg-white border border-slate-200 rounded-lg p-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+                            className="bg-gray-900 border border-gray-700 rounded-lg p-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
                           >
                             <div className="space-y-1">
-                              <h4 className="text-sm font-semibold text-slate-900 line-clamp-2">
+                              <h4 className="text-sm font-semibold text-white line-clamp-2">
                                 {test.title || "Test"}
                               </h4>
-                              <p className="text-sm text-slate-600 line-clamp-2">
+                              <p className="text-sm text-gray-400 line-clamp-2">
                                 {test.description || "No description provided."}
                               </p>
                             </div>
@@ -672,7 +677,7 @@ const CoursePanelPage = () => {
                         );
                       })
                     ) : (
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-gray-400">
                         No tests available for this series.
                       </p>
                     )}
@@ -688,7 +693,7 @@ const CoursePanelPage = () => {
 
   if (loading) {
     return (
-      <div className="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center text-text-secondary">
+      <div className="bg-gray-950 min-h-screen flex items-center justify-center text-gray-400">
         Loading course...
       </div>
     );
@@ -696,21 +701,21 @@ const CoursePanelPage = () => {
 
   if (!courseData) {
     return (
-      <div className="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center text-text-secondary px-4">
+      <div className="bg-gray-950 min-h-screen flex items-center justify-center text-gray-400 px-4">
         {error || "No course data available."}
       </div>
     );
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark min-h-screen text-text-main dark:text-white">
+    <div className="bg-gray-950 min-h-screen text-gray-100">
       <div className="max-w-350 mx-auto px-4 md:px-8 py-8 flex flex-col gap-8">
         {/* Breadcrumbs and Header */}
         <header className="flex flex-col gap-6">
-          <div className="flex items-center gap-2 text-sm text-text-secondary">
+          <div className="flex items-center gap-2 text-sm text-gray-400">
             <Link 
               href="/profile/student"
-              className="hover:text-blue-600 transition-colors cursor-pointer"
+              className="hover:text-blue-400 transition-colors cursor-pointer"
             >
               Home
             </Link>
@@ -719,14 +724,14 @@ const CoursePanelPage = () => {
             </span>
             <Link 
               href={studentId ? `/profile/student/${studentId}?tab=my-courses` : "/profile/student"}
-              className="hover:text-blue-600 transition-colors cursor-pointer"
+              className="hover:text-blue-400 transition-colors cursor-pointer"
             >
               My Courses
             </Link>
             <span className="material-symbols-outlined text-[16px]">
               chevron_right
             </span>
-            <span className="text-blue-600 font-medium line-clamp-1">
+            <span className="text-blue-400 font-medium line-clamp-1">
               {courseData?.title || "Course"}
             </span>
           </div>
@@ -735,20 +740,20 @@ const CoursePanelPage = () => {
             <div className="flex-1 space-y-4">
               <div className="flex flex-wrap items-center gap-3">
                 {courseData?.subject && (
-                  <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wide rounded-full">
+                  <span className="px-3 py-1 bg-blue-900/30 text-blue-300 text-xs font-bold uppercase tracking-wide rounded-full">
                     {Array.isArray(courseData.subject)
                       ? courseData.subject.join(", ")
                       : courseData.subject}
                   </span>
                 )}
                 {courseData?.specialization && (
-                  <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wide rounded-full">
+                  <span className="px-3 py-1 bg-blue-900/30 text-blue-300 text-xs font-bold uppercase tracking-wide rounded-full">
                     {Array.isArray(courseData.specialization)
                       ? courseData.specialization.join(", ")
                       : courseData.specialization}
                   </span>
                 )}
-                <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-100 px-3 py-1 rounded-full">
+                <span className="flex items-center gap-1 text-xs font-medium text-green-300 bg-green-900/30 px-3 py-1 rounded-full">
                   <span className="size-2 rounded-full bg-green-500 animate-pulse" />
                   In Progress
                 </span>
@@ -756,10 +761,10 @@ const CoursePanelPage = () => {
               <h1 className="text-3xl md:text-4xl font-black tracking-tight">
                 {courseData?.title || "Course"}
               </h1>
-              <p className="text-text-secondary text-lg max-w-3xl">
+              <p className="text-gray-400 text-lg max-w-3xl">
                 {courseData?.subtitle || courseData?.description || ""}
               </p>
-              <div className="flex flex-wrap gap-4 text-sm text-text-secondary items-center pt-1">
+              <div className="flex flex-wrap gap-4 text-sm text-gray-400 items-center pt-1">
                 {courseData?.language && (
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-[20px]">
@@ -768,7 +773,7 @@ const CoursePanelPage = () => {
                     <span>{courseData.language}</span>
                   </div>
                 )}
-                <div className="w-1 h-1 bg-gray-300 rounded-full" />
+                <div className="w-1 h-1 bg-gray-700 rounded-full" />
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-[20px]">
                     calendar_today
@@ -786,7 +791,7 @@ const CoursePanelPage = () => {
                       : "Start date TBD"}
                   </span>
                 </div>
-                <div className="w-1 h-1 bg-gray-300 rounded-full" />
+                <div className="w-1 h-1 bg-gray-700 rounded-full" />
                 {courseData?.courseClass && (
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-[20px]">
@@ -806,7 +811,7 @@ const CoursePanelPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <section className="lg:col-span-12 flex flex-col gap-6">
             {/* Tabs */}
-            <div className="border-b border-gray-200 dark:border-gray-800">
+            <div className="border-b border-gray-800">
               <div className="flex gap-8">
                 {[
                   { id: "videos", label: "Videos" },
@@ -822,8 +827,8 @@ const CoursePanelPage = () => {
                       key={tab.id}
                       className={`pb-4 px-2 border-b-2 transition-all text-lg ${
                         active
-                          ? "text-blue-600 border-blue-600 font-bold"
-                          : "text-text-secondary hover:text-blue-600 border-transparent hover:border-blue-300 font-medium"
+                          ? "text-blue-400 border-blue-500 font-bold"
+                          : "text-gray-400 hover:text-blue-300 border-transparent hover:border-blue-500/40 font-medium"
                       }`}
                       onClick={() => setActiveTab(tab.id)}
                     >
@@ -860,10 +865,10 @@ const CoursePanelPage = () => {
                     )}
                   </div>
 
-                  <div className="bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
+                  <div className="bg-gray-900 p-5 rounded-2xl shadow-sm border border-gray-800">
                     <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                       <div>
-                        {/* <div className="flex gap-2 mb-2 text-xs text-text-secondary">
+                        {/* <div className="flex gap-2 mb-2 text-xs text-gray-600 dark:text-gray-400">
                           <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-white/10 font-medium">
                             {activeTab === "videos" ? "Lesson" : ""}{" "}
                             {allVideos.findIndex(
@@ -882,7 +887,7 @@ const CoursePanelPage = () => {
                       </div>
                       {/* <div className="flex gap-2">
                         <button
-                          className="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                          className="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                           title="Previous Lesson"
                         >
                           <span className="material-symbols-outlined">
@@ -890,7 +895,7 @@ const CoursePanelPage = () => {
                           </span>
                         </button>
                         <button
-                          className="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-text-secondary hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                          className="size-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                           title="Next Lesson"
                         >
                           <span className="material-symbols-outlined">
@@ -899,7 +904,7 @@ const CoursePanelPage = () => {
                         </button>
                       </div> */}
                     </div>
-                    <p className="text-text-secondary text-sm leading-relaxed line-clamp-3">
+                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">
                       {courseData?.description ||
                         "In this lecture, we dive into the selected topic. Download the attached worksheet for practice problems."}
                     </p>
@@ -907,20 +912,20 @@ const CoursePanelPage = () => {
                 </div>
 
                 <div className="w-full xl:w-90 flex flex-col gap-4">
-                  <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col h-150">
-                    <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-blue-50/50 dark:bg-blue-900/10 rounded-t-2xl">
-                      <h3 className="font-bold text-blue-900 dark:text-blue-200">Course Content</h3>
-                      <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
+                  <div className="bg-gray-900 rounded-2xl shadow-sm border border-gray-800 flex flex-col h-150">
+                    <div className="p-4 border-b border-gray-800 flex justify-between items-center bg-blue-900/20 rounded-t-2xl">
+                      <h3 className="font-bold text-blue-200">Course Content</h3>
+                      <span className="text-xs font-medium text-blue-300">
                         {completedCount}/{allVideos.length} Completed
                       </span>
                     </div>
                     <div className="overflow-y-auto flex-1 p-2 space-y-1 no-scrollbar">
                       {(loading || courseVideosLoading) && allVideos.length === 0 && (
-                        <div className="p-4 text-sm text-text-secondary">
+                        <div className="p-4 text-sm text-gray-400">
                           Loading videos...
                         </div>
                       )}
-                      {allVideos.map((video, idx) => {
+                      {allVideos.map((video) => {
                         const isActive = video.id === currentVideo?.id;
                         const isVideoCompleted = completedVideos[video.id]?.isCompleted || false;
                         const isToggling = togglingVideoId === video.id;
@@ -929,8 +934,8 @@ const CoursePanelPage = () => {
                             key={video.id}
                             className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-colors ${
                               isActive
-                                ? "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600"
-                                : "hover:bg-gray-50 dark:hover:bg-white/5"
+                                ? "bg-blue-900/25 border-l-4 border-blue-500"
+                                : "hover:bg-gray-800"
                             }`}
                           >
                             {/* Checkbox for marking completion */}
@@ -967,26 +972,26 @@ const CoursePanelPage = () => {
                                     ? "text-blue-600 dark:text-blue-400"
                                     : isVideoCompleted
                                     ? "text-green-600 dark:text-green-400"
-                                    : "text-text-main dark:text-white"
+                                    : "text-gray-900 dark:text-gray-100"
                                 }`}
                               >
                                 {video.title}
                               </div>
-                              <div
+                              {/* <div
                                 className={`text-xs mt-0.5 ${
                                   isActive
-                                    ? "text-blue-600/70 dark:text-blue-400/70"
-                                    : "text-text-secondary"
+                                    ? "text-blue-300/80"
+                                    : "text-gray-400"
                                 }`}
                               >
-                                {video.duration || "—"}
-                              </div>
+                                {video.duration || "-"}
+                              </div> */}
                             </button>
                           </div>
                         );
                       })}
                       {allVideos.length === 0 && (
-                        <div className="p-4 text-sm text-text-secondary">
+                        <div className="p-4 text-sm text-gray-400">
                           No videos available
                         </div>
                       )}
@@ -1001,13 +1006,13 @@ const CoursePanelPage = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold">Course Assets</h3>
-                  <span className="text-sm font-bold text-blue-600">
+                  <span className="text-sm font-bold text-blue-400">
                     View All
                   </span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {courseMaterialsLoading && assets.length === 0 && (
-                    <div className="col-span-3 text-sm text-text-secondary">
+                    <div className="col-span-3 text-sm text-gray-400">
                       Loading study materials...
                     </div>
                   )}
@@ -1017,26 +1022,26 @@ const CoursePanelPage = () => {
                       href={asset.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-start gap-4 hover:-translate-y-1 hover:shadow-md hover:border-blue-300 transition-all duration-300"
+                      className="bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-800 flex items-start gap-4 hover:-translate-y-1 hover:shadow-md hover:border-blue-500 transition-all duration-300"
                     >
-                      <div className="size-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center shrink-0">
+                      <div className="size-12 bg-blue-900/30 text-blue-300 rounded-lg flex items-center justify-center shrink-0">
                         <span className="material-symbols-outlined">
                           description
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-bold truncate">{asset.title}</h4>
-                        <p className="text-xs text-text-secondary mt-1 line-clamp-2">
+                        <p className="text-xs text-gray-400 mt-1 line-clamp-2">
                           {asset.description || "Resource"}
                         </p>
-                        <p className="text-xs text-text-secondary mt-1">
+                        <p className="text-xs text-gray-400 mt-1">
                           {asset.size || ""}
                         </p>
                       </div>
                     </a>
                   ))}
                   {assets.length === 0 && (
-                    <div className="col-span-3 text-sm text-text-secondary">
+                    <div className="col-span-3 text-sm text-gray-400">
                       No assets available.
                     </div>
                   )}
@@ -1050,7 +1055,7 @@ const CoursePanelPage = () => {
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-bold">Live Classes</h3>
                   {courseData?.liveClass?.length > 0 && (
-                    <span className="text-sm font-medium text-text-secondary">
+                    <span className="text-sm font-medium text-gray-400">
                       {courseData.liveClass.length} {courseData.liveClass.length === 1 ? 'class' : 'classes'}
                     </span>
                   )}
@@ -1066,7 +1071,7 @@ const CoursePanelPage = () => {
                     return (
                       <div
                         key={liveClass._id || liveClass.id || index}
-                        className="bg-white dark:bg-surface-dark p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all duration-300"
+                        className="bg-gray-900 p-5 rounded-xl shadow-sm border border-gray-800 hover:shadow-md transition-all duration-300"
                       >
                         <div className="space-y-3">
                           {/* Status Badge */}
@@ -1074,10 +1079,10 @@ const CoursePanelPage = () => {
                             <span
                               className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
                                 isPast
-                                  ? "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                                  ? "bg-gray-800 text-gray-400"
                                   : isToday
-                                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                                  : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                                  ? "bg-green-900/30 text-green-300"
+                                  : "bg-blue-900/30 text-blue-300"
                               }`}
                             >
                               {isPast ? "Completed" : isToday ? "Today" : "Upcoming"}
@@ -1085,13 +1090,13 @@ const CoursePanelPage = () => {
                           </div>
 
                           {/* Title */}
-                          <h4 className="text-lg font-bold text-text-main dark:text-white line-clamp-2">
+                          <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 line-clamp-2">
                             {liveClass.liveClassTitle || "Live Class"}
                           </h4>
 
                           {/* Date and Time */}
                           {classDate && (
-                            <div className="flex items-center gap-2 text-sm text-text-secondary">
+                            <div className="flex items-center gap-2 text-sm text-gray-400">
                               <span className="material-symbols-outlined text-[18px]">
                                 calendar_today
                               </span>
@@ -1103,7 +1108,7 @@ const CoursePanelPage = () => {
                                   year: "numeric",
                                 })}
                               </span>
-                              <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                              <span className="w-1 h-1 bg-gray-700 rounded-full" />
                               <span className="material-symbols-outlined text-[18px]">
                                 schedule
                               </span>
@@ -1118,7 +1123,7 @@ const CoursePanelPage = () => {
 
                           {/* Duration */}
                           {liveClass.classDuration && (
-                            <div className="flex items-center gap-2 text-sm text-text-secondary">
+                            <div className="flex items-center gap-2 text-sm text-gray-400">
                               <span className="material-symbols-outlined text-[18px]">
                                 timer
                               </span>
@@ -1128,11 +1133,11 @@ const CoursePanelPage = () => {
 
                           {/* Fee (only for non-course-specific classes) */}
                           {!liveClass.isCourseSpecific && liveClass.liveClassesFee > 0 && (
-                            <div className="flex items-center gap-2 text-sm font-semibold text-blue-600">
+                            <div className="flex items-center gap-2 text-sm font-semibold text-blue-300">
                               <span className="material-symbols-outlined text-[18px]">
                                 currency_rupee
                               </span>
-                              <span>₹{liveClass.liveClassesFee}</span>
+                              <span>&#8377;{liveClass.liveClassesFee}</span>
                             </div>
                           )}
 
@@ -1166,8 +1171,8 @@ const CoursePanelPage = () => {
                               <button
                                 className={`w-full py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
                                   isPast
-                                    ? "bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-500"
-                                    : "bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-500"
+                                    ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                                    : "bg-gray-800 text-gray-500 cursor-not-allowed"
                                 }`}
                                 disabled={true}
                               >
@@ -1181,12 +1186,12 @@ const CoursePanelPage = () => {
                   })}
                   {(!courseData?.liveClass || courseData.liveClass.length === 0) && (
                     <div className="col-span-2 text-center py-12">
-                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-800 mb-4">
                         <span className="material-symbols-outlined text-gray-400 text-3xl">
                           video_call
                         </span>
                       </div>
-                      <p className="text-text-secondary text-sm">
+                      <p className="text-gray-400 text-sm">
                         No live classes scheduled for this course yet.
                       </p>
                     </div>
@@ -1215,3 +1220,5 @@ const CoursePanelPage = () => {
 };
 
 export default CoursePanelPage;
+
+

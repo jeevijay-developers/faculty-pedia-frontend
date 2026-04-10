@@ -14,7 +14,6 @@ import EditProfileModal from "./EditProfileModal";
 import LiveClassesTab from "./LiveClassesTab";
 import { getCoursesByIds } from "../server/course.routes";
 import { getTestSeriesById } from "../server/test-series.route";
-import { getResultById } from "../server/result.routes";
 import { updateStudentProfile } from "../server/student/student.routes";
 import {
   getStudentNotifications,
@@ -635,7 +634,7 @@ const StudentDashboard = ({
     };
   }, [JSON.stringify(tests), JSON.stringify(combinedResults)]);
 
-  // Resolve result details by fetching each result ID from results array individually.
+  // Resolve result details from already available combined results.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -643,38 +642,26 @@ const StudentDashboard = ({
         setResultsLoading(true);
         setResultsError(null);
 
-        // Extract result IDs from results array - each result can be string ID or object with _id
-        const resultIds = new Set();
-        combinedResults.forEach((result) => {
-          const resultId = getResultId(result);
-          if (resultId && !resolvedResultsMap[resultId]) {
-            resultIds.add(resultId);
-          }
-        });
+        const localPairs = combinedResults
+          .map((result) => {
+            const resultObj =
+              result && typeof result === "object"
+                ? result.result || result.data || result
+                : null;
+            const resultId = getResultId(resultObj || result);
+            return resultId ? [resultId, resultObj || { _id: resultId }] : null;
+          })
+          .filter(Boolean);
 
-        if (resultIds.size === 0) {
+        if (localPairs.length === 0) {
           setResultsLoading(false);
           return;
         }
 
-        // Fetch each result individually using getResultById
-        const fetchedPairs = await Promise.all(
-          Array.from(resultIds).map(async (resultId) => {
-            try {
-              const data = await getResultById(resultId);
-              const resultObj = data?.result || data?.data || data;
-              return [resultObj?._id || resultId, resultObj];
-            } catch (e) {
-              console.warn(`Failed to fetch result ${resultId}:`, e);
-              return [resultId, { _id: resultId, error: true }];
-            }
-          }),
-        );
-
         if (!cancelled) {
           setResolvedResultsMap((prev) => {
             const next = { ...prev };
-            fetchedPairs.forEach(([id, obj]) => {
+            localPairs.forEach(([id, obj]) => {
               if (id) next[id] = obj;
             });
             return next;
