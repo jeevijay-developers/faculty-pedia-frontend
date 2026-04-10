@@ -328,14 +328,17 @@ const ViewProfile = ({ educatorData }) => {
   const payPerHourEmailLink = educatorData?.email
     ? `mailto:${educatorData.email}`
     : null;
-  const payPerHourDisplayName =
+  const educatorDisplayName =
+    educatorData?.fullName?.trim() ||
     [educatorData?.firstName, educatorData?.lastName]
       .filter(Boolean)
       .join(" ")
       .trim() ||
-    educatorData?.fullName ||
     educatorData?.name ||
+    educatorData?.username ||
     "this educator";
+  const payPerHourDisplayName =
+    educatorDisplayName;
 
   useEffect(() => {
     setRatingState({
@@ -904,7 +907,7 @@ const ViewProfile = ({ educatorData }) => {
             Educators
           </a>
           <span className="text-gray-400">›</span>
-          <span className="text-[#111118] dark:text-gray-100">{`${educatorData.firstName} ${educatorData.lastName}`}</span>
+          <span className="text-[#111118] dark:text-gray-100">{educatorDisplayName}</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
@@ -918,7 +921,7 @@ const ViewProfile = ({ educatorData }) => {
                 <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-md ring-4 ring-white dark:ring-gray-800">
                   <Image
                     src={avatarSrc}
-                    alt={`${educatorData.firstName} ${educatorData.lastName}`}
+                    alt={educatorDisplayName}
                     fill
                     sizes="128px"
                     className="object-cover"
@@ -934,7 +937,7 @@ const ViewProfile = ({ educatorData }) => {
 
               <div className="relative z-10 flex flex-col items-center w-full">
                 <h1 className="text-[#111118] dark:text-gray-100 text-2xl font-bold tracking-tight">
-                  {`${educatorData.firstName} ${educatorData.lastName}`}
+                  {educatorDisplayName}
                 </h1>
                 <p className="text-[#636388] dark:text-gray-400 text-sm font-medium mt-1">
                   @{educatorData.username || "educator"}
@@ -1236,8 +1239,7 @@ const ViewProfile = ({ educatorData }) => {
                       <Video className="w-10 h-10 text-[#231fe5]" />
                     </div>
                     <h3 className="text-xl font-semibold mb-2 text-center text-[#111118] dark:text-gray-100">
-                      Intro Video of {educatorData.firstName}{" "}
-                      {educatorData.lastName}
+                      Intro Video of {educatorDisplayName}
                     </h3>
                     <p className="text-sm text-[#636388] dark:text-gray-400 text-center max-w-md">
                       is not currently available. Check out soon!
@@ -1559,6 +1561,7 @@ const ViewProfile = ({ educatorData }) => {
                         _id: educatorData._id,
                         firstName: educatorData.firstName,
                         lastName: educatorData.lastName,
+                        fullName: educatorDisplayName,
                         image: educatorData.image,
                         specialization: educatorData.specialization,
                         qualification: educatorData.qualification,
@@ -1621,7 +1624,7 @@ const ViewProfile = ({ educatorData }) => {
                               webinar.description?.long ||
                               webinar.description?.full ||
                               "",
-                        educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
+                        educatorName: educatorDisplayName,
                         educatorPhoto:
                           educatorData.image?.url ||
                           educatorData.image ||
@@ -1688,7 +1691,7 @@ const ViewProfile = ({ educatorData }) => {
                       testSeries={{
                         id: testSeries._id,
                         title: testSeries.title,
-                        educatorName: `${educatorData.firstName} ${educatorData.lastName}`,
+                        educatorName: educatorDisplayName,
                         educatorPhoto:
                           educatorData.image?.url ||
                           educatorData.image ||
