@@ -270,11 +270,13 @@ const WebinarForm = ({ onSubmit }) => {
           className="mt-1 block w-full text-sm text-gray-500 dark:text-gray-300"
         />
         {imagePreview && (
-          <img
-            src={imagePreview}
-            alt="Preview"
-            className="mt-2 w-32 h-32 object-cover rounded"
-          />
+          <div className="mt-2 w-full max-w-md aspect-video rounded overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-full h-full object-contain"
+            />
+          </div>
         )}
       </div>
 

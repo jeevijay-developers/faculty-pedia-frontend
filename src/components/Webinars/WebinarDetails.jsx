@@ -101,12 +101,12 @@ const WebinarDetails = ({ id }) => {
           <div
             data-aos="fade-up"
             data-aos-delay="100"
-            className="rounded-xl overflow-hidden shadow-lg"
+            className="rounded-xl overflow-hidden shadow-lg aspect-video bg-gray-100"
           >
             <img
               src={webinarData.image?.url || "/images/placeholders/card-16x9.svg"}
               alt={webinarData.title || "Webinar"}
-              className="w-full h-64 object-cover"
+              className="aspect-video object-cover"
             />
           </div>
 
