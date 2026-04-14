@@ -227,7 +227,7 @@ const Page = ({ params }) => {
           size="sm"
         />
       </div>
-      <ViewProfile educatorData={educatorData} />
+      <ViewProfile educatorData={educatorData} showContentSections={false} />
 
       {/* Courses Section */}
       <div className="max-w-7xl mx-auto px-4 py-12">

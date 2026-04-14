@@ -81,18 +81,18 @@ const CourseHeader = ({ course }) => {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
       {/* Header Section */}
-      <div className="text-gray-800 dark:text-gray-100 p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="text-gray-800 dark:text-gray-100 p-4 sm:p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Course Image */}
           <div className="lg:col-span-1">
             <img
               src={
                 course.image ||
                 course.courseThumbnail ||
-                "/images/placeholders/1.svg"
+                "/images/placeholders/card-16x9.svg"
               }
               alt={course.title}
-              className="w-full h-64 lg:h-48 object-cover rounded-lg border-2 border-white/20"
+              className="w-full aspect-video object-cover rounded-lg border-2 border-white/20"
             />
           </div>
 
@@ -123,7 +123,7 @@ const CourseHeader = ({ course }) => {
             </div>
 
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{course.title}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 wrap-break-word">{course.title}</h1>
               <ShareButton
                 title={course?.title || "Course"}
                 text={shareText}
@@ -132,7 +132,7 @@ const CourseHeader = ({ course }) => {
                 className="lg:ml-auto"
               />
             </div>
-            <p className="text-gray-700 dark:text-gray-300 text-lg mb-4 line-clamp-2 leading-relaxed">
+            <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg mb-4 line-clamp-2 leading-relaxed">
               {course.description || course.description?.short || "No description available"}
             </p>
 
@@ -205,10 +205,10 @@ const CourseHeader = ({ course }) => {
       </div>
 
       {/* Details Section */}
-      <div className="p-6">
-        <div className={`grid grid-cols-1 md:grid-cols-2 ${isOneToOne ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-6`}>
+      <div className="p-4 sm:p-6">
+        <div className={`grid grid-cols-1 md:grid-cols-2 ${isOneToOne ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-4 sm:gap-6`}>
           {/* Pricing */}
-          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200">
+          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 sm:p-4 border border-green-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaRupeeSign className="w-5 h-5 text-green-600" />
               <span className="text-sm font-medium text-green-700">
@@ -226,7 +226,7 @@ const CourseHeader = ({ course }) => {
           </div>
 
           {/* Timeline */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 sm:p-4 border border-blue-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaCalendarAlt className="w-5 h-5 text-blue-600" />
               <span className="text-sm font-medium text-blue-700">
@@ -241,7 +241,7 @@ const CourseHeader = ({ course }) => {
 
           {/* Enrollment (only for One to All) */}
           {isOneToAll && (
-            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200">
+            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3 sm:p-4 border border-purple-200">
               <div className="flex items-center space-x-2 mb-2">
                 <FaUsers className="w-5 h-5 text-purple-600" />
                 <span className="text-sm font-medium text-purple-700">
@@ -256,7 +256,7 @@ const CourseHeader = ({ course }) => {
           )}
 
           {/* Subject */}
-          <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 border border-orange-200">
+          <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 sm:p-4 border border-orange-200">
             <div className="flex items-center space-x-2 mb-2">
               <FaGraduationCap className="w-5 h-5 text-orange-600" />
               <span className="text-sm font-medium text-orange-700">

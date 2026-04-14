@@ -13,7 +13,6 @@ import {
   FaStar,
   FaStarHalfAlt,
 } from "react-icons/fa";
-import Banner from "../Common/Banner";
 import EnrollButton from "../Common/EnrollButton";
 import ShareButton from "@/components/Common/ShareButton";
 import { fetchEducatorById } from "@/components/server/webinars.routes";
@@ -56,6 +55,42 @@ const deriveEducatorName = (webinar) => {
   return candidate || "Educator";
 };
 
+const EDUCATOR_IMAGE_FALLBACK = "/images/placeholders/educatorFallback.svg";
+
+const pickImageUrl = (source) => {
+  if (!source) return null;
+  if (typeof source === "string" && source.trim()) return source.trim();
+  if (typeof source === "object") {
+    const candidate = source.url || source.secure_url || source.src;
+    if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
+  }
+  return null;
+};
+
+const deriveEducatorImage = (webinar) => {
+  const educatorObject =
+    (webinar?.educatorID && typeof webinar.educatorID === "object"
+      ? webinar.educatorID
+      : null) ||
+    (webinar?.educatorId && typeof webinar.educatorId === "object"
+      ? webinar.educatorId
+      : null) ||
+    (webinar?.educator && typeof webinar.educator === "object"
+      ? webinar.educator
+      : null) ||
+    (webinar?.creator && typeof webinar.creator === "object"
+      ? webinar.creator
+      : null);
+
+  return (
+    pickImageUrl(educatorObject?.profilePicture) ||
+    pickImageUrl(educatorObject?.image) ||
+    pickImageUrl(educatorObject?.avatar) ||
+    pickImageUrl(webinar?.educatorImage) ||
+    EDUCATOR_IMAGE_FALLBACK
+  );
+};
+
 const parseDurationMinutes = (value) => {
   if (typeof value === "number" && Number.isFinite(value) && value > 0) {
     return value;
@@ -86,6 +121,7 @@ const formatHoursFromMinutes = (minutes) => {
 const WebinarDetails = ({ webinar }) => {
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
   const [educatorName, setEducatorName] = useState(deriveEducatorName(webinar));
+  const [educatorImage, setEducatorImage] = useState(deriveEducatorImage(webinar));
   const [studentId, setStudentId] = useState(null);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
@@ -115,6 +151,14 @@ const WebinarDetails = ({ webinar }) => {
 
       if (nameCandidates.length) {
         setEducatorName(nameCandidates[0]);
+      }
+
+      const imageCandidate =
+        pickImageUrl(educator.profilePicture) ||
+        pickImageUrl(educator.image) ||
+        pickImageUrl(educator.avatar);
+      if (imageCandidate) {
+        setEducatorImage(imageCandidate);
       }
     };
 
@@ -224,10 +268,25 @@ const WebinarDetails = ({ webinar }) => {
     setReviewRating(nextRating);
   };
 
+  const formattedDate = timing.toLocaleDateString("en-US", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  const formattedTime = timing.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const prettyTitle = title
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
   return (
-    <div>
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen pb-28 lg:pb-12">
       {showReviewSuccess && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6 text-center">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Thanks for your review!</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
@@ -243,349 +302,426 @@ const WebinarDetails = ({ webinar }) => {
           </div>
         </div>
       )}
-      <div className="max-w-7xl mx-auto p-4 space-y-8">
-        {/* Header Section */}
-        <div
-          className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden"
-          data-aos="fade-up"
-        >
-          <div className="relative h-64 w-full">
-            <Image
-              src={imageUrl}
-              alt={title}
-              fill
-              unoptimized
-              className="object-cover"
-            />
-            {/* Subject and Type badges */}
-            <div className="absolute top-4 left-4 flex gap-2">
-              <span className="px-3 py-1 text-xs font-medium text-white bg-blue-600 rounded-full">
-                <FaBook className="w-3 h-3 inline mr-1" />
-                {subject.charAt(0).toUpperCase() + subject.slice(1)}
-              </span>
-              <span className="px-3 py-1 text-xs font-medium text-white bg-green-600 rounded-full capitalize">
-                {webinarType.replace("-", " ")}
-              </span>
-            </div>
-          </div>
 
-          <div className="p-6">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 mb-4">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                {title
-                  .split("-")
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(" ")}
+      {/* Hero */}
+      <section className="relative w-full bg-slate-900" data-aos="fade-up">
+        <div className="relative w-full aspect-video max-h-[620px] overflow-hidden">
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            unoptimized
+            sizes="100vw"
+            className="object-contain object-center"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-5 sm:pb-8 lg:pb-12">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1 px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white bg-blue-600/90 backdrop-blur-sm rounded-full shadow-sm">
+                  <FaBook className="w-3 h-3" />
+                  {subject.charAt(0).toUpperCase() + subject.slice(1)}
+                </span>
+                <span className="inline-flex items-center px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white bg-green-600/90 backdrop-blur-sm rounded-full shadow-sm">
+                  {webinarType.replace("-", " ")}
+                </span>
+                <span className="inline-flex items-center px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white bg-orange-500/90 backdrop-blur-sm rounded-full shadow-sm">
+                  Live
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight wrap-break-word max-w-3xl drop-shadow">
+                {prettyTitle}
               </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">By {educatorName}</p>
-              <ShareButton
-                title={title || "Webinar"}
-                text={shareText}
-                useCurrentUrl
-                size="sm"
-              />
-            </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">{description}</p>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <FaChalkboardTeacher className="w-5 h-5 mr-3 text-blue-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Educator</p>
-                  <p className="font-semibold">{educatorName}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <FaCalendarAlt className="w-5 h-5 mr-3 text-blue-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Date</p>
-                  <p className="font-semibold">
-                    {timing.toLocaleDateString("en-US", {
-                      weekday: "short",
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {timing.toLocaleTimeString("en-US", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <FaClock className="w-5 h-5 mr-3 text-blue-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Duration</p>
-                  <p className="font-semibold">
-                    {durationInHours === "N/A" ? "N/A" : `${durationInHours} hours`}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <FaUsers className="w-5 h-5 mr-3 text-blue-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Seats</p>
-                  <p className="font-semibold">{seatsAvailable} available</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {enrolledCount} enrolled
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <FaRupeeSign className="w-5 h-5 mr-3 text-blue-500" />
-                <div>
-                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Price</p>
-                  <p className="font-semibold">₹{fees}</p>
-                  {fees === 0 && <p className="text-sm text-green-600">Free</p>}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Details Section */}
-        <div
-          className="grid md:grid-cols-2 gap-8"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
-          {/* <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-            <FaBook className="w-5 h-5 mr-2 text-blue-500" />
-            Topics Covered
-          </h2>
-          <ul className="space-y-3">
-            {webinar.topics &&
-              webinar.topics.map((topic, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="w-2 h-2 mt-2 rounded-full bg-blue-500 mr-2" />
-                  <span>{topic}</span>
-                </li>
-              ))}
-          </ul>
-        </div> */}
-
-          {/* <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-            <FaGraduationCap className="w-5 h-5 mr-2 text-blue-500" />
-            What You'll Learn
-          </h2>
-          <ul className="space-y-3">
-            {webinar.learningOutcomes.map((outcome, index) => (
-              <li key={index} className="flex items-start">
-                <span className="w-2 h-2 mt-2 rounded-full bg-blue-500 mr-2" />
-                <span>{outcome}</span>
-              </li>
-            ))}
-          </ul>
-        </div> */}
-        </div>
-
-        {/* Additional Information */}
-        <div
-          className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-            <FaGraduationCap className="w-5 h-5 mr-2 text-blue-500" />
-            Webinar Information
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                Specialization
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400">{specialization}</p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Subject</h3>
-              <p className="text-gray-600 dark:text-gray-400 capitalize">{subject}</p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Type</h3>
-              <p className="text-gray-600 dark:text-gray-400 capitalize">
-                {webinarType.replace("-", " ")}
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Format</h3>
-              <p className="text-gray-600 dark:text-gray-400">Live Online Webinar</p>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6"
-          data-aos="fade-up"
-          data-aos-delay="130"
-        >
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-            Give Review and rate this Webinar
-          </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            Share your experience. Only enrolled students can submit a review, and it will show on the educator profile.
-          </p>
-          <form className="space-y-4" onSubmit={handleWebinarReviewSubmit}>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Tap to rate (half stars supported)
-              </span>
-              <div className="flex items-center gap-1">
-                {[0, 1, 2, 3, 4].map((index) => {
-                  const fillState = reviewRating - index;
-                  const icon = fillState >= 1 ? (
-                    <FaStar className="h-6 w-6 text-yellow-400" />
-                  ) : fillState >= 0.5 ? (
-                    <FaStarHalfAlt className="h-6 w-6 text-yellow-400" />
-                  ) : (
-                    <FaStar className="h-6 w-6 text-gray-300" />
-                  );
-                  return (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={(event) => handleWebinarStarClick(index, event)}
-                      disabled={!isAlreadyEnrolled || isSubmittingReview}
-                      className="p-1 disabled:cursor-not-allowed"
-                      aria-label={`Set webinar rating to ${index + 1} star${index === 0 ? "" : "s"}`}
-                    >
-                      {icon}
-                    </button>
-                  );
-                })}
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{reviewRating.toFixed(1)}</span>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="webinar-review-text">
-                Your Review
-              </label>
-              <textarea
-                id="webinar-review-text"
-                value={reviewText}
-                onChange={(event) => setReviewText(event.target.value)}
-                rows={4}
-                className="mt-2 w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm"
-                placeholder="Tell others about the content, delivery, and outcomes."
-                disabled={!isAlreadyEnrolled || isSubmittingReview}
-                required
-              />
-            </div>
-            {reviewStatus && (
-              <p className="text-sm text-gray-700 dark:text-gray-300">{reviewStatus}</p>
-            )}
-            <button
-              type="submit"
-              className={`w-full sm:w-auto inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold text-white shadow-sm ${
-                isAlreadyEnrolled
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-              disabled={!isAlreadyEnrolled || isSubmittingReview}
-            >
-              {isSubmittingReview ? "Submitting..." : "Submit Review"}
-            </button>
-            {!isAlreadyEnrolled && (
-              <p className="text-sm text-red-600 font-medium">
-                Enroll in this webinar to submit a review.
-              </p>
-            )}
-          </form>
-        </div>
-
-        {/* Assets Section */}
-        {webinar.assetsLink && webinar.assetsLink.length > 0 && (
-          <div
-            className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6"
-            data-aos="fade-up"
-            data-aos-delay="150"
-          >
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-              <FaBook className="w-5 h-5 mr-2 text-blue-500" />
-              Study Materials
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {webinar.assetsLink.map((asset, index) => (
-                <a
-                  key={index}
-                  href={asset}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                    <FaBook className="w-4 h-4 text-blue-600" />
+              <div className="mt-4 flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="relative w-11 h-11 rounded-full border-2 border-white/70 overflow-hidden bg-white/10 shadow-md">
+                    <Image
+                      src={educatorImage}
+                      alt={educatorName}
+                      fill
+                      unoptimized
+                      sizes="44px"
+                      className="object-cover"
+                    />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                      Material {index + 1}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Study Resource</p>
+                    <p className="text-white font-semibold leading-none">{educatorName}</p>
+                    <p className="text-blue-100 text-xs mt-1">Webinar Instructor</p>
                   </div>
-                </a>
-              ))}
+                </div>
+                <div className="hidden sm:flex items-center gap-2 text-white/90 text-sm font-medium">
+                  <FaCalendarAlt className="text-blue-200" />
+                  <span>{formattedDate} • {formattedTime}</span>
+                </div>
+                <div className="ml-auto">
+                  <ShareButton
+                    title={title || "Webinar"}
+                    text={shareText}
+                    useCurrentUrl
+                    size="sm"
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        )}
-
-        {/* Educator Section */}
-        {/* <div
-        className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-6"
-        data-aos="fade-up"
-        data-aos-delay="200"
-      >
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-          <FaChalkboardTeacher className="w-5 h-5 mr-2 text-blue-500" />
-          About the Educator
-        </h2>
-        <div className="flex items-start space-x-4">
-          <div className="relative h-16 w-16 rounded-full overflow-hidden">
-            <Image
-              src={webinar.educator.image.url}
-              alt={webinar.educator.name}
-              fill
-              className="object-cover"
-            />
-          </div>
-          <div>
-            <h3 className="font-semibold text-lg">{webinar.educator.name}</h3>
-            <p className="text-gray-600 dark:text-gray-400">{webinar.educator.qualification}</p>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">{webinar.educator.bio}</p>
-          </div>
         </div>
-      </div> */}
+      </section>
 
-        {/* CTA Buttons */}
-        <div
-          className="flex justify-center gap-4 pb-8"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
-          <EnrollButton
-            type="webinar"
-            itemId={webinar._id || webinar.id}
-            price={fees}
-            className="bg-blue-600 text-white px-8 py-4 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300 font-medium"
-            title="Enroll & Join"
-            initialEnrolled={isAlreadyEnrolled}
-            onEnrollmentSuccess={() => {
-              if (webinar.webinarLink) {
-                window.location.href = webinar.webinarLink;
-                return true; // handled, skip default redirect
-              }
-              return false; // fallback to default redirect
-            }}
-          />
+      {/* Info strip (glassmorphism) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-7 md:-mt-10 relative z-20">
+        <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl md:rounded-full p-5 md:px-10 md:py-5 grid grid-cols-2 md:flex md:flex-nowrap md:justify-between md:items-center gap-5 md:gap-6 shadow-xl border border-white/60 dark:border-gray-700/60">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 shrink-0">
+              <FaChalkboardTeacher />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest">Educator</p>
+              <p className="font-bold text-sm text-gray-900 dark:text-gray-100 truncate">{educatorName}</p>
+            </div>
+          </div>
+          <div className="hidden md:block h-8 w-px bg-gray-200 dark:bg-gray-700" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 shrink-0">
+              <FaClock />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest">Duration</p>
+              <p className="font-bold text-sm text-gray-900 dark:text-gray-100">
+                {durationInHours === "N/A" ? "N/A" : `${durationInHours} hrs`}
+              </p>
+            </div>
+          </div>
+          <div className="hidden md:block h-8 w-px bg-gray-200 dark:bg-gray-700" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 shrink-0">
+              <FaUsers />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest">Seats</p>
+              <p className="font-bold text-sm text-gray-900 dark:text-gray-100">{seatsAvailable} available</p>
+            </div>
+          </div>
+          <div className="hidden md:block h-8 w-px bg-gray-200 dark:bg-gray-700" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 shrink-0">
+              <FaRupeeSign />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest">Price</p>
+              <p className="font-bold text-sm text-orange-600">
+                {fees > 0 ? `₹${fees}` : "Free"}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 lg:mt-14 lg:grid lg:grid-cols-10 lg:gap-10">
+        {/* LEFT */}
+        <div className="lg:col-span-7 space-y-12">
+          {/* About */}
+          <section data-aos="fade-up">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+              About the Webinar
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg leading-relaxed">
+              {description}
+            </p>
+          </section>
+
+          {/* Webinar Information Grid */}
+          <section
+            className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 sm:p-8"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center">
+              <FaGraduationCap className="w-5 h-5 mr-2 text-blue-500" />
+              Webinar Information
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5">
+                <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest mb-1">Specialization</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100">{specialization}</p>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5">
+                <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest mb-1">Subject</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 capitalize">{subject}</p>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5">
+                <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest mb-1">Type</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 capitalize">{webinarType.replace("-", " ")}</p>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5">
+                <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest mb-1">Format</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100">Live Online Webinar</p>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5">
+                <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest mb-1">Date</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100">{formattedDate}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{formattedTime}</p>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5">
+                <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest mb-1">Enrollment</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100">{enrolledCount} enrolled</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{seatsAvailable} of {seatLimit} seats available</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Educator */}
+          <section data-aos="fade-up" data-aos-delay="120">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+              Meet Your Educator
+            </h2>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row gap-6 items-center">
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shrink-0 shadow-lg bg-gradient-to-br from-blue-500 to-indigo-600">
+                <Image
+                  src={educatorImage}
+                  alt={educatorName}
+                  fill
+                  unoptimized
+                  sizes="(max-width: 640px) 128px, 160px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">{educatorName}</h3>
+                <p className="text-blue-600 font-semibold mb-4">Webinar Instructor</p>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Your guide for this live session. Join the webinar to interact with {educatorName} directly and get your questions answered in real time.
+                </p>
+                <div className="flex flex-wrap justify-center sm:justify-start gap-2 mt-4">
+                  <span className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full text-xs font-bold text-gray-700 dark:text-gray-300">{specialization}</span>
+                  <span className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full text-xs font-bold text-gray-700 dark:text-gray-300 capitalize">{subject}</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Review Form */}
+          <section
+            className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 sm:p-8"
+            data-aos="fade-up"
+            data-aos-delay="130"
+          >
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+              Rate this Webinar
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              Share your experience. Only enrolled students can submit a review, and it will show on the educator profile.
+            </p>
+            <form className="space-y-4" onSubmit={handleWebinarReviewSubmit}>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Tap to rate (half stars supported)
+                </span>
+                <div className="flex items-center gap-1">
+                  {[0, 1, 2, 3, 4].map((index) => {
+                    const fillState = reviewRating - index;
+                    const icon = fillState >= 1 ? (
+                      <FaStar className="h-6 w-6 text-yellow-400" />
+                    ) : fillState >= 0.5 ? (
+                      <FaStarHalfAlt className="h-6 w-6 text-yellow-400" />
+                    ) : (
+                      <FaStar className="h-6 w-6 text-gray-300" />
+                    );
+                    return (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={(event) => handleWebinarStarClick(index, event)}
+                        disabled={!isAlreadyEnrolled || isSubmittingReview}
+                        className="p-1 disabled:cursor-not-allowed"
+                        aria-label={`Set webinar rating to ${index + 1} star${index === 0 ? "" : "s"}`}
+                      >
+                        {icon}
+                      </button>
+                    );
+                  })}
+                  <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{reviewRating.toFixed(1)}</span>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="webinar-review-text">
+                  Your Review
+                </label>
+                <textarea
+                  id="webinar-review-text"
+                  value={reviewText}
+                  onChange={(event) => setReviewText(event.target.value)}
+                  rows={4}
+                  className="mt-2 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
+                  placeholder="Tell others about the content, delivery, and outcomes."
+                  disabled={!isAlreadyEnrolled || isSubmittingReview}
+                  required
+                />
+              </div>
+              {reviewStatus && (
+                <p className="text-sm text-gray-700 dark:text-gray-300">{reviewStatus}</p>
+              )}
+              <button
+                type="submit"
+                className={`w-full sm:w-auto inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold text-white shadow-sm ${
+                  isAlreadyEnrolled
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
+                disabled={!isAlreadyEnrolled || isSubmittingReview}
+              >
+                {isSubmittingReview ? "Submitting..." : "Submit Review"}
+              </button>
+              {!isAlreadyEnrolled && (
+                <p className="text-sm text-red-600 font-medium">
+                  Enroll in this webinar to submit a review.
+                </p>
+              )}
+            </form>
+          </section>
+
+          {/* Assets */}
+          {webinar.assetsLink && webinar.assetsLink.length > 0 && (
+            <section
+              className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 sm:p-8"
+              data-aos="fade-up"
+              data-aos-delay="150"
+            >
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                <FaBook className="w-5 h-5 mr-2 text-blue-500" />
+                Study Materials
+              </h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {webinar.assetsLink.map((asset, index) => (
+                  <a
+                    key={index}
+                    href={asset}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  >
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                      <FaBook className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-gray-100">
+                        Material {index + 1}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Study Resource</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {/* RIGHT sticky pricing panel */}
+        <aside className="hidden lg:block lg:col-span-3 mt-12 lg:mt-0">
+          <div className="sticky top-24 bg-white dark:bg-gray-900 rounded-2xl p-7 shadow-xl border border-gray-100 dark:border-gray-800">
+            <div className="mb-6">
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-extrabold text-gray-900 dark:text-gray-100">
+                  {fees > 0 ? `₹${fees}` : "Free"}
+                </span>
+                {fees > 0 && (
+                  <span className="text-sm font-bold text-orange-600 uppercase tracking-wide">
+                    Enroll Now
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">One-time payment</p>
+            </div>
+            <div className="space-y-4 mb-8">
+              <div className="flex items-center gap-3">
+                <FaCalendarAlt className="text-blue-600 w-4 h-4" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{formattedDate}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <FaClock className="text-blue-600 w-4 h-4" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {formattedTime} • {durationInHours === "N/A" ? "N/A" : `${durationInHours} hrs`}
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <FaUsers className="text-blue-600 w-4 h-4" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {seatsAvailable} of {seatLimit} seats available
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <FaBook className="text-blue-600 w-4 h-4" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">{subject}</span>
+              </div>
+            </div>
+            <EnrollButton
+              type="webinar"
+              itemId={webinar._id || webinar.id}
+              price={fees}
+              className="w-full bg-blue-600 text-white py-3.5 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 font-bold text-sm"
+              title="Enroll & Join"
+              initialEnrolled={isAlreadyEnrolled}
+              onEnrollmentSuccess={() => {
+                if (webinar.webinarLink) {
+                  window.location.href = webinar.webinarLink;
+                  return true;
+                }
+                return false;
+              }}
+            />
+            <p className="text-[11px] text-center text-gray-500 dark:text-gray-400 mt-3">
+              By enrolling, you agree to our Terms of Service and Privacy Policy.
+            </p>
+            <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Includes</p>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <span className="text-green-500">✓</span> Live interactive session
+                </li>
+                <li className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                  <span className="text-green-500">✓</span> Live Q&amp;A with educator
+                </li>
+                {webinar.assetsLink && webinar.assetsLink.length > 0 && (
+                  <li className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="text-green-500">✓</span> Downloadable study materials
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      {/* Mobile sticky action bar */}
+      <div className="fixed bottom-0 left-0 w-full z-40 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-[0_-4px_20px_0_rgba(0,0,0,0.08)] border-t border-gray-200 dark:border-gray-800">
+        <div className="flex justify-between items-center px-4 py-3 gap-3">
+          <div className="shrink-0">
+            <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest">Price</p>
+            <p className="text-lg font-extrabold text-gray-900 dark:text-gray-100 leading-none">
+              {fees > 0 ? `₹${fees}` : "Free"}
+            </p>
+          </div>
+          <div className="flex-1 max-w-[240px]">
+            <EnrollButton
+              type="webinar"
+              itemId={webinar._id || webinar.id}
+              price={fees}
+              className="w-full bg-blue-600 text-white py-3 rounded-full font-bold text-sm shadow-lg"
+              title="Enroll & Join"
+              initialEnrolled={isAlreadyEnrolled}
+              onEnrollmentSuccess={() => {
+                if (webinar.webinarLink) {
+                  window.location.href = webinar.webinarLink;
+                  return true;
+                }
+                return false;
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 };

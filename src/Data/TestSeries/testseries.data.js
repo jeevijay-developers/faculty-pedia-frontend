@@ -14,7 +14,7 @@ export const testSeriesData = [
     endDate: "2024-12-15T00:00:00.000Z",
     image: {
       public_id: "neet_physics_001_img",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     teacherId: "educator_001",
     enrolledStudents: [],
@@ -28,7 +28,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_1_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "physics",
         startDate: "2024-07-20T10:00:00.000Z",
@@ -51,7 +51,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_1_2_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "physics",
         startDate: "2024-08-05T10:00:00.000Z",
@@ -92,7 +92,7 @@ export const testSeriesData = [
     endDate: "2025-01-01T00:00:00.000Z",
     image: {
       public_id: "neet_physics_002_img",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     teacherId: "educator_002",
     enrolledStudents: [],
@@ -106,7 +106,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_2_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "physics",
         startDate: "2024-08-10T14:00:00.000Z",
@@ -129,7 +129,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_2_2_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "physics",
         startDate: "2024-08-25T14:00:00.000Z",
@@ -171,7 +171,7 @@ export const testSeriesData = [
     endDate: "2025-02-20T00:00:00.000Z",
     image: {
       public_id: "neet_chemistry_001_img",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     teacherId: "educator_003",
     enrolledStudents: [],
@@ -185,7 +185,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_3_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "chemistry",
         startDate: "2024-07-25T11:00:00.000Z",
@@ -208,7 +208,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_3_2_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "chemistry",
         startDate: "2024-08-15T11:00:00.000Z",
@@ -248,7 +248,7 @@ export const testSeriesData = [
     endDate: "2024-12-05T00:00:00.000Z",
     image: {
       public_id: "neet_chemistry_002_img",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     teacherId: "educator_004",
     enrolledStudents: [],
@@ -262,7 +262,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_4_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "chemistry",
         startDate: "2024-08-12T09:00:00.000Z",
@@ -304,7 +304,7 @@ export const testSeriesData = [
     endDate: "2024-12-15T00:00:00.000Z",
     image: {
       public_id: "neet_biology_001_img",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     teacherId: "educator_005",
     enrolledStudents: [],
@@ -318,7 +318,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_5_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "biology",
         startDate: "2024-07-22T10:00:00.000Z",
@@ -341,7 +341,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_5_2_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "biology",
         startDate: "2024-08-08T10:00:00.000Z",
@@ -381,7 +381,7 @@ export const testSeriesData = [
     endDate: "2025-04-10T00:00:00.000Z",
     image: {
       public_id: "neet_biology_002_img",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     teacherId: "educator_006",
     enrolledStudents: [],
@@ -395,7 +395,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_6_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "biology",
         startDate: "2024-08-18T13:00:00.000Z",
@@ -418,7 +418,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_6_2_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "biology",
         startDate: "2024-09-05T13:00:00.000Z",
@@ -458,7 +458,7 @@ export const testSeriesData = [
     endDate: "2024-11-15T00:00:00.000Z",
     image: {
       public_id: "neet_biology_003_img",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     teacherId: "educator_007",
     enrolledStudents: [],
@@ -472,7 +472,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_7_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "biology",
         startDate: "2024-08-22T15:00:00.000Z",
@@ -512,7 +512,7 @@ export const testSeriesData = [
     noOfTests: 14,
     startDate: "2024-09-01T00:00:00.000Z",
     endDate: "2025-03-01T00:00:00.000Z",
-    image: { public_id: "jee_physics_001_img", url: "/images/placeholders/1.svg" },
+    image: { public_id: "jee_physics_001_img", url: "/images/placeholders/card-16x9.svg" },
     teacherId: "educator_011",
     enrolledStudents: [],
     liveTests: [
@@ -525,7 +525,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_8_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "physics",
         startDate: "2024-09-08T10:00:00.000Z",
@@ -548,7 +548,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_8_2_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "physics",
         startDate: "2024-09-22T10:00:00.000Z",
@@ -586,7 +586,7 @@ export const testSeriesData = [
     noOfTests: 16,
     startDate: "2024-09-10T00:00:00.000Z",
     endDate: "2025-03-10T00:00:00.000Z",
-    image: { public_id: "jee_chemistry_001_img", url: "/images/placeholders/1.svg" },
+    image: { public_id: "jee_chemistry_001_img", url: "/images/placeholders/card-16x9.svg" },
     teacherId: "educator_012",
     enrolledStudents: [],
     liveTests: [
@@ -599,7 +599,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_9_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "chemistry",
         startDate: "2024-09-15T11:00:00.000Z",
@@ -622,7 +622,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_9_2_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "chemistry",
         startDate: "2024-10-01T11:00:00.000Z",
@@ -660,7 +660,7 @@ export const testSeriesData = [
     noOfTests: 18,
     startDate: "2024-09-05T00:00:00.000Z",
     endDate: "2025-04-05T00:00:00.000Z",
-    image: { public_id: "jee_mathematics_001_img", url: "/images/placeholders/1.svg" },
+    image: { public_id: "jee_mathematics_001_img", url: "/images/placeholders/card-16x9.svg" },
     teacherId: "educator_013",
     enrolledStudents: [],
     liveTests: [
@@ -673,7 +673,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_10_1_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "mathematics",
         startDate: "2024-09-12T14:00:00.000Z",
@@ -696,7 +696,7 @@ export const testSeriesData = [
         },
         image: {
           public_id: "test_10_2_img",
-          url: "/images/placeholders/1.svg"
+          url: "/images/placeholders/card-16x9.svg"
         },
         subject: "mathematics",
         startDate: "2024-09-28T14:00:00.000Z",

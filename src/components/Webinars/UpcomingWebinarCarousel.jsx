@@ -37,14 +37,18 @@ const UpcomingWebinarCarousel = ({
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchWebinarsBySpecialization(specialization);
+        const response = await fetchWebinarsBySpecialization(specialization, {
+          upcoming: true,
+        });
 
-        // Extract webinars from response
         const webinarsData =
           response?.data?.webinars || response?.webinars || [];
         setData(
           webinarsData.filter((webinar) => {
-            const edu = webinar?.educatorId || webinar?.educator;
+            const edu =
+              webinar?.educatorID ||
+              webinar?.educatorId ||
+              webinar?.educator;
             return edu && (edu.fullName || edu.name || edu.firstName);
           })
         );

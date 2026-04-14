@@ -226,11 +226,12 @@ export const TestSeriesCard = ({ testSeries }) => {
 
   return (
     <div className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white dark:bg-gray-900 p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_18px_40px_rgba(0,0,0,0.12)]">
-      <div className="relative mb-4 h-40 overflow-hidden rounded-xl bg-white dark:bg-gray-900">
+      <div className="relative mb-4 aspect-video w-full overflow-hidden rounded-xl bg-white dark:bg-gray-900">
         <Image
-          src={testSeries.image || "/images/placeholders/1.svg"}
+          src={testSeries.image || "/images/placeholders/card-16x9.svg"}
           alt={testSeries.title || "Test Series"}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 group-hover:scale-[1.015]"
         />
         <div className="absolute left-3 top-3">

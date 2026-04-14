@@ -5,7 +5,7 @@ import { MdSchool, MdAccessTime, MdCalendarToday } from "react-icons/md";
 import { IoStarSharp } from "react-icons/io5";
 import { FaBook } from "react-icons/fa";
 
-const DEFAULT_COURSE_IMAGE = "/images/placeholders/1.svg";
+const DEFAULT_COURSE_IMAGE = "/images/placeholders/card-16x9.svg";
 const DEFAULT_EDUCATOR_IMAGE = "/images/placeholders/educator-fallback.svg";
 const HEX_OBJECT_ID_REGEX = /^[a-f\d]{24}$/i;
 
@@ -134,7 +134,7 @@ const CourseCard = ({ course }) => {
   return (
     <div className="group relative flex flex-col rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
       {/* Course Image */}
-      <div className="relative h-48 bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-xl mb-4">
+      <div className="relative aspect-video w-full bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-xl mb-4">
         <Image
           src={heroImageSrc}
           alt={course?.title || "Course"}

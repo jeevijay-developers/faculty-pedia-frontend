@@ -132,7 +132,7 @@ const CourseCard = ({ course }) => {
             <div className="relative w-full h-40 bg-gray-200 dark:bg-gray-700 overflow-hidden flex-shrink-0">
                 {course.image?.url || course.image ? (
                     <Image
-                        src={course.image?.url || course.image || "/images/placeholders/1.svg"}
+                        src={course.image?.url || course.image || "/images/placeholders/card-16x9.svg"}
                         alt={course.title}
                         fill
                         className="object-cover"

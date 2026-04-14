@@ -29,7 +29,7 @@ const ClassCard = ({ courseItem }) => {
     : "TBD";
   const duration = courseItem.classDuration || 1;
   const seatLimit = courseItem.seatLimit || 0;
-  const imageUrl = courseItem.image?.url || "/images/placeholders/1.svg";
+  const imageUrl = courseItem.image?.url || "/images/placeholders/card-16x9.svg";
 
   // Educator information
   const educatorName =

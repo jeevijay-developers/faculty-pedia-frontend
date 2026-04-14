@@ -9,7 +9,7 @@ const Page = async ({ params }) => {
   return (
     <div>
       <Banner
-        url={blogData.image?.url || "/images/placeholders/1.svg"}
+        url={blogData.image?.url || "/images/placeholders/card-16x9.svg"}
         title={"Blog Post Details"}
         subtitle={
           "Discover insights, tips, and in-depth knowledge from our expert educators and thought leaders."

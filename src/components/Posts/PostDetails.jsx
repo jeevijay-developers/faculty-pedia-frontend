@@ -140,7 +140,7 @@ const PostDetails = ({ postData }) => {
             className="rounded-xl overflow-hidden shadow-lg"
           >
             <img
-              src={postData.image?.url || "/images/placeholders/1.svg"}
+              src={postData.image?.url || "/images/placeholders/card-16x9.svg"}
               alt={postData.title || "Blog Post"}
               className="w-full h-96 object-cover"
             />
@@ -236,7 +236,7 @@ const PostDetails = ({ postData }) => {
                       <div className="flex items-start space-x-3">
                         <img
                           src={
-                            course.image?.url || "/images/placeholders/1.svg"
+                            course.image?.url || "/images/placeholders/card-16x9.svg"
                           }
                           alt={course.title}
                           className="w-16 h-16 rounded-lg object-cover"

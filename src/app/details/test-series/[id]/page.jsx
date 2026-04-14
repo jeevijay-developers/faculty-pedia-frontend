@@ -22,7 +22,7 @@ const Page = async ({ params }) => {
     return (
       <div>
         <Banner
-          url={"/images/placeholders/1.svg"}
+          url={"/images/placeholders/card-16x9.svg"}
           title={"Test Series Not Found"}
           subtitle={"The test series you're looking for could not be found."}
         />
@@ -41,7 +41,7 @@ const Page = async ({ params }) => {
   return (
     <div>
       <Banner
-        url={testSeriesData.image?.url || "/images/placeholders/1.svg"}
+        url={testSeriesData.image?.url || "/images/placeholders/card-16x9.svg"}
         title={"Test Series Details"}
         subtitle={
           testSeriesData.description?.short || 

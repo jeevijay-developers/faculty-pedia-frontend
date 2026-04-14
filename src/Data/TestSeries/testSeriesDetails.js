@@ -10,7 +10,7 @@ const testSeriesDetails = {
   endDate: "2025-12-31T23:59:59.000Z",
   image: {
     public_id: "jee_test_series_img123",
-    url: "/images/placeholders/1.svg",
+    url: "/images/placeholders/card-16x9.svg",
   },
   teacherId: "64fbc6d234a9ef1234567890",
   enrolledStudents: [

@@ -102,7 +102,7 @@ const OneToOnePPHPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
-          url="/images/placeholders/1.svg"
+          url="/images/placeholders/card-16x9.svg"
           title="1-1 Pay Per Hour"
           subtitle="Book expert 1-1 sessions by the hour across subjects."
         />
@@ -121,7 +121,7 @@ const OneToOnePPHPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
-          url="/images/placeholders/1.svg"
+          url="/images/placeholders/card-16x9.svg"
           title="1-1 Pay Per Hour"
           subtitle="Book expert 1-1 sessions by the hour across subjects."
         />
@@ -147,7 +147,7 @@ const OneToOnePPHPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       <Banner
-        url="/images/placeholders/1.svg"
+        url="/images/placeholders/card-16x9.svg"
         title="1-1 Pay Per Hour"
         subtitle="Book expert 1-1 sessions by the hour across subjects."
       />

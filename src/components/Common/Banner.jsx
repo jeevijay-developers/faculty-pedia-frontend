@@ -29,13 +29,13 @@ export default function Banner({ url, title, subtitle, btnTitle, btnUrl }) {
   const shouldRenderButton = btnTitle && btnUrl && showCta;
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full overflow-hidden aspect-video min-h-55 md:min-h-80 max-h-140">
       <Image
         src={url}
         alt="Classes Banner"
-        height={600}
-        width={1200}
-        className="w-full h-64 md:h-96 object-cover"
+        fill
+        sizes="100vw"
+        className="object-cover object-center"
         priority
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white text-center px-4">

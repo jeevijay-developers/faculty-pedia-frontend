@@ -104,7 +104,7 @@ const WebinarDetails = ({ id }) => {
             className="rounded-xl overflow-hidden shadow-lg"
           >
             <img
-              src={webinarData.image?.url || "/images/placeholders/1.svg"}
+              src={webinarData.image?.url || "/images/placeholders/card-16x9.svg"}
               alt={webinarData.title || "Webinar"}
               className="w-full h-64 object-cover"
             />
@@ -116,7 +116,7 @@ const WebinarDetails = ({ id }) => {
             data-aos-delay="200"
             className="grid md:grid-cols-2 gap-6"
           >
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-lg">
+            <div className="bg-linear-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-lg">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="p-2 bg-blue-500 rounded-lg">
                   <FaCalendarAlt className="text-white text-lg" />
@@ -131,7 +131,7 @@ const WebinarDetails = ({ id }) => {
               <p className="text-gray-600 dark:text-gray-400">{formatTime(webinarData.time)}</p>
             </div>
 
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-lg">
+            <div className="bg-linear-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-lg">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="p-2 bg-green-500 rounded-lg">
                   <FaUsers className="text-white text-lg" />
@@ -146,7 +146,7 @@ const WebinarDetails = ({ id }) => {
               </p>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mt-3">
                 <div
-                  className="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-500 ease-out"
+                  className="bg-linear-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-500 ease-out"
                   style={{
                     width: `${
                       ((webinarData.enrolledStudents?.length || 0) /
@@ -163,7 +163,7 @@ const WebinarDetails = ({ id }) => {
           <div
             data-aos="fade-up"
             data-aos-delay="300"
-            className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-xl shadow-lg"
+            className="bg-linear-to-br from-gray-50 to-gray-100 p-8 rounded-xl shadow-lg"
           >
             <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
               About This Webinar
@@ -179,7 +179,7 @@ const WebinarDetails = ({ id }) => {
             <div
               data-aos="fade-up"
               data-aos-delay="400"
-              className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl shadow-lg"
+              className="bg-linear-to-br from-purple-50 to-purple-100 p-8 rounded-xl shadow-lg"
             >
               <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200">
                 Webinar Resources
@@ -214,21 +214,21 @@ const WebinarDetails = ({ id }) => {
           {/* Pricing Card */}
           <div
             data-aos="fade-left"
-            className="bg-gradient-to-br from-white to-blue-50 p-6 rounded-xl shadow-xl  top-6 ring-1 ring-blue-100"
+            className="bg-linear-to-br from-white to-blue-50 p-6 rounded-xl shadow-xl  top-6 ring-1 ring-blue-100"
           >
             <div className="text-center space-y-6">
               <div className="relative">
                 <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
                   Limited Seats
                 </div>
-                <span className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="text-5xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   ₹{webinarData.fees || 0}
                 </span>
                 <p className="text-gray-600 dark:text-gray-400 mt-2">One-time payment</p>
               </div>
 
               <div className="space-y-3">
-                <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl  hover:cursor-pointer">
+                <button className="w-full bg-linear-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl  hover:cursor-pointer">
                   🚀 Enroll Now
                 </button>
                 {/* <button className="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-xl font-semibold hover:bg-gray-200 dark:bg-gray-700 transition-all duration-300">
@@ -273,7 +273,7 @@ const WebinarDetails = ({ id }) => {
           <div
             data-aos="fade-left"
             data-aos-delay="100"
-            className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-lg ring-1 ring-indigo-100"
+            className="bg-linear-to-br from-indigo-50 to-purple-50 p-6 rounded-xl shadow-lg ring-1 ring-indigo-100"
           >
             <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
               <span className="text-2xl mr-2">✨</span>

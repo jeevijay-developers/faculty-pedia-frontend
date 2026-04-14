@@ -161,6 +161,9 @@ export default function LiveTestSeriesForm() {
 
         <div>
           <label className="block font-semibold">Image</label>
+          <p className="text-xs text-gray-500 mb-1">
+            Recommended: 1280x720 (16:9), under 300 KB.
+          </p>
           <input
             type="file"
             name="image"

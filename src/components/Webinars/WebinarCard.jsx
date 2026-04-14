@@ -40,12 +40,12 @@ const WebinarCard = ({ webinar }) => {
       className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
       data-aos="fade-up"
     >
-      <div className="relative h-48 w-full">
+      <div className="relative aspect-video w-full">
         <Image
           src={imageUrl}
           alt={title}
           fill
-          unoptimized
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover"
         />
         {/* Subject badge */}

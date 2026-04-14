@@ -1,24 +1,38 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import CourseHeader from "./CourseHeader";
 import ClassCard from "./ClassCard";
-// import { TestSeriesCard } from "@/components/Exams/IIT-JEE/TestSeriesCarousel";
 import { getTestSeriesByCourse } from "@/components/server/test-series.route";
 import {
-  FaUsers,
-  FaClock,
-  FaCalendarAlt,
-  FaChair,
-  FaGraduationCap,
-  FaWhatsapp,
+  FaArrowLeft,
+  FaPlay,
   FaStar,
   FaStarHalfAlt,
+  FaRegStar,
+  FaChevronRight,
+  FaWhatsapp,
+  FaBolt,
+  FaShoppingCart,
+  FaRupeeSign,
+  FaCalendarAlt,
+  FaUsers,
+  FaBookOpen,
+  FaVideo,
+  FaFileAlt,
+  FaQuestionCircle,
+  FaCheckCircle,
+  FaUserEdit,
+  FaUserCircle,
+  FaClock,
+  FaChair,
+  FaGraduationCap,
 } from "react-icons/fa";
+import { FiShare2 } from "react-icons/fi";
 import { getCourseById } from "../server/course.routes";
 import { getEducatorProfile } from "../server/educators.routes";
 import CourseLoader from "../others/courseLoader";
 import EnrollButton from "../Common/EnrollButton";
+import ShareButton from "@/components/Common/ShareButton";
 import { createItemReview } from "../server/reviews.routes";
 
 const CourseDetails = ({ id }) => {
@@ -31,30 +45,17 @@ const CourseDetails = ({ id }) => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const coursePanelRef = useRef(null);
 
-  // Function to convert YouTube URL to embed format
   const getYouTubeEmbedUrl = (url) => {
     if (!url) return null;
-
-    // Handle different YouTube URL formats
     let videoId = null;
-
-    // youtu.be format
     if (url.includes("youtu.be/")) {
       videoId = url.split("youtu.be/")[1].split("?")[0];
-    }
-    // youtube.com/watch format
-    else if (url.includes("youtube.com/watch?v=")) {
+    } else if (url.includes("youtube.com/watch?v=")) {
       videoId = url.split("v=")[1].split("&")[0];
-    }
-    // youtube.com/embed format (already correct)
-    else if (url.includes("youtube.com/embed/")) {
+    } else if (url.includes("youtube.com/embed/")) {
       return url;
     }
-
-    const embedUrl = videoId
-      ? `https://www.youtube.com/embed/${videoId}`
-      : null;
-    return embedUrl;
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
   };
 
   const getVimeoEmbedUrl = (url) => {
@@ -83,6 +84,7 @@ const CourseDetails = ({ id }) => {
   const [reviewStatus, setReviewStatus] = useState("");
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [showReviewSuccess, setShowReviewSuccess] = useState(false);
+  const [playIntro, setPlayIntro] = useState(false);
 
   const resolveAssetUrl = (asset) => {
     if (!asset) return null;
@@ -145,7 +147,6 @@ const CourseDetails = ({ id }) => {
   );
 
   useEffect(() => {
-    // Extract current student id from localStorage (browser only)
     if (typeof window !== "undefined") {
       try {
         const raw = localStorage.getItem("faculty-pedia-student-data");
@@ -166,8 +167,7 @@ const CourseDetails = ({ id }) => {
 
         if (data) {
           setCourse(data);
-          
-          // Fetch educator details if educatorID exists
+
           if (data.educatorID) {
             try {
               const educatorId = typeof data.educatorID === 'object' ? data.educatorID._id : data.educatorID;
@@ -300,7 +300,7 @@ const CourseDetails = ({ id }) => {
   if (error) {
     return (
       <div className="max-w-7xl mx-auto p-4">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
           <p className="text-red-600 font-medium">{error}</p>
         </div>
       </div>
@@ -310,8 +310,8 @@ const CourseDetails = ({ id }) => {
   if (!course) {
     return (
       <div className="max-w-7xl mx-auto p-4">
-        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 text-center">
-          <p className="text-gray-500 dark:text-gray-400">Course not found.</p>
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-center">
+          <p className="text-gray-500">Course not found.</p>
         </div>
       </div>
     );
@@ -375,85 +375,282 @@ const CourseDetails = ({ id }) => {
     setSelectedVideo(video);
   };
 
-  // Determine course type
   const courseTypeValue = (course?.courseType || "").toString().toLowerCase();
   const isOneToOne = courseTypeValue === "one-to-one" || courseTypeValue === "oto";
+  const isOneToAll = courseTypeValue === "one-to-all" || courseTypeValue === "ota";
+  const courseTypeLabel = isOneToAll ? "One to All" : isOneToOne ? "One to One" : "Course";
+
+  const resolveEducator = () => {
+    const candidates = [course?.educatorID, course?.educatorId, course?.educator];
+    for (const cand of candidates) {
+      if (!cand) continue;
+      if (typeof cand === "string") {
+        return { id: cand.trim(), name: course?.educatorName || "Instructor" };
+      }
+      if (typeof cand === "object") {
+        const nestedId = cand._id || cand.id;
+        const fullName =
+          cand.fullName ||
+          [cand.firstName, cand.lastName].filter(Boolean).join(" ").trim() ||
+          cand.username || cand.name;
+        return { id: nestedId || null, name: fullName || "Instructor" };
+      }
+    }
+    return { id: null, name: "Instructor" };
+  };
+
+  const { id: educatorId, name: educatorName } = resolveEducator();
+
+  const enrolledCount = course.enrolledStudents?.length || 0;
+  const maxStudents = course.maxStudents || 0;
+  const enrollPct = maxStudents ? Math.min(100, Math.round((enrolledCount / maxStudents) * 100)) : 0;
+
+  const heroImage =
+    course.image || course.courseThumbnail || "/images/placeholders/card-16x9.svg";
+
+  const formatDate = (d) => {
+    try {
+      return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+    } catch { return "N/A"; }
+  };
+
+  const ratingValue = Number(course.rating || course.averageRating || 0);
+  const ratingCount = course.reviewsCount || course.totalReviews || (Array.isArray(course.reviews) ? course.reviews.length : 0);
+
+  const renderStar = (index) => {
+    const fillState = reviewRating - index;
+    if (fillState >= 1) return <FaStar className="h-6 w-6 text-yellow-400" />;
+    if (fillState >= 0.5) return <FaStarHalfAlt className="h-6 w-6 text-yellow-400" />;
+    return <FaRegStar className="h-6 w-6 text-gray-300" />;
+  };
 
   return (
-    <div className="max-w-7xl mx-auto p-4 text-gray-900 dark:text-gray-100">
+    <div className="bg-[#f7f9fb] min-h-screen text-[#191c1e]">
       {showReviewSuccess && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6 text-center">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Thanks for your review!</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center">
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Thanks for your review!</h3>
+            <p className="text-gray-600 mb-4">
               Your rating has been recorded and will appear on the educator profile.
             </p>
             <button
               type="button"
               onClick={() => setShowReviewSuccess(false)}
-              className="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
+              className="inline-flex w-full justify-center rounded-xl bg-[#0050cb] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#003fa4]"
             >
               Close
             </button>
           </div>
         </div>
       )}
-      <CourseHeader course={course} />
 
-      <div className="mt-8">
-        {/* Tab Navigation */}
-        <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-            <button
-              onClick={() => setActiveTab("overview")}
-              className={`${
-                activeTab === "overview"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
-            >
-              Overview
-            </button>
-            {/* <button
-              onClick={() => setActiveTab("classes")}
-              className={`${
-                activeTab === "classes"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
-            >
-              Classes
-            </button> */}
-            {hasTestSeries && (
-              <button
-                onClick={() => setActiveTab("tests")}
-                className={`${
-                  activeTab === "tests"
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-gray-700 dark:hover:text-gray-300"
-                } whitespace-nowrap py-4 px-1 border-b-2 font-medium`}
-              >
-                Test Series ({courseTests.length || 0})
-              </button>
-            )}
-          </nav>
+      {/* Mobile / Small-screen Top App Bar */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl flex items-center justify-between px-4 h-16">
+        <button
+          onClick={() => router.back()}
+          className="text-blue-700 active:scale-95 transition-transform duration-200 p-2"
+          aria-label="Go back"
+        >
+          <FaArrowLeft className="text-xl" />
+        </button>
+        <h1 className="font-semibold tracking-tight text-slate-900">Course Details</h1>
+        <ShareButton
+          title={course?.title || "Course"}
+          text={`Explore the course "${course?.title || ''}" on Facultypedia.`}
+          useCurrentUrl
+          variant="ghost"
+          size="sm"
+          className="text-blue-700 p-2!"
+        />
+      </header>
+
+      <main className="pt-20 pb-36 px-4 space-y-8 max-w-7xl mx-auto lg:pt-8 lg:pb-10 lg:px-8">
+        {/* Desktop top bar */}
+        <div className="hidden lg:flex items-center justify-between">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-2 text-[#0050cb] font-semibold hover:underline"
+          >
+            <FaArrowLeft />
+            <span>Back</span>
+          </button>
+          <h1 className="text-lg font-semibold tracking-tight text-slate-900">Course Details</h1>
+          <ShareButton
+            title={course?.title || "Course"}
+            text={`Explore the course "${course?.title || ''}" on Facultypedia.`}
+            useCurrentUrl
+            size="sm"
+          />
         </div>
 
-        {/* Main Content with Sidebar */}
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-3">
+        {/* Desktop grid wrapper */}
+        <div className="lg:grid lg:grid-cols-3 lg:gap-8 space-y-8 lg:space-y-0">
+          {/* Left / main column */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Hero Section */}
+            <section className="relative overflow-hidden rounded-2xl aspect-video shadow-xl group">
+              <img
+                alt={course.title}
+                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                src={heroImage}
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-slate-900/90 via-slate-900/40 to-transparent flex flex-col justify-end p-6">
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {course.specialization?.map((spec, idx) => (
+                    <span
+                      key={`spec-${idx}`}
+                      className="bg-[#0066ff] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                    >
+                      {spec}
+                    </span>
+                  ))}
+                  {course.class?.map((cls, idx) => (
+                    <span
+                      key={`cls-${idx}`}
+                      className="bg-[#6bff8f] text-[#007432] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                    >
+                      {cls}
+                    </span>
+                  ))}
+                  <span className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
+                    {courseTypeLabel}
+                  </span>
+                </div>
+                <h2 className="text-white font-bold leading-tight text-2xl lg:text-4xl">
+                  {course.title}
+                </h2>
+                {course.description && (
+                  <p className="hidden lg:block text-white/80 text-sm mt-3 line-clamp-2 max-w-3xl">
+                    {course.description}
+                  </p>
+                )}
+              </div>
+            </section>
+
+            {/* Price / Enrollment */}
+            <section className="flex items-end justify-between bg-white p-6 rounded-2xl shadow-sm">
+              <div>
+                <p className="text-[#424656] text-xs font-semibold mb-1">Total Fee</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-extrabold text-[#0050cb]">
+                    ₹{course.fees?.toLocaleString() || "0"}
+                  </span>
+                  {course.discount > 0 && (
+                    <span className="text-[#424656] line-through text-sm">
+                      ₹{Math.round((course.fees || 0) / (1 - course.discount / 100)).toLocaleString()}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="text-right">
+                {isOneToAll && (
+                  <>
+                    <div className="w-32 h-2 bg-[#eceef0] rounded-full mb-2 overflow-hidden">
+                      <div
+                        className="h-full bg-[#006e2f]"
+                        style={{ width: `${enrollPct}%` }}
+                      />
+                    </div>
+                    <p className="text-xs font-medium text-[#006e2f]">
+                      {enrolledCount}/{maxStudents || 0} students enrolled
+                    </p>
+                  </>
+                )}
+                {!isOneToAll && (
+                  <p className="text-xs font-medium text-[#006e2f]">
+                    {enrolledCount} enrolled
+                  </p>
+                )}
+              </div>
+            </section>
+
+            {/* Quick Info Bento */}
+            <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-[#f2f4f6] p-4 rounded-xl flex flex-col gap-3">
+                <FaRupeeSign className="text-[#0050cb] text-xl" />
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-[#424656] tracking-wider">Course Fee</p>
+                  <p className="font-bold text-sm">₹{course.fees?.toLocaleString() || 0} One-time</p>
+                </div>
+              </div>
+              <div className="bg-[#f2f4f6] p-4 rounded-xl flex flex-col gap-3">
+                <FaCalendarAlt className="text-[#954000] text-xl" />
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-[#424656] tracking-wider">Timeline</p>
+                  <p className="font-bold text-sm">{course.courseDuration || `${formatDate(course.startDate)} - ${formatDate(course.endDate)}`}</p>
+                </div>
+              </div>
+              <div className="bg-[#f2f4f6] p-4 rounded-xl flex flex-col gap-3">
+                <FaUsers className="text-[#006e2f] text-xl" />
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-[#424656] tracking-wider">Enrollment</p>
+                  <p className="font-bold text-sm">{isOneToAll ? `${enrolledCount}/${maxStudents}` : "Open Now"}</p>
+                </div>
+              </div>
+              <div className="bg-[#f2f4f6] p-4 rounded-xl flex flex-col gap-3">
+                <FaBookOpen className="text-[#0050cb] text-xl" />
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-[#424656] tracking-wider">Subject</p>
+                  <p className="font-bold text-sm">
+                    {Array.isArray(course.subject) ? course.subject.join(", ") : course.subject || "N/A"}
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Sticky Tabs */}
+            <nav className="flex gap-6 overflow-x-auto hide-scrollbar border-b border-[#c2c6d8]/30 sticky top-16 lg:top-0 bg-[#f7f9fb]/80 backdrop-blur-md z-40 py-2 -mx-4 px-4 lg:mx-0 lg:px-0">
+              <button
+                onClick={() => setActiveTab("overview")}
+                className={`${activeTab === "overview" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+              >
+                Overview
+              </button>
+              <button
+                onClick={() => setActiveTab("features")}
+                className={`${activeTab === "features" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+              >
+                Features
+              </button>
+              <button
+                onClick={() => setActiveTab("prerequisites")}
+                className={`${activeTab === "prerequisites" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+              >
+                Prerequisites
+              </button>
+              <button
+                onClick={() => setActiveTab("reviews")}
+                className={`${activeTab === "reviews" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+              >
+                Reviews
+              </button>
+              {hasTestSeries && (
+                <button
+                  onClick={() => setActiveTab("tests")}
+                  className={`${activeTab === "tests" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+                >
+                  Test Series ({courseTests.length})
+                </button>
+              )}
+              {course?.liveClass?.length > 0 && (
+                <button
+                  onClick={() => setActiveTab("classes")}
+                  className={`${activeTab === "classes" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+                >
+                  Classes
+                </button>
+              )}
+            </nav>
+
+            {/* Tab content */}
             {activeTab === "overview" && (
-              <div className="space-y-8">
-                {/* Course Videos */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Intro Video */}
-                  {course.introVideo && (
-                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                        Course Introduction
-                      </h3>
-                      <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <>
+                {/* Course Introduction Video */}
+                {course.introVideo && (
+                  <section className="space-y-4">
+                    <h3 className="text-lg font-bold">Course Introduction</h3>
+                    <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg group cursor-pointer bg-black">
+                      {playIntro ? (
                         <iframe
                           src={getIntroEmbedUrl(course.introVideo)}
                           title="Course Introduction"
@@ -462,523 +659,473 @@ const CourseDetails = ({ id }) => {
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                           referrerPolicy="strict-origin-when-cross-origin"
                           allowFullScreen
-                        ></iframe>
-                      </div>
+                        />
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setPlayIntro(true)}
+                          className="absolute inset-0 w-full h-full"
+                        >
+                          <img
+                            alt="Course intro"
+                            className="w-full h-full object-cover"
+                            src={heroImage}
+                          />
+                          <div className="absolute inset-0 bg-slate-900/30 flex items-center justify-center">
+                            <div className="bg-white/90 p-5 rounded-full shadow-2xl active:scale-90 transition-transform">
+                              <FaPlay className="text-[#0050cb] text-3xl ml-1" />
+                            </div>
+                          </div>
+                        </button>
+                      )}
                     </div>
-                  )}
-
-                  {/* Demo Videos */}
-                  {course.videos && course.videos.length > 0 && course.videos[0]?.links?.[0] && (
-                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                        Demo Video
-                      </h3>
-                      <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
-                        <iframe
-                          src={getYouTubeEmbedUrl(course.videos[0].links[0])}
-                          title={course.videos[0].title || "Course Demo"}
-                          className="w-full h-full"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                        ></iframe>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-              
-                {/* Course Objectives */}
-                {course.courseObjectives &&
-                  course.courseObjectives.length > 0 && (
-                    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                        Course Feature
-                      </h3>
-                      <ul className="list-disc list-inside space-y-2">
-                        {course.courseObjectives.map((objective, index) => (
-                          <li key={index} className="text-gray-700 dark:text-gray-300">
-                            {objective}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                {/* Prerequisites */}
-                {course.prerequisites && course.prerequisites.length > 0 && (
-                  <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                      Prerequisites
-                    </h3>
-                    <ul className="list-disc list-inside space-y-2">
-                      {course.prerequisites.map((prerequisite, index) => (
-                        <li key={index} className="text-gray-700 dark:text-gray-300">
-                          {prerequisite}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  </section>
                 )}
 
-                <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    Give Review and rate this Course
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Reviews are limited to enrolled students. Your feedback appears on the educator profile.
-                  </p>
-                  <form className="space-y-4" onSubmit={handleCourseReviewSubmit}>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Tap to rate (half stars supported)
-                      </span>
-                      <div className="flex items-center gap-1">
-                        {[0, 1, 2, 3, 4].map((index) => {
-                          const fillState = reviewRating - index;
-                          const icon = fillState >= 1 ? (
-                            <FaStar className="h-6 w-6 text-yellow-400" />
-                          ) : fillState >= 0.5 ? (
-                            <FaStarHalfAlt className="h-6 w-6 text-yellow-400" />
-                          ) : (
-                            <FaStar className="h-6 w-6 text-gray-300" />
-                          );
-                          return (
-                            <button
-                              key={index}
-                              type="button"
-                              onClick={(event) => handleCourseStarClick(index, event)}
-                              disabled={!isEnrolled || isSubmittingReview}
-                              className="p-1 disabled:cursor-not-allowed"
-                              aria-label={`Set course rating to ${index + 1} star${index === 0 ? "" : "s"}`}
-                            >
-                              {icon}
-                            </button>
-                          );
-                        })}
-                        <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{reviewRating.toFixed(1)}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor="course-review-text">
-                        Your Review
-                      </label>
-                      <textarea
-                        id="course-review-text"
-                        value={reviewText}
-                        onChange={(event) => setReviewText(event.target.value)}
-                        rows={4}
-                        className="mt-2 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 px-3 py-2 text-sm"
-                        placeholder="Share what you liked and what could improve."
-                        disabled={!isEnrolled || isSubmittingReview}
-                        required
+                {/* Demo Video */}
+                {course.videos && course.videos.length > 0 && course.videos[0]?.links?.[0] && (
+                  <section className="space-y-4">
+                    <h3 className="text-lg font-bold">Demo Video</h3>
+                    <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg bg-black">
+                      <iframe
+                        src={getYouTubeEmbedUrl(course.videos[0].links[0])}
+                        title={course.videos[0].title || "Course Demo"}
+                        className="w-full h-full"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
                       />
                     </div>
-                    {reviewStatus && (
-                      <p className="text-sm text-gray-700 dark:text-gray-300">{reviewStatus}</p>
-                    )}
+                  </section>
+                )}
+
+                {course.description && (
+                  <section className="bg-white rounded-2xl p-6 shadow-sm space-y-3">
+                    <h3 className="text-lg font-bold">About this course</h3>
+                    <p className="text-sm text-[#424656] leading-relaxed whitespace-pre-line">
+                      {course.description}
+                    </p>
+                  </section>
+                )}
+              </>
+            )}
+
+            {activeTab === "features" && (
+              <section className="bg-white rounded-2xl p-6 space-y-6 shadow-sm">
+                <h3 className="text-lg font-bold">Core Features</h3>
+                {course.courseObjectives && course.courseObjectives.length > 0 ? (
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    {course.courseObjectives.map((objective, index) => {
+                      const palette = [
+                        { bg: "bg-[#006e2f]/10", color: "text-[#006e2f]", Icon: FaVideo },
+                        { bg: "bg-[#0050cb]/10", color: "text-[#0050cb]", Icon: FaFileAlt },
+                        { bg: "bg-[#954000]/10", color: "text-[#954000]", Icon: FaQuestionCircle },
+                      ];
+                      const p = palette[index % palette.length];
+                      const Icon = p.Icon;
+                      return (
+                        <div key={index} className="flex items-start gap-4">
+                          <div className={`${p.bg} p-3 rounded-lg`}>
+                            <Icon className={`${p.color} text-base`} />
+                          </div>
+                          <div>
+                            <p className="font-bold text-sm">{objective}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-sm text-[#424656]">No features listed yet.</p>
+                )}
+              </section>
+            )}
+
+            {activeTab === "prerequisites" && (
+              <section className="space-y-4">
+                <h3 className="text-lg font-bold">Prerequisites</h3>
+                {course.prerequisites && course.prerequisites.length > 0 ? (
+                  <div className="space-y-3">
+                    {course.prerequisites.map((prerequisite, index) => (
+                      <div
+                        key={index}
+                        className="bg-[#bc5200]/5 border-l-4 border-[#954000] p-4 rounded-r-2xl"
+                      >
+                        <div className="flex items-center gap-3">
+                          <FaCheckCircle className="text-[#954000]" />
+                          <p className="text-sm font-medium text-[#783200]">
+                            {prerequisite}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-2xl p-6 text-sm text-[#424656]">
+                    No specific prerequisites for this course.
+                  </div>
+                )}
+              </section>
+            )}
+
+            {activeTab === "reviews" && (
+              <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold">Reviews</h3>
+                  <div className="flex items-center gap-1 bg-[#006e2f]/10 px-3 py-1 rounded-full">
+                    <FaStar className="text-[#006e2f] text-xs" />
+                    <span className="text-sm font-bold text-[#006e2f]">
+                      {ratingValue ? ratingValue.toFixed(1) : "—"} ({ratingCount})
+                    </span>
+                  </div>
+                </div>
+
+                <form
+                  className="bg-white rounded-2xl p-6 shadow-sm space-y-4"
+                  onSubmit={handleCourseReviewSubmit}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#c2c6d8] flex items-center justify-center">
+                      <FaUserCircle className="text-white text-xl" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold">Write a public review</p>
+                      <p className="text-xs text-[#424656]">
+                        Reviews are limited to enrolled students.
+                      </p>
+                    </div>
+                    <FaUserEdit className="text-[#424656]" />
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    {[0, 1, 2, 3, 4].map((index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={(event) => handleCourseStarClick(index, event)}
+                        disabled={!isEnrolled || isSubmittingReview}
+                        className="p-1 disabled:cursor-not-allowed"
+                        aria-label={`Set course rating to ${index + 1}`}
+                      >
+                        {renderStar(index)}
+                      </button>
+                    ))}
+                    <span className="ml-2 text-sm text-[#424656]">{reviewRating.toFixed(1)}</span>
+                  </div>
+
+                  <textarea
+                    value={reviewText}
+                    onChange={(event) => setReviewText(event.target.value)}
+                    rows={4}
+                    className="w-full rounded-xl border border-[#c2c6d8] bg-white px-4 py-3 text-sm outline-none focus:border-[#0050cb]"
+                    placeholder="Share what you liked and what could improve."
+                    disabled={!isEnrolled || isSubmittingReview}
+                    required
+                  />
+
+                  {reviewStatus && (
+                    <p className="text-sm text-[#424656]">{reviewStatus}</p>
+                  )}
+
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <button
                       type="submit"
-                      className={`w-full sm:w-auto inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold text-white shadow-sm ${
-                        isEnrolled
-                          ? "bg-blue-600 hover:bg-blue-700"
-                          : "bg-gray-400 cursor-not-allowed"
+                      className={`inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-sm ${
+                        isEnrolled ? "bg-[#0050cb] hover:bg-[#003fa4]" : "bg-gray-400 cursor-not-allowed"
                       }`}
                       disabled={!isEnrolled || isSubmittingReview}
                     >
                       {isSubmittingReview ? "Submitting..." : "Submit Review"}
                     </button>
                     {!isEnrolled && (
-                      <p className="inline-flex items-center rounded-full border border-amber-300 dark:border-amber-700 bg-amber-100 dark:bg-amber-900/30 px-3 py-1 text-xs font-medium text-amber-800 dark:text-amber-200 ml-3">
-                        Enroll in this course to submit a review.
+                      <p className="inline-flex items-center rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+                        Enroll to submit a review.
                       </p>
                     )}
-                  </form>
-                </div>
-              </div>
+                  </div>
+                </form>
+              </section>
             )}
 
             {activeTab === "classes" && (
-              <div>
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                    Live Classes
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    All scheduled live classes for this course
-                  </p>
-                </div>
+              <section className="space-y-4">
+                <h3 className="text-lg font-bold">Live Classes</h3>
                 {course.liveClass && course.liveClass.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {course.liveClass.map((classItem, index) => (
-                      <ClassCard
-                        key={classItem._id || index}
-                        classData={classItem}
-                      />
+                      <ClassCard key={classItem._id || index} classData={classItem} />
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500 dark:text-gray-400">
-                      No live classes scheduled yet.
-                    </p>
+                  <div className="bg-white rounded-2xl p-6 text-center text-[#424656]">
+                    No live classes scheduled yet.
                   </div>
                 )}
-              </div>
+              </section>
             )}
 
             {activeTab === "tests" && (
-              <div>
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                    Test Series
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Practice tests and assessments for this course
-                  </p>
-                </div>
-                {!hasTestSeries && !testsLoading && (
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    No test series assigned to this course yet.
-                  </div>
-                )}
+              <section className="space-y-4">
+                <h3 className="text-lg font-bold">Test Series</h3>
                 {testsLoading && (
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <div className="bg-white rounded-2xl p-6 text-center text-[#424656]">
                     Loading test series...
                   </div>
                 )}
+                {!testsLoading && !hasTestSeries && (
+                  <div className="bg-white rounded-2xl p-6 text-center text-[#424656]">
+                    No test series assigned to this course yet.
+                  </div>
+                )}
                 {hasTestSeries && (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {courseTests.map((test, index) => {
                       const questionCount =
                         test.totalQuestions ||
                         test.noOfQuestions ||
                         test.numberOfQuestions ||
-                        (Array.isArray(test.questions)
-                          ? test.questions.length
-                          : null);
-
+                        (Array.isArray(test.questions) ? test.questions.length : null);
                       return (
                         <div
                           key={test._id || test.id || index}
-                          className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-900 shadow-sm"
+                          className="bg-white rounded-2xl p-4 shadow-sm"
                         >
-                          <div className="flex flex-col gap-2">
-                            <div className="flex items-center justify-between">
-                              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
-                                {test.title || "Untitled Test Series"}
-                              </h4>
-                              {questionCount != null && (
-                                <span className="text-sm font-medium text-blue-700 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full">
-                                  {questionCount} questions
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-line line-clamp-3">
-                              {test.description || "No description provided."}
-                            </p>
+                          <div className="flex items-center justify-between gap-3">
+                            <h4 className="text-base font-bold line-clamp-2">
+                              {test.title || "Untitled Test Series"}
+                            </h4>
+                            {questionCount != null && (
+                              <span className="text-xs font-semibold text-[#0050cb] bg-[#0050cb]/10 px-3 py-1 rounded-full whitespace-nowrap">
+                                {questionCount} Qs
+                              </span>
+                            )}
                           </div>
+                          <p className="text-sm text-[#424656] line-clamp-3 mt-2">
+                            {test.description || "No description provided."}
+                          </p>
                         </div>
                       );
                     })}
                   </div>
                 )}
-              </div>
+              </section>
+            )}
+
+            {/* Instructor Card (always visible on overview) */}
+            {activeTab === "overview" && (
+              <section className="space-y-4">
+                <h3 className="text-lg font-bold">Primary Instructor</h3>
+                <div className="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm">
+                  <img
+                    alt={educatorName}
+                    className="w-16 h-16 rounded-xl object-cover bg-[#c2c6d8]"
+                    src={
+                      educator?.profileImage ||
+                      educator?.profilePicture ||
+                      educator?.image ||
+                      "/images/placeholders/avatar.svg"
+                    }
+                    onError={(e) => {
+                      e.currentTarget.src = "/images/placeholders/avatar.svg";
+                    }}
+                  />
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-base truncate">{educatorName}</h4>
+                    <p className="text-xs text-[#424656] mb-1">
+                      {(() => {
+                        const t = educator?.title;
+                        const q = educator?.qualification;
+                        const pick = (v) =>
+                          typeof v === "string"
+                            ? v
+                            : v && typeof v === "object"
+                            ? v.title || v.name || ""
+                            : "";
+                        return pick(t) || pick(q) || "Faculty";
+                      })()}
+                      {educator?.yearsOfExperience ? ` • ${educator.yearsOfExperience}+ Years Exp.` : ""}
+                    </p>
+                    {educator?.averageRating != null && (
+                      <div className="flex items-center gap-1">
+                        <FaStar className="text-[#954000] text-xs" />
+                        <span className="text-xs font-bold">
+                          {Number(educator.averageRating).toFixed(1)}/5 Rating
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {educatorId && (
+                    <button
+                      onClick={() => router.push(`/profile/educator/${educatorId}`)}
+                      className="ml-auto bg-[#0050cb]/5 p-2 rounded-full text-[#0050cb]"
+                      aria-label="View instructor"
+                    >
+                      <FaChevronRight />
+                    </button>
+                  )}
+                </div>
+              </section>
             )}
           </div>
 
-          {/* Sidebar - Sticky */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-4">
-              {/* Course Price and Enroll */}
-              <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6 shadow-sm">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600 mb-4">
-                    ₹{course.fees?.toLocaleString()}
-                  </div>
-                  {isEnrolled ? (
-                    <button
-                      onClick={handleOpenCoursePanel}
-                      className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors mb-4"
-                    >
-                      Go to Course
-                    </button>
-                  ) : (
-                    <EnrollButton
-                      type="course"
-                      itemId={course._id || course.id}
-                      price={course.fees}
-                      className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-4"
-                    />
-                  )}
-
-                  {/* Course Stats */}
-                  <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center text-sm">
-                      <span className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
-                        <FaClock className="w-4 h-4 mr-2" />  
-                        <span>{course.courseDuration || "N/A"}</span>
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400">Course Duration</span>
-                    </div>
-                    <div className="flex items-center text-sm">
-                      <span className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
-                        <FaCalendarAlt className="w-4 h-4 mr-2" />
-                        <span>{course.classesPerWeek || "N/A"}</span>
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400">Classes / Week</span>
-                    </div>
-                    <div className="flex items-center text-sm">
-                      <span className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
-                        <FaClock className="w-4 h-4 mr-2" />
-                        <span>{course.classDuration ? `${course.classDuration} min` : "N/A"}</span>
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400">Per Class Duration</span>
-                    </div>
-                    {course.classTiming && (
-                      <div className="flex items-center text-sm">
-                        <span className="flex items-center mr-1 text-gray-600 dark:text-gray-400">
-                          <FaClock className="w-4 h-4 mr-2" />
-                          <span>{course.classTiming}</span>
-                        </span>
-                        <span className="text-gray-500 dark:text-gray-400">Class Timing</span>
-                      </div>
-                    )}
-                    <div className="flex items-center text-sm">
-                      <span className="flex items-center  mr-1 text-gray-600 dark:text-gray-400">
-                        <FaChair className="w-4 h-4 mr-2" />
-                        <span>{course.enrolledStudents?.length || 0}</span>
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400">Enrolled</span>
-                    </div>
-                  </div>
-
-                  {course.certificateAvailable && (
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-                      🎓 Certificate available upon completion
-                    </div>
+          {/* Right column — desktop sticky sidebar */}
+          <aside className="hidden lg:block lg:col-span-1">
+            <div className="sticky top-6 space-y-4">
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <p className="text-[#424656] text-xs font-semibold mb-1">Total Fee</p>
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-3xl font-extrabold text-[#0050cb]">
+                    ₹{course.fees?.toLocaleString() || "0"}
+                  </span>
+                  {course.discount > 0 && (
+                    <span className="text-xs font-medium text-[#006e2f]">
+                      {course.discount}% off
+                    </span>
                   )}
                 </div>
-              </div>
 
-              {/* Talk to Educator WhatsApp Button - now visible for both 'One to One' and 'One to All' course types */}
-              {!isEnrolled && educator?.whatsappNumber && (
-                <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-200 dark:border-green-800/50 p-5 shadow-sm">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                      Worried about buying a course?
-                    </p>
-                    <a
-                      href={`https://wa.me/${educator.whatsappNumber.replace(/[^0-9]/g, '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-sm hover:shadow-md"
-                    >
-                      <FaWhatsapp className="w-5 h-5" />
-                      Talk to Educator
-                    </a>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
-                      Connect directly with the educator to clarify your doubts
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {showCoursePanel && isEnrolled && (
-        <div
-          ref={coursePanelRef}
-          className="mt-10 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-4">
-            <div className="border-b md:border-b-0 md:border-r bg-gray-50 dark:bg-gray-800">
-              <div className="flex md:flex-col">
-                <button
-                  onClick={() => setPanelTab("videos")}
-                  className={`flex-1 px-4 py-3 text-left text-sm font-medium border-b md:border-b-0 md:border-b-transparent md:border-l-4 transition-colors ${
-                    panelTab === "videos"
-                      ? "bg-white dark:bg-gray-900 text-blue-700 md:border-blue-600"
-                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 md:border-transparent"
-                  }`}
-                >
-                  Videos
-                </button>
-                <button
-                  onClick={() => setPanelTab("assets")}
-                  className={`flex-1 px-4 py-3 text-left text-sm font-medium border-b md:border-b-0 md:border-l-4 transition-colors ${
-                    panelTab === "assets"
-                      ? "bg-white dark:bg-gray-900 text-blue-700 md:border-blue-600"
-                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 md:border-transparent"
-                  }`}
-                >
-                  Assets
-                </button>
-              </div>
-            </div>
-
-            <div className="md:col-span-3 p-6 space-y-4">
-              {panelTab === "videos" ? (
-                topics.length === 0 ? (
-                  <div className="text-center text-gray-500 dark:text-gray-400">
-                    No course videos available.
-                  </div>
+                {isEnrolled ? (
+                  <button
+                    onClick={handleOpenCoursePanel}
+                    className="w-full flex items-center justify-center gap-2 bg-linear-to-br from-blue-600 to-blue-500 text-white rounded-2xl h-14 shadow-lg font-bold text-sm tracking-wide active:scale-[0.98] transition-all"
+                  >
+                    <FaBolt />
+                    Go to Course
+                  </button>
                 ) : (
-                  <div className="space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          Course Videos
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Select a topic to browse its videos.
-                        </p>
-                      </div>
-                      <select
-                        value={selectedTopic}
-                        onChange={(e) => handleTopicChange(e.target.value)}
-                        className="w-full sm:w-64 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 px-3 py-2 text-sm"
-                      >
-                        {topics.map((topic) => (
-                          <option key={topic} value={topic}>
-                            {topic}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                  <EnrollButton
+                    type="course"
+                    itemId={course._id || course.id}
+                    price={course.fees}
+                    className="w-full flex items-center justify-center gap-2 bg-linear-to-br from-blue-600 to-blue-500 text-white rounded-2xl h-14 shadow-lg font-bold text-sm tracking-wide active:scale-[0.98] transition-all"
+                  />
+                )}
 
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-                      <div className="lg:col-span-3">
-                        {selectedVideo ? (
-                          <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border">
-                            <iframe
-                              src={getYouTubeEmbedUrl(
-                                selectedVideo.link || selectedVideo.url
-                              )}
-                              title={
-                                selectedVideo.title ||
-                                selectedVideo.name ||
-                                "Course Video"
-                              }
-                              className="w-full h-full"
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              referrerPolicy="strict-origin-when-cross-origin"
-                              allowFullScreen
-                            />
-                          </div>
-                        ) : (
-                          <div className="h-full min-h-60 flex items-center justify-center text-gray-500 dark:text-gray-400 border rounded-lg">
-                            Select a video to start watching.
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="lg:col-span-2 space-y-3">
-                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                          Videos in this topic
-                        </p>
-                        <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-                          {groupedVideos[selectedTopic]?.map((video, idx) => {
-                            const videoTitle =
-                              video.title || video.name || `Video ${idx + 1}`;
-                            return (
-                              <button
-                                key={`${selectedTopic}-${idx}-${videoTitle}`}
-                                onClick={() => handleVideoSelect(video)}
-                                className={`w-full text-left p-3 rounded-md border transition-colors ${
-                                  selectedVideo === video
-                                    ? "border-blue-200 bg-blue-50 dark:bg-blue-900/20 text-blue-800"
-                                    : "border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                                }`}
-                              >
-                                <p className="text-sm font-medium line-clamp-1">
-                                  {videoTitle}
-                                </p>
-                                {video.topic && (
-                                  <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">
-                                    {video.topic}
-                                  </p>
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
+                <div className="mt-5 pt-5 border-t border-[#c2c6d8]/30 space-y-3 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-[#424656]">
+                      <FaClock /> Duration
+                    </span>
+                    <span className="font-semibold">{course.courseDuration || "N/A"}</span>
                   </div>
-                )
-              ) : assets.length === 0 ? (
-                <div className="text-center text-gray-500 dark:text-gray-400">
-                  No assets shared for this course yet.
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-[#424656]">
+                      <FaCalendarAlt /> Classes / Week
+                    </span>
+                    <span className="font-semibold">{course.classesPerWeek || "N/A"}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-[#424656]">
+                      <FaClock /> Per Class
+                    </span>
+                    <span className="font-semibold">
+                      {course.classDuration ? `${course.classDuration} min` : "N/A"}
+                    </span>
+                  </div>
+                  {course.classTiming && (
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-2 text-[#424656]">
+                        <FaClock /> Timing
+                      </span>
+                      <span className="font-semibold">{course.classTiming}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-[#424656]">
+                      <FaChair /> Enrolled
+                    </span>
+                    <span className="font-semibold">{enrolledCount}</span>
+                  </div>
+                  {course.certificateAvailable && (
+                    <div className="flex items-center gap-2 text-xs text-[#424656] pt-2 border-t border-[#c2c6d8]/30">
+                      <FaGraduationCap /> Certificate on completion
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                      Course Assets
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Downloadable resources shared by the instructor.
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {assets.map((asset, index) => {
-                      const assetUrl = resolveAssetUrl(asset);
-                      return (
-                        <a
-                          key={`${asset.title || asset.name || "asset"}-${index}`}
-                          href={assetUrl || "#"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
-                            assetUrl
-                              ? "border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                              : "border-red-200 bg-red-50/50 text-red-600 cursor-not-allowed"
-                          }`}
-                          onClick={(e) => {
-                            if (!assetUrl) e.preventDefault();
-                          }}
-                        >
-                          <div className="flex-1">
-                            <p className="font-medium text-gray-900 dark:text-gray-100 line-clamp-1">
-                              {asset.title || asset.name || `Asset ${index + 1}`}
-                            </p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                              {asset.fileType || asset.type || asset.mimeType || "Resource"}
-                            </p>
-                            {!assetUrl && (
-                              <p className="text-xs text-red-500 mt-1">
-                                Missing file link. Please re-upload.
-                              </p>
-                            )}
-                          </div>
-                          <svg
-                            className="w-5 h-5 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M7 10l5 5m0 0l5-5m-5 5V3"
-                            />
-                          </svg>
-                        </a>
-                      );
-                    })}
-                  </div>
+              </div>
+
+              {!isEnrolled && educator?.whatsappNumber && (
+                <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200 p-5">
+                  <p className="text-sm text-[#424656] mb-3 text-center">
+                    Worried about buying a course?
+                  </p>
+                  <a
+                    href={`https://wa.me/${educator.whatsappNumber.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-green-700 transition-colors"
+                  >
+                    <FaWhatsapp className="w-5 h-5" />
+                    Talk to Educator
+                  </a>
                 </div>
               )}
             </div>
-          </div>
+          </aside>
         </div>
-      )}
+
+        {/* Mobile WhatsApp CTA */}
+        {!isEnrolled && educator?.whatsappNumber && (
+          <section className="lg:hidden bg-linear-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200 p-5">
+            <p className="text-sm text-[#424656] mb-3 text-center">
+              Worried about buying a course?
+            </p>
+            <a
+              href={`https://wa.me/${educator.whatsappNumber.replace(/[^0-9]/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-6 rounded-xl font-semibold"
+            >
+              <FaWhatsapp className="w-5 h-5" />
+              Talk to Educator
+            </a>
+          </section>
+        )}
+      </main>
+
+      {/* Mobile Sticky Bottom Bar */}
+      <footer className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl rounded-t-3xl shadow-[0_-12px_40px_rgba(0,80,203,0.06)] flex justify-between items-center px-4 pt-4 pb-6">
+        {isEnrolled ? (
+          <button
+            onClick={handleOpenCoursePanel}
+            className="flex-1 flex items-center justify-center gap-2 bg-linear-to-br from-blue-600 to-blue-500 text-white rounded-2xl h-14 mx-2 shadow-lg active:scale-[0.98] transition-all duration-150 font-bold text-sm"
+          >
+            <FaBolt />
+            Go to Course
+          </button>
+        ) : (
+          <>
+            {educator?.whatsappNumber ? (
+              <a
+                href={`https://wa.me/${educator.whatsappNumber.replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center gap-2 bg-slate-100 text-slate-900 rounded-2xl h-14 mx-2 font-bold text-sm"
+              >
+                <FaWhatsapp />
+                Contact
+              </a>
+            ) : (
+              <div className="flex-1 flex items-center justify-center gap-2 bg-slate-100 text-slate-900 rounded-2xl h-14 mx-2 font-bold text-sm">
+                <FaShoppingCart />
+                Save
+              </div>
+            )}
+            <EnrollButton
+              type="course"
+              itemId={course._id || course.id}
+              price={course.fees}
+              className="flex-1 flex items-center justify-center gap-2 bg-linear-to-br from-blue-600 to-blue-500 text-white rounded-2xl h-14 mx-2 shadow-lg active:scale-[0.98] transition-all duration-150 font-bold text-sm"
+            />
+          </>
+        )}
+      </footer>
+
+      <style jsx>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 };

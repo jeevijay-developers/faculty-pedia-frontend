@@ -229,6 +229,9 @@ const LiveCourseForm = () => {
 
         <div className="flex flex-col gap-2">
           <label className="font-medium">Upload Course Image</label>
+          <p className="text-xs text-gray-500">
+            Recommended: 1280x720 (16:9), under 300 KB.
+          </p>
           <input type="file" accept="image/*" onChange={handleImageUpload} />
           {imagePreview && (
             <div className="relative mt-2">

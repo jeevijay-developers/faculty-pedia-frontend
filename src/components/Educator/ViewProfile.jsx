@@ -127,7 +127,7 @@ const setStoredEducatorRating = (educatorId, studentId, rating) => {
   }
 };
 
-const ViewProfile = ({ educatorData }) => {
+const ViewProfile = ({ educatorData, showContentSections = true }) => {
   const router = useRouter();
   // Add safety check at the top
   if (!educatorData) {
@@ -1540,193 +1540,197 @@ const ViewProfile = ({ educatorData }) => {
           </div>
         </div>
 
-        {/* Courses Section */}
-        {courseDetails && courseDetails.length > 0 && (
-          <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
-            <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
-              Available Courses
-            </h2>
-            {loadingCourses ? (
-              <div className="flex justify-center items-center py-8">
-                <div className="text-gray-500 dark:text-gray-400">Loading courses...</div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {courseDetails.slice(0, visibleCourses).map((course, index) => (
-                  <CourseCard
-                    key={course._id || index}
-                    course={{
-                      ...course,
-                      educator: {
-                        _id: educatorData._id,
-                        firstName: educatorData.firstName,
-                        lastName: educatorData.lastName,
-                        fullName: educatorDisplayName,
-                        image: educatorData.image,
-                        specialization: educatorData.specialization,
-                        qualification: educatorData.qualification,
-                        rating: ratingAverage,
-                        yearsExperience: safeNumber(
-                          educatorData.yoe,
-                          0,
-                        ),
-                      },
-                    }}
-                  />
-                ))}
+        {showContentSections && (
+          <>
+            {/* Courses Section */}
+            {courseDetails && courseDetails.length > 0 && (
+              <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
+                <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
+                  Available Courses
+                </h2>
+                {loadingCourses ? (
+                  <div className="flex justify-center items-center py-8">
+                    <div className="text-gray-500 dark:text-gray-400">Loading courses...</div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {courseDetails.slice(0, visibleCourses).map((course, index) => (
+                      <CourseCard
+                        key={course._id || index}
+                        course={{
+                          ...course,
+                          educator: {
+                            _id: educatorData._id,
+                            firstName: educatorData.firstName,
+                            lastName: educatorData.lastName,
+                            fullName: educatorDisplayName,
+                            image: educatorData.image,
+                            specialization: educatorData.specialization,
+                            qualification: educatorData.qualification,
+                            rating: ratingAverage,
+                            yearsExperience: safeNumber(
+                              educatorData.yoe,
+                              0,
+                            ),
+                          },
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+                {visibleCourses < courseDetails.length && (
+                  <div className="flex justify-center mt-6">
+                    <button
+                      onClick={loadMoreCourses}
+                      className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
+                    >
+                      View More Courses
+                      <span className="text-sm opacity-90">
+                        ({Math.min(3, courseDetails.length - visibleCourses)} more)
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
-            {visibleCourses < courseDetails.length && (
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={loadMoreCourses}
-                  className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
-                >
-                  View More Courses
-                  <span className="text-sm opacity-90">
-                    ({Math.min(3, courseDetails.length - visibleCourses)} more)
-                  </span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
 
-        {/* Webinars Section */}
-        {webinarDetails && webinarDetails.length > 0 && (
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
-            <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
-              Available Webinars
-            </h2>
-            {loadingWebinars ? (
-              <div className="flex justify-center items-center py-8">
-                <div className="text-gray-500 dark:text-gray-400">Loading webinars...</div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {webinarDetails
-                  .slice(0, visibleWebinars)
-                  .map((webinar, index) => (
-                    <UpcomingWebinarCard
-                      key={webinar._id || index}
-                      item={{
-                        _id: webinar._id || webinar.id,
-                        id: webinar._id || webinar.id,
-                        title:
-                          webinar.title ||
-                          webinar.webinarTitle ||
-                          webinar.name ||
-                          "",
-                        description:
-                          typeof webinar.description === "string"
-                            ? webinar.description
-                            : webinar.description?.short ||
-                              webinar.description?.long ||
-                              webinar.description?.full ||
+            {/* Webinars Section */}
+            {webinarDetails && webinarDetails.length > 0 && (
+              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
+                <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
+                  Available Webinars
+                </h2>
+                {loadingWebinars ? (
+                  <div className="flex justify-center items-center py-8">
+                    <div className="text-gray-500 dark:text-gray-400">Loading webinars...</div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {webinarDetails
+                      .slice(0, visibleWebinars)
+                      .map((webinar, index) => (
+                        <UpcomingWebinarCard
+                          key={webinar._id || index}
+                          item={{
+                            _id: webinar._id || webinar.id,
+                            id: webinar._id || webinar.id,
+                            title:
+                              webinar.title ||
+                              webinar.webinarTitle ||
+                              webinar.name ||
                               "",
-                        educatorName: educatorDisplayName,
-                        educatorPhoto:
-                          educatorData.image?.url ||
-                          educatorData.image ||
-                          EDUCATOR_FALLBACK_IMAGE,
-                        qualification:
-                          educatorData.qualification?.[0]?.title || "N/A",
-                        specialization:
-                          webinar.specialization || educatorData.specialization,
-                        subject: webinar.subject,
-                        timing:
-                          webinar.timing || webinar.date || webinar.startDate || null,
-                        duration: webinar.duration,
-                        fees: safeNumber(webinar.fees ?? webinar.fee, 0),
-                        detailsLink: `/webinars/${webinar._id}`,
-                        image:
-                          webinar.image?.url ||
-                          webinar.image ||
-                          webinar.banner?.url ||
-                          webinar.banner ||
-                          "/images/placeholders/1.svg",
-                        seatLimit: webinar.seatLimit,
-                        enrolledCount: webinar.enrolledStudents?.length || 0,
-                        webinarType: webinar.webinarType,
-                        webinarLink: webinar.webinarLink,
-                      }}
-                    />
-                  ))}
+                            description:
+                              typeof webinar.description === "string"
+                                ? webinar.description
+                                : webinar.description?.short ||
+                                  webinar.description?.long ||
+                                  webinar.description?.full ||
+                                  "",
+                            educatorName: educatorDisplayName,
+                            educatorPhoto:
+                              educatorData.image?.url ||
+                              educatorData.image ||
+                              EDUCATOR_FALLBACK_IMAGE,
+                            qualification:
+                              educatorData.qualification?.[0]?.title || "N/A",
+                            specialization:
+                              webinar.specialization || educatorData.specialization,
+                            subject: webinar.subject,
+                            timing:
+                              webinar.timing || webinar.date || webinar.startDate || null,
+                            duration: webinar.duration,
+                            fees: safeNumber(webinar.fees ?? webinar.fee, 0),
+                            detailsLink: `/webinars/${webinar._id}`,
+                            image:
+                              webinar.image?.url ||
+                              webinar.image ||
+                              webinar.banner?.url ||
+                              webinar.banner ||
+                              "/images/placeholders/card-16x9.svg",
+                            seatLimit: webinar.seatLimit,
+                            enrolledCount: webinar.enrolledStudents?.length || 0,
+                            webinarType: webinar.webinarType,
+                            webinarLink: webinar.webinarLink,
+                          }}
+                        />
+                      ))}
+                  </div>
+                )}
+                {visibleWebinars < webinarDetails.length && (
+                  <div className="flex justify-center mt-6">
+                    <button
+                      onClick={loadMoreWebinars}
+                      className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
+                    >
+                      View More Webinars
+                      <span className="text-sm opacity-90">
+                        ({Math.min(3, webinarDetails.length - visibleWebinars)}{" "}
+                        more)
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
-            {visibleWebinars < webinarDetails.length && (
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={loadMoreWebinars}
-                  className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
-                >
-                  View More Webinars
-                  <span className="text-sm opacity-90">
-                    ({Math.min(3, webinarDetails.length - visibleWebinars)}{" "}
-                    more)
-                  </span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
 
-        {/* Test Series Section */}
-        {testSeriesDetails && testSeriesDetails.length > 0 && (
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
-            <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
-              Available Test Series
-            </h2>
-            {loadingTestSeries ? (
-              <div className="flex justify-center items-center py-8">
-                <div className="text-gray-500 dark:text-gray-400">Loading test series...</div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {testSeriesDetails
-                  .slice(0, visibleTestSeries)
-                  .map((testSeries, index) => (
-                    <TestSeriesCard
-                      key={testSeries._id || index}
-                      testSeries={{
-                        id: testSeries._id,
-                        title: testSeries.title,
-                        educatorName: educatorDisplayName,
-                        educatorPhoto:
-                          educatorData.image?.url ||
-                          educatorData.image ||
-                          EDUCATOR_FALLBACK_IMAGE,
-                        qualification:
-                          educatorData.qualification?.[0]?.title || "N/A",
-                        subject: testSeries.subject,
-                        specialization: testSeries.specialization,
-                        noOfTests: testSeries.noOfTests,
-                        fee: testSeries.price,
-                        slug: testSeries._id || `test-series-${index}`,
-                        description: testSeries.description,
-                        validity: testSeries.validity,
-                        startDate: testSeries.startDate,
-                        endDate: testSeries.endDate,
-                      }}
-                    />
-                  ))}
+            {/* Test Series Section */}
+            {testSeriesDetails && testSeriesDetails.length > 0 && (
+              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
+                <h2 className="text-2xl font-bold text-[#111118] dark:text-gray-100 mb-6">
+                  Available Test Series
+                </h2>
+                {loadingTestSeries ? (
+                  <div className="flex justify-center items-center py-8">
+                    <div className="text-gray-500 dark:text-gray-400">Loading test series...</div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {testSeriesDetails
+                      .slice(0, visibleTestSeries)
+                      .map((testSeries, index) => (
+                        <TestSeriesCard
+                          key={testSeries._id || index}
+                          testSeries={{
+                            id: testSeries._id,
+                            title: testSeries.title,
+                            educatorName: educatorDisplayName,
+                            educatorPhoto:
+                              educatorData.image?.url ||
+                              educatorData.image ||
+                              EDUCATOR_FALLBACK_IMAGE,
+                            qualification:
+                              educatorData.qualification?.[0]?.title || "N/A",
+                            subject: testSeries.subject,
+                            specialization: testSeries.specialization,
+                            noOfTests: testSeries.noOfTests,
+                            fee: testSeries.price,
+                            slug: testSeries._id || `test-series-${index}`,
+                            description: testSeries.description,
+                            validity: testSeries.validity,
+                            startDate: testSeries.startDate,
+                            endDate: testSeries.endDate,
+                          }}
+                        />
+                      ))}
+                  </div>
+                )}
+                {visibleTestSeries < testSeriesDetails.length && (
+                  <div className="flex justify-center mt-6">
+                    <button
+                      onClick={loadMoreTestSeries}
+                      className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
+                    >
+                      View More Test Series
+                      <span className="text-sm opacity-90">
+                        ({Math.min(3, testSeriesDetails.length - visibleTestSeries)}{" "}
+                        more)
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
-            {visibleTestSeries < testSeriesDetails.length && (
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={loadMoreTestSeries}
-                  className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
-                >
-                  View More Test Series
-                  <span className="text-sm opacity-90">
-                    ({Math.min(3, testSeriesDetails.length - visibleTestSeries)}{" "}
-                    more)
-                  </span>
-                </button>
-              </div>
-            )}
-          </div>
+          </>
         )}
 
         {/* Item Review Modal */}

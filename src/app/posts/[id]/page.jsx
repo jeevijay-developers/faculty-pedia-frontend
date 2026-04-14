@@ -178,7 +178,7 @@ const PostDetailsPage = ({ params }) => {
                     src={
                       educator?.profilePicture ||
                       educator?.image?.url ||
-                      "/images/placeholders/1.svg"
+                      "/images/placeholders/card-16x9.svg"
                     }
                     alt={educator?.fullName || "Educator"}
                     fill

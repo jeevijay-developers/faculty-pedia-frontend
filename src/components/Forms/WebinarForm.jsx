@@ -260,6 +260,9 @@ const WebinarForm = ({ onSubmit }) => {
 
       <div>
         <label className="block text-gray-700 dark:text-gray-300">Image</label>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+          Recommended: 1280x720 (16:9), under 300 KB.
+        </p>
         <input
           type="file"
           accept="image/*"

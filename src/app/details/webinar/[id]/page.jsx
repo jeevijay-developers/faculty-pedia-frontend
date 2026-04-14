@@ -9,7 +9,7 @@ const Page = async ({ params }) => {
   return (
     <div>
       <Banner
-        url={"/images/placeholders/1.svg"}
+        url={"/images/placeholders/card-16x9.svg"}
         title={"Webinar Details"}
         subtitle={
           "Join our expert-led webinars to enhance your knowledge and skills with interactive learning experiences."

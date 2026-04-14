@@ -6,7 +6,7 @@ const page = () => {
   return (
     <div>
       <Banner
-        url="/images/placeholders/1.svg"
+        url="/images/placeholders/card-16x9.svg"
         title="NEET Test Series"
         subtitle="Choose from our comprehensive test series to excel in NEET"
       />

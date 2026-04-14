@@ -56,7 +56,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden rounded-2xl bg-white dark:bg-gray-900">
         <Image
-          src="/images/placeholders/1.svg"
+          src="/images/placeholders/card-16x9.svg"
           alt={classData.liveClassTitle || "Live Class"}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"

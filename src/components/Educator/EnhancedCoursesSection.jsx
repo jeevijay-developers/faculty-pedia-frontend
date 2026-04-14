@@ -118,7 +118,7 @@ const CourseCard = ({ course }) => {
       {/* Course Thumbnail */}
       <div className="relative h-40 sm:h-44 md:h-48 w-full overflow-hidden">
         <Image
-          src={course.image?.url || "/images/placeholders/1.svg"}
+          src={course.image?.url || "/images/placeholders/card-16x9.svg"}
           alt={course.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"

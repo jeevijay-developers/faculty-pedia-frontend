@@ -26,7 +26,7 @@ const demoStudentData = {
       fees: 15000,
       slug: "physics-mastery-iit-jee",
       image: {
-        url: "/images/placeholders/1.svg",
+        url: "/images/placeholders/card-16x9.svg",
       },
     },
     {

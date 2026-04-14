@@ -121,7 +121,7 @@ const blogData = {
     email: "johndoe@example.com",
     profileImage: {
       public_id: "educator_placeholder",
-      url: "/images/placeholders/1.svg",
+      url: "/images/placeholders/card-16x9.svg",
     },
     bio: "Passionate physics educator with over 10 years of experience teaching IIT-JEE aspirants.",
     workExperience: [
@@ -177,7 +177,7 @@ const blogData = {
         ],
         image: {
           public_id: "course_1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         title: "physics crash course",
         description: {
@@ -206,7 +206,7 @@ const blogData = {
         purchases: [],
         image: {
           public_id: "course_2",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         title: "biology fundamentals",
         description: {
@@ -235,7 +235,7 @@ const blogData = {
         purchases: [],
         image: {
           public_id: "course_3",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         title: "maths board exam prep",
         description: {
@@ -264,7 +264,7 @@ const blogData = {
         purchases: [],
         image: {
           public_id: "course_4",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         title: "organic chemistry booster",
         description: {
@@ -293,7 +293,7 @@ const blogData = {
         purchases: [],
         image: {
           public_id: "course_5",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         title: "physics for medical aspirants",
         description: {
@@ -331,7 +331,7 @@ const blogData = {
         fees: 499,
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0001",
         enrolledStudents: [],
@@ -356,7 +356,7 @@ const blogData = {
         fees: 399,
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0002",
         enrolledStudents: [],
@@ -380,7 +380,7 @@ const blogData = {
         fees: 299,
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0003",
         enrolledStudents: [],
@@ -405,7 +405,7 @@ const blogData = {
         fees: 450,
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0004",
         enrolledStudents: [],
@@ -429,7 +429,7 @@ const blogData = {
         fees: 350,
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0005",
         enrolledStudents: [],
@@ -452,7 +452,7 @@ const blogData = {
         endDate: "2025-09-30T00:00:00.000Z",
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0001",
         enrolledStudents: [],
@@ -471,7 +471,7 @@ const blogData = {
         endDate: "2025-10-05T00:00:00.000Z",
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0002",
         enrolledStudents: [],
@@ -491,7 +491,7 @@ const blogData = {
         endDate: "2025-09-25T00:00:00.000Z",
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0003",
         enrolledStudents: [],
@@ -510,7 +510,7 @@ const blogData = {
         endDate: "2025-09-29T00:00:00.000Z",
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0004",
         enrolledStudents: [],
@@ -531,7 +531,7 @@ const blogData = {
         endDate: "2025-10-20T00:00:00.000Z",
         image: {
           public_id: "placeholder1",
-          url: "/images/placeholders/1.svg",
+          url: "/images/placeholders/card-16x9.svg",
         },
         teacherId: "64fbc123456789abcdef0005",
         enrolledStudents: [],
@@ -544,7 +544,7 @@ const blogData = {
   category: "JEE",
   image: {
     public_id: "jee_blog_img456",
-    url: "/images/placeholders/1.svg",
+    url: "/images/placeholders/card-16x9.svg",
   },
   isPublished: true,
 };

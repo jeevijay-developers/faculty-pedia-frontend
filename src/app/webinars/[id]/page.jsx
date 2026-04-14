@@ -70,7 +70,7 @@ export default function WebinarDetailsPage({ params }) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
-          url={"/images/placeholders/1.svg"}
+          url={"/images/placeholders/card-16x9.svg"}
           title={"Webinar Details"}
           subtitle={"Unable to load webinar information"}
         />
@@ -106,7 +106,7 @@ export default function WebinarDetailsPage({ params }) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
         <Banner
-          url={"/images/placeholders/1.svg"}
+          url={"/images/placeholders/card-16x9.svg"}
           title={"Webinar Not Found"}
           subtitle={"The webinar you're looking for doesn't exist"}
         />

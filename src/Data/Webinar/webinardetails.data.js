@@ -12,7 +12,7 @@ const webinarDetails = {
   fees: 50,
   image: {
     public_id: "react_webinar_img789",
-    url: "/images/placeholders/1.svg",
+    url: "/images/placeholders/card-16x9.svg",
   },
   teacherId: "64fbc6d234a9ef1234567890",
   enrolledStudents: [

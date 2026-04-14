@@ -8,7 +8,7 @@ const sampleCourse = {
   ],
   image: {
     public_id: "course12345",
-    url: "/images/placeholders/1.svg",
+    url: "/images/placeholders/card-16x9.svg",
   },
   title: "jee-physics-basics",
   description: {

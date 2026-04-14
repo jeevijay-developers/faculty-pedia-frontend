@@ -74,7 +74,7 @@ const TestSeriesDetailPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Banner
-          url={"/images/placeholders/1.svg"}
+          url={"/images/placeholders/card-16x9.svg"}
           title={"Test Series Details"}
           subtitle={"Unable to load test series information"}
         />
@@ -110,7 +110,7 @@ const TestSeriesDetailPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Banner
-          url={"/images/placeholders/1.svg"}
+          url={"/images/placeholders/card-16x9.svg"}
           title={"Test Series Details"}
           subtitle={"Test series not found"}
         />
@@ -142,7 +142,7 @@ const TestSeriesDetailPage = () => {
       <div className="px-4 pt-4 sm:px-6 sm:pt-6">
         <div className="relative mx-auto w-full max-w-[1200px] aspect-[3/1] overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-900">
           <Image
-            src={testSeries.image || "/images/placeholders/1.svg"}
+            src={testSeries.image || "/images/placeholders/card-16x9.svg"}
             alt={testSeries.title || "Test Series"}
             fill
             className="object-cover"

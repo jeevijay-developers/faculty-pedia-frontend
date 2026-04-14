@@ -11,7 +11,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_1_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Complete foundation course for JEE Mathematics covering all essential topics.",
@@ -89,7 +89,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_2_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Complete NEET Biology preparation covering botany and zoology.",
@@ -168,7 +168,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_3_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Physics course tailored for engineering entrance exams.",
@@ -246,7 +246,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_4_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Complete chemistry preparation for NEET examinations.",
@@ -324,7 +324,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_5_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Complete English preparation for all competitive exams with grammar and comprehension.",
@@ -387,7 +387,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_6_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Master organic chemistry with advanced reaction mechanisms and problem-solving techniques for JEE Main and Advanced.",
@@ -450,7 +450,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_7_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Intensive physics preparation for NEET with focus on mechanics, thermodynamics, and modern physics.",
@@ -513,7 +513,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_8_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Comprehensive chemistry foundation for NEET covering physical, inorganic, and organic chemistry concepts.",
@@ -576,7 +576,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_9_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Advanced mathematics for JEE with calculus, coordinate geometry, and complex problem-solving strategies.",
@@ -639,7 +639,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_11_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Complete Class 10 CBSE Science covering physics, chemistry, and biology for board exam success.",
@@ -702,7 +702,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_12_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Comprehensive botany and zoology course for NEET with detailed diagrams and extensive practice questions.",
@@ -765,7 +765,7 @@ export const defaultCourses = [
     purchases: [],
     image: {
       public_id: "course_13_image",
-      url: "/images/placeholders/1.svg"
+      url: "/images/placeholders/card-16x9.svg"
     },
     description: {
       shortDesc: "Intensive problem-solving workshop for JEE physics with challenging numerical and conceptual questions.",

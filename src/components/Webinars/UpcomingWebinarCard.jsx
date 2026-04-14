@@ -67,7 +67,7 @@ const UpcomingWebinarCard = ({ item }) => {
   const resolvedImage =
     (typeof webinar?.image === "string" && webinar.image) ||
     (typeof webinar?.image?.url === "string" && webinar.image.url) ||
-    "/images/placeholders/1.svg";
+    "/images/placeholders/card-16x9.svg";
 
   const durationValue =
     webinar?.duration || webinar?.totalHours || webinar?.timeRange || null;
@@ -117,11 +117,12 @@ const UpcomingWebinarCard = ({ item }) => {
 
   return (
     <div className="group relative flex flex-col rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)] h-full overflow-hidden">
-      <div className="relative h-40 bg-gray-100 dark:bg-gray-800 rounded-xl mb-4">
+      <div className="relative aspect-video w-full bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden mb-4">
         <Image
           src={resolvedImage}
           alt={webinar?.title || "Webinar"}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover"
         />
         {webinar?.specialization && (

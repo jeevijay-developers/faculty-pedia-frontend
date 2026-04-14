@@ -12,7 +12,7 @@ import {
 import { getCourseById } from "../server/course.routes";
 import { getTestSeriesByCourse } from "../server/test-series.route";
 
-const DEFAULT_IMAGE = "/images/placeholders/1.svg";
+const DEFAULT_IMAGE = "/images/placeholders/card-16x9.svg";
 
 const isLikelyObjectId = (value) =>
   typeof value === "string" && /^[0-9a-fA-F]{24}$/.test(value.trim());

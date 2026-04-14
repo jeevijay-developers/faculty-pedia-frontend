@@ -53,7 +53,7 @@ const CoursesBySpecificEducator = ({ educatorId }) => {
     >
       <div className="flex items-center space-x-3">
         <Image
-          src={course.image?.url || "/images/placeholders/1.svg"}
+          src={course.image?.url || "/images/placeholders/card-16x9.svg"}
           alt={course.title}
           width={60}
           height={60}
