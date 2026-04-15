@@ -13,6 +13,7 @@ import {
   FaStar,
   FaStarHalfAlt,
 } from "react-icons/fa";
+import { FaPlay } from "react-icons/fa";
 import EnrollButton from "../Common/EnrollButton";
 import ShareButton from "@/components/Common/ShareButton";
 import { fetchEducatorById } from "@/components/server/webinars.routes";
@@ -56,6 +57,29 @@ const deriveEducatorName = (webinar) => {
 };
 
 const EDUCATOR_IMAGE_FALLBACK = "/images/placeholders/educatorFallback.svg";
+
+const getYouTubeEmbedUrl = (url) => {
+  if (!url) return null;
+  let videoId = null;
+  if (url.includes("youtu.be/")) {
+    videoId = url.split("youtu.be/")[1].split("?")[0];
+  } else if (url.includes("youtube.com/watch?v=")) {
+    videoId = url.split("v=")[1].split("&")[0];
+  } else if (url.includes("youtube.com/embed/")) {
+    return url;
+  }
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+};
+
+const getVimeoEmbedUrl = (url) => {
+  if (!url) return null;
+  if (url.includes("player.vimeo.com/video/")) return url;
+  const match = url.match(/vimeo\.com\/(?:video\/|manage\/videos\/)?([0-9]+)/);
+  const id = match?.[1];
+  return id ? `https://player.vimeo.com/video/${id}` : null;
+};
+
+const getIntroEmbedUrl = (url) => getYouTubeEmbedUrl(url) || getVimeoEmbedUrl(url);
 
 const pickImageUrl = (source) => {
   if (!source) return null;
@@ -128,6 +152,8 @@ const WebinarDetails = ({ webinar }) => {
   const [reviewStatus, setReviewStatus] = useState("");
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [showReviewSuccess, setShowReviewSuccess] = useState(false);
+  const [playIntro, setPlayIntro] = useState(false);
+  const introVideoEmbedUrl = getIntroEmbedUrl(webinar?.introVideo);
 
   useEffect(() => {
     const educatorIdString =
@@ -305,7 +331,7 @@ const WebinarDetails = ({ webinar }) => {
 
       {/* Hero */}
       <section className="relative w-full bg-slate-900" data-aos="fade-up">
-        <div className="relative w-full aspect-video max-h-[620px] overflow-hidden">
+        <div className="relative w-full aspect-video max-h-155 overflow-hidden">
           <Image
             src={imageUrl}
             alt={title}
@@ -315,7 +341,7 @@ const WebinarDetails = ({ webinar }) => {
             className="object-contain object-center"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
           <div className="absolute inset-x-0 bottom-0">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-5 sm:pb-8 lg:pb-12">
               <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -431,6 +457,51 @@ const WebinarDetails = ({ webinar }) => {
             </p>
           </section>
 
+          {/* Demo Video */}
+          {introVideoEmbedUrl && (
+            <section className="space-y-4" data-aos="fade-up">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+                Demo Video
+              </h2>
+              <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg bg-black">
+                {playIntro ? (
+                  <iframe
+                    src={`${introVideoEmbedUrl}${
+                      introVideoEmbedUrl.includes("?") ? "&" : "?"
+                    }autoplay=1`}
+                    title={`${title} - Demo`}
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setPlayIntro(true)}
+                    className="absolute inset-0 w-full h-full group"
+                    aria-label="Play demo video"
+                  >
+                    <Image
+                      src={imageUrl}
+                      alt={`${title} demo preview`}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 1024px) 100vw, 700px"
+                      className="object-cover"
+                    />
+                    <span className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
+                      <span className="bg-white/90 p-5 rounded-full shadow-2xl group-active:scale-90 transition-transform">
+                        <FaPlay className="text-blue-600 text-3xl ml-1" />
+                      </span>
+                    </span>
+                  </button>
+                )}
+              </div>
+            </section>
+          )}
+
           {/* Webinar Information Grid */}
           <section
             className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 sm:p-8"
@@ -477,7 +548,7 @@ const WebinarDetails = ({ webinar }) => {
               Meet Your Educator
             </h2>
             <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col sm:flex-row gap-6 items-center">
-              <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shrink-0 shadow-lg bg-gradient-to-br from-blue-500 to-indigo-600">
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden shrink-0 shadow-lg bg-linear-to-br from-blue-500 to-indigo-600">
                 <Image
                   src={educatorImage}
                   alt={educatorName}
@@ -702,7 +773,7 @@ const WebinarDetails = ({ webinar }) => {
               {fees > 0 ? `₹${fees}` : "Free"}
             </p>
           </div>
-          <div className="flex-1 max-w-[240px]">
+          <div className="flex-1 max-w-60">
             <EnrollButton
               type="webinar"
               itemId={webinar._id || webinar.id}
