@@ -17,6 +17,7 @@ const Login = ({
   signupLink = "/join-as-student",
   onLoginSuccess = null,
   allowEducatorFallback = true,
+  restrictToRole = null, // 'student' | 'educator' | null
 }) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -71,6 +72,23 @@ const Login = ({
 
       // Call login API
       const response = await loginUser(formData.email, formData.password, allowEducatorFallback);
+
+      // Block cross-role logins and show a helpful error
+      if (restrictToRole === "student" && response.userType === "educator") {
+        const educatorUrl =
+          process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL ||
+          "https://educator.facultypedia.com";
+        toast.error(
+          `This is the student portal. Your educator account should sign in at the educator dashboard.`
+        );
+        return;
+      }
+      if (restrictToRole === "educator" && response.userType === "student") {
+        toast.error(
+          "This is the educator portal. Your student account should sign in at the student login page."
+        );
+        return;
+      }
 
       // Store authentication token
       if (response.TOKEN) {
