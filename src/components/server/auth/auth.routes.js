@@ -112,7 +112,7 @@ export const verifyEmailCode = async (data) => {
 };
 
 // Generic login function that can handle both students and educators
-export const loginUser = async (email, password) => {
+export const loginUser = async (email, password, allowEducatorFallback = true) => {
   try {
     // First try to login as student
     try {
@@ -123,12 +123,13 @@ export const loginUser = async (email, password) => {
 
       return formatAuthResponse(studentResponse.data, "student");
     } catch (studentError) {
-      // If student login fails with 400/401 (invalid credentials), try educator login
+      // If student login fails, optionally try educator login
       const isAuthError =
         studentError.response?.status === 400 ||
-        studentError.response?.status === 401;
+        studentError.response?.status === 401 ||
+        studentError.response?.status === 403;
 
-      if (isAuthError) {
+      if (isAuthError && allowEducatorFallback) {
         try {
           const educatorResponse = await API_CLIENT.post("/api/auth/ed-login", {
             email,

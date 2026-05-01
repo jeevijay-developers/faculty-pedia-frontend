@@ -16,6 +16,7 @@ const Login = ({
   forgotPasswordLink = "/forgot-password",
   signupLink = "/join-as-student",
   onLoginSuccess = null,
+  allowEducatorFallback = true,
 }) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -69,7 +70,7 @@ const Login = ({
       }
 
       // Call login API
-      const response = await loginUser(formData.email, formData.password);
+      const response = await loginUser(formData.email, formData.password, allowEducatorFallback);
 
       // Store authentication token
       if (response.TOKEN) {
