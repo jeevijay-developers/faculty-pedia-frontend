@@ -299,7 +299,7 @@ const CourseDetails = ({ id }) => {
     return { id: null, name: "Instructor" };
   };
 
-  const { id: educatorId, name: educatorName } = resolveEducator();
+  const { id: resolvedEducatorId, name: educatorName } = resolveEducator();
 
   const enrolledCount = course.enrolledStudents?.length || 0;
   const maxStudents = course.maxStudents || 0;
@@ -859,9 +859,9 @@ const CourseDetails = ({ id }) => {
                       </div>
                     )}
                   </div>
-                  {educatorId && (
+                  {resolvedEducatorId && (
                     <button
-                      onClick={() => router.push(`/profile/educator/${educatorId}`)}
+                      onClick={() => router.push(`/profile/educator/${educator?.slug || resolvedEducatorId}`)}
                       className="ml-auto bg-[#0050cb]/5 p-2 rounded-full text-[#0050cb]"
                       aria-label="View instructor"
                     >
