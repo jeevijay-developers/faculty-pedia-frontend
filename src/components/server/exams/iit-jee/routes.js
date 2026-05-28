@@ -163,6 +163,17 @@ export const fetchTestSeriesById = async (id) => {
     throw error;
   }
 };
+
+// Fetch test series by slug
+export const fetchTestSeriesBySlug = async (slug) => {
+  try {
+    const response = await API_CLIENT.get(`/api/test-series/slug/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching test series by slug:", error);
+    throw error;
+  }
+};
 export const fetchIITJEEBlogs = async (specialization = "IIT-JEE") => {
   try {
     const response = await API_CLIENT.get(
@@ -230,6 +241,17 @@ export const fetchLiveClassById = async (id) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching live class:", error);
+    throw error;
+  }
+};
+
+// Fetch live class by slug
+export const fetchLiveClassBySlug = async (slug) => {
+  try {
+    const response = await API_CLIENT.get(`/api/live-classes/slug/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching live class by slug:", error);
     throw error;
   }
 };

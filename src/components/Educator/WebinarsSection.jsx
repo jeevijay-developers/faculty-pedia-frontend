@@ -187,13 +187,13 @@ const WebinarsSection = ({ webinars }) => {
 
                       <div className="mt-auto pt-4 flex gap-3">
                         <Link
-                          href={`/webinars/${webinar.id}/details`}
+                          href={`/webinars/${webinar.slug || webinar.id}/details`}
                           className="w-full px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 dark:bg-blue-900/20 transition-all duration-300 font-medium text-center text-sm"
                         >
                           View Details
                         </Link>
                         <Link
-                          href={`/webinars/${webinar.id}`}
+                          href={`/webinars/${webinar.slug || webinar.id}`}
                           className="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 font-medium hover:scale-105 text-sm"
                         >
                           {webinar.isLive ? (

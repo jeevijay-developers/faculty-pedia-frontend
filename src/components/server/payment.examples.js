@@ -109,7 +109,7 @@ export const TestSeriesPurchaseButton = ({ testSeries, currentStudent }) => {
       (result) => {
         setLoading(false);
         alert("Enrolled in test series successfully!");
-        window.location.href = `/test-series/${testSeries._id}`;
+        window.location.href = `/test-series/${testSeries.slug || testSeries._id}`;
       },
       (error) => {
         setLoading(false);
@@ -153,7 +153,7 @@ export const WebinarRegistrationButton = ({ webinar, currentStudent }) => {
       (result) => {
         setLoading(false);
         alert("Registered for webinar successfully!");
-        window.location.href = `/webinars/${webinar._id}`;
+        window.location.href = `/webinars/${webinar.slug || webinar._id}`;
       },
       (error) => {
         setLoading(false);

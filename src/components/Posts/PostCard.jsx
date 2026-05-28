@@ -162,7 +162,7 @@ const PostCard = ({ post, activeSpecialization }) => {
             <div className="flex flex-col">
               {educator?._id ? (
                 <Link
-                  href={`/profile/educator/${educator._id}`}
+                  href={`/profile/educator/${educator.slug || educator._id}`}
                   className="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -256,7 +256,7 @@ const PostCard = ({ post, activeSpecialization }) => {
                       </span>
                       {educator?._id ? (
                         <Link
-                          href={`/profile/educator/${educator._id}`}
+                          href={`/profile/educator/${educator.slug || educator._id}`}
                           className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-blue-600 transition-colors"
                         >
                           {educator?.fullName || "Educator"}

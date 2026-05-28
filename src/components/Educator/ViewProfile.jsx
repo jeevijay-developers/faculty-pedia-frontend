@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/query-keys";
+import { EducatorStatsGrid } from "./EducatorStatsGrid";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import Image from "next/image";
@@ -18,11 +21,8 @@ import {
   FaGraduationCap,
 } from "react-icons/fa";
 import {
-  BookOpen,
   Video,
-  TestTube,
   Calendar,
-  FileQuestion,
   Briefcase,
   ChevronLeft,
   ChevronRight,
@@ -49,7 +49,7 @@ import {
   createItemReview,
   getEducatorItemReviews,
 } from "@/components/server/reviews.routes";
-import Player from "@vimeo/player";
+import VimeoPlayer from "@/components/Common/VimeoPlayer";
 import {
   followEducator,
   unfollowEducator,
@@ -170,10 +170,6 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [educatorData?.image]);
 
-  // Vimeo player refs
-  const vimeoContainerRef = useRef(null);
-  const vimeoIframeRef = useRef(null);
-  const vimeoPlayerRef = useRef(null);
   const reviewCarouselRef = useRef(null);
 
   const payPerHourFeeValue = safeNumber(educatorData?.payPerHourFee, 0);
@@ -248,17 +244,66 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
   const [itemReviewText, setItemReviewText] = useState("");
   const [isSubmittingItemReview, setIsSubmittingItemReview] = useState(false);
 
-  // State for webinar details
-  const [webinarDetails, setWebinarDetails] = useState([]);
-  const [loadingWebinars, setLoadingWebinars] = useState(false);
+  // ─── Secondary data queries ────────────────────────────────────────────────
 
-  // State for course details
-  const [courseDetails, setCourseDetails] = useState([]);
-  const [loadingCourses, setLoadingCourses] = useState(false);
+  const webinarIds = useMemo(
+    () =>
+      (educatorData?.webinars ?? [])
+        .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
+        .filter((id) => id && typeof id === "string" && id.trim()),
+    [educatorData?.webinars]
+  );
 
-  // State for test series details
-  const [testSeriesDetails, setTestSeriesDetails] = useState([]);
-  const [loadingTestSeries, setLoadingTestSeries] = useState(false);
+  const { data: webinarDetails = [], isLoading: loadingWebinars } = useQuery({
+    queryKey: queryKeys.webinars.byEducator(educatorData?._id ?? ""),
+    queryFn: async () => {
+      const responses = await Promise.all(
+        webinarIds.map((id) => getWebinarById(id).catch(() => null))
+      );
+      return responses
+        .map((r) => normalizeWebinarPayload(r))
+        .filter((w) => w && (w._id || w.id));
+    },
+    enabled: webinarIds.length > 0,
+  });
+
+  const courseIds = useMemo(
+    () =>
+      (educatorData?.courses ?? [])
+        .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
+        .filter((id) => id && typeof id === "string" && id.trim()),
+    [educatorData?.courses]
+  );
+
+  const { data: courseDetails = [], isLoading: loadingCourses } = useQuery({
+    queryKey: queryKeys.courses.byEducator(educatorData?._id ?? ""),
+    queryFn: async () => {
+      const results = await Promise.all(
+        courseIds.map((id) => getCourseById(id).catch(() => null))
+      );
+      return results.filter(Boolean);
+    },
+    enabled: courseIds.length > 0,
+  });
+
+  const testSeriesIds = useMemo(
+    () =>
+      (educatorData?.testSeries ?? [])
+        .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
+        .filter((id) => id && typeof id === "string" && id.trim()),
+    [educatorData?.testSeries]
+  );
+
+  const { data: testSeriesDetails = [], isLoading: loadingTestSeries } = useQuery({
+    queryKey: queryKeys.testSeries.byEducator(educatorData?._id ?? ""),
+    queryFn: async () => {
+      const results = await Promise.all(
+        testSeriesIds.map((id) => getTestSeriesById(id).catch(() => null))
+      );
+      return results.filter(Boolean);
+    },
+    enabled: testSeriesIds.length > 0,
+  });
 
   const reviewableItems = useMemo(() => {
     const items = [];
@@ -303,12 +348,42 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [currentUser, setCurrentUser] = useState(() => getUserData());
   const educatorId = educatorData?._id;
-  const [summaryCounts, setSummaryCounts] = useState({
-    courses: 0,
-    webinars: 0,
-    testSeries: 0,
+  const { data: summaryCounts = { courses: 0, webinars: 0, testSeries: 0 }, isLoading: isLoadingSummary } = useQuery({
+    queryKey: ["educators", educatorId ?? "", "summary"],
+    queryFn: async () => {
+      const [coursesRes, webinarsRes, testSeriesRes] = await Promise.all([
+        getCoursesByEducator(educatorId, { page: 1, limit: 1 }),
+        getWebinarsByEducator(educatorId, { page: 1, limit: 1 }),
+        getTestSeriesByEducator(educatorId, { page: 1, limit: 1 }),
+      ]);
+      return {
+        courses:
+          coursesRes?.pagination?.totalCourses ??
+          coursesRes?.pagination?.total ??
+          coursesRes?.totalCourses ??
+          coursesRes?.courses?.length ??
+          0,
+        webinars:
+          webinarsRes?.data?.pagination?.totalWebinars ??
+          webinarsRes?.pagination?.totalWebinars ??
+          webinarsRes?.totalWebinars ??
+          webinarsRes?.data?.webinars?.length ??
+          0,
+        testSeries:
+          testSeriesRes?.pagination?.totalTestSeries ??
+          testSeriesRes?.pagination?.total ??
+          testSeriesRes?.totalTestSeries ??
+          testSeriesRes?.testSeries?.length ??
+          0,
+      };
+    },
+    enabled: !!educatorId,
+    placeholderData: {
+      courses: courseDetails.length,
+      webinars: webinarDetails.length,
+      testSeries: testSeriesDetails.length,
+    },
   });
-  const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const postCount = safeNumber(
     educatorData?.posts?.length ?? educatorData?.postCount,
     0
@@ -389,181 +464,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
     }
   }, [educatorData?._id]);
 
-  // Fetch webinar details when component mounts or educatorData changes
-  useEffect(() => {
-    const fetchWebinarDetails = async () => {
-      if (educatorData?.webinars && educatorData.webinars.length > 0) {
-        setLoadingWebinars(true);
-        try {
-          const validIds = educatorData.webinars
-            .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
-            .filter((id) => id && typeof id === "string" && id.trim().length > 0);
 
-          const webinarPromises = validIds.map((webinarId) =>
-            getWebinarById(webinarId).catch((err) => {
-              console.warn(
-                `Failed to fetch webinar ${webinarId}:`,
-                err.message
-              );
-              return null;
-            })
-          );
-          const webinarResponses = await Promise.all(webinarPromises);
-          const webinars = webinarResponses
-            .map((response) => normalizeWebinarPayload(response))
-            .filter(
-              (webinar) =>
-                webinar && typeof webinar === "object" && (webinar._id || webinar.id)
-            );
-
-          setWebinarDetails(webinars);
-        } catch (error) {
-          console.error("Error fetching webinar details:", error);
-          setWebinarDetails([]);
-        } finally {
-          setLoadingWebinars(false);
-        }
-      }
-    };
-
-    fetchWebinarDetails();
-  }, [educatorData?.webinars]);
-
-  // Fetch course details when component mounts or educatorData changes
-  useEffect(() => {
-    const fetchCourseDetails = async () => {
-      if (educatorData?.courses && educatorData.courses.length > 0) {
-        setLoadingCourses(true);
-        try {
-          const validIds = educatorData.courses
-            .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
-            .filter((id) => id && typeof id === "string" && id.trim().length > 0);
-
-          const coursePromises = validIds.map((courseId) =>
-            getCourseById(courseId).catch((err) => {
-              console.warn(`Failed to fetch course ${courseId}:`, err.message);
-              return null;
-            })
-          );
-          const courses = await Promise.all(coursePromises);
-          setCourseDetails(courses.filter((course) => course)); // Filter out any null/undefined results
-        } catch (error) {
-          console.error("Error fetching course details:", error);
-          setCourseDetails([]);
-        } finally {
-          setLoadingCourses(false);
-        }
-      }
-    };
-
-    fetchCourseDetails();
-  }, [educatorData?.courses]);
-
-  // Fetch test series details when component mounts or educatorData changes
-  useEffect(() => {
-    const fetchTestSeriesDetails = async () => {
-      if (educatorData?.testSeries && educatorData.testSeries.length > 0) {
-        setLoadingTestSeries(true);
-        try {
-          const validIds = educatorData.testSeries
-            .map((item) => (typeof item === "string" ? item : item?._id || item?.id))
-            .filter((id) => id && typeof id === "string" && id.trim().length > 0);
-
-          const testSeriesPromises = validIds.map((testSeriesId) =>
-            getTestSeriesById(testSeriesId).catch((err) => {
-              console.warn(
-                `Failed to fetch test series ${testSeriesId}:`,
-                err.message
-              );
-              return null;
-            })
-          );
-          const testSeriesList = await Promise.all(testSeriesPromises);
-          setTestSeriesDetails(
-            testSeriesList.filter((testSeries) => testSeries)
-          ); // Filter out any null/undefined results
-        } catch (error) {
-          console.error("Error fetching test series details:", error);
-          setTestSeriesDetails([]);
-        } finally {
-          setLoadingTestSeries(false);
-        }
-      }
-    };
-
-    fetchTestSeriesDetails();
-  }, [educatorData?.testSeries]);
-
-  // Fetch summary counts (courses, webinars, test series) by educator ID
-  useEffect(() => {
-    if (!educatorId) return;
-
-    let isMounted = true;
-
-    const loadSummaryCounts = async () => {
-      setIsLoadingSummary(true);
-      try {
-        const [coursesRes, webinarsRes, testSeriesRes] = await Promise.all([
-          getCoursesByEducator(educatorId, { page: 1, limit: 1 }),
-          getWebinarsByEducator(educatorId, { page: 1, limit: 1 }),
-          getTestSeriesByEducator(educatorId, { page: 1, limit: 1 }),
-        ]);
-
-        const totalCourses =
-          coursesRes?.pagination?.totalCourses ??
-          coursesRes?.pagination?.total ??
-          coursesRes?.totalCourses ??
-          coursesRes?.courses?.length ??
-          0;
-
-        const totalWebinars =
-          webinarsRes?.data?.pagination?.totalWebinars ??
-          webinarsRes?.pagination?.totalWebinars ??
-          webinarsRes?.totalWebinars ??
-          webinarsRes?.data?.webinars?.length ??
-          0;
-
-        const totalTestSeries =
-          testSeriesRes?.pagination?.totalTestSeries ??
-          testSeriesRes?.pagination?.total ??
-          testSeriesRes?.totalTestSeries ??
-          testSeriesRes?.testSeries?.length ??
-          0;
-
-        if (isMounted) {
-          setSummaryCounts({
-            courses: totalCourses,
-            webinars: totalWebinars,
-            testSeries: totalTestSeries,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching educator summary counts:", error);
-        if (isMounted) {
-          setSummaryCounts({
-            courses: courseDetails?.length || 0,
-            webinars: webinarDetails?.length || 0,
-            testSeries: testSeriesDetails?.length || 0,
-          });
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoadingSummary(false);
-        }
-      }
-    };
-
-    loadSummaryCounts();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [
-    educatorId,
-    courseDetails?.length,
-    webinarDetails?.length,
-    testSeriesDetails?.length,
-  ]);
 
   // Fetch item reviews for this educator (courses, webinars, test series)
   useEffect(() => {
@@ -617,7 +518,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
   // Follow functionality
   const handleFollowToggle = async () => {
     if (!currentUser) {
-      toast.error("Please login as a student to follow educators");
+      router.push("/login");
       return;
     }
 
@@ -838,59 +739,6 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
     return () => window.clearInterval(id);
   }, [itemReviews]);
 
-  // Initialize Vimeo intro video player when introVideoLink changes
-  useEffect(() => {
-    const link = educatorData?.introVideoLink;
-    const container = vimeoContainerRef.current;
-
-    if (!link || !container) return;
-
-    const videoId = extractVimeoId(link);
-    if (!videoId) return;
-
-    if (!vimeoIframeRef.current) {
-      const iframe = document.createElement("iframe");
-      iframe.allow = "autoplay; fullscreen; picture-in-picture";
-      iframe.allowFullscreen = true;
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.style.border = "0";
-      container.innerHTML = "";
-      container.appendChild(iframe);
-      vimeoIframeRef.current = iframe;
-    }
-
-    if (!vimeoPlayerRef.current) {
-      vimeoPlayerRef.current = new Player(vimeoIframeRef.current, {
-        id: videoId,
-        autopause: false,
-        muted: false,
-      });
-    } else {
-      vimeoPlayerRef.current.loadVideo(videoId).catch(() => {});
-    }
-
-    const playerInstance = vimeoPlayerRef.current;
-
-    playerInstance.on("play", handlePlay);
-
-    return () => {
-      playerInstance.off("play", handlePlay);
-    };
-  }, [educatorData?.introVideoLink]);
-
-  // Cleanup on unmount
-  useEffect(
-    () => () => {
-      if (vimeoPlayerRef.current) {
-        vimeoPlayerRef.current.unload().catch(() => {});
-        vimeoPlayerRef.current = null;
-      }
-      vimeoIframeRef.current = null;
-    },
-    []
-  );
-
   return (
     <div className="w-full min-h-screen bg-[#f6f6f8] dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
@@ -956,7 +804,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                 <div className="mt-6 w-full flex flex-col gap-3">
                   <button
                     onClick={handleFollowToggle}
-                    disabled={isLoadingFollow || !currentUser}
+                    disabled={isLoadingFollow}
                     className={`w-full text-white text-sm font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
                       isFollowing
                         ? "bg-green-600 hover:bg-green-700 shadow-green-200"
@@ -1221,20 +1069,15 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
           <div className="lg:col-span-8 flex flex-col gap-6">
             {/* Intro Media Section */}
             <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-              <div className="relative w-full aspect-video bg-linear-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
+              <div className="relative w-full bg-linear-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
                 {educatorData.introVideoLink &&
                 extractVimeoId(educatorData.introVideoLink) ? (
-                  <iframe
-                    src={`${educatorData.introVideoLink}?title=0&byline=0&portrait=0`}
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0"
+                  <VimeoPlayer
+                    url={educatorData.introVideoLink}
+                    title={`${educatorDisplayName} – intro video`}
                   />
                 ) : (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
+                  <div className="aspect-video relative flex flex-col items-center justify-center px-6">
                     <div className="w-20 h-20 bg-[#231fe5]/10 rounded-full flex items-center justify-center shadow-sm mb-6 border border-[#231fe5]/20">
                       <Video className="w-10 h-10 text-[#231fe5]" />
                     </div>
@@ -1254,88 +1097,15 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
             </div>
 
             {/* Teaching Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button
-                type="button"
-                onClick={() => router.push(`/courses?educator=${educatorId}`)}
-                className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
-              >
-                <div className="w-10 h-10 rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-600 flex items-center justify-center mb-1">
-                  <BookOpen className="w-5 h-5" />
-                </div>
-                <p className="text-2xl font-bold text-[#111118] dark:text-gray-100">
-                  {isLoadingSummary
-                    ? "..."
-                    : safeNumber(
-                        summaryCounts.courses ?? courseDetails?.length,
-                        0,
-                      )}
-                </p>
-                <p className="text-xs text-[#636388] dark:text-gray-400 font-medium uppercase tracking-wide">
-                  Courses
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  router.push(`/test-series?educator=${educatorId}`)
-                }
-                className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
-              >
-                <div className="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 flex items-center justify-center mb-1">
-                  <TestTube className="w-5 h-5" />
-                </div>
-                <p className="text-2xl font-bold text-[#111118] dark:text-gray-100">
-                  {isLoadingSummary
-                    ? "..."
-                    : safeNumber(
-                        summaryCounts.testSeries ?? testSeriesDetails?.length,
-                        0,
-                      )}
-                </p>
-                <p className="text-xs text-[#636388] dark:text-gray-400 font-medium uppercase tracking-wide">
-                  Test Series
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => router.push(`/webinars?educator=${educatorId}`)}
-                className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
-              >
-                <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 flex items-center justify-center mb-1">
-                  <Calendar className="w-5 h-5" />
-                </div>
-                <p className="text-2xl font-bold text-[#111118] dark:text-gray-100">
-                  {isLoadingSummary
-                    ? "..."
-                    : safeNumber(
-                        summaryCounts.webinars ?? webinarDetails?.length,
-                        0,
-                      )}
-                </p>
-                <p className="text-xs text-[#636388] dark:text-gray-400 font-medium uppercase tracking-wide">
-                  Webinars
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => router.push(`/posts?educator=${educatorId}`)}
-                className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50"
-              >
-                <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center mb-1">
-                  <FileQuestion className="w-5 h-5" />
-                </div>
-                <p className="text-2xl font-bold text-[#111118] dark:text-gray-100">
-                  {safeNumber(postCount, 0).toLocaleString()}
-                </p>
-                <p className="text-xs text-[#636388] dark:text-gray-400 font-medium uppercase tracking-wide">
-                  Posts
-                </p>
-              </button>
-            </div>
+            <EducatorStatsGrid
+              educatorId={educatorId}
+              isLoadingSummary={isLoadingSummary}
+              summaryCounts={summaryCounts}
+              courseDetails={courseDetails}
+              webinarDetails={webinarDetails}
+              testSeriesDetails={testSeriesDetails}
+              postCount={postCount}
+            />
 
             {/* Experience & Qualifications Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1640,7 +1410,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                               webinar.timing || webinar.date || webinar.startDate || null,
                             duration: webinar.duration,
                             fees: safeNumber(webinar.fees ?? webinar.fee, 0),
-                            detailsLink: `/webinars/${webinar._id}`,
+                            detailsLink: `/webinars/${webinar.slug || webinar._id}`,
                             image:
                               webinar.image?.url ||
                               webinar.image ||

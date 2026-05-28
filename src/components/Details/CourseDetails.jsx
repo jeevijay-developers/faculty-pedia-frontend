@@ -1,5 +1,10 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/query-keys";
+import { useAuth } from "@/context/AuthContext";
+import { getYouTubeEmbedUrl, getVimeoEmbedUrl, resolveAssetUrl } from "@/lib/media";
+import { formatDate } from "@/utils/dateFormatter";
 import { useRouter } from "next/navigation";
 import ClassCard from "./ClassCard";
 import { getTestSeriesByCourse } from "@/components/server/test-series.route";
@@ -33,6 +38,7 @@ import { getEducatorProfile } from "../server/educators.routes";
 import CourseLoader from "../others/courseLoader";
 import EnrollButton from "../Common/EnrollButton";
 import ShareButton from "@/components/Common/ShareButton";
+import VimeoPlayer from "@/components/Common/VimeoPlayer";
 import { createItemReview } from "../server/reviews.routes";
 
 const CourseDetails = ({ id }) => {
@@ -45,40 +51,55 @@ const CourseDetails = ({ id }) => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const coursePanelRef = useRef(null);
 
-  const getYouTubeEmbedUrl = (url) => {
-    if (!url) return null;
-    let videoId = null;
-    if (url.includes("youtu.be/")) {
-      videoId = url.split("youtu.be/")[1].split("?")[0];
-    } else if (url.includes("youtube.com/watch?v=")) {
-      videoId = url.split("v=")[1].split("&")[0];
-    } else if (url.includes("youtube.com/embed/")) {
-      return url;
-    }
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-  };
+  const getIntroEmbedUrl = (url) => getYouTubeEmbedUrl(url) ?? getVimeoEmbedUrl(url);
 
-  const getVimeoEmbedUrl = (url) => {
-    if (!url) return null;
-    if (url.includes("player.vimeo.com/video/")) return url;
-    const match = url.match(/vimeo\.com\/(?:video\/|manage\/videos\/)?([0-9]+)/);
-    const id = match?.[1];
-    return id ? `https://player.vimeo.com/video/${id}` : null;
-  };
+  // ─── Auth ──────────────────────────────────────────────────────────────────
+  const { studentId } = useAuth();
 
-  const getIntroEmbedUrl = (url) => {
-    const yt = getYouTubeEmbedUrl(url);
-    if (yt) return yt;
-    return getVimeoEmbedUrl(url);
-  };
+  // ─── Course query ───────────────────────────────────────────────────────────
+  const {
+    data: course = null,
+    isLoading: loading,
+    error: courseError,
+  } = useQuery({
+    queryKey: queryKeys.courses.byId(id),
+    queryFn: () => getCourseById(id),
+    enabled: !!id,
+  });
+  const error = courseError?.message ?? null;
 
-  const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [studentId, setStudentId] = useState(null);
-  const [courseTests, setCourseTests] = useState([]);
-  const [testsLoading, setTestsLoading] = useState(false);
-  const [educator, setEducator] = useState(null);
+  // ─── Educator query (depends on course) ────────────────────────────────────
+  const rawEducatorId = course?.educatorID;
+  const educatorId =
+    rawEducatorId && typeof rawEducatorId === "object"
+      ? rawEducatorId._id
+      : rawEducatorId ?? null;
+
+  const { data: educator = null } = useQuery({
+    queryKey: queryKeys.educators.byId(educatorId ?? ""),
+    queryFn: async () => {
+      const res = await getEducatorProfile(educatorId);
+      return res?.data?.educator || res?.educator || res;
+    },
+    enabled: !!educatorId,
+  });
+
+  // ─── Test series query (depends on course) ─────────────────────────────────
+  const courseId = course?._id || course?.id || id;
+  const initialTestSeries = Array.isArray(course?.testSeries)
+    ? course.testSeries
+    : [];
+
+  const { data: courseTests = [], isLoading: testsLoading } = useQuery({
+    queryKey: queryKeys.testSeries.byCourse(courseId),
+    queryFn: async () => {
+      const res = await getTestSeriesByCourse(courseId);
+      const list = res?.testSeries || res?.data?.testSeries || res || [];
+      return Array.isArray(list) ? list : [];
+    },
+    enabled: !!courseId && initialTestSeries.length === 0,
+    initialData: initialTestSeries.length > 0 ? initialTestSeries : undefined,
+  });
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
   const [reviewStatus, setReviewStatus] = useState("");
@@ -86,43 +107,6 @@ const CourseDetails = ({ id }) => {
   const [showReviewSuccess, setShowReviewSuccess] = useState(false);
   const [playIntro, setPlayIntro] = useState(false);
 
-  const resolveAssetUrl = (asset) => {
-    if (!asset) return null;
-    const direct =
-      asset.link || asset.url || asset.secure_url || asset.path || asset.fileUrl;
-    if (direct) return direct;
-
-    const publicId = asset.publicId || asset.public_id;
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    if (publicId && cloudName) {
-      const resourceType =
-        (asset.resourceType || asset.resource_type || "raw").toLowerCase();
-      const resTypePath = ["raw", "image", "video"].includes(resourceType)
-        ? resourceType
-        : "raw";
-      const hasExtension = publicId.includes(".");
-      const normalizedType = (asset.fileType || "pdf").toString().toLowerCase();
-      const typeToExt = {
-        pdf: "pdf",
-        doc: "doc",
-        docx: "docx",
-        ppt: "ppt",
-        pptx: "pptx",
-        excel: "xlsx",
-        xls: "xls",
-        xlsx: "xlsx",
-      };
-      const extension = hasExtension
-        ? ""
-        : `.${typeToExt[normalizedType] || normalizedType}`;
-      const normalizedId = publicId.startsWith("/")
-        ? publicId.slice(1)
-        : publicId;
-      return `https://res.cloudinary.com/${cloudName}/${resTypePath}/upload/${normalizedId}${extension}`;
-    }
-
-    return null;
-  };
 
   const groupedVideos = useMemo(() => {
     const groups = {};
@@ -146,53 +130,6 @@ const CourseDetails = ({ id }) => {
     [courseTests]
   );
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const raw = localStorage.getItem("faculty-pedia-student-data");
-        const parsed = raw ? JSON.parse(raw) : {};
-        const idFromStorage = parsed?._id || parsed?.id;
-        setStudentId(idFromStorage || null);
-      } catch (err) {
-        console.error("Error parsing student data from storage", err);
-      }
-    }
-
-    setLoading(true);
-    setError(null);
-
-    const fetchCourseDetails = async () => {
-      try {
-        const data = await getCourseById(id);
-
-        if (data) {
-          setCourse(data);
-
-          if (data.educatorID) {
-            try {
-              const educatorId = typeof data.educatorID === 'object' ? data.educatorID._id : data.educatorID;
-              const educatorResponse = await getEducatorProfile(educatorId);
-              const educatorData = educatorResponse?.data?.educator || educatorResponse?.educator || educatorResponse;
-              setEducator(educatorData);
-            } catch (educatorError) {
-              console.error("Error fetching educator:", educatorError);
-            }
-          }
-        } else {
-          setError("Course not found");
-        }
-      } catch (error) {
-        console.error("Error fetching course:", error);
-        setError(error.message || "Failed to load course details");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchCourseDetails();
-    }
-  }, [id]);
 
   useEffect(() => {
     if (!course || !studentId) {
@@ -242,43 +179,6 @@ const CourseDetails = ({ id }) => {
     }
   }, [activeTab, hasTestSeries]);
 
-  useEffect(() => {
-    const courseId = course?._id || course?.id || id;
-    if (!courseId) return;
-
-    const initialSeries = Array.isArray(course?.testSeries)
-      ? course.testSeries
-      : [];
-
-    if (initialSeries.length > 0) {
-      setCourseTests(initialSeries);
-      return;
-    }
-
-    let cancelled = false;
-    const fetchCourseTests = async () => {
-      setTestsLoading(true);
-      try {
-        const response = await getTestSeriesByCourse(courseId);
-        const list =
-          response?.testSeries || response?.data?.testSeries || response || [];
-        if (!cancelled) {
-          setCourseTests(Array.isArray(list) ? list : []);
-        }
-      } catch (err) {
-        console.error("Error fetching course test series:", err);
-        if (!cancelled) setCourseTests([]);
-      } finally {
-        if (!cancelled) setTestsLoading(false);
-      }
-    };
-
-    fetchCourseTests();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [course?.testSeries, course?._id, course?.id, id]);
 
   const assets = useMemo(() => {
     if (
@@ -408,11 +308,6 @@ const CourseDetails = ({ id }) => {
   const heroImage =
     course.image || course.courseThumbnail || "/images/placeholders/card-16x9.svg";
 
-  const formatDate = (d) => {
-    try {
-      return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-    } catch { return "N/A"; }
-  };
 
   const ratingValue = Number(course.rating || course.averageRating || 0);
   const ratingCount = course.reviewsCount || course.totalReviews || (Array.isArray(course.reviews) ? course.reviews.length : 0);
@@ -649,36 +544,45 @@ const CourseDetails = ({ id }) => {
                 {course.introVideo && (
                   <section className="space-y-4">
                     <h3 className="text-lg font-bold">Course Introduction</h3>
-                    <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg group cursor-pointer bg-black">
-                      {playIntro ? (
-                        <iframe
-                          src={getIntroEmbedUrl(course.introVideo)}
-                          title="Course Introduction"
-                          className="w-full h-full"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setPlayIntro(true)}
-                          className="absolute inset-0 w-full h-full"
-                        >
-                          <img
-                            alt="Course intro"
-                            className="w-full h-full object-cover"
-                            src={heroImage}
+                    {getVimeoEmbedUrl(course.introVideo) ? (
+                      <VimeoPlayer
+                        url={course.introVideo}
+                        poster={heroImage}
+                        title="Course Introduction"
+                        className="rounded-2xl shadow-lg"
+                      />
+                    ) : (
+                      <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg group cursor-pointer bg-black">
+                        {playIntro ? (
+                          <iframe
+                            src={getIntroEmbedUrl(course.introVideo)}
+                            title="Course Introduction"
+                            className="w-full h-full"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
                           />
-                          <div className="absolute inset-0 bg-slate-900/30 flex items-center justify-center">
-                            <div className="bg-white/90 p-5 rounded-full shadow-2xl active:scale-90 transition-transform">
-                              <FaPlay className="text-[#0050cb] text-3xl ml-1" />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setPlayIntro(true)}
+                            className="absolute inset-0 w-full h-full"
+                          >
+                            <img
+                              alt="Course intro"
+                              className="w-full h-full object-cover"
+                              src={heroImage}
+                            />
+                            <div className="absolute inset-0 bg-slate-900/30 flex items-center justify-center">
+                              <div className="bg-white/90 p-5 rounded-full shadow-2xl active:scale-90 transition-transform">
+                                <FaPlay className="text-[#0050cb] text-3xl ml-1" />
+                              </div>
                             </div>
-                          </div>
-                        </button>
-                      )}
-                    </div>
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </section>
                 )}
 

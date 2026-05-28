@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { isAuthenticated } from "@/utils/auth";
 import { toast } from "react-hot-toast";
 import { createPaymentOrder, verifyPayment } from "../server/payment.routes";
+import { useAuth } from "@/context/AuthContext";
 
 /**
  * Authentication-aware enrollment button component
@@ -24,6 +24,7 @@ const EnrollButton = ({
   initialEnrolled = false,
 }) => {
   const router = useRouter();
+  const { isLoggedIn, studentId: authStudentId, userData: authUserData } = useAuth();
   const [isEnrolling, setIsEnrolling] = useState(false);
   const [hasEnrolled, setHasEnrolled] = useState(false);
 
@@ -71,26 +72,15 @@ const EnrollButton = ({
 
   const handleEnrollment = async () => {
     // Check if user is authenticated
-    if (!isAuthenticated()) {
+    if (!isLoggedIn) {
       toast.error("Please login to enroll in this course");
-      // Redirect to login with return URL
       const currentUrl = window.location.pathname + window.location.search;
       router.push(`/login?redirect=${encodeURIComponent(currentUrl)}`);
       return;
     }
 
-    // Get student ID from localStorage if not provided
-    let actualStudentId = studentId;
-    if (!actualStudentId) {
-      try {
-        const userData = JSON.parse(
-          localStorage.getItem("faculty-pedia-student-data") || "{}"
-        );
-        actualStudentId = userData._id || userData.id;
-      } catch (error) {
-        console.error("Error parsing student data:", error);
-      }
-    }
+    // Resolve student ID: prefer prop, fall back to AuthContext
+    let actualStudentId = studentId ?? authStudentId;
 
     if (!actualStudentId) {
       toast.error("Student information not found. Please login again.");
@@ -181,15 +171,7 @@ const EnrollButton = ({
         throw new Error("Invalid payment order response");
       }
 
-      const userData = (() => {
-        try {
-          return JSON.parse(
-            localStorage.getItem("faculty-pedia-student-data") || "{}"
-          );
-        } catch (err) {
-          return {};
-        }
-      })();
+      const userData = authUserData ?? {};
 
       const options = {
         key: orderData.razorpayKey,

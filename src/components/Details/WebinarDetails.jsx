@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { getYouTubeEmbedUrl, getVimeoEmbedUrl, pickImageUrl } from "@/lib/media";
+import { formatDate } from "@/utils/dateFormatter";
+import VimeoPlayer from "@/components/Common/VimeoPlayer";
 import Image from "next/image";
 import {
   FaClock,
@@ -58,38 +61,8 @@ const deriveEducatorName = (webinar) => {
 
 const EDUCATOR_IMAGE_FALLBACK = "/images/placeholders/educatorFallback.svg";
 
-const getYouTubeEmbedUrl = (url) => {
-  if (!url) return null;
-  let videoId = null;
-  if (url.includes("youtu.be/")) {
-    videoId = url.split("youtu.be/")[1].split("?")[0];
-  } else if (url.includes("youtube.com/watch?v=")) {
-    videoId = url.split("v=")[1].split("&")[0];
-  } else if (url.includes("youtube.com/embed/")) {
-    return url;
-  }
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-};
 
-const getVimeoEmbedUrl = (url) => {
-  if (!url) return null;
-  if (url.includes("player.vimeo.com/video/")) return url;
-  const match = url.match(/vimeo\.com\/(?:video\/|manage\/videos\/)?([0-9]+)/);
-  const id = match?.[1];
-  return id ? `https://player.vimeo.com/video/${id}` : null;
-};
-
-const getIntroEmbedUrl = (url) => getYouTubeEmbedUrl(url) || getVimeoEmbedUrl(url);
-
-const pickImageUrl = (source) => {
-  if (!source) return null;
-  if (typeof source === "string" && source.trim()) return source.trim();
-  if (typeof source === "object") {
-    const candidate = source.url || source.secure_url || source.src;
-    if (typeof candidate === "string" && candidate.trim()) return candidate.trim();
-  }
-  return null;
-};
+const getIntroEmbedUrl = (url) => getYouTubeEmbedUrl(url) ?? getVimeoEmbedUrl(url);
 
 const deriveEducatorImage = (webinar) => {
   const educatorObject =
@@ -336,7 +309,7 @@ const WebinarDetails = ({ webinar }) => {
             src={imageUrl}
             alt={title}
             fill
-            unoptimized
+
             sizes="100vw"
             className="object-contain object-center"
             priority
@@ -366,7 +339,7 @@ const WebinarDetails = ({ webinar }) => {
                       src={educatorImage}
                       alt={educatorName}
                       fill
-                      unoptimized
+          
                       sizes="44px"
                       className="object-cover"
                     />
@@ -463,42 +436,51 @@ const WebinarDetails = ({ webinar }) => {
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
                 Demo Video
               </h2>
-              <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg bg-black">
-                {playIntro ? (
-                  <iframe
-                    src={`${introVideoEmbedUrl}${
-                      introVideoEmbedUrl.includes("?") ? "&" : "?"
-                    }autoplay=1`}
-                    title={`${title} - Demo`}
-                    className="w-full h-full"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setPlayIntro(true)}
-                    className="absolute inset-0 w-full h-full group"
-                    aria-label="Play demo video"
-                  >
-                    <Image
-                      src={imageUrl}
-                      alt={`${title} demo preview`}
-                      fill
-                      unoptimized
-                      sizes="(max-width: 1024px) 100vw, 700px"
-                      className="object-cover"
+              {introVideoEmbedUrl.includes("vimeo") ? (
+                <VimeoPlayer
+                  url={webinar?.introVideo}
+                  poster={imageUrl}
+                  title={`${title} – Demo`}
+                  className="rounded-2xl shadow-lg"
+                />
+              ) : (
+                <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg bg-black">
+                  {playIntro ? (
+                    <iframe
+                      src={`${introVideoEmbedUrl}${
+                        introVideoEmbedUrl.includes("?") ? "&" : "?"
+                      }autoplay=1`}
+                      title={`${title} - Demo`}
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
                     />
-                    <span className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
-                      <span className="bg-white/90 p-5 rounded-full shadow-2xl group-active:scale-90 transition-transform">
-                        <FaPlay className="text-blue-600 text-3xl ml-1" />
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setPlayIntro(true)}
+                      className="absolute inset-0 w-full h-full group"
+                      aria-label="Play demo video"
+                    >
+                      <Image
+                        src={imageUrl}
+                        alt={`${title} demo preview`}
+                        fill
+            
+                        sizes="(max-width: 1024px) 100vw, 700px"
+                        className="object-cover"
+                      />
+                      <span className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
+                        <span className="bg-white/90 p-5 rounded-full shadow-2xl group-active:scale-90 transition-transform">
+                          <FaPlay className="text-blue-600 text-3xl ml-1" />
+                        </span>
                       </span>
-                    </span>
-                  </button>
-                )}
-              </div>
+                    </button>
+                  )}
+                </div>
+              )}
             </section>
           )}
 
@@ -553,7 +535,7 @@ const WebinarDetails = ({ webinar }) => {
                   src={educatorImage}
                   alt={educatorName}
                   fill
-                  unoptimized
+      
                   sizes="(max-width: 640px) 128px, 160px"
                   className="object-cover"
                 />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -37,11 +38,10 @@ const INITIAL_NOTIFICATION_STATE = {
 };
 
 const Navbar = () => {
+  const { isLoggedIn, userData, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isExamDropdownOpen, setIsExamDropdownOpen] = useState(false);
   const [isEducatorDropdownOpen, setIsEducatorDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(null);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notificationState, setNotificationState] = useState(
     INITIAL_NOTIFICATION_STATE
@@ -49,47 +49,6 @@ const Navbar = () => {
   const notificationPanelRef = useRef(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const syncUserData = () => {
-      if (typeof window === "undefined") return;
-      const stored = localStorage.getItem("faculty-pedia-student-data");
-      if (!stored) {
-        setIsLoggedIn(false);
-        setUserData(null);
-        return;
-      }
-      try {
-        const parsed = JSON.parse(stored);
-        setUserData(parsed);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        localStorage.removeItem("faculty-pedia-student-data");
-        setIsLoggedIn(false);
-        setUserData(null);
-      }
-    };
-
-    const handleStorage = (event) => {
-      if (!event || !event.key || event.key === "faculty-pedia-student-data") {
-        syncUserData();
-      }
-    };
-
-    syncUserData();
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("storage", handleStorage);
-      window.addEventListener("student-data-updated", syncUserData);
-    }
-
-    return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener("storage", handleStorage);
-        window.removeEventListener("student-data-updated", syncUserData);
-      }
-    };
-  }, []);
 
   const fetchNotifications = useCallback(
     async ({ suppressUnread = false } = {}) => {
@@ -216,26 +175,18 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     const confirmed = await confirmAlert({
-      title: "Delete Student",
-      message: "Are you sure you want to logout ?",
+      title: "Logout",
+      message: "Are you sure you want to logout?",
       type: "error",
       confirmText: "Yes, Logout",
       cancelText: "Cancel",
     });
 
     if (confirmed) {
-      localStorage.removeItem("faculty-pedia-student-data");
-      localStorage.removeItem("faculty-pedia-auth-token");
-      setIsLoggedIn(false);
-      setUserData(null);
       setIsNotificationOpen(false);
       setNotificationState(INITIAL_NOTIFICATION_STATE);
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new Event("student-data-updated"));
-      }
       toast.success("Logged out successfully");
-      // Optionally redirect to home page
-      router.push("/");
+      await logout(); // clears localStorage + httpOnly cookie + redirects to /login
     }
   };
 

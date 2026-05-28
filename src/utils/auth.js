@@ -71,3 +71,31 @@ export const logout = (redirectTo = "/login") => {
     window.location.href = redirectTo;
   }
 };
+
+/**
+ * Plant the httpOnly fp_session cookie via the Next.js API route.
+ * Must be called after a successful login while in the browser.
+ * @param {'student'|'educator'} userType
+ */
+export const setSession = async (userType) => {
+  try {
+    await fetch("/api/auth/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userType }),
+    });
+  } catch (err) {
+    console.warn("Could not set session cookie:", err);
+  }
+};
+
+/**
+ * Clear the httpOnly fp_session cookie via the Next.js API route.
+ */
+export const clearSession = async () => {
+  try {
+    await fetch("/api/auth/session", { method: "DELETE" });
+  } catch (err) {
+    console.warn("Could not clear session cookie:", err);
+  }
+};

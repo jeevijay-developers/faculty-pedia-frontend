@@ -232,7 +232,7 @@ const UpcomingWebinarCard = ({ item }) => {
           </div>
         </div>
         <Link
-          href={`/webinars/${webinar?._id || webinar?.id}`}
+          href={`/webinars/${webinar?.slug || webinar?._id || webinar?.id}`}
           className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center block"
         >
           View Details

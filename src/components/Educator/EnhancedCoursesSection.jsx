@@ -189,13 +189,13 @@ const CourseCard = ({ course }) => {
 
           <div className="flex flex-col sm:flex-row gap-2">
             <Link
-              href={`/details/course/${course._id}`}
+              href={`/details/course/${course.slug || course._id}`}
               className="flex-1 px-3 sm:px-4 py-2 text-xs sm:text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 dark:bg-blue-900/20 transition-colors text-center"
             >
               View More
             </Link>
             <Link
-              href={`/details/course/${course._id}?enroll=true`}
+              href={`/details/course/${course.slug || course._id}?enroll=true`}
               className="flex-1 px-3 sm:px-4 py-2 text-xs sm:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center"
             >
               Enroll

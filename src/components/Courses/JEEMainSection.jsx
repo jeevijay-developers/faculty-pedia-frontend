@@ -219,7 +219,7 @@ const CourseCard = ({ course }) => {
           <div className="flex space-x-2">
             <Link
               // href={course.enrollLink}
-              href={`/details/course/${course.id}`}
+              href={`/details/course/${course.slug || course.id}`}
               className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 py-2 px-3 rounded-md text-xs font-medium transition-colors duration-200 text-center"
             >
               View Details

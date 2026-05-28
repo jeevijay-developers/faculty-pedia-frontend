@@ -171,7 +171,7 @@ const OneToOneLiveClassesCard = ({ classData }) => {
 
           {/* Details Button */}
           <Link
-            href={`/1-1-live-class/${classData._id || classData.id}`}
+            href={`/1-1-live-class/${classData.slug || classData._id || classData.id}`}
             className="inline-flex items-center gap-2 rounded-full bg-blue-600 h-9 px-5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Details

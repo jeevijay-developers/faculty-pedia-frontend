@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { LuLoaderCircle, LuMail, LuLock } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { loginUser } from "@/components/server/auth/auth.routes";
-import { setAuthToken } from "@/utils/auth";
+import { setAuthToken, setSession } from "@/utils/auth";
 import Image from "next/image";
 
 const Login = ({
@@ -93,6 +93,8 @@ const Login = ({
       // Store authentication token
       if (response.TOKEN) {
         setAuthToken(response.TOKEN);
+        // Plant httpOnly session cookie for server-side middleware protection
+        await setSession(response.userType);
       }
 
       // Store user data based on type

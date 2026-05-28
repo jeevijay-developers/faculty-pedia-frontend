@@ -49,6 +49,16 @@ export const getEducatorProfile = async (id) => {
   }
 };
 
+export const getEducatorBySlug = async (slug) => {
+  try {
+    const response = await API_CLIENT.get(`${EDUCATORS_BASE_PATH}/slug/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching educator by slug:", error);
+    throw error;
+  }
+};
+
 export const createEducatorProfile = async (payload) => {
   try {
     const response = await API_CLIENT.post(EDUCATORS_BASE_PATH, payload);

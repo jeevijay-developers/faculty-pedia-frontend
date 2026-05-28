@@ -121,6 +121,8 @@ API_CLIENT.interceptors.response.use(
         localStorage.removeItem("faculty-pedia-student-data");
         localStorage.removeItem("faculty-pedia-educator-data");
         localStorage.removeItem("user-role");
+        // Clear the httpOnly session cookie so middleware also unblocks
+        fetch("/api/auth/session", { method: "DELETE" }).catch(() => {});
         window.location.href =
           "/login?message=Session expired. Please login again.";
       }

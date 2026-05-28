@@ -23,7 +23,7 @@ const resolveImageUrl = (image) => {
 };
 
 const WebinarCard = ({ webinar }) => {
-  const webinarId = webinar._id || webinar.id;
+  const webinarId = webinar.slug || webinar._id || webinar.id;
   const imageUrl = resolveImageUrl(webinar.image);
   const normalizedSubject = Array.isArray(webinar.subject)
     ? webinar.subject.find((item) => typeof item === "string" && item.trim())

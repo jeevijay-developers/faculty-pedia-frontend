@@ -28,7 +28,7 @@ const GenericLoginPage = () => {
     if (userType === "student") {
       router.replace("/");
     } else if (userType === "educator") {
-      router.replace(`/profile/educator/${userData._id}`);
+      router.replace(`/profile/educator/${userData.slug || userData._id}`);
     }
   };
 

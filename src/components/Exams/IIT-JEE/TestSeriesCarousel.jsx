@@ -273,7 +273,7 @@ export const TestSeriesCard = ({ testSeries }) => {
             ₹{testSeries.price?.toLocaleString("en-IN") || 0}
           </div>
           <Link
-            href={`/test-series/${testSeries._id || testSeries.id}`}
+            href={`/test-series/${testSeries.slug || testSeries._id || testSeries.id}`}
             className="block w-full rounded-full bg-blue-600 py-2.5 text-center text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             View Details

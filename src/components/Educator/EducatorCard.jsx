@@ -9,6 +9,7 @@ const EDUCATOR_FALLBACK_IMAGE = "/images/placeholders/educatorFallback.svg";
 const EducatorCard = ({ educator }) => {
   const {
     _id,
+    slug,
     firstName,
     lastName,
     name,
@@ -190,7 +191,7 @@ const EducatorCard = ({ educator }) => {
       </div>
 
       {/* Action Button */}
-      <Link href={`/profile/educator/${_id}`}>
+      <Link href={`/profile/educator/${slug || _id}`}>
         <button className="w-full rounded-full bg-blue-600 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
           View Full Profile
         </button>

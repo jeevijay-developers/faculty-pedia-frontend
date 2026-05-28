@@ -1,5 +1,10 @@
 ﻿"use client";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/query-keys";
+import { useAuth } from "@/context/AuthContext";
+import { getEmbedUrl } from "@/lib/media";
+import VimeoPlayer from "@/components/Common/VimeoPlayer";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { FiChevronDown, FiFileText, FiCheck } from "react-icons/fi";
@@ -16,209 +21,99 @@ import {
   toggleVideoComplete,
 } from "@/components/server/progress.routes";
 
-const getEmbedUrl = (url) => {
-  if (!url) return null;
-  const trimmed = url.trim();
-  if (/vimeo\.com\/\d+/.test(trimmed) && trimmed.includes("player.vimeo.com")) {
-    return trimmed;
-  }
-  if (trimmed.includes("youtube.com/embed/")) return trimmed;
-  const watchId = trimmed.includes("watch?v=")
-    ? trimmed.split("v=")[1].split("&")[0]
-    : null;
-  const shortId = trimmed.includes("youtu.be/")
-    ? trimmed.split("youtu.be/")[1].split("?")[0]
-    : null;
-  const videoId = watchId || shortId;
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : trimmed;
-};
 
 const CoursePanelPage = () => {
   const searchParams = useSearchParams();
   const courseId = searchParams?.get("courseId") || null;
-  const [courseData, setCourseData] = useState(null);
+  // ─── Auth ──────────────────────────────────────────────────────────────────
+  const { studentId } = useAuth();
+
+  // ─── UI state ──────────────────────────────────────────────────────────────
   const [activeTab, setActiveTab] = useState("videos");
   const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [showVideoDropdown, setShowVideoDropdown] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [courseTests, setCourseTests] = useState([]);
-  const [testsLoading, setTestsLoading] = useState(false);
   const [expandedSeriesId, setExpandedSeriesId] = useState(null);
   const [testsBySeries, setTestsBySeries] = useState({});
   const [seriesTestsLoading, setSeriesTestsLoading] = useState({});
-  const [courseVideos, setCourseVideos] = useState([]);
-  const [courseVideosLoading, setCourseVideosLoading] = useState(false);
-  const [courseMaterials, setCourseMaterials] = useState([]);
-  const [courseMaterialsLoading, setCourseMaterialsLoading] = useState(false);
   const [completedVideos, setCompletedVideos] = useState({});
-  const [studentId, setStudentId] = useState(null);
   const [togglingVideoId, setTogglingVideoId] = useState(null);
 
-  // Get student ID from localStorage on mount
-  useEffect(() => {
-    try {
-      const raw =
-        typeof window !== "undefined"
-          ? window.localStorage.getItem("faculty-pedia-student-data")
-          : null;
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        setStudentId(parsed?._id || parsed?.id || null);
-      }
-    } catch (err) {
-      console.warn("Failed to get student id", err);
-    }
-  }, []);
-
-  useEffect(() => {
-    const load = async () => {
-      if (!courseId) {
-        setError("Missing courseId. Open this page via a course link.");
-        setCourseTests([]);
-        setCourseData(null);
-        return;
-      }
-
+  // ─── Course query ───────────────────────────────────────────────────────────
+  const {
+    data: courseData = null,
+    isLoading: loading,
+    error: courseQueryError,
+  } = useQuery({
+    queryKey: queryKeys.courses.byId(courseId ?? ""),
+    queryFn: async () => {
       try {
-        setLoading(true);
-        setError(null);
-        let data = null;
-
-        try {
-          data = await getCourseById(courseId);
-        } catch (err) {
-          const status = err?.response?.status;
-          if (status === 404) {
-            // Fallback: treat identifier as slug even if it looked like an ObjectId
-            data = await getCourseById(courseId, true);
-          } else {
-            throw err;
-          }
+        return await getCourseById(courseId);
+      } catch (err) {
+        if (err?.response?.status === 404) {
+          return await getCourseById(courseId, true); // slug fallback
         }
-
-        if (data) {
-          setCourseData(data);
-          const first = data?.videos?.[0];
-          setSelectedVideoId(first?.link || first?.url || null);
-        } else {
-          setCourseData(null);
-          setSelectedVideoId(null);
-          setError("Course not found");
-        }
-      } catch (err) {
-        setCourseData(null);
-        setSelectedVideoId(null);
-        setError(
-          err?.response?.data?.message ||
-            err?.message ||
-            "Failed to load course"
-        );
-      } finally {
-        setLoading(false);
+        throw err;
       }
-    };
-    load();
-  }, [courseId]);
+    },
+    enabled: !!courseId,
+  });
+  const error = courseQueryError
+    ? (courseQueryError?.response?.data?.message ?? courseQueryError?.message ?? "Failed to load course")
+    : null;
 
+  // Initialise selected video from first video when course data first arrives
   useEffect(() => {
-    const resolvedCourseId = courseData?._id || courseData?.id || courseId;
-    if (!resolvedCourseId) return;
-
-    const initialSeries = Array.isArray(courseData?.testSeries)
-      ? courseData.testSeries
-      : [];
-
-    if (initialSeries.length > 0) {
-      setCourseTests(initialSeries);
-      return;
+    if (courseData && selectedVideoId === null) {
+      const first = courseData?.videos?.[0];
+      setSelectedVideoId(first?.link || first?.url || null);
     }
+  }, [courseData]);
 
-    let cancelled = false;
-    const fetchTests = async () => {
-      setTestsLoading(true);
-      try {
-        const res = await getTestSeriesByCourse(resolvedCourseId);
-        const candidates = [
-          res?.testSeries,
-          res?.data?.testSeries,
-          res?.data?.data?.testSeries,
-          res?.data,
-          res,
-        ];
-        const list = candidates.find(Array.isArray) || [];
-        if (!cancelled) setCourseTests(list);
-      } catch (err) {
-        console.error("Failed to fetch course test series", err);
-        if (!cancelled) setCourseTests([]);
-      } finally {
-        if (!cancelled) setTestsLoading(false);
-      }
-    };
+  // ─── Test series query ──────────────────────────────────────────────────────
+  const resolvedCourseId = courseData?._id || courseData?.id || courseId;
+  const initialTestSeries = Array.isArray(courseData?.testSeries)
+    ? courseData.testSeries
+    : [];
 
-    fetchTests();
-    return () => {
-      cancelled = true;
-    };
-  }, [courseData?._id, courseData?.id, courseData?.testSeries, courseId]);
+  const { data: courseTests = [], isLoading: testsLoading } = useQuery({
+    queryKey: queryKeys.testSeries.byCourse(resolvedCourseId ?? ""),
+    queryFn: async () => {
+      const res = await getTestSeriesByCourse(resolvedCourseId);
+      const candidates = [
+        res?.testSeries,
+        res?.data?.testSeries,
+        res?.data?.data?.testSeries,
+        res?.data,
+        res,
+      ];
+      return candidates.find(Array.isArray) ?? [];
+    },
+    enabled: !!resolvedCourseId && initialTestSeries.length === 0,
+    initialData: initialTestSeries.length > 0 ? initialTestSeries : undefined,
+  });
 
-  useEffect(() => {
-    const resolvedCourseId = courseData?._id || courseData?.id || courseId;
-    if (!resolvedCourseId) {
-      setCourseVideos([]);
-      return;
-    }
+  // ─── Videos query ───────────────────────────────────────────────────────────
+  const { data: courseVideos = [], isLoading: courseVideosLoading } = useQuery({
+    queryKey: ["courseVideos", resolvedCourseId],
+    queryFn: async () => {
+      const videos = await getCourseVideosPublic(resolvedCourseId, { limit: 200 });
+      return Array.isArray(videos) ? videos : [];
+    },
+    enabled: !!resolvedCourseId,
+  });
 
-    let cancelled = false;
-    const loadVideos = async () => {
-      try {
-        setCourseVideosLoading(true);
-        const videos = await getCourseVideosPublic(resolvedCourseId, {
-          limit: 200,
-        });
-        if (!cancelled) setCourseVideos(Array.isArray(videos) ? videos : []);
-      } catch (err) {
-        console.error("Failed to load course videos", err);
-        if (!cancelled) setCourseVideos([]);
-      } finally {
-        if (!cancelled) setCourseVideosLoading(false);
-      }
-    };
+  // ─── Study materials query ──────────────────────────────────────────────────
+  const { data: courseMaterials = [], isLoading: courseMaterialsLoading } = useQuery({
+    queryKey: ["courseMaterials", resolvedCourseId],
+    queryFn: async () => {
+      const materials = await getStudyMaterialsByCourse(resolvedCourseId, { limit: 200 });
+      return Array.isArray(materials) ? materials : [];
+    },
+    enabled: !!resolvedCourseId,
+  });
 
-    loadVideos();
-    return () => {
-      cancelled = true;
-    };
-  }, [courseData?._id, courseData?.id, courseId]);
 
-  useEffect(() => {
-    const resolvedCourseId = courseData?._id || courseData?.id || courseId;
-    if (!resolvedCourseId) {
-      setCourseMaterials([]);
-      return;
-    }
 
-    let cancelled = false;
-    const loadMaterials = async () => {
-      try {
-        setCourseMaterialsLoading(true);
-        const materials = await getStudyMaterialsByCourse(resolvedCourseId, {
-          limit: 200,
-        });
-        if (!cancelled) setCourseMaterials(Array.isArray(materials) ? materials : []);
-      } catch (err) {
-        console.error("Failed to load course study materials", err);
-        if (!cancelled) setCourseMaterials([]);
-      } finally {
-        if (!cancelled) setCourseMaterialsLoading(false);
-      }
-    };
-
-    loadMaterials();
-    return () => {
-      cancelled = true;
-    };
-  }, [courseData?._id, courseData?.id, courseId]);
 
   // Fetch video progress for this course and student
   useEffect(() => {
@@ -845,15 +740,24 @@ const CoursePanelPage = () => {
                 <div className="flex-1 flex flex-col gap-4">
                   <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-lg group">
                     {currentVideo ? (
-                      <iframe
-                        src={getEmbedUrl(currentVideo.url)}
-                        title={currentVideo.title}
-                        className="w-full h-full"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                      />
+                      /vimeo/i.test(currentVideo.url) ? (
+                        <VimeoPlayer
+                          url={currentVideo.url}
+                          title={currentVideo.title}
+                          autoplay
+                          className="rounded-xl"
+                        />
+                      ) : (
+                        <iframe
+                          src={getEmbedUrl(currentVideo.url)}
+                          title={currentVideo.title}
+                          className="w-full h-full"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          referrerPolicy="strict-origin-when-cross-origin"
+                          allowFullScreen
+                        />
+                      )
                     ) : loading || courseVideosLoading ? (
                       <div className="absolute inset-0 flex items-center justify-center text-white">
                         Loading videos...
