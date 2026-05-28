@@ -15,12 +15,25 @@ import {
   FaGraduationCap,
   FaStar,
   FaStarHalfAlt,
+  FaWhatsapp,
+  FaPlay,
 } from "react-icons/fa";
-import { FaPlay } from "react-icons/fa";
 import EnrollButton from "../Common/EnrollButton";
 import ShareButton from "@/components/Common/ShareButton";
 import { fetchEducatorById } from "@/components/server/webinars.routes";
 import { createItemReview } from "../server/reviews.routes";
+
+const deriveEducatorPhone = (webinar) => {
+  const educatorObject =
+    (webinar?.educatorID && typeof webinar.educatorID === "object" ? webinar.educatorID : null) ||
+    (webinar?.educatorId && typeof webinar.educatorId === "object" ? webinar.educatorId : null) ||
+    null;
+  const raw = educatorObject?.mobileNumber || educatorObject?.phone || educatorObject?.phoneNumber || null;
+  if (!raw) return null;
+  const digits = String(raw).replace(/\D/g, "");
+  // Prepend 91 if it's a 10-digit Indian number
+  return digits.length === 10 ? `91${digits}` : digits;
+};
 
 const deriveEducatorName = (webinar) => {
   const educatorObject =
@@ -119,6 +132,7 @@ const WebinarDetails = ({ webinar }) => {
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
   const [educatorName, setEducatorName] = useState(deriveEducatorName(webinar));
   const [educatorImage, setEducatorImage] = useState(deriveEducatorImage(webinar));
+  const [educatorPhone, setEducatorPhone] = useState(deriveEducatorPhone(webinar));
   const [studentId, setStudentId] = useState(null);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
@@ -158,6 +172,11 @@ const WebinarDetails = ({ webinar }) => {
         pickImageUrl(educator.avatar);
       if (imageCandidate) {
         setEducatorImage(imageCandidate);
+      }
+
+      if (educator.mobileNumber || educator.phone || educator.phoneNumber) {
+        const raw = String(educator.mobileNumber || educator.phone || educator.phoneNumber).replace(/\D/g, "");
+        setEducatorPhone(raw.length === 10 ? `91${raw}` : raw);
       }
     };
 
@@ -224,6 +243,9 @@ const WebinarDetails = ({ webinar }) => {
     webinar.enrolledCount || webinar.studentEnrolled?.length || 0;
   const seatsAvailable = webinar.seatsAvailable || seatLimit - enrolledCount;
   const shareText = `Join the webinar "${title}" on Facultypedia.`;
+  const whatsappUrl = educatorPhone
+    ? `https://wa.me/${educatorPhone}?text=${encodeURIComponent(`Hi ${educatorName}, I have a question about your webinar "${title}". Can you help me?`)}`
+    : null;
 
   const handleWebinarReviewSubmit = async (event) => {
     event.preventDefault();
@@ -550,6 +572,17 @@ const WebinarDetails = ({ webinar }) => {
                   <span className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full text-xs font-bold text-gray-700 dark:text-gray-300">{specialization}</span>
                   <span className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full text-xs font-bold text-gray-700 dark:text-gray-300 capitalize">{subject}</span>
                 </div>
+                {whatsappUrl && (
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-5 inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 text-[#128C7E] dark:text-[#25D366] font-semibold text-sm transition-colors duration-200 cursor-pointer"
+                  >
+                    <FaWhatsapp className="w-5 h-5 text-[#25D366]" />
+                    Worried about joining? Talk to educator
+                  </a>
+                )}
               </div>
             </div>
           </section>
@@ -723,6 +756,17 @@ const WebinarDetails = ({ webinar }) => {
                 return false;
               }}
             />
+            {whatsappUrl && (
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 w-full inline-flex items-center justify-center gap-2.5 py-3 px-4 rounded-full border border-[#25D366]/40 bg-[#25D366]/8 hover:bg-[#25D366]/15 text-[#128C7E] dark:text-[#25D366] font-semibold text-sm transition-colors duration-200 cursor-pointer"
+              >
+                <FaWhatsapp className="w-4 h-4 text-[#25D366] shrink-0" />
+                Worried about joining? Talk to educator
+              </a>
+            )}
             <p className="text-[11px] text-center text-gray-500 dark:text-gray-400 mt-3">
               By enrolling, you agree to our Terms of Service and Privacy Policy.
             </p>
@@ -755,24 +799,42 @@ const WebinarDetails = ({ webinar }) => {
               {fees > 0 ? `₹${fees}` : "Free"}
             </p>
           </div>
-          <div className="flex-1 max-w-60">
-            <EnrollButton
-              type="webinar"
-              itemId={webinar._id || webinar.id}
-              price={fees}
-              className="w-full bg-blue-600 text-white py-3 rounded-full font-bold text-sm shadow-lg"
-              title="Enroll & Join"
-              initialEnrolled={isAlreadyEnrolled}
-              onEnrollmentSuccess={() => {
-                if (webinar.webinarLink) {
-                  window.location.href = webinar.webinarLink;
-                  return true;
-                }
-                return false;
-              }}
-            />
+          <div className="flex-1 flex items-center gap-2 min-w-0">
+            <div className="flex-1">
+              <EnrollButton
+                type="webinar"
+                itemId={webinar._id || webinar.id}
+                price={fees}
+                className="w-full bg-blue-600 text-white py-3 rounded-full font-bold text-sm shadow-lg"
+                title="Enroll & Join"
+                initialEnrolled={isAlreadyEnrolled}
+                onEnrollmentSuccess={() => {
+                  if (webinar.webinarLink) {
+                    window.location.href = webinar.webinarLink;
+                    return true;
+                  }
+                  return false;
+                }}
+              />
+            </div>
+            {whatsappUrl && (
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Talk to educator on WhatsApp"
+                className="shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-[#25D366]/10 border border-[#25D366]/40 hover:bg-[#25D366]/20 transition-colors duration-200 cursor-pointer"
+              >
+                <FaWhatsapp className="w-6 h-6 text-[#25D366]" />
+              </a>
+            )}
           </div>
         </div>
+        {whatsappUrl && (
+          <p className="text-[10px] text-center text-gray-400 dark:text-gray-500 pb-1.5 -mt-1">
+            Worried about joining? Tap the WhatsApp icon to talk to the educator
+          </p>
+        )}
       </div>
 
     </div>

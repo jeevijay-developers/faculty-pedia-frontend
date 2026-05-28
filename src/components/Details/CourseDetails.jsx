@@ -383,42 +383,68 @@ const CourseDetails = ({ id }) => {
           {/* Left / main column */}
           <div className="lg:col-span-2 space-y-8">
             {/* Hero Section */}
-            <section className="relative overflow-hidden rounded-2xl aspect-video shadow-xl group">
-              <img
-                alt={course.title}
-                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
-                src={heroImage}
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-slate-900/90 via-slate-900/40 to-transparent flex flex-col justify-end p-6">
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {course.specialization?.map((spec, idx) => (
-                    <span
-                      key={`spec-${idx}`}
-                      className="bg-[#0066ff] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
-                    >
-                      {spec}
+            <section>
+              <div className="relative overflow-hidden rounded-2xl aspect-video shadow-xl group">
+                <img
+                  alt={course.title}
+                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                  src={heroImage}
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-900/90 via-slate-900/40 to-transparent flex flex-col justify-end p-4 sm:p-6">
+                  {/* Badges — hidden on mobile to prevent overlap with image content */}
+                  <div className="hidden sm:flex flex-wrap gap-2 mb-3">
+                    {course.specialization?.map((spec, idx) => (
+                      <span
+                        key={`spec-${idx}`}
+                        className="bg-[#0066ff] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                      >
+                        {spec}
+                      </span>
+                    ))}
+                    {course.class?.map((cls, idx) => (
+                      <span
+                        key={`cls-${idx}`}
+                        className="bg-[#6bff8f] text-[#007432] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                      >
+                        {cls}
+                      </span>
+                    ))}
+                    <span className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
+                      {courseTypeLabel}
                     </span>
-                  ))}
-                  {course.class?.map((cls, idx) => (
-                    <span
-                      key={`cls-${idx}`}
-                      className="bg-[#6bff8f] text-[#007432] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
-                    >
-                      {cls}
-                    </span>
-                  ))}
-                  <span className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
-                    {courseTypeLabel}
-                  </span>
+                  </div>
+                  <h2 className="text-white font-bold leading-tight text-xl sm:text-2xl lg:text-4xl">
+                    {course.title}
+                  </h2>
+                  {course.description && (
+                    <p className="hidden lg:block text-white/80 text-sm mt-3 line-clamp-2 max-w-3xl">
+                      {course.description}
+                    </p>
+                  )}
                 </div>
-                <h2 className="text-white font-bold leading-tight text-2xl lg:text-4xl">
-                  {course.title}
-                </h2>
-                {course.description && (
-                  <p className="hidden lg:block text-white/80 text-sm mt-3 line-clamp-2 max-w-3xl">
-                    {course.description}
-                  </p>
-                )}
+              </div>
+
+              {/* Badges row — mobile only, shown cleanly below the image */}
+              <div className="flex sm:hidden flex-wrap gap-2 mt-3 px-1">
+                {course.specialization?.map((spec, idx) => (
+                  <span
+                    key={`spec-m-${idx}`}
+                    className="bg-[#0066ff] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                  >
+                    {spec}
+                  </span>
+                ))}
+                {course.class?.map((cls, idx) => (
+                  <span
+                    key={`cls-m-${idx}`}
+                    className="bg-[#6bff8f] text-[#007432] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                  >
+                    {cls}
+                  </span>
+                ))}
+                <span className="bg-slate-200 text-slate-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  {courseTypeLabel}
+                </span>
               </div>
             </section>
 
