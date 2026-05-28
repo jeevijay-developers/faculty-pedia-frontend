@@ -29,7 +29,7 @@ const WebinarDetails = ({ id }) => {
       setLoading(true);
       try {
         const DATA = await getWebinarById(id);
-        setData(DATA);
+        setData(DATA?.webinar || DATA?.data || DATA);
       } catch (error) {
         console.error("Failed to fetch educators:", error);
       } finally {

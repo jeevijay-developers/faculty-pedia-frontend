@@ -15,9 +15,10 @@ const Page = async ({ params }) => {
 
   try {
     const isObjectId = /^[a-f\d]{24}$/i.test(slug);
-    testSeriesData = isObjectId
+    const raw = isObjectId
       ? await getTestSeriesById(slug)
       : await getTestSeriesBySlug(slug);
+    testSeriesData = raw?.testSeries || raw?.data || raw;
   } catch (err) {
     console.error("Error fetching test series:", err);
     error = err.message || "Failed to load test series";
