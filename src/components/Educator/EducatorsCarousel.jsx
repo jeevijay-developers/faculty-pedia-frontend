@@ -15,6 +15,12 @@ import { getEducatorsBySpecialization } from "../server/educators.routes";
 import Loading from "../Common/Loading";
 import CarouselFallback from "../Common/CarouselFallback";
 
+const isEducatorActive = (educator) => {
+  if (!educator || typeof educator === "string") return true;
+  const status = (educator.status || "").toLowerCase();
+  return status !== "inactive" && status !== "disabled" && status !== "banned";
+};
+
 const EducatorsCarousel = ({ specialization = "All" }) => {
   const [swiperRef, setSwiperRef] = useState(null);
   const [filteredEducators, setFilteredEducators] = useState([]);
@@ -49,7 +55,12 @@ const EducatorsCarousel = ({ specialization = "All" }) => {
         }
 
         setFilteredEducators(
-          educators.filter((edu) => edu && (edu.fullName || edu.name || edu.firstName))
+          educators.filter(
+            (edu) =>
+              edu &&
+              (edu.fullName || edu.name || edu.firstName) &&
+              isEducatorActive(edu)
+          )
         );
       } catch (error) {
         console.error("Failed to fetch educators:", error);

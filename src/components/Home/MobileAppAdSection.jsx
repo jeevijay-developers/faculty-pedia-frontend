@@ -53,12 +53,6 @@ const MobileAppAdSection = () => {
                   </div>
                 </Link>
               </div>
-
-              <div className="mt-6">
-                <div className="inline-flex items-center px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium">
-                  <span>Coming Soon...</span>
-                </div>
-              </div>
             </div>
           </motion.div>
 

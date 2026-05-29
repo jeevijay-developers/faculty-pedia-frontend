@@ -42,6 +42,12 @@ const isOneToAllCourse = (item) => {
   return hasOneToAllType;
 };
 
+const isEducatorActive = (educator) => {
+  if (!educator || typeof educator === "string") return true;
+  const status = (educator.status || "").toLowerCase();
+  return status !== "inactive" && status !== "disabled" && status !== "banned";
+};
+
 const OneToAllLiveCoursesPage = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +75,12 @@ const OneToAllLiveCoursesPage = () => {
         } else if (Array.isArray(response)) {
           allCourses = response;
         }
-        setCourses(allCourses.filter(isOneToAllCourse));
+        setCourses(
+          allCourses.filter(isOneToAllCourse).filter((c) => {
+            const edu = c?.educator || c?.educatorID || c?.educatorId;
+            return isEducatorActive(edu);
+          })
+        );
       } catch (err) {
         setError(err.message || "Failed to load One to All courses");
       } finally {
@@ -224,7 +235,7 @@ const OneToAllLiveCoursesPage = () => {
             </button>
             {/* Filter Dropdown */}
             {showFilters && (
-              <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-5 z-50">
+              <div className="absolute left-0 md:left-auto md:right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-5 z-50">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">Filter & Sort</h3>
                   {activeFilterCount > 0 && (

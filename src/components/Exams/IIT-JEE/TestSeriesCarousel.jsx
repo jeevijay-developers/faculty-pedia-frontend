@@ -14,8 +14,15 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { fetchTestSeriesBySpecialization } from "@/components/server/exams/iit-jee/routes";
+import { getEducatorsBySpecialization } from "@/components/server/educators.routes";
 import Loading from "@/components/Common/Loading";
 import CarouselFallback from "@/components/Common/CarouselFallback";
+
+const isEducatorActive = (educator) => {
+  if (!educator || typeof educator === "string") return true;
+  const status = (educator.status || "").toLowerCase();
+  return status !== "inactive" && status !== "disabled" && status !== "banned";
+};
 
 const TestSeriesCarousel = ({
   title = "Online Test Series",
@@ -33,16 +40,34 @@ const TestSeriesCarousel = ({
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchTestSeriesBySpecialization(specialization);
+        const [tsRes, educatorRes] = await Promise.allSettled([
+          fetchTestSeriesBySpecialization(specialization),
+          getEducatorsBySpecialization(specialization),
+        ]);
 
-        // Extract test series from response and keep only independent ones
-        const testSeriesData = (response?.testSeries || []).filter((ts) => {
-          // Exclude anything linked to a course or marked course specific
+        const educatorsList =
+          educatorRes.value?.data?.educators ||
+          educatorRes.value?.educators ||
+          [];
+
+        const activeEducatorIds = new Set(
+          educatorsList
+            .filter(isEducatorActive)
+            .map((edu) => String(edu._id || edu.id))
+        );
+
+        const testSeriesData = (tsRes.value?.testSeries || []).filter((ts) => {
           const hasCourse = Boolean(ts?.courseId);
           const isCourseSpecific = Boolean(ts?.isCourseSpecific);
           const edu = ts?.educator || ts?.educatorId;
-          const hasEducatorName = edu && (edu.fullName || edu.name || edu.firstName);
-          return !hasCourse && !isCourseSpecific && hasEducatorName;
+          const hasEducatorName =
+            edu && (edu.fullName || edu.name || edu.firstName);
+          if (!hasEducatorName || hasCourse || isCourseSpecific) return false;
+          const eduId = String(
+            typeof edu === "object" ? edu._id || edu.id : edu
+          );
+          if (activeEducatorIds.size > 0) return activeEducatorIds.has(eduId);
+          return isEducatorActive(edu);
         });
 
         setData(testSeriesData);

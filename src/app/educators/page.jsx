@@ -7,6 +7,12 @@ import { getAllEducators } from "@/components/server/educators.routes";
 import Loading from "@/components/Common/Loading";
 import { Search } from "lucide-react";
 
+const isEducatorActive = (educator) => {
+  if (!educator || typeof educator === "string") return true;
+  const status = (educator.status || "").toLowerCase();
+  return status !== "inactive" && status !== "disabled" && status !== "banned";
+};
+
 const EducatorsPage = () => {
   const searchParams = useSearchParams();
   const specialization = searchParams.get('specialization');
@@ -43,8 +49,9 @@ const EducatorsPage = () => {
           console.warn("Unexpected educators format:", response);
         }
 
-        setAllEducators(educators);
-        setFilteredEducators(educators);
+        const activeEducators = educators.filter(isEducatorActive);
+        setAllEducators(activeEducators);
+        setFilteredEducators(activeEducators);
       } catch (error) {
         console.error("Error fetching educators:", error);
         console.error("Error details:", error.response?.data);

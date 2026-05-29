@@ -12,6 +12,12 @@ import { fetchAllWebinars } from "@/components/server/exams/iit-jee/routes";
 import { getWebinarsByEducator } from "@/components/server/webinars.routes";
 import ShareButton from "@/components/Common/ShareButton";
 
+const isEducatorActive = (educator) => {
+  if (!educator || typeof educator === "string") return true;
+  const status = (educator.status || "").toLowerCase();
+  return status !== "inactive" && status !== "disabled" && status !== "banned";
+};
+
 export default function WebinarsPage() {
   const searchParams = useSearchParams();
   const educatorId = searchParams.get("educator");
@@ -54,7 +60,12 @@ export default function WebinarsPage() {
           webinarsData = response?.data?.webinars || response?.webinars || [];
         }
 
-        setAllWebinars(webinarsData);
+        setAllWebinars(
+          webinarsData.filter((w) => {
+            const edu = w?.educatorID || w?.educatorId || w?.educator;
+            return isEducatorActive(edu);
+          })
+        );
       } catch (err) {
         console.error("Failed to fetch webinars:", err);
         setError(err.message || "Failed to fetch webinars");

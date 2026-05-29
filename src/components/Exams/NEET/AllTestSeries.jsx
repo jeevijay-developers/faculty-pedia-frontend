@@ -7,6 +7,12 @@ import { MdQuiz } from 'react-icons/md';
 import { fetchTestSeriesBySpecialization } from '@/components/server/exams/iit-jee/routes';
 import EnrollButton from '@/components/Common/EnrollButton';
 
+const isEducatorActive = (educator) => {
+  if (!educator || typeof educator === "string") return true;
+  const status = (educator.status || "").toLowerCase();
+  return status !== "inactive" && status !== "disabled" && status !== "banned";
+};
+
 const AllTestSeries = ({ exam = 'NEET' }) => {
   const [testSeries, setTestSeries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +24,11 @@ const AllTestSeries = ({ exam = 'NEET' }) => {
       try {
         const response = await fetchTestSeriesBySpecialization(exam, { limit: 100 });
         const list = response?.testSeries || response?.data?.testSeries || [];
-        setTestSeries(Array.isArray(list) ? list : []);
+        const active = (Array.isArray(list) ? list : []).filter((ts) => {
+          const edu = ts?.educator || ts?.educatorId;
+          return isEducatorActive(edu);
+        });
+        setTestSeries(active);
       } catch (err) {
         console.error('Error fetching test series:', err);
         setTestSeries([]);

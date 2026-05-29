@@ -326,17 +326,16 @@ const WebinarDetails = ({ webinar }) => {
 
       {/* Hero */}
       <section className="relative w-full bg-slate-900" data-aos="fade-up">
-        <div className="relative w-full aspect-video max-h-155 overflow-hidden">
+        <div className="relative w-full min-h-[320px] sm:aspect-video sm:min-h-0 max-h-155 overflow-hidden">
           <Image
             src={imageUrl}
             alt={title}
             fill
-
             sizes="100vw"
-            className="object-contain object-center"
+            className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-linear-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/50 to-slate-950/10" />
           <div className="absolute inset-x-0 bottom-0">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-5 sm:pb-8 lg:pb-12">
               <div className="flex flex-wrap items-center gap-2 mb-3">

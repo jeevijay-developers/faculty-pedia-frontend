@@ -7,6 +7,12 @@ import Loading from "@/components/Common/Loading";
 import { getAllCourses, getCoursesByEducator } from "@/components/server/course.routes";
 import { Search } from "lucide-react";
 
+const isEducatorActive = (educator) => {
+  if (!educator || typeof educator === "string") return true;
+  const status = (educator.status || "").toLowerCase();
+  return status !== "inactive" && status !== "disabled" && status !== "banned";
+};
+
 const CoursesPage = () => {
   const searchParams = useSearchParams();
   const educatorId = searchParams.get("educator");
@@ -51,8 +57,12 @@ const CoursesPage = () => {
           courses = data;
         }
 
-        setAllCourses(courses);
-        setFilteredCourses(courses); // Show all courses initially
+        const activeCourses = courses.filter((c) => {
+          const edu = c?.educator || c?.educatorID || c?.educatorId;
+          return isEducatorActive(edu);
+        });
+        setAllCourses(activeCourses);
+        setFilteredCourses(activeCourses);
       } catch (error) {
         console.error("Error fetching courses:", error);
         setError(error.message || "Failed to load courses");

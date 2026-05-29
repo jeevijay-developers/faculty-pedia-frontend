@@ -14,6 +14,7 @@ import CarouselFallback from "../Common/CarouselFallback";
 import "swiper/css";
 import "swiper/css/navigation";
 import { fetchWebinarsBySpecialization } from "../server/exams/iit-jee/routes";
+import { getEducatorsBySpecialization } from "../server/educators.routes";
 import Loading from "../Common/Loading";
 
 /**
@@ -22,6 +23,12 @@ import Loading from "../Common/Loading";
  * - specialization?: 'IIT-JEE' | 'NEET' | 'CBSE'
  * - viewMoreLink?: string
  */
+const isEducatorActive = (educator) => {
+  if (!educator || typeof educator === "string") return true;
+  const status = (educator.status || "").toLowerCase();
+  return status !== "inactive" && status !== "disabled" && status !== "banned";
+};
+
 const UpcomingWebinarCarousel = ({
   title = "Upcoming Webinars",
   specialization = "IIT-JEE",
@@ -37,19 +44,40 @@ const UpcomingWebinarCarousel = ({
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchWebinarsBySpecialization(specialization, {
-          upcoming: true,
-        });
+        const [webinarRes, educatorRes] = await Promise.allSettled([
+          fetchWebinarsBySpecialization(specialization, { upcoming: true }),
+          getEducatorsBySpecialization(specialization),
+        ]);
 
         const webinarsData =
-          response?.data?.webinars || response?.webinars || [];
+          webinarRes.value?.data?.webinars || webinarRes.value?.webinars || [];
+        const educatorsList =
+          educatorRes.value?.data?.educators ||
+          educatorRes.value?.educators ||
+          [];
+
+        // Build a set of confirmed-active educator IDs from the dedicated endpoint
+        const activeEducatorIds = new Set(
+          educatorsList
+            .filter(isEducatorActive)
+            .map((edu) => String(edu._id || edu.id))
+        );
+
         setData(
           webinarsData.filter((webinar) => {
             const edu =
               webinar?.educatorID ||
               webinar?.educatorId ||
               webinar?.educator;
-            return edu && (edu.fullName || edu.name || edu.firstName);
+            if (!edu || !(edu.fullName || edu.name || edu.firstName))
+              return false;
+            const eduId = String(
+              typeof edu === "object" ? edu._id || edu.id : edu
+            );
+            // Prefer the authoritative educator list; fall back to inline status check
+            if (activeEducatorIds.size > 0)
+              return activeEducatorIds.has(eduId);
+            return isEducatorActive(edu);
           })
         );
       } catch (error) {

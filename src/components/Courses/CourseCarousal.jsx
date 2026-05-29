@@ -67,6 +67,12 @@ const CourseCarousel = ({
     course.creator ||
     course.instructor;
 
+  const isEducatorActive = (educator) => {
+    if (!educator || typeof educator === "string") return true;
+    const status = (educator.status || "").toLowerCase();
+    return status !== "inactive" && status !== "disabled" && status !== "banned";
+  };
+
   const deriveEducatorName = (educatorObj, course) => {
     if (educatorObj && typeof educatorObj === "object") {
       const nameFromObj =
@@ -113,24 +119,23 @@ const CourseCarousel = ({
       ) {
         const normalizedCandidateId = normalizeId(educatorCandidate._id);
         if (normalizedCandidateId) {
+          // Seed cache from inline object (may lack status — will be overwritten by API fetch)
           educatorCache.set(normalizedCandidateId, educatorCandidate);
         }
       }
 
-      const educatorName = deriveEducatorName(educatorCandidate, course);
+      // Always collect every educator ID so we can fetch the full profile
+      // (inline objects may be partial and lack the `status` field)
+      const idCandidate = normalizeId(
+        (typeof educatorCandidate === "string" && educatorCandidate) ||
+          (typeof course.educatorID === "string" && course.educatorID) ||
+          (typeof course.educatorId === "string" && course.educatorId) ||
+          educatorCandidate?._id ||
+          ""
+      );
 
-      if (!educatorName) {
-        const idCandidate = normalizeId(
-          (typeof educatorCandidate === "string" && educatorCandidate) ||
-            (typeof course.educatorID === "string" && course.educatorID) ||
-            (typeof course.educatorId === "string" && course.educatorId) ||
-            educatorCandidate?._id ||
-            ""
-        );
-
-        if (isValidObjectId(idCandidate)) {
-          educatorIdSet.add(idCandidate);
-        }
+      if (isValidObjectId(idCandidate)) {
+        educatorIdSet.add(idCandidate);
       }
     });
 
@@ -228,9 +233,10 @@ const CourseCarousel = ({
           ""
       );
 
+      // Prefer the API-fetched full profile (has status) over the inline partial object
       const cachedEducator =
-        (typeof educatorCandidate === "object" && educatorCandidate) ||
         educatorCache.get(educatorIdFromCourse) ||
+        (typeof educatorCandidate === "object" && educatorCandidate) ||
         null;
 
       const resolvedEducator = cachedEducator || educatorCandidate || null;
@@ -306,7 +312,11 @@ const CourseCarousel = ({
         setCoursesToRender(
           enrichedCourses.filter((course) => {
             const edu = course?.educator;
-            return edu && (edu.fullName || edu.name || edu.firstName);
+            return (
+              edu &&
+              (edu.fullName || edu.name || edu.firstName) &&
+              isEducatorActive(edu)
+            );
           })
         );
       } catch (error) {
