@@ -135,7 +135,7 @@ export default function VimeoPlayer({
 
           <span className="absolute inset-0 bg-black/40 flex items-center justify-center">
             <span className="bg-white/90 group-hover/play:bg-white p-5 rounded-full shadow-2xl group-active/play:scale-90 transition-transform">
-              <FaPlay className="text-[#231fe5] text-3xl ml-1" />
+              <FaPlay className="text-[#231fe5] dark:text-indigo-400 text-3xl ml-1" />
             </span>
           </span>
 

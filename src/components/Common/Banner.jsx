@@ -35,7 +35,7 @@ export default function Banner({ url, title, subtitle, btnTitle, btnUrl }) {
         alt="Classes Banner"
         fill
         sizes="100vw"
-        className="object-cover object-center"
+        className="object-cover object-top"
         priority
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white text-center px-4">

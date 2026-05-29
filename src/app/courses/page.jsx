@@ -223,7 +223,7 @@ const CoursesPage = () => {
         {/* Control Bar */}
         <div className="sticky top-0 z-40 -mx-4 md:mx-0 flex flex-col gap-4 bg-gray-50 dark:bg-gray-800/95 backdrop-blur-sm p-4 md:rounded-2xl md:bg-white dark:bg-gray-900 md:shadow-sm lg:flex-row lg:items-center lg:justify-between border-b md:border border-gray-200 dark:border-gray-700 transition-all mb-6">
           {/* Subject Pills */}
-          <div className="flex gap-2 overflow-x-auto pb-1 lg:pb-0">
+          <div className="flex gap-2 overflow-x-auto pb-1 lg:pb-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
             {subjects.map((subject) => (
               <button
                 key={subject}
@@ -231,7 +231,7 @@ const CoursesPage = () => {
                 className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 text-sm font-medium transition-all ${
                   activeTab === subject
                     ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                    : "bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
+                    : "bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 {subject}

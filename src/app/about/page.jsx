@@ -60,7 +60,7 @@ export default function AboutPage() {
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-600/10 blur-[100px]" />
           <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-blue-400/10 blur-[100px]" />
@@ -75,7 +75,7 @@ export default function AboutPage() {
             About FacultyPedia
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] mb-8 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] mb-8 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400">
             Built for Educators.
             <br />
             Powered by Vision.
@@ -98,7 +98,7 @@ export default function AboutPage() {
             We&apos;re not just another EdTech company.
           </h2>
 
-          <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed italic border-l-4 border-blue-600 pl-6 py-2 text-left max-w-2xl mx-auto rounded-r-xl bg-blue-50 dark:bg-blue-900/20/40">
+          <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed italic border-l-4 border-blue-600 pl-6 py-2 text-left max-w-2xl mx-auto rounded-r-xl bg-blue-50 dark:bg-blue-900/20">
             &ldquo;We&apos;re building a teacher-first ecosystem where educators become brands.&rdquo;
           </p>
         </div>
@@ -161,7 +161,7 @@ export default function AboutPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <div className="rounded-2xl border border-red-100 bg-red-50/50 p-8">
+            <div className="rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10 p-8">
               <h3 className="text-base font-bold text-gray-800 dark:text-gray-200 mb-6 flex items-center gap-2">
                 <span className="flex items-center justify-center w-7 h-7 rounded-full bg-red-100 text-red-500 text-xs font-black shrink-0">
                   ✕
@@ -182,7 +182,7 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <div className="rounded-2xl border border-blue-100 bg-blue-50 dark:bg-blue-900/20/50 p-8">
+            <div className="rounded-2xl border border-blue-100 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/20 p-8">
               <h3 className="text-base font-bold text-gray-800 dark:text-gray-200 mb-6 flex items-center gap-2">
                 <span className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-100 text-blue-600 text-xs font-black shrink-0">
                   ✓

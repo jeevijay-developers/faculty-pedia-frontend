@@ -77,7 +77,7 @@ const ContactPage = () => {
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-600/10 blur-[100px]" />
           <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-blue-400/10 blur-[100px]" />
@@ -92,7 +92,7 @@ const ContactPage = () => {
             Contact Us
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400">
             Let&apos;s Build the Future
             <br />
             of Education Together
@@ -145,7 +145,7 @@ const ContactPage = () => {
                             className={
                               action.variant === "primary"
                                 ? "inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 transition-colors"
-                                : "inline-flex items-center gap-2 rounded-xl border border-blue-200 px-4 py-2.5 text-sm font-semibold text-blue-700 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-900/20 transition-colors"
+                                : "inline-flex items-center gap-2 rounded-xl border border-blue-200 dark:border-blue-700 px-4 py-2.5 text-sm font-semibold text-blue-700 dark:text-blue-400 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                             }
                           >
                             {ActionIcon && <ActionIcon className="w-4 h-4" />}
@@ -168,7 +168,7 @@ const ContactPage = () => {
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
             {/* For Educators */}
-            <div className="rounded-2xl border border-blue-100 bg-blue-50 dark:bg-blue-900/20/50 p-8">
+            <div className="rounded-2xl border border-blue-100 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/20 p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-100 text-blue-600">
                   <FiBookOpen className="w-5 h-5" />

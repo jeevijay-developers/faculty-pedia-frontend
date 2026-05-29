@@ -808,7 +808,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                     className={`w-full text-white text-sm font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed ${
                       isFollowing
                         ? "bg-green-600 hover:bg-green-700 shadow-green-200"
-                        : "bg-[#231fe5] hover:bg-[#1a16b5] shadow-blue-200"
+                        : "bg-[#231fe5] dark:bg-indigo-500 hover:bg-[#1a16b5] dark:hover:bg-indigo-600 shadow-blue-200"
                     }`}
                   >
                     {isLoadingFollow ? (
@@ -858,7 +858,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
             {/* About Section Card */}
             <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
               <h2 className="text-[#111118] dark:text-gray-100 text-lg font-bold mb-4 flex items-center gap-2">
-                <span className="text-[#231fe5] text-[22px]">ℹ️</span>
+                <span className="text-[#231fe5] dark:text-indigo-400 text-[22px]">ℹ️</span>
                 About Me
               </h2>
               <div className="prose prose-sm text-[#636388] dark:text-gray-400 dark:prose-invert font-normal leading-relaxed mb-6">
@@ -976,7 +976,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                       );
                       setIsReviewModalOpen(true);
                     }}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#231fe5] text-white text-sm font-semibold shadow-sm hover:bg-[#1c19c8] transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#231fe5] dark:bg-indigo-500 text-white text-sm font-semibold shadow-sm hover:bg-[#1c19c8] dark:hover:bg-indigo-600 transition-colors"
                   >
                     Share Your Review
                   </button>
@@ -1078,8 +1078,8 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                   />
                 ) : (
                   <div className="aspect-video relative flex flex-col items-center justify-center px-6">
-                    <div className="w-20 h-20 bg-[#231fe5]/10 rounded-full flex items-center justify-center shadow-sm mb-6 border border-[#231fe5]/20">
-                      <Video className="w-10 h-10 text-[#231fe5]" />
+                    <div className="w-20 h-20 bg-[#231fe5]/10 dark:bg-indigo-400/10 rounded-full flex items-center justify-center shadow-sm mb-6 border border-[#231fe5]/20 dark:border-indigo-400/20">
+                      <Video className="w-10 h-10 text-[#231fe5] dark:text-indigo-400" />
                     </div>
                     <h3 className="text-xl font-semibold mb-2 text-center text-[#111118] dark:text-gray-100">
                       Intro Video of {educatorDisplayName}
@@ -1088,7 +1088,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                       is not currently available. Check out soon!
                     </p>
                     <div className="mt-6 flex items-center gap-2 text-xs text-[#636388] dark:text-gray-400">
-                      <div className="w-2 h-2 bg-[#231fe5] rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-[#231fe5] dark:bg-indigo-400 rounded-full animate-pulse"></div>
                       <span>Coming Soon</span>
                     </div>
                   </div>
@@ -1112,7 +1112,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
               {/* Work Experience */}
               <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
                 <h3 className="text-[#111118] dark:text-gray-100 text-lg font-bold mb-6 flex items-center gap-2">
-                  <Briefcase className="text-[#231fe5] w-5 h-5" />
+                  <Briefcase className="text-[#231fe5] dark:text-indigo-400 w-5 h-5" />
                   Work Experience
                 </h3>
                 <div className="relative border-l-2 border-gray-100 dark:border-gray-800 ml-3 space-y-8">
@@ -1122,15 +1122,15 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                       <div key={index} className="relative pl-6">
                         <div
                           className={`absolute -left-2.25 top-1.5 w-4 h-4 rounded-full ${
-                            index === 0 ? "bg-[#231fe5]" : "bg-gray-300"
-                          } border-4 border-white shadow-sm`}
+                            index === 0 ? "bg-[#231fe5] dark:bg-indigo-400" : "bg-gray-300 dark:bg-gray-600"
+                          } border-4 border-white dark:border-gray-900 shadow-sm`}
                         ></div>
                         <h4 className="text-[#111118] dark:text-gray-100 text-sm font-bold">
                           {exp.title}
                         </h4>
                         <p
                           className={`${
-                            index === 0 ? "text-[#231fe5]" : "text-[#636388] dark:text-gray-400"
+                            index === 0 ? "text-[#231fe5] dark:text-indigo-400" : "text-[#636388] dark:text-gray-400"
                           } text-xs font-medium mb-1`}
                         >
                           {exp.company} • {safeYear(exp.startDate)} -{" "}
@@ -1156,7 +1156,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                 {/* Qualifications */}
                 <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
                   <h3 className="text-[#111118] dark:text-gray-100 text-lg font-bold mb-4 flex items-center gap-2">
-                    <FaGraduationCap className="text-[#231fe5] w-5 h-5" />
+                    <FaGraduationCap className="text-[#231fe5] dark:text-indigo-400 w-5 h-5" />
                     Qualifications
                   </h3>
                   <ul className="space-y-4">
@@ -1299,7 +1299,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                   <button
                     type="button"
                     onClick={() => setIsPayPerHourModalOpen(true)}
-                    className="w-full sm:w-auto bg-white dark:bg-gray-900 text-[#231fe5] hover:bg-blue-50 font-bold py-3 px-8 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto bg-white dark:bg-gray-900 text-[#231fe5] dark:text-indigo-400 hover:bg-blue-50 dark:hover:bg-indigo-900/20 font-bold py-3 px-8 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                   >
                     <span>Book 1:1 Session</span>
                     <Calendar className="w-5 h-5" />
@@ -1352,7 +1352,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                   <div className="flex justify-center mt-6">
                     <button
                       onClick={loadMoreCourses}
-                      className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
+                      className="px-6 py-3 bg-[#231fe5] dark:bg-indigo-500 text-white rounded-lg font-medium hover:bg-[#1a17b8] dark:hover:bg-indigo-600 transition-all duration-200 flex items-center gap-2"
                     >
                       View More Courses
                       <span className="text-sm opacity-90">
@@ -1430,7 +1430,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                   <div className="flex justify-center mt-6">
                     <button
                       onClick={loadMoreWebinars}
-                      className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
+                      className="px-6 py-3 bg-[#231fe5] dark:bg-indigo-500 text-white rounded-lg font-medium hover:bg-[#1a17b8] dark:hover:bg-indigo-600 transition-all duration-200 flex items-center gap-2"
                     >
                       View More Webinars
                       <span className="text-sm opacity-90">
@@ -1488,7 +1488,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                   <div className="flex justify-center mt-6">
                     <button
                       onClick={loadMoreTestSeries}
-                      className="px-6 py-3 bg-[#231fe5] text-white rounded-lg font-medium hover:bg-[#1a17b8] transition-all duration-200 flex items-center gap-2"
+                      className="px-6 py-3 bg-[#231fe5] dark:bg-indigo-500 text-white rounded-lg font-medium hover:bg-[#1a17b8] dark:hover:bg-indigo-600 transition-all duration-200 flex items-center gap-2"
                     >
                       View More Test Series
                       <span className="text-sm opacity-90">
@@ -1537,7 +1537,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                       const next = reviewableItems.find((item) => item.id === e.target.value);
                       setSelectedItemForReview(next || null);
                     }}
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50 dark:focus:ring-indigo-400/50 dark:bg-gray-800 dark:text-gray-100"
                   >
                     <option value="" disabled>
                       Select a course, webinar, or test series
@@ -1586,7 +1586,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                     value={itemReviewText}
                     onChange={(e) => setItemReviewText(e.target.value)}
                     rows={4}
-                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50"
+                    className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#231fe5]/50 dark:focus:ring-indigo-400/50 dark:bg-gray-800 dark:text-gray-100"
                     placeholder="Share your experience..."
                   />
                 </div>
@@ -1603,7 +1603,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                   <button
                     type="button"
                     onClick={handleItemReviewSubmit}
-                    className="px-4 py-2 rounded-lg bg-[#231fe5] text-white text-sm font-semibold shadow-sm hover:bg-[#1c19c8] disabled:opacity-60"
+                    className="px-4 py-2 rounded-lg bg-[#231fe5] dark:bg-indigo-500 text-white text-sm font-semibold shadow-sm hover:bg-[#1c19c8] dark:hover:bg-indigo-600 disabled:opacity-60"
                     disabled={isSubmittingItemReview}
                   >
                     {isSubmittingItemReview ? "Submitting..." : "Submit Review"}
@@ -1663,10 +1663,10 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                     </div>
 
                     <div className="overflow-y-auto px-6 pb-6 pt-4">
-                      <div className="flex items-start gap-3 rounded-xl border border-[#231fe5]/20 bg-[#231fe5]/5 p-4">
-                        <FaMoneyBillWave className="mt-1 h-5 w-5 text-[#231fe5]" />
+                      <div className="flex items-start gap-3 rounded-xl border border-[#231fe5]/20 dark:border-indigo-400/20 bg-[#231fe5]/5 dark:bg-indigo-400/5 p-4">
+                        <FaMoneyBillWave className="mt-1 h-5 w-5 text-[#231fe5] dark:text-indigo-400" />
                         <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-[#231fe5]">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#231fe5] dark:text-indigo-400">
                             Hourly rate
                           </p>
                           <p className="text-3xl font-bold text-[#111118] dark:text-gray-100">
@@ -1704,7 +1704,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                         )}
                         {educatorData?.yoe && (
                           <div className="flex items-start gap-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
-                            <FaClock className="mt-1 h-4 w-4 text-[#231fe5]" />
+                            <FaClock className="mt-1 h-4 w-4 text-[#231fe5] dark:text-indigo-400" />
                             <div>
                               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                                 Experience

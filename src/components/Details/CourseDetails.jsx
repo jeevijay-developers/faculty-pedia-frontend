@@ -320,18 +320,18 @@ const CourseDetails = ({ id }) => {
   };
 
   return (
-    <div className="bg-[#f7f9fb] min-h-screen text-[#191c1e]">
+    <div className="bg-[#f7f9fb] dark:bg-gray-950 min-h-screen text-[#191c1e] dark:text-gray-100">
       {showReviewSuccess && (
         <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 text-center">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Thanks for your review!</h3>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl max-w-md w-full p-6 text-center">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Thanks for your review!</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
               Your rating has been recorded and will appear on the educator profile.
             </p>
             <button
               type="button"
               onClick={() => setShowReviewSuccess(false)}
-              className="inline-flex w-full justify-center rounded-xl bg-[#0050cb] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#003fa4]"
+              className="inline-flex w-full justify-center rounded-xl bg-[#0050cb] dark:bg-indigo-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#003fa4] dark:hover:bg-indigo-600"
             >
               Close
             </button>
@@ -340,7 +340,7 @@ const CourseDetails = ({ id }) => {
       )}
 
       {/* Mobile / Small-screen Top App Bar */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl flex items-center justify-between px-4 h-16">
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl flex items-center justify-between px-4 h-16">
         <button
           onClick={() => router.back()}
           className="text-blue-700 active:scale-95 transition-transform duration-200 p-2"
@@ -348,7 +348,7 @@ const CourseDetails = ({ id }) => {
         >
           <FaArrowLeft className="text-xl" />
         </button>
-        <h1 className="font-semibold tracking-tight text-slate-900">Course Details</h1>
+        <h1 className="font-semibold tracking-tight text-slate-900 dark:text-gray-100">Course Details</h1>
         <ShareButton
           title={course?.title || "Course"}
           text={`Explore the course "${course?.title || ''}" on Facultypedia.`}
@@ -364,12 +364,12 @@ const CourseDetails = ({ id }) => {
         <div className="hidden lg:flex items-center justify-between">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-[#0050cb] font-semibold hover:underline"
+            className="flex items-center gap-2 text-[#0050cb] dark:text-indigo-400 font-semibold hover:underline"
           >
             <FaArrowLeft />
             <span>Back</span>
           </button>
-          <h1 className="text-lg font-semibold tracking-tight text-slate-900">Course Details</h1>
+          <h1 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-gray-100">Course Details</h1>
           <ShareButton
             title={course?.title || "Course"}
             text={`Explore the course "${course?.title || ''}" on Facultypedia.`}
@@ -449,15 +449,15 @@ const CourseDetails = ({ id }) => {
             </section>
 
             {/* Price / Enrollment */}
-            <section className="flex items-end justify-between bg-white p-6 rounded-2xl shadow-sm">
+            <section className="flex items-end justify-between bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
               <div>
-                <p className="text-[#424656] text-xs font-semibold mb-1">Total Fee</p>
+                <p className="text-[#424656] dark:text-gray-400 text-xs font-semibold mb-1">Total Fee</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-extrabold text-[#0050cb]">
+                  <span className="text-3xl font-extrabold text-[#0050cb] dark:text-indigo-400">
                     ₹{course.fees?.toLocaleString() || "0"}
                   </span>
                   {course.discount > 0 && (
-                    <span className="text-[#424656] line-through text-sm">
+                    <span className="text-[#424656] dark:text-gray-400 line-through text-sm">
                       ₹{Math.round((course.fees || 0) / (1 - course.discount / 100)).toLocaleString()}
                     </span>
                   )}
@@ -466,19 +466,19 @@ const CourseDetails = ({ id }) => {
               <div className="text-right">
                 {isOneToAll && (
                   <>
-                    <div className="w-32 h-2 bg-[#eceef0] rounded-full mb-2 overflow-hidden">
+                    <div className="w-32 h-2 bg-[#eceef0] dark:bg-gray-700 rounded-full mb-2 overflow-hidden">
                       <div
-                        className="h-full bg-[#006e2f]"
+                        className="h-full bg-[#006e2f] dark:bg-green-500"
                         style={{ width: `${enrollPct}%` }}
                       />
                     </div>
-                    <p className="text-xs font-medium text-[#006e2f]">
+                    <p className="text-xs font-medium text-[#006e2f] dark:text-green-400">
                       {enrolledCount}/{maxStudents || 0} students enrolled
                     </p>
                   </>
                 )}
                 {!isOneToAll && (
-                  <p className="text-xs font-medium text-[#006e2f]">
+                  <p className="text-xs font-medium text-[#006e2f] dark:text-green-400">
                     {enrolledCount} enrolled
                   </p>
                 )}
@@ -487,31 +487,31 @@ const CourseDetails = ({ id }) => {
 
             {/* Quick Info Bento */}
             <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-[#f2f4f6] p-4 rounded-xl flex flex-col gap-3">
-                <FaRupeeSign className="text-[#0050cb] text-xl" />
+              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3">
+                <FaRupeeSign className="text-[#0050cb] dark:text-indigo-400 text-xl" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#424656] tracking-wider">Course Fee</p>
+                  <p className="text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider">Course Fee</p>
                   <p className="font-bold text-sm">₹{course.fees?.toLocaleString() || 0} One-time</p>
                 </div>
               </div>
-              <div className="bg-[#f2f4f6] p-4 rounded-xl flex flex-col gap-3">
+              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3">
                 <FaCalendarAlt className="text-[#954000] text-xl" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#424656] tracking-wider">Timeline</p>
+                  <p className="text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider">Timeline</p>
                   <p className="font-bold text-sm">{course.courseDuration || `${formatDate(course.startDate)} - ${formatDate(course.endDate)}`}</p>
                 </div>
               </div>
-              <div className="bg-[#f2f4f6] p-4 rounded-xl flex flex-col gap-3">
+              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3">
                 <FaUsers className="text-[#006e2f] text-xl" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#424656] tracking-wider">Enrollment</p>
+                  <p className="text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider">Enrollment</p>
                   <p className="font-bold text-sm">{isOneToAll ? `${enrolledCount}/${maxStudents}` : "Open Now"}</p>
                 </div>
               </div>
-              <div className="bg-[#f2f4f6] p-4 rounded-xl flex flex-col gap-3">
-                <FaBookOpen className="text-[#0050cb] text-xl" />
+              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3">
+                <FaBookOpen className="text-[#0050cb] dark:text-indigo-400 text-xl" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#424656] tracking-wider">Subject</p>
+                  <p className="text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider">Subject</p>
                   <p className="font-bold text-sm">
                     {Array.isArray(course.subject) ? course.subject.join(", ") : course.subject || "N/A"}
                   </p>
@@ -520,35 +520,35 @@ const CourseDetails = ({ id }) => {
             </section>
 
             {/* Sticky Tabs */}
-            <nav className="flex gap-6 overflow-x-auto hide-scrollbar border-b border-[#c2c6d8]/30 sticky top-16 lg:top-0 bg-[#f7f9fb]/80 backdrop-blur-md z-40 py-2 -mx-4 px-4 lg:mx-0 lg:px-0">
+            <nav className="flex gap-6 overflow-x-auto hide-scrollbar border-b border-[#c2c6d8]/30 dark:border-gray-700/30 sticky top-16 lg:top-0 bg-[#f7f9fb]/80 dark:bg-gray-950/80 backdrop-blur-md z-40 py-2 -mx-4 px-4 lg:mx-0 lg:px-0">
               <button
                 onClick={() => setActiveTab("overview")}
-                className={`${activeTab === "overview" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+                className={`${activeTab === "overview" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
               >
                 Overview
               </button>
               <button
                 onClick={() => setActiveTab("features")}
-                className={`${activeTab === "features" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+                className={`${activeTab === "features" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
               >
                 Features
               </button>
               <button
                 onClick={() => setActiveTab("prerequisites")}
-                className={`${activeTab === "prerequisites" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+                className={`${activeTab === "prerequisites" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
               >
                 Prerequisites
               </button>
               <button
                 onClick={() => setActiveTab("reviews")}
-                className={`${activeTab === "reviews" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+                className={`${activeTab === "reviews" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
               >
                 Reviews
               </button>
               {hasTestSeries && (
                 <button
                   onClick={() => setActiveTab("tests")}
-                  className={`${activeTab === "tests" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+                  className={`${activeTab === "tests" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
                 >
                   Test Series ({courseTests.length})
                 </button>
@@ -556,7 +556,7 @@ const CourseDetails = ({ id }) => {
               {course?.liveClass?.length > 0 && (
                 <button
                   onClick={() => setActiveTab("classes")}
-                  className={`${activeTab === "classes" ? "text-[#0050cb] font-bold border-b-2 border-[#0050cb]" : "text-[#424656] font-medium"} text-sm whitespace-nowrap pb-2`}
+                  className={`${activeTab === "classes" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
                 >
                   Classes
                 </button>
@@ -602,7 +602,7 @@ const CourseDetails = ({ id }) => {
                             />
                             <div className="absolute inset-0 bg-slate-900/30 flex items-center justify-center">
                               <div className="bg-white/90 p-5 rounded-full shadow-2xl active:scale-90 transition-transform">
-                                <FaPlay className="text-[#0050cb] text-3xl ml-1" />
+                                <FaPlay className="text-[#0050cb] dark:text-indigo-400 text-3xl ml-1" />
                               </div>
                             </div>
                           </button>
@@ -631,9 +631,9 @@ const CourseDetails = ({ id }) => {
                 )}
 
                 {course.description && (
-                  <section className="bg-white rounded-2xl p-6 shadow-sm space-y-3">
+                  <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm space-y-3">
                     <h3 className="text-lg font-bold">About this course</h3>
-                    <p className="text-sm text-[#424656] leading-relaxed whitespace-pre-line">
+                    <p className="text-sm text-[#424656] dark:text-gray-400 leading-relaxed whitespace-pre-line">
                       {course.description}
                     </p>
                   </section>
@@ -642,7 +642,7 @@ const CourseDetails = ({ id }) => {
             )}
 
             {activeTab === "features" && (
-              <section className="bg-white rounded-2xl p-6 space-y-6 shadow-sm">
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 space-y-6 shadow-sm">
                 <h3 className="text-lg font-bold">Core Features</h3>
                 {course.courseObjectives && course.courseObjectives.length > 0 ? (
                   <div className="grid gap-6 lg:grid-cols-2">
@@ -667,7 +667,7 @@ const CourseDetails = ({ id }) => {
                     })}
                   </div>
                 ) : (
-                  <p className="text-sm text-[#424656]">No features listed yet.</p>
+                  <p className="text-sm text-[#424656] dark:text-gray-400">No features listed yet.</p>
                 )}
               </section>
             )}
@@ -680,11 +680,11 @@ const CourseDetails = ({ id }) => {
                     {course.prerequisites.map((prerequisite, index) => (
                       <div
                         key={index}
-                        className="bg-[#bc5200]/5 border-l-4 border-[#954000] p-4 rounded-r-2xl"
+                        className="bg-[#bc5200]/5 dark:bg-orange-900/10 border-l-4 border-[#954000] p-4 rounded-r-2xl"
                       >
                         <div className="flex items-center gap-3">
                           <FaCheckCircle className="text-[#954000]" />
-                          <p className="text-sm font-medium text-[#783200]">
+                          <p className="text-sm font-medium text-[#783200] dark:text-orange-300">
                             {prerequisite}
                           </p>
                         </div>
@@ -692,7 +692,7 @@ const CourseDetails = ({ id }) => {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white rounded-2xl p-6 text-sm text-[#424656]">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-sm text-[#424656] dark:text-gray-400">
                     No specific prerequisites for this course.
                   </div>
                 )}
@@ -703,29 +703,29 @@ const CourseDetails = ({ id }) => {
               <section className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold">Reviews</h3>
-                  <div className="flex items-center gap-1 bg-[#006e2f]/10 px-3 py-1 rounded-full">
-                    <FaStar className="text-[#006e2f] text-xs" />
-                    <span className="text-sm font-bold text-[#006e2f]">
+                  <div className="flex items-center gap-1 bg-[#006e2f]/10 dark:bg-green-900/20 px-3 py-1 rounded-full">
+                    <FaStar className="text-[#006e2f] dark:text-green-400 text-xs" />
+                    <span className="text-sm font-bold text-[#006e2f] dark:text-green-400">
                       {ratingValue ? ratingValue.toFixed(1) : "—"} ({ratingCount})
                     </span>
                   </div>
                 </div>
 
                 <form
-                  className="bg-white rounded-2xl p-6 shadow-sm space-y-4"
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm space-y-4"
                   onSubmit={handleCourseReviewSubmit}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#c2c6d8] flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-[#c2c6d8] dark:bg-gray-600 flex items-center justify-center">
                       <FaUserCircle className="text-white text-xl" />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-bold">Write a public review</p>
-                      <p className="text-xs text-[#424656]">
+                      <p className="text-xs text-[#424656] dark:text-gray-400">
                         Reviews are limited to enrolled students.
                       </p>
                     </div>
-                    <FaUserEdit className="text-[#424656]" />
+                    <FaUserEdit className="text-[#424656] dark:text-gray-400" />
                   </div>
 
                   <div className="flex items-center gap-1">
@@ -741,28 +741,28 @@ const CourseDetails = ({ id }) => {
                         {renderStar(index)}
                       </button>
                     ))}
-                    <span className="ml-2 text-sm text-[#424656]">{reviewRating.toFixed(1)}</span>
+                    <span className="ml-2 text-sm text-[#424656] dark:text-gray-400">{reviewRating.toFixed(1)}</span>
                   </div>
 
                   <textarea
                     value={reviewText}
                     onChange={(event) => setReviewText(event.target.value)}
                     rows={4}
-                    className="w-full rounded-xl border border-[#c2c6d8] bg-white px-4 py-3 text-sm outline-none focus:border-[#0050cb]"
+                    className="w-full rounded-xl border border-[#c2c6d8] dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-gray-100 px-4 py-3 text-sm outline-none focus:border-[#0050cb] dark:focus:border-indigo-400"
                     placeholder="Share what you liked and what could improve."
                     disabled={!isEnrolled || isSubmittingReview}
                     required
                   />
 
                   {reviewStatus && (
-                    <p className="text-sm text-[#424656]">{reviewStatus}</p>
+                    <p className="text-sm text-[#424656] dark:text-gray-400">{reviewStatus}</p>
                   )}
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <button
                       type="submit"
                       className={`inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-sm ${
-                        isEnrolled ? "bg-[#0050cb] hover:bg-[#003fa4]" : "bg-gray-400 cursor-not-allowed"
+                        isEnrolled ? "bg-[#0050cb] dark:bg-indigo-500 hover:bg-[#003fa4] dark:hover:bg-indigo-600" : "bg-gray-400 cursor-not-allowed"
                       }`}
                       disabled={!isEnrolled || isSubmittingReview}
                     >
@@ -788,7 +788,7 @@ const CourseDetails = ({ id }) => {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white rounded-2xl p-6 text-center text-[#424656]">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center text-[#424656] dark:text-gray-400">
                     No live classes scheduled yet.
                   </div>
                 )}
@@ -799,12 +799,12 @@ const CourseDetails = ({ id }) => {
               <section className="space-y-4">
                 <h3 className="text-lg font-bold">Test Series</h3>
                 {testsLoading && (
-                  <div className="bg-white rounded-2xl p-6 text-center text-[#424656]">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center text-[#424656] dark:text-gray-400">
                     Loading test series...
                   </div>
                 )}
                 {!testsLoading && !hasTestSeries && (
-                  <div className="bg-white rounded-2xl p-6 text-center text-[#424656]">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center text-[#424656] dark:text-gray-400">
                     No test series assigned to this course yet.
                   </div>
                 )}
@@ -819,19 +819,19 @@ const CourseDetails = ({ id }) => {
                       return (
                         <div
                           key={test._id || test.id || index}
-                          className="bg-white rounded-2xl p-4 shadow-sm"
+                          className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm"
                         >
                           <div className="flex items-center justify-between gap-3">
                             <h4 className="text-base font-bold line-clamp-2">
                               {test.title || "Untitled Test Series"}
                             </h4>
                             {questionCount != null && (
-                              <span className="text-xs font-semibold text-[#0050cb] bg-[#0050cb]/10 px-3 py-1 rounded-full whitespace-nowrap">
+                              <span className="text-xs font-semibold text-[#0050cb] dark:text-indigo-400 bg-[#0050cb]/10 dark:bg-indigo-400/10 px-3 py-1 rounded-full whitespace-nowrap">
                                 {questionCount} Qs
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-[#424656] line-clamp-3 mt-2">
+                          <p className="text-sm text-[#424656] dark:text-gray-400 line-clamp-3 mt-2">
                             {test.description || "No description provided."}
                           </p>
                         </div>
@@ -846,10 +846,10 @@ const CourseDetails = ({ id }) => {
             {activeTab === "overview" && (
               <section className="space-y-4">
                 <h3 className="text-lg font-bold">Primary Instructor</h3>
-                <div className="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm">
+                <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl flex items-center gap-4 shadow-sm">
                   <img
                     alt={educatorName}
-                    className="w-16 h-16 rounded-xl object-cover bg-[#c2c6d8]"
+                    className="w-16 h-16 rounded-xl object-cover bg-[#c2c6d8] dark:bg-gray-600"
                     src={
                       educator?.profileImage ||
                       educator?.profilePicture ||
@@ -862,7 +862,7 @@ const CourseDetails = ({ id }) => {
                   />
                   <div className="min-w-0">
                     <h4 className="font-bold text-base truncate">{educatorName}</h4>
-                    <p className="text-xs text-[#424656] mb-1">
+                    <p className="text-xs text-[#424656] dark:text-gray-400 mb-1">
                       {(() => {
                         const t = educator?.title;
                         const q = educator?.qualification;
@@ -888,7 +888,7 @@ const CourseDetails = ({ id }) => {
                   {resolvedEducatorId && (
                     <button
                       onClick={() => router.push(`/profile/educator/${educator?.slug || resolvedEducatorId}`)}
-                      className="ml-auto bg-[#0050cb]/5 p-2 rounded-full text-[#0050cb]"
+                      className="ml-auto bg-[#0050cb]/5 dark:bg-indigo-400/10 p-2 rounded-full text-[#0050cb] dark:text-indigo-400"
                       aria-label="View instructor"
                     >
                       <FaChevronRight />
@@ -902,14 +902,14 @@ const CourseDetails = ({ id }) => {
           {/* Right column — desktop sticky sidebar */}
           <aside className="hidden lg:block lg:col-span-1">
             <div className="sticky top-6 space-y-4">
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
-                <p className="text-[#424656] text-xs font-semibold mb-1">Total Fee</p>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+                <p className="text-[#424656] dark:text-gray-400 text-xs font-semibold mb-1">Total Fee</p>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-3xl font-extrabold text-[#0050cb]">
+                  <span className="text-3xl font-extrabold text-[#0050cb] dark:text-indigo-400">
                     ₹{course.fees?.toLocaleString() || "0"}
                   </span>
                   {course.discount > 0 && (
-                    <span className="text-xs font-medium text-[#006e2f]">
+                    <span className="text-xs font-medium text-[#006e2f] dark:text-green-400">
                       {course.discount}% off
                     </span>
                   )}
@@ -932,21 +932,21 @@ const CourseDetails = ({ id }) => {
                   />
                 )}
 
-                <div className="mt-5 pt-5 border-t border-[#c2c6d8]/30 space-y-3 text-sm">
+                <div className="mt-5 pt-5 border-t border-[#c2c6d8]/30 dark:border-gray-700/30 space-y-3 text-sm">
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-[#424656]">
+                    <span className="flex items-center gap-2 text-[#424656] dark:text-gray-400">
                       <FaClock /> Duration
                     </span>
                     <span className="font-semibold">{course.courseDuration || "N/A"}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-[#424656]">
+                    <span className="flex items-center gap-2 text-[#424656] dark:text-gray-400">
                       <FaCalendarAlt /> Classes / Week
                     </span>
                     <span className="font-semibold">{course.classesPerWeek || "N/A"}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-[#424656]">
+                    <span className="flex items-center gap-2 text-[#424656] dark:text-gray-400">
                       <FaClock /> Per Class
                     </span>
                     <span className="font-semibold">
@@ -955,20 +955,20 @@ const CourseDetails = ({ id }) => {
                   </div>
                   {course.classTiming && (
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-2 text-[#424656]">
+                      <span className="flex items-center gap-2 text-[#424656] dark:text-gray-400">
                         <FaClock /> Timing
                       </span>
                       <span className="font-semibold">{course.classTiming}</span>
                     </div>
                   )}
                   <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-[#424656]">
+                    <span className="flex items-center gap-2 text-[#424656] dark:text-gray-400">
                       <FaChair /> Enrolled
                     </span>
                     <span className="font-semibold">{enrolledCount}</span>
                   </div>
                   {course.certificateAvailable && (
-                    <div className="flex items-center gap-2 text-xs text-[#424656] pt-2 border-t border-[#c2c6d8]/30">
+                    <div className="flex items-center gap-2 text-xs text-[#424656] dark:text-gray-400 pt-2 border-t border-[#c2c6d8]/30 dark:border-gray-700/30">
                       <FaGraduationCap /> Certificate on completion
                     </div>
                   )}
@@ -976,8 +976,8 @@ const CourseDetails = ({ id }) => {
               </div>
 
               {!isEnrolled && educator?.whatsappNumber && (
-                <div className="bg-linear-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200 p-5">
-                  <p className="text-sm text-[#424656] mb-3 text-center">
+                <div className="bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border border-green-200 dark:border-green-800 p-5">
+                  <p className="text-sm text-[#424656] dark:text-gray-400 mb-3 text-center">
                     Worried about buying a course?
                   </p>
                   <a
@@ -997,7 +997,7 @@ const CourseDetails = ({ id }) => {
 
         {/* Mobile WhatsApp CTA */}
         {!isEnrolled && educator?.whatsappNumber && (
-          <section className="lg:hidden bg-linear-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200 p-5">
+          <section className="lg:hidden bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl border border-green-200 dark:border-green-800 p-5">
             <p className="text-sm text-[#424656] mb-3 text-center">
               Worried about buying a course?
             </p>
@@ -1015,7 +1015,7 @@ const CourseDetails = ({ id }) => {
       </main>
 
       {/* Mobile Sticky Bottom Bar */}
-      <footer className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl rounded-t-3xl shadow-[0_-12px_40px_rgba(0,80,203,0.06)] flex justify-between items-center px-4 pt-4 pb-6">
+      <footer className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-t-3xl shadow-[0_-12px_40px_rgba(0,80,203,0.06)] flex justify-between items-center px-4 pt-4 pb-6">
         {isEnrolled ? (
           <button
             onClick={handleOpenCoursePanel}
@@ -1031,7 +1031,7 @@ const CourseDetails = ({ id }) => {
                 href={`https://wa.me/${educator.whatsappNumber.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 bg-slate-100 text-slate-900 rounded-2xl h-14 mx-2 font-bold text-sm"
+                className="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-gray-800 text-slate-900 dark:text-gray-100 rounded-2xl h-14 mx-2 font-bold text-sm"
               >
                 <FaWhatsapp />
                 Contact

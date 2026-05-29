@@ -9,7 +9,7 @@ const safeNumber = (value, fallback = 0) => {
 };
 
 const STAT_BTN =
-  "bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50";
+  "bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center gap-1 hover:border-[#231fe5]/30 dark:hover:border-indigo-400/30 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#231fe5]/50 dark:focus-visible:ring-indigo-400/50";
 
 const StatButton = ({ onClick, iconBg, iconColor, Icon, value, label }) => (
   <button type="button" onClick={onClick} className={STAT_BTN}>

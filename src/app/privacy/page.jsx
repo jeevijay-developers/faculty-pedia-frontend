@@ -236,7 +236,7 @@ const PrivacyPage = () => {
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-600/10 blur-[100px]" />
           <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-blue-400/10 blur-[100px]" />
@@ -251,7 +251,7 @@ const PrivacyPage = () => {
             Privacy & Data Protection
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400">
             Privacy Policy
           </h1>
 
@@ -291,7 +291,7 @@ const PrivacyPage = () => {
               <a
                 key={s.number}
                 href={`#section-${s.number}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:bg-blue-900/20 transition-all duration-200"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-all duration-200"
               >
                 <span className="text-blue-500 font-bold">{s.number}</span>
                 <span className="hidden sm:inline">{s.title}</span>
@@ -314,7 +314,7 @@ const PrivacyPage = () => {
                 className="scroll-mt-24 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-shadow duration-300"
               >
                 {/* card header with accent bar */}
-                <div className="flex items-center gap-4 px-8 py-5 bg-gradient-to-r from-blue-50 to-white border-b border-gray-100 dark:border-gray-800">
+                <div className="flex items-center gap-4 px-8 py-5 bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-900 border-b border-gray-100 dark:border-gray-800">
                   <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-100 text-blue-600 shrink-0">
                     <Icon className="w-5 h-5" />
                   </div>
@@ -377,8 +377,8 @@ const PrivacyPage = () => {
                   {section.callout && (
                     <div className={`rounded-xl px-5 py-4 text-sm font-medium ${
                       section.callout.type === "warning"
-                        ? "bg-amber-50 border border-amber-200 text-amber-800"
-                        : "bg-blue-50 dark:bg-blue-900/20 border border-blue-100 text-blue-700"
+                        ? "bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-300"
+                        : "bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 text-blue-700 dark:text-blue-300"
                     }`}>
                       {section.callout.type === "warning" && <span className="mr-1.5">&#9888;&#65039;</span>}
                       {section.callout.text}

@@ -20,24 +20,17 @@ const deriveEducatorName = (webinar) => {
       ? webinar.creator
       : null);
 
-  const candidate =
-    [
-      webinar?.educatorName,
-      webinar?.educatorFullName,
-      educatorObject?.fullName,
-          educatorObject?.name,
-      [educatorObject?.firstName, educatorObject?.lastName]
-        .filter(Boolean)
-        .join(" "),
-      educatorObject?.username,
-      webinar?.creatorName,
-    ].find((val) => typeof val === "string" && val.trim()) ||
-    (typeof webinar?.educatorID === "string" && webinar.educatorID.trim()
-      ? webinar.educatorID.trim()
-      : null) ||
-    (typeof webinar?.educatorId === "string" && webinar.educatorId.trim()
-      ? webinar.educatorId.trim()
-      : null);
+  const candidate = [
+    webinar?.educatorName,
+    webinar?.educatorFullName,
+    educatorObject?.fullName,
+    educatorObject?.name,
+    [educatorObject?.firstName, educatorObject?.lastName]
+      .filter(Boolean)
+      .join(" "),
+    educatorObject?.username,
+    webinar?.creatorName,
+  ].find((val) => typeof val === "string" && val.trim());
 
   return candidate || "Educator";
 };

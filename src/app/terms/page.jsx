@@ -215,7 +215,7 @@ const TermsPage = () => {
     <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-600/10 blur-[100px]" />
           <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-blue-400/10 blur-[100px]" />
@@ -230,7 +230,7 @@ const TermsPage = () => {
             Legal
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-400">
             Terms & Conditions
           </h1>
 
@@ -322,7 +322,7 @@ const TermsPage = () => {
 
               {/* sub section with its own intro + bullets */}
               {section.subSection && (
-                <div className="mt-5 rounded-xl bg-red-50/50 border border-red-100 p-5">
+                <div className="mt-5 rounded-xl bg-red-50/50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 p-5">
                   <p className="text-gray-700 dark:text-gray-300 text-sm font-semibold mb-3">{section.subSection.intro}</p>
                   <BulletList items={section.subSection.bullets} />
                 </div>
@@ -341,7 +341,7 @@ const TermsPage = () => {
                       )}
                       {child.bullets && <BulletList items={child.bullets} />}
                       {child.followUp && (
-                        <div className="mt-4 rounded-xl bg-red-50/50 border border-red-100 p-4">
+                        <div className="mt-4 rounded-xl bg-red-50/50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 p-4">
                           <p className="text-gray-700 dark:text-gray-300 text-sm font-semibold mb-3">{child.followUp}</p>
                           {child.followUpBullets && <BulletList items={child.followUpBullets} />}
                         </div>

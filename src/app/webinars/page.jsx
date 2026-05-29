@@ -225,7 +225,7 @@ export default function WebinarsPage() {
 
         {/* Tabs */}
         <div className="mb-8" data-aos="fade-up" data-aos-delay="100">
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
             {subjects.map((subject) => (
               <button
                 key={subject}
@@ -234,7 +234,7 @@ export default function WebinarsPage() {
                 className={`flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full px-5 text-sm font-medium transition-all whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeTab === subject
                     ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                    : "bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
+                    : "bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 {subject}

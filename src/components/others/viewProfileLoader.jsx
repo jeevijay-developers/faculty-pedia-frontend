@@ -1,6 +1,6 @@
 "use client";
 
-const shimmer = "bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200";
+const shimmer = "bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700";
 
 const Bar = ({ className = "" }) => (
 	<div className={`rounded-md ${shimmer} animate-pulse ${className}`} />
@@ -41,7 +41,7 @@ const ViewProfileLoader = () => {
 						<div className="flex flex-col items-center text-center gap-4">
 							<div className="relative">
 								<div className="h-28 w-28 rounded-full bg-gray-200 dark:bg-gray-700" />
-								<div className="absolute bottom-1 right-1 h-4 w-4 rounded-full bg-gray-300 border-2 border-white" />
+								<div className="absolute bottom-1 right-1 h-4 w-4 rounded-full bg-gray-300 dark:bg-gray-600 border-2 border-white dark:border-gray-900" />
 							</div>
 							<div className="space-y-2 w-full">
 								<Bar className="h-4 w-2/3 mx-auto" />

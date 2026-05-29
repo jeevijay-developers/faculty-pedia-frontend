@@ -24,6 +24,10 @@ const StyledWrapper = styled.div`
   justify-content: center;
   background: linear-gradient(135deg, #f6f6f8 0%, #FAFAFA 100%);
 
+  @media (prefers-color-scheme: dark) {
+    background: linear-gradient(135deg, #030712 0%, #111827 100%);
+  }
+
   .wrapper {
     width: 200px;
     height: 60px;
@@ -40,6 +44,16 @@ const StyledWrapper = styled.div`
     left: 15%;
     transform-origin: 50%;
     animation: circle7124 0.5s alternate infinite ease;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .circle {
+      background-color: #818cf8;
+    }
+
+    .shadow {
+      background-color: rgba(129, 140, 248, 0.2);
+    }
   }
 
   @keyframes circle7124 {

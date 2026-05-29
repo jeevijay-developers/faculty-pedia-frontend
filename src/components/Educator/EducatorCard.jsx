@@ -119,7 +119,7 @@ const EducatorCard = ({ educator }) => {
               alt={displayName}
               width={96}
               height={96}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover object-top"
               onError={() => setProfileImageUrl(EDUCATOR_FALLBACK_IMAGE)}
             />
           </div>

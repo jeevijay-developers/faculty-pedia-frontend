@@ -390,7 +390,7 @@ const WebinarDetails = ({ webinar }) => {
       </section>
 
       {/* Info strip (glassmorphism) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-7 md:-mt-10 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-3 md:-mt-10 relative z-20">
         <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl md:rounded-full p-5 md:px-10 md:py-5 grid grid-cols-2 md:flex md:flex-nowrap md:justify-between md:items-center gap-5 md:gap-6 shadow-xl border border-white/60 dark:border-gray-700/60">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 shrink-0">
@@ -817,24 +817,8 @@ const WebinarDetails = ({ webinar }) => {
                 }}
               />
             </div>
-            {whatsappUrl && (
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Talk to educator on WhatsApp"
-                className="shrink-0 w-12 h-12 flex items-center justify-center rounded-full bg-[#25D366]/10 border border-[#25D366]/40 hover:bg-[#25D366]/20 transition-colors duration-200 cursor-pointer"
-              >
-                <FaWhatsapp className="w-6 h-6 text-[#25D366]" />
-              </a>
-            )}
           </div>
         </div>
-        {whatsappUrl && (
-          <p className="text-[10px] text-center text-gray-400 dark:text-gray-500 pb-1.5 -mt-1">
-            Worried about joining? Tap the WhatsApp icon to talk to the educator
-          </p>
-        )}
       </div>
 
     </div>

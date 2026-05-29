@@ -1,6 +1,6 @@
 "use client";
 
-const shimmer = "bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200";
+const shimmer = "bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700";
 
 const Bar = ({ className = "" }) => (
 	<div className={`rounded-md ${shimmer} animate-pulse ${className}`} />

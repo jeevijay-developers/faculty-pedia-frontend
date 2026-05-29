@@ -143,7 +143,7 @@ const TestSeriesDetailPage = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Custom Hero Section optimized for 1200x400 banner */}
       <div className="px-4 pt-4 sm:px-6 sm:pt-6">
-        <div className="relative mx-auto w-full max-w-[1200px] aspect-[3/1] overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-900">
+        <div className="relative mx-auto w-full max-w-[1200px] min-h-[180px] sm:aspect-[3/1] overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-900">
           <Image
             src={testSeries.image || "/images/placeholders/card-16x9.svg"}
             alt={testSeries.title || "Test Series"}

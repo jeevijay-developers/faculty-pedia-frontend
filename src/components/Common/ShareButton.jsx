@@ -17,7 +17,7 @@ const VARIANT_CLASSNAMES = {
 };
 
 const SIZE_CLASSNAMES = {
-  sm: "px-3 py-1.5 text-sm",
+  sm: "p-2 text-sm",
   md: "px-4 py-2 text-sm",
   lg: "px-5 py-2.5 text-base",
 };
@@ -169,7 +169,7 @@ const ShareButton = ({
       <button
         type="button"
         onClick={handleOpenModal}
-        className={`inline-flex items-center justify-center gap-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 ${variantClasses} ${sizeClasses} ${className}`.trim()}
+        className={`inline-flex items-center justify-center gap-2 rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 ${variantClasses} ${sizeClasses} ${className}`.trim()}
         aria-label={displayLabel}
       >
         <Icon className="h-4 w-4" />

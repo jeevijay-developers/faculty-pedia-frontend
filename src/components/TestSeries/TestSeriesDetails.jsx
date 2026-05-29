@@ -448,7 +448,7 @@ const TestSeriesDetails = ({ testSeriesData }) => {
   ]);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 text-gray-900 dark:text-gray-100">
+    <div className="max-w-7xl mx-auto px-6 py-6 pb-28 lg:pb-6 text-gray-900 dark:text-gray-100">
       {showReviewSuccess && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6 text-center">
@@ -482,37 +482,25 @@ const TestSeriesDetails = ({ testSeriesData }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         {/* Main Content */}
         <div className="lg:col-span-2">
-          {/* Hero Banner */}
-          <div className="relative overflow-hidden rounded-md h-80 mb-8 border border-gray-200 dark:border-gray-700">
-            <div className="absolute inset-0 bg-linear-to-br from-[#1E88E5]/10 to-[#1E88E5]/5"></div>
-            <div className="relative z-10 p-8 flex flex-col justify-center h-full">
-              <div className="flex gap-2 mb-6">
-                {testSeriesData.specialization && (
-                  <span className="bg-[#1E88E5]/10 text-[#1E88E5] border border-[#1E88E5]/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
-                    {Array.isArray(testSeriesData.specialization) 
-                      ? testSeriesData.specialization[0] 
-                      : testSeriesData.specialization}
-                  </span>
-                )}
-                {testSeriesData.subject && (
-                  <span className="bg-[#1E88E5]/10 text-[#1E88E5] border border-[#1E88E5]/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
-                    {Array.isArray(testSeriesData.subject) 
-                      ? testSeriesData.subject[0] 
-                      : testSeriesData.subject}
-                  </span>
-                )}
-              </div>
-              <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4 max-w-2xl text-gray-900 dark:text-gray-100">
-                {testSeriesData.title || "Test Series Title"}
-              </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-xl">
-                {descriptionText || "Master your exam preparation with comprehensive mock tests designed by expert faculty."}
-              </p>
+          {/* Subject/Specialization tags */}
+          {(testSeriesData.specialization || testSeriesData.subject) && (
+            <div className="flex flex-wrap gap-2 mb-6">
+              {testSeriesData.specialization && (
+                <span className="bg-[#1E88E5]/10 text-[#1E88E5] border border-[#1E88E5]/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                  {Array.isArray(testSeriesData.specialization)
+                    ? testSeriesData.specialization[0]
+                    : testSeriesData.specialization}
+                </span>
+              )}
+              {testSeriesData.subject && (
+                <span className="bg-[#1E88E5]/10 text-[#1E88E5] border border-[#1E88E5]/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                  {Array.isArray(testSeriesData.subject)
+                    ? testSeriesData.subject[0]
+                    : testSeriesData.subject}
+                </span>
+              )}
             </div>
-            <div className="absolute -right-5 -bottom-5 opacity-[0.03]">
-              <FaBookOpen className="text-[240px] text-gray-900 dark:text-gray-100" />
-            </div>
-          </div>
+          )}
 
           <div className="flex flex-col gap-10">
             {/* About Section */}
@@ -965,6 +953,30 @@ const TestSeriesDetails = ({ testSeriesData }) => {
                 Based on {reviewSummary.count} verified reviews
               </p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile sticky CTA bar */}
+      <div className="fixed bottom-0 left-0 w-full z-40 lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-[0_-4px_20px_0_rgba(0,0,0,0.08)] border-t border-gray-200 dark:border-gray-800">
+        <div className="flex items-center px-4 py-3 gap-3">
+          <div className="shrink-0">
+            <p className="text-[10px] uppercase font-bold text-gray-500 dark:text-gray-400 tracking-widest">Price</p>
+            <p className="text-lg font-extrabold text-gray-900 dark:text-gray-100 leading-none">
+              {testSeriesData.price > 0 ? `₹${testSeriesData.price?.toLocaleString()}` : "Free"}
+            </p>
+          </div>
+          <div className="flex-1">
+            <EnrollButton
+              type="testseries"
+              itemId={testSeriesData._id || testSeriesData.id}
+              price={testSeriesData.price}
+              title="Enroll Now"
+              joinLabel="Join Test Series"
+              initialEnrolled={isEnrolled}
+              onEnrollmentSuccess={handleEnrollmentSuccess}
+              className="w-full bg-[#1E88E5] text-white py-3 rounded-full font-bold text-sm shadow-lg"
+            />
           </div>
         </div>
       </div>
