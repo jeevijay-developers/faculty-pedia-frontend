@@ -1118,7 +1118,13 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                 <div className="relative border-l-2 border-gray-100 dark:border-gray-800 ml-3 space-y-8">
                   {educatorData.workExperience &&
                   educatorData.workExperience.length > 0 ? (
-                    educatorData.workExperience.map((exp, index) => (
+                    [...educatorData.workExperience]
+                      .sort((a, b) => {
+                        const aYear = a.startDate ? new Date(a.startDate).getFullYear() : 0;
+                        const bYear = b.startDate ? new Date(b.startDate).getFullYear() : 0;
+                        return bYear - aYear;
+                      })
+                      .map((exp, index) => (
                       <div key={index} className="relative pl-6">
                         <div
                           className={`absolute -left-2.25 top-1.5 w-4 h-4 rounded-full ${
