@@ -31,7 +31,7 @@ const MobileAppAdSection = () => {
 
             <div className="pt-4">
               <div className="flex flex-col sm:flex-row gap-4 items-center">
-                <Link
+                {/* <Link
                   href="#"
                   className="bg-black text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-gray-800 transition-colors duration-300 w-full sm:w-auto justify-center"
                 >
@@ -40,10 +40,10 @@ const MobileAppAdSection = () => {
                     <span className="text-xs">Download on the</span>
                     <span className="font-semibold">App Store</span>
                   </div>
-                </Link>
+                </Link> */}
 
                 <Link
-                  href="#"
+                  href="https://play.google.com/store/apps/details?id=com.facultypedia.app&pcampaignid=web_share"
                   className="bg-black text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-gray-800 transition-colors duration-300 w-full sm:w-auto justify-center"
                 >
                   <RiAndroidFill className="text-xl" />
