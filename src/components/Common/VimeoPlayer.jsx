@@ -35,10 +35,14 @@ export default function VimeoPlayer({
 
   const videoId = extractVimeoId(url);
 
-  // Track fullscreen changes so the button icon/label stays in sync
+  // Track fullscreen changes so the button icon/label stays in sync.
+  // Checks both the standard and Safari-prefixed fullscreen element so the
+  // icon doesn't get stuck after exiting fullscreen on Safari/desktop.
   useEffect(() => {
     const onChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setIsFullscreen(
+        !!(document.fullscreenElement || document.webkitFullscreenElement)
+      );
     };
     document.addEventListener("fullscreenchange", onChange);
     document.addEventListener("webkitfullscreenchange", onChange);
@@ -58,12 +62,10 @@ export default function VimeoPlayer({
   const toggleFullscreen = () => {
     const el = iframeRef.current;
     if (!el) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen?.();
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
     } else {
-      el.requestFullscreen?.() ??
-        el.webkitRequestFullscreen?.() ??
-        el.mozRequestFullScreen?.();
+      (el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen)?.call(el);
     }
   };
 
