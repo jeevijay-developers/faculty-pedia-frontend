@@ -56,7 +56,10 @@ const AllPostsSection = ({ educatorId, educatorName: propEducatorName }) => {
         setAllPosts(
           posts.filter((post) => {
             const edu = post?.educatorId || post?.educator;
-            return edu && (edu.fullName || edu.name || edu.firstName);
+            if (!edu || typeof edu === "string") return false;
+            const status = (edu.status || "active").toLowerCase();
+            if (status === "inactive" || status === "disabled") return false;
+            return !!(edu.fullName || edu.name || edu.firstName);
           })
         );
         setPagination(paginationData);

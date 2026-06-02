@@ -46,7 +46,11 @@ const PostCarousel = ({ subject = "All", specialization }) => {
         setData(
           postsData.filter((post) => {
             const edu = post?.educatorId || post?.educator;
-            return edu && (edu.fullName || edu.name || edu.firstName);
+            if (!edu || typeof edu === "string") return false;
+            // Hide posts from inactive/disabled educators
+            const status = (edu.status || "active").toLowerCase();
+            if (status === "inactive" || status === "disabled") return false;
+            return !!(edu.fullName || edu.name || edu.firstName);
           })
         );
       } catch (error) {
