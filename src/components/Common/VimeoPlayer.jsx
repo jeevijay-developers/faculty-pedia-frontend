@@ -14,6 +14,15 @@ const extractVimeoId = (value) => {
   return match?.[1] ?? null;
 };
 
+// iOS Safari and all iOS browsers (Chrome, Firefox) use the same WebKit engine
+// and completely block requestFullscreen() on iframes — Apple does not implement
+// it. The only reliable fullscreen on iOS is Vimeo's own native button, which
+// hands off to the iOS system video player. For that to work, playsinline must
+// NOT be set on iOS (it suppresses Vimeo's fullscreen button).
+const isIOS =
+  typeof navigator !== "undefined" &&
+  /iP(hone|ad|od)/i.test(navigator.userAgent);
+
 /**
  * Props:
  *   url      – Vimeo video URL or numeric ID (required)
@@ -36,9 +45,10 @@ export default function VimeoPlayer({
   const videoId = extractVimeoId(url);
 
   // Track fullscreen changes so the button icon/label stays in sync.
-  // Checks both the standard and Safari-prefixed fullscreen element so the
-  // icon doesn't get stuck after exiting fullscreen on Safari/desktop.
+  // Checks both standard and Safari-prefixed properties so the icon doesn't
+  // get stuck after exiting fullscreen on desktop Safari.
   useEffect(() => {
+    if (isIOS) return;
     const onChange = () => {
       setIsFullscreen(
         !!(document.fullscreenElement || document.webkitFullscreenElement)
@@ -54,9 +64,13 @@ export default function VimeoPlayer({
 
   if (!videoId) return null;
 
+  // playsinline=1 on iOS suppresses Vimeo's own fullscreen button, leaving the
+  // user with no fullscreen path at all. Omitting it lets Vimeo's ⛶ button
+  // trigger the iOS system video player with native fullscreen support.
   const embedUrl =
     `https://player.vimeo.com/video/${videoId}` +
-    `?autoplay=1&controls=1&pip=1&responsive=1&playsinline=1` +
+    `?autoplay=1&controls=1&pip=1&responsive=1` +
+    (isIOS ? `` : `&playsinline=1`) +
     `&title=0&byline=0&portrait=0&color=231fe5`;
 
   const toggleFullscreen = () => {
@@ -70,7 +84,6 @@ export default function VimeoPlayer({
   };
 
   return (
-    // "group" enables child elements to respond to hover on the container
     <div
       className={`group relative w-full aspect-video bg-black overflow-hidden ${className}`}
     >
@@ -86,37 +99,37 @@ export default function VimeoPlayer({
             allowFullScreen
           />
 
-          {/*
-            Fullscreen toggle button
-            - Mobile (< sm): always visible
-            - Desktop: hidden by default, revealed when the player is hovered
-          */}
-          <button
-            onClick={toggleFullscreen}
-            className={`
-              absolute bottom-3 right-3 z-20
-              flex items-center gap-1
-              bg-black/70 hover:bg-black
-              text-white text-xs font-semibold
-              px-2.5 py-1.5 rounded-lg
-              transition-opacity duration-200
-              focus:opacity-100
-              ${isFullscreen
-                ? "opacity-100"
-                : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-              }
-            `}
-            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-          >
-            {isFullscreen ? (
-              <MdFullscreenExit className="text-lg shrink-0" />
-            ) : (
-              <MdFullscreen className="text-lg shrink-0" />
-            )}
-            <span className="sm:hidden">
-              {isFullscreen ? "Exit" : "Fullscreen"}
-            </span>
-          </button>
+          {/* Custom fullscreen button — hidden on iOS because requestFullscreen
+              is blocked by Apple on all iOS browsers. On iOS, Vimeo's own ⛶
+              button (visible in the player controls) handles fullscreen instead. */}
+          {!isIOS && (
+            <button
+              onClick={toggleFullscreen}
+              className={`
+                absolute bottom-3 right-3 z-20
+                flex items-center gap-1
+                bg-black/70 hover:bg-black
+                text-white text-xs font-semibold
+                px-2.5 py-1.5 rounded-lg
+                transition-opacity duration-200
+                focus:opacity-100
+                ${isFullscreen
+                  ? "opacity-100"
+                  : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                }
+              `}
+              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            >
+              {isFullscreen ? (
+                <MdFullscreenExit className="text-lg shrink-0" />
+              ) : (
+                <MdFullscreen className="text-lg shrink-0" />
+              )}
+              <span className="sm:hidden">
+                {isFullscreen ? "Exit" : "Fullscreen"}
+              </span>
+            </button>
+          )}
         </>
       ) : (
         <button
