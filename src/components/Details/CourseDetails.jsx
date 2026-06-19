@@ -359,7 +359,7 @@ const CourseDetails = ({ id }) => {
         />
       </header>
 
-      <main className="pt-20 pb-36 px-4 space-y-8 max-w-7xl mx-auto lg:pt-8 lg:pb-10 lg:px-8">
+      <main className="pt-20 pb-36 px-3 space-y-5 max-w-7xl mx-auto sm:px-4 sm:space-y-6 lg:pt-8 lg:pb-10 lg:px-8 lg:space-y-8">
         {/* Desktop top bar */}
         <div className="hidden lg:flex items-center justify-between">
           <button
@@ -379,9 +379,9 @@ const CourseDetails = ({ id }) => {
         </div>
 
         {/* Desktop grid wrapper */}
-        <div className="lg:grid lg:grid-cols-3 lg:gap-8 space-y-8 lg:space-y-0">
+        <div className="lg:grid lg:grid-cols-3 lg:gap-8 space-y-5 sm:space-y-6 lg:space-y-0">
           {/* Left / main column */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-5 sm:space-y-6 lg:space-y-8">
             {/* Hero Section */}
             <section>
               <div className="relative overflow-hidden rounded-2xl aspect-video shadow-xl group">
@@ -390,13 +390,13 @@ const CourseDetails = ({ id }) => {
                   className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
                   src={heroImage}
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-slate-900/90 via-slate-900/40 to-transparent flex flex-col justify-end p-4 sm:p-6">
-                  {/* Badges — hidden on mobile to prevent overlap with image content */}
-                  <div className="hidden sm:flex flex-wrap gap-2 mb-3">
+                {/* Overlay — hidden entirely on mobile, shown sm+ */}
+                <div className="hidden sm:flex absolute inset-0 bg-linear-to-t from-slate-900/90 via-slate-900/40 to-transparent flex-col justify-end p-5 lg:p-6">
+                  <div className="flex flex-wrap gap-1.5 mb-2 sm:mb-3">
                     {course.specialization?.map((spec, idx) => (
                       <span
                         key={`spec-${idx}`}
-                        className="bg-[#0066ff] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                        className="bg-[#0066ff] text-white text-[9px] sm:text-[10px] font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full uppercase tracking-wider"
                       >
                         {spec}
                       </span>
@@ -404,32 +404,44 @@ const CourseDetails = ({ id }) => {
                     {course.class?.map((cls, idx) => (
                       <span
                         key={`cls-${idx}`}
-                        className="bg-[#6bff8f] text-[#007432] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                        className="bg-[#6bff8f] text-[#007432] text-[9px] sm:text-[10px] font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full uppercase tracking-wider"
                       >
                         {cls}
                       </span>
                     ))}
-                    <span className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
+                    <span className="bg-white/20 text-white text-[9px] sm:text-[10px] font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
                       {courseTypeLabel}
                     </span>
                   </div>
-                  <h2 className="text-white font-bold leading-tight text-xl sm:text-2xl lg:text-4xl">
+                  <h2 className="text-white font-bold leading-tight sm:text-xl lg:text-3xl xl:text-4xl line-clamp-3">
                     {course.title}
                   </h2>
                   {course.description && (
-                    <p className="hidden lg:block text-white/80 text-sm mt-3 line-clamp-2 max-w-3xl">
+                    <p className="hidden lg:block text-white/80 text-sm mt-2 line-clamp-2 max-w-3xl">
                       {course.description}
                     </p>
                   )}
                 </div>
               </div>
 
+              {/* Mobile-only: title + short description below the banner image */}
+              <div className="sm:hidden mt-3 space-y-1.5 px-0.5">
+                <h2 className="text-[#191c1e] dark:text-gray-100 font-bold text-lg leading-snug">
+                  {course.title}
+                </h2>
+                {course.description && (
+                  <p className="text-xs text-[#424656] dark:text-gray-400 leading-relaxed line-clamp-3">
+                    {course.description}
+                  </p>
+                )}
+              </div>
+
               {/* Badges row — mobile only, shown cleanly below the image */}
-              <div className="flex sm:hidden flex-wrap gap-2 mt-3 px-1">
+              <div className="flex sm:hidden flex-wrap gap-1.5 mt-2.5 px-0.5">
                 {course.specialization?.map((spec, idx) => (
                   <span
                     key={`spec-m-${idx}`}
-                    className="bg-[#0066ff] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                    className="bg-[#0066ff] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide"
                   >
                     {spec}
                   </span>
@@ -437,48 +449,48 @@ const CourseDetails = ({ id }) => {
                 {course.class?.map((cls, idx) => (
                   <span
                     key={`cls-m-${idx}`}
-                    className="bg-[#6bff8f] text-[#007432] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider"
+                    className="bg-[#6bff8f] text-[#007432] text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide"
                   >
                     {cls}
                   </span>
                 ))}
-                <span className="bg-slate-200 text-slate-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                <span className="bg-slate-200 text-slate-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wide">
                   {courseTypeLabel}
                 </span>
               </div>
             </section>
 
             {/* Price / Enrollment */}
-            <section className="flex items-end justify-between bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
-              <div>
-                <p className="text-[#424656] dark:text-gray-400 text-xs font-semibold mb-1">Total Fee</p>
-                <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-extrabold text-[#0050cb] dark:text-indigo-400">
+            <section className="flex items-center justify-between bg-white dark:bg-gray-800 p-4 sm:p-5 rounded-2xl shadow-sm gap-3">
+              <div className="min-w-0">
+                <p className="text-[#424656] dark:text-gray-400 text-[11px] sm:text-xs font-semibold mb-0.5">Total Fee</p>
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#0050cb] dark:text-indigo-400 leading-none">
                     ₹{course.fees?.toLocaleString() || "0"}
                   </span>
                   {course.discount > 0 && (
-                    <span className="text-[#424656] dark:text-gray-400 line-through text-sm">
+                    <span className="text-[#424656] dark:text-gray-400 line-through text-xs sm:text-sm">
                       ₹{Math.round((course.fees || 0) / (1 - course.discount / 100)).toLocaleString()}
                     </span>
                   )}
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right shrink-0">
                 {isOneToAll && (
                   <>
-                    <div className="w-32 h-2 bg-[#eceef0] dark:bg-gray-700 rounded-full mb-2 overflow-hidden">
+                    <div className="w-24 sm:w-32 h-1.5 sm:h-2 bg-[#eceef0] dark:bg-gray-700 rounded-full mb-1.5 sm:mb-2 overflow-hidden">
                       <div
                         className="h-full bg-[#006e2f] dark:bg-green-500"
                         style={{ width: `${enrollPct}%` }}
                       />
                     </div>
-                    <p className="text-xs font-medium text-[#006e2f] dark:text-green-400">
-                      {enrolledCount}/{maxStudents || 0} students enrolled
+                    <p className="text-[11px] sm:text-xs font-medium text-[#006e2f] dark:text-green-400">
+                      {enrolledCount}/{maxStudents || 0} enrolled
                     </p>
                   </>
                 )}
                 {!isOneToAll && (
-                  <p className="text-xs font-medium text-[#006e2f] dark:text-green-400">
+                  <p className="text-[11px] sm:text-xs font-medium text-[#006e2f] dark:text-green-400">
                     {enrolledCount} enrolled
                   </p>
                 )}
@@ -486,33 +498,33 @@ const CourseDetails = ({ id }) => {
             </section>
 
             {/* Quick Info Bento */}
-            <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3">
-                <FaRupeeSign className="text-[#0050cb] dark:text-indigo-400 text-xl" />
+            <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-3 sm:p-4 rounded-xl flex flex-col gap-2 sm:gap-3">
+                <FaRupeeSign className="text-[#0050cb] dark:text-indigo-400 text-base sm:text-xl" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider">Course Fee</p>
-                  <p className="font-bold text-sm">₹{course.fees?.toLocaleString() || 0} One-time</p>
+                  <p className="text-[9px] sm:text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider mb-0.5">Course Fee</p>
+                  <p className="font-bold text-xs sm:text-sm leading-snug">₹{course.fees?.toLocaleString() || 0} One-time</p>
                 </div>
               </div>
-              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3">
-                <FaCalendarAlt className="text-[#954000] text-xl" />
+              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-3 sm:p-4 rounded-xl flex flex-col gap-2 sm:gap-3">
+                <FaCalendarAlt className="text-[#954000] text-base sm:text-xl" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider">Timeline</p>
-                  <p className="font-bold text-sm">{course.courseDuration || `${formatDate(course.startDate)} - ${formatDate(course.endDate)}`}</p>
+                  <p className="text-[9px] sm:text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider mb-0.5">Timeline</p>
+                  <p className="font-bold text-xs sm:text-sm leading-snug line-clamp-2">{course.courseDuration || `${formatDate(course.startDate)} – ${formatDate(course.endDate)}`}</p>
                 </div>
               </div>
-              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3">
-                <FaUsers className="text-[#006e2f] text-xl" />
+              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-3 sm:p-4 rounded-xl flex flex-col gap-2 sm:gap-3">
+                <FaUsers className="text-[#006e2f] text-base sm:text-xl" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider">Enrollment</p>
-                  <p className="font-bold text-sm">{isOneToAll ? `${enrolledCount}/${maxStudents}` : "Open Now"}</p>
+                  <p className="text-[9px] sm:text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider mb-0.5">Enrollment</p>
+                  <p className="font-bold text-xs sm:text-sm leading-snug">{isOneToAll ? `${enrolledCount}/${maxStudents}` : "Open Now"}</p>
                 </div>
               </div>
-              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-4 rounded-xl flex flex-col gap-3">
-                <FaBookOpen className="text-[#0050cb] dark:text-indigo-400 text-xl" />
+              <div className="bg-[#f2f4f6] dark:bg-gray-800 p-3 sm:p-4 rounded-xl flex flex-col gap-2 sm:gap-3">
+                <FaBookOpen className="text-[#0050cb] dark:text-indigo-400 text-base sm:text-xl" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider">Subject</p>
-                  <p className="font-bold text-sm">
+                  <p className="text-[9px] sm:text-[10px] uppercase font-bold text-[#424656] dark:text-gray-400 tracking-wider mb-0.5">Subject</p>
+                  <p className="font-bold text-xs sm:text-sm leading-snug line-clamp-2">
                     {Array.isArray(course.subject) ? course.subject.join(", ") : course.subject || "N/A"}
                   </p>
                 </div>
@@ -520,47 +532,27 @@ const CourseDetails = ({ id }) => {
             </section>
 
             {/* Sticky Tabs */}
-            <nav className="flex gap-6 overflow-x-auto hide-scrollbar border-b border-[#c2c6d8]/30 dark:border-gray-700/30 sticky top-16 lg:top-0 bg-[#f7f9fb]/80 dark:bg-gray-950/80 backdrop-blur-md z-40 py-2 -mx-4 px-4 lg:mx-0 lg:px-0">
-              <button
-                onClick={() => setActiveTab("overview")}
-                className={`${activeTab === "overview" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
-              >
-                Overview
-              </button>
-              <button
-                onClick={() => setActiveTab("features")}
-                className={`${activeTab === "features" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
-              >
-                Features
-              </button>
-              <button
-                onClick={() => setActiveTab("prerequisites")}
-                className={`${activeTab === "prerequisites" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
-              >
-                Prerequisites
-              </button>
-              <button
-                onClick={() => setActiveTab("reviews")}
-                className={`${activeTab === "reviews" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
-              >
-                Reviews
-              </button>
-              {hasTestSeries && (
+            <nav className="flex gap-4 sm:gap-6 overflow-x-auto hide-scrollbar border-b border-[#c2c6d8]/30 dark:border-gray-700/30 sticky top-16 lg:top-0 bg-[#f7f9fb]/80 dark:bg-gray-950/80 backdrop-blur-md z-40 py-2 -mx-3 px-3 sm:-mx-4 sm:px-4 lg:mx-0 lg:px-0">
+              {[
+                { key: "overview", label: "Overview" },
+                { key: "features", label: "Features" },
+                { key: "prerequisites", label: "Prerequisites" },
+                { key: "reviews", label: "Reviews" },
+                ...(hasTestSeries ? [{ key: "tests", label: `Tests (${courseTests.length})` }] : []),
+                ...(course?.liveClass?.length > 0 ? [{ key: "classes", label: "Classes" }] : []),
+              ].map(({ key, label }) => (
                 <button
-                  onClick={() => setActiveTab("tests")}
-                  className={`${activeTab === "tests" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
+                  key={key}
+                  onClick={() => setActiveTab(key)}
+                  className={`${
+                    activeTab === key
+                      ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400"
+                      : "text-[#424656] dark:text-gray-400 font-medium"
+                  } text-xs sm:text-sm whitespace-nowrap pb-2 shrink-0`}
                 >
-                  Test Series ({courseTests.length})
+                  {label}
                 </button>
-              )}
-              {course?.liveClass?.length > 0 && (
-                <button
-                  onClick={() => setActiveTab("classes")}
-                  className={`${activeTab === "classes" ? "text-[#0050cb] dark:text-indigo-400 font-bold border-b-2 border-[#0050cb] dark:border-indigo-400" : "text-[#424656] dark:text-gray-400 font-medium"} text-sm whitespace-nowrap pb-2`}
-                >
-                  Classes
-                </button>
-              )}
+              ))}
             </nav>
 
             {/* Tab content */}
@@ -568,8 +560,8 @@ const CourseDetails = ({ id }) => {
               <>
                 {/* Course Introduction Video */}
                 {course.introVideo && (
-                  <section className="space-y-4">
-                    <h3 className="text-lg font-bold">Course Introduction</h3>
+                  <section className="space-y-3 sm:space-y-4">
+                    <h3 className="text-base sm:text-lg font-bold">Course Introduction</h3>
                     {getVimeoEmbedUrl(course.introVideo) ? (
                       <VimeoPlayer
                         url={course.introVideo}
@@ -614,8 +606,8 @@ const CourseDetails = ({ id }) => {
 
                 {/* Demo Video */}
                 {course.videos && course.videos.length > 0 && course.videos[0]?.links?.[0] && (
-                  <section className="space-y-4">
-                    <h3 className="text-lg font-bold">Demo Video</h3>
+                  <section className="space-y-3 sm:space-y-4">
+                    <h3 className="text-base sm:text-lg font-bold">Demo Video</h3>
                     <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg bg-black">
                       <iframe
                         src={getYouTubeEmbedUrl(course.videos[0].links[0])}
@@ -631,9 +623,9 @@ const CourseDetails = ({ id }) => {
                 )}
 
                 {course.description && (
-                  <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm space-y-3">
-                    <h3 className="text-lg font-bold">About this course</h3>
-                    <p className="text-sm text-[#424656] dark:text-gray-400 leading-relaxed whitespace-pre-line">
+                  <section className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-sm space-y-2 sm:space-y-3">
+                    <h3 className="text-base sm:text-lg font-bold">About this course</h3>
+                    <p className="text-xs sm:text-sm text-[#424656] dark:text-gray-400 leading-relaxed whitespace-pre-line">
                       {course.description}
                     </p>
                   </section>
@@ -642,10 +634,10 @@ const CourseDetails = ({ id }) => {
             )}
 
             {activeTab === "features" && (
-              <section className="bg-white dark:bg-gray-800 rounded-2xl p-6 space-y-6 shadow-sm">
-                <h3 className="text-lg font-bold">Core Features</h3>
+              <section className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-sm">
+                <h3 className="text-base sm:text-lg font-bold">Core Features</h3>
                 {course.courseObjectives && course.courseObjectives.length > 0 ? (
-                  <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
                     {course.courseObjectives.map((objective, index) => {
                       const palette = [
                         { bg: "bg-[#006e2f]/10", color: "text-[#006e2f]", Icon: FaVideo },
@@ -655,36 +647,36 @@ const CourseDetails = ({ id }) => {
                       const p = palette[index % palette.length];
                       const Icon = p.Icon;
                       return (
-                        <div key={index} className="flex items-start gap-4">
-                          <div className={`${p.bg} p-3 rounded-lg`}>
-                            <Icon className={`${p.color} text-base`} />
+                        <div key={index} className="flex items-start gap-3 sm:gap-4">
+                          <div className={`${p.bg} p-2.5 sm:p-3 rounded-lg shrink-0`}>
+                            <Icon className={`${p.color} text-sm sm:text-base`} />
                           </div>
                           <div>
-                            <p className="font-bold text-sm">{objective}</p>
+                            <p className="font-bold text-xs sm:text-sm leading-snug">{objective}</p>
                           </div>
                         </div>
                       );
                     })}
                   </div>
                 ) : (
-                  <p className="text-sm text-[#424656] dark:text-gray-400">No features listed yet.</p>
+                  <p className="text-xs sm:text-sm text-[#424656] dark:text-gray-400">No features listed yet.</p>
                 )}
               </section>
             )}
 
             {activeTab === "prerequisites" && (
-              <section className="space-y-4">
-                <h3 className="text-lg font-bold">Prerequisites</h3>
+              <section className="space-y-3 sm:space-y-4">
+                <h3 className="text-base sm:text-lg font-bold">Prerequisites</h3>
                 {course.prerequisites && course.prerequisites.length > 0 ? (
-                  <div className="space-y-3">
+                  <div className="space-y-2.5 sm:space-y-3">
                     {course.prerequisites.map((prerequisite, index) => (
                       <div
                         key={index}
-                        className="bg-[#bc5200]/5 dark:bg-orange-900/10 border-l-4 border-[#954000] p-4 rounded-r-2xl"
+                        className="bg-[#bc5200]/5 dark:bg-orange-900/10 border-l-4 border-[#954000] p-3 sm:p-4 rounded-r-2xl"
                       >
-                        <div className="flex items-center gap-3">
-                          <FaCheckCircle className="text-[#954000]" />
-                          <p className="text-sm font-medium text-[#783200] dark:text-orange-300">
+                        <div className="flex items-start gap-2.5 sm:gap-3">
+                          <FaCheckCircle className="text-[#954000] mt-0.5 shrink-0" />
+                          <p className="text-xs sm:text-sm font-medium text-[#783200] dark:text-orange-300 leading-snug">
                             {prerequisite}
                           </p>
                         </div>
@@ -692,7 +684,7 @@ const CourseDetails = ({ id }) => {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-sm text-[#424656] dark:text-gray-400">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 text-xs sm:text-sm text-[#424656] dark:text-gray-400">
                     No specific prerequisites for this course.
                   </div>
                 )}
@@ -700,68 +692,68 @@ const CourseDetails = ({ id }) => {
             )}
 
             {activeTab === "reviews" && (
-              <section className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold">Reviews</h3>
-                  <div className="flex items-center gap-1 bg-[#006e2f]/10 dark:bg-green-900/20 px-3 py-1 rounded-full">
-                    <FaStar className="text-[#006e2f] dark:text-green-400 text-xs" />
-                    <span className="text-sm font-bold text-[#006e2f] dark:text-green-400">
+              <section className="space-y-3 sm:space-y-4">
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="text-base sm:text-lg font-bold">Reviews</h3>
+                  <div className="flex items-center gap-1 bg-[#006e2f]/10 dark:bg-green-900/20 px-2.5 sm:px-3 py-1 rounded-full shrink-0">
+                    <FaStar className="text-[#006e2f] dark:text-green-400 text-[10px] sm:text-xs" />
+                    <span className="text-xs sm:text-sm font-bold text-[#006e2f] dark:text-green-400">
                       {ratingValue ? ratingValue.toFixed(1) : "—"} ({ratingCount})
                     </span>
                   </div>
                 </div>
 
                 <form
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm space-y-4"
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-sm space-y-3 sm:space-y-4"
                   onSubmit={handleCourseReviewSubmit}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#c2c6d8] dark:bg-gray-600 flex items-center justify-center">
-                      <FaUserCircle className="text-white text-xl" />
+                  <div className="flex items-center gap-2.5 sm:gap-3">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#c2c6d8] dark:bg-gray-600 flex items-center justify-center shrink-0">
+                      <FaUserCircle className="text-white text-lg sm:text-xl" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-bold">Write a public review</p>
-                      <p className="text-xs text-[#424656] dark:text-gray-400">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs sm:text-sm font-bold">Write a public review</p>
+                      <p className="text-[11px] sm:text-xs text-[#424656] dark:text-gray-400">
                         Reviews are limited to enrolled students.
                       </p>
                     </div>
-                    <FaUserEdit className="text-[#424656] dark:text-gray-400" />
+                    <FaUserEdit className="text-[#424656] dark:text-gray-400 shrink-0" />
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5 sm:gap-1">
                     {[0, 1, 2, 3, 4].map((index) => (
                       <button
                         key={index}
                         type="button"
                         onClick={(event) => handleCourseStarClick(index, event)}
                         disabled={!isEnrolled || isSubmittingReview}
-                        className="p-1 disabled:cursor-not-allowed"
+                        className="p-0.5 sm:p-1 disabled:cursor-not-allowed"
                         aria-label={`Set course rating to ${index + 1}`}
                       >
                         {renderStar(index)}
                       </button>
                     ))}
-                    <span className="ml-2 text-sm text-[#424656] dark:text-gray-400">{reviewRating.toFixed(1)}</span>
+                    <span className="ml-1 sm:ml-2 text-xs sm:text-sm text-[#424656] dark:text-gray-400">{reviewRating.toFixed(1)}</span>
                   </div>
 
                   <textarea
                     value={reviewText}
                     onChange={(event) => setReviewText(event.target.value)}
                     rows={4}
-                    className="w-full rounded-xl border border-[#c2c6d8] dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-gray-100 px-4 py-3 text-sm outline-none focus:border-[#0050cb] dark:focus:border-indigo-400"
+                    className="w-full rounded-xl border border-[#c2c6d8] dark:border-gray-700 bg-white dark:bg-gray-900 dark:text-gray-100 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm outline-none focus:border-[#0050cb] dark:focus:border-indigo-400"
                     placeholder="Share what you liked and what could improve."
                     disabled={!isEnrolled || isSubmittingReview}
                     required
                   />
 
                   {reviewStatus && (
-                    <p className="text-sm text-[#424656] dark:text-gray-400">{reviewStatus}</p>
+                    <p className="text-xs sm:text-sm text-[#424656] dark:text-gray-400">{reviewStatus}</p>
                   )}
 
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3">
                     <button
                       type="submit"
-                      className={`inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-sm ${
+                      className={`inline-flex items-center justify-center rounded-xl px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-sm ${
                         isEnrolled ? "bg-[#0050cb] dark:bg-indigo-500 hover:bg-[#003fa4] dark:hover:bg-indigo-600" : "bg-gray-400 cursor-not-allowed"
                       }`}
                       disabled={!isEnrolled || isSubmittingReview}
@@ -769,7 +761,7 @@ const CourseDetails = ({ id }) => {
                       {isSubmittingReview ? "Submitting..." : "Submit Review"}
                     </button>
                     {!isEnrolled && (
-                      <p className="inline-flex items-center rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+                      <p className="inline-flex items-center rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-[11px] sm:text-xs font-medium text-amber-800">
                         Enroll to submit a review.
                       </p>
                     )}
@@ -779,16 +771,16 @@ const CourseDetails = ({ id }) => {
             )}
 
             {activeTab === "classes" && (
-              <section className="space-y-4">
-                <h3 className="text-lg font-bold">Live Classes</h3>
+              <section className="space-y-3 sm:space-y-4">
+                <h3 className="text-base sm:text-lg font-bold">Live Classes</h3>
                 {course.liveClass && course.liveClass.length > 0 ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     {course.liveClass.map((classItem, index) => (
                       <ClassCard key={classItem._id || index} classData={classItem} />
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center text-[#424656] dark:text-gray-400">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 text-center text-xs sm:text-sm text-[#424656] dark:text-gray-400">
                     No live classes scheduled yet.
                   </div>
                 )}
@@ -796,20 +788,20 @@ const CourseDetails = ({ id }) => {
             )}
 
             {activeTab === "tests" && (
-              <section className="space-y-4">
-                <h3 className="text-lg font-bold">Test Series</h3>
+              <section className="space-y-3 sm:space-y-4">
+                <h3 className="text-base sm:text-lg font-bold">Test Series</h3>
                 {testsLoading && (
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center text-[#424656] dark:text-gray-400">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 text-center text-xs sm:text-sm text-[#424656] dark:text-gray-400">
                     Loading test series...
                   </div>
                 )}
                 {!testsLoading && !hasTestSeries && (
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center text-[#424656] dark:text-gray-400">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 text-center text-xs sm:text-sm text-[#424656] dark:text-gray-400">
                     No test series assigned to this course yet.
                   </div>
                 )}
                 {hasTestSeries && (
-                  <div className="space-y-3">
+                  <div className="space-y-2.5 sm:space-y-3">
                     {courseTests.map((test, index) => {
                       const questionCount =
                         test.totalQuestions ||
@@ -819,19 +811,19 @@ const CourseDetails = ({ id }) => {
                       return (
                         <div
                           key={test._id || test.id || index}
-                          className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm"
+                          className="bg-white dark:bg-gray-800 rounded-2xl p-3.5 sm:p-4 shadow-sm"
                         >
-                          <div className="flex items-center justify-between gap-3">
-                            <h4 className="text-base font-bold line-clamp-2">
+                          <div className="flex items-start justify-between gap-2 sm:gap-3">
+                            <h4 className="text-sm sm:text-base font-bold line-clamp-2 leading-snug">
                               {test.title || "Untitled Test Series"}
                             </h4>
                             {questionCount != null && (
-                              <span className="text-xs font-semibold text-[#0050cb] dark:text-indigo-400 bg-[#0050cb]/10 dark:bg-indigo-400/10 px-3 py-1 rounded-full whitespace-nowrap">
+                              <span className="text-[11px] sm:text-xs font-semibold text-[#0050cb] dark:text-indigo-400 bg-[#0050cb]/10 dark:bg-indigo-400/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full whitespace-nowrap shrink-0">
                                 {questionCount} Qs
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-[#424656] dark:text-gray-400 line-clamp-3 mt-2">
+                          <p className="text-xs sm:text-sm text-[#424656] dark:text-gray-400 line-clamp-3 mt-1.5 sm:mt-2 leading-snug">
                             {test.description || "No description provided."}
                           </p>
                         </div>
@@ -844,12 +836,12 @@ const CourseDetails = ({ id }) => {
 
             {/* Instructor Card (always visible on overview) */}
             {activeTab === "overview" && (
-              <section className="space-y-4">
-                <h3 className="text-lg font-bold">Primary Instructor</h3>
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl flex items-center gap-4 shadow-sm">
+              <section className="space-y-3 sm:space-y-4">
+                <h3 className="text-base sm:text-lg font-bold">Primary Instructor</h3>
+                <div className="bg-white dark:bg-gray-800 p-3.5 sm:p-4 rounded-2xl flex items-center gap-3 sm:gap-4 shadow-sm">
                   <img
                     alt={educatorName}
-                    className="w-16 h-16 rounded-xl object-cover bg-[#c2c6d8] dark:bg-gray-600"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover bg-[#c2c6d8] dark:bg-gray-600 shrink-0"
                     src={
                       educator?.profileImage ||
                       educator?.profilePicture ||
@@ -860,9 +852,9 @@ const CourseDetails = ({ id }) => {
                       e.currentTarget.src = "/images/placeholders/avatar.svg";
                     }}
                   />
-                  <div className="min-w-0">
-                    <h4 className="font-bold text-base truncate">{educatorName}</h4>
-                    <p className="text-xs text-[#424656] dark:text-gray-400 mb-1">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-bold text-sm sm:text-base truncate">{educatorName}</h4>
+                    <p className="text-[11px] sm:text-xs text-[#424656] dark:text-gray-400 mb-0.5 sm:mb-1 leading-snug">
                       {(() => {
                         const t = educator?.title;
                         const q = educator?.qualification;
@@ -874,12 +866,12 @@ const CourseDetails = ({ id }) => {
                             : "";
                         return pick(t) || pick(q) || "Faculty";
                       })()}
-                      {educator?.yearsOfExperience ? ` • ${educator.yearsOfExperience}+ Years Exp.` : ""}
+                      {educator?.yearsOfExperience ? ` • ${educator.yearsOfExperience}+ Yrs` : ""}
                     </p>
                     {educator?.averageRating != null && (
                       <div className="flex items-center gap-1">
-                        <FaStar className="text-[#954000] text-xs" />
-                        <span className="text-xs font-bold">
+                        <FaStar className="text-[#954000] text-[10px] sm:text-xs" />
+                        <span className="text-[11px] sm:text-xs font-bold">
                           {Number(educator.averageRating).toFixed(1)}/5 Rating
                         </span>
                       </div>
@@ -888,7 +880,7 @@ const CourseDetails = ({ id }) => {
                   {resolvedEducatorId && (
                     <button
                       onClick={() => router.push(`/profile/educator/${educator?.slug || resolvedEducatorId}`)}
-                      className="ml-auto bg-[#0050cb]/5 dark:bg-indigo-400/10 p-2 rounded-full text-[#0050cb] dark:text-indigo-400"
+                      className="shrink-0 bg-[#0050cb]/5 dark:bg-indigo-400/10 p-2 rounded-full text-[#0050cb] dark:text-indigo-400"
                       aria-label="View instructor"
                     >
                       <FaChevronRight />
@@ -1015,14 +1007,14 @@ const CourseDetails = ({ id }) => {
       </main>
 
       {/* Mobile Sticky Bottom Bar */}
-      <footer className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-t-3xl shadow-[0_-12px_40px_rgba(0,80,203,0.06)] flex justify-between items-center px-4 pt-4 pb-6">
+      <footer className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-t-3xl shadow-[0_-12px_40px_rgba(0,80,203,0.06)] flex justify-between items-center px-3 pt-3 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         {isEnrolled ? (
           <button
             onClick={handleOpenCoursePanel}
-            className="flex-1 flex items-center justify-center gap-2 bg-linear-to-br from-blue-600 to-blue-500 text-white rounded-2xl h-14 mx-2 shadow-lg active:scale-[0.98] transition-all duration-150 font-bold text-sm"
+            className="flex-1 flex items-center justify-center gap-2 bg-linear-to-br from-blue-600 to-blue-500 text-white rounded-2xl h-12 sm:h-14 mx-1.5 shadow-lg active:scale-[0.98] transition-all duration-150 font-bold text-sm"
           >
-            <FaBolt />
-            Go to Course
+            <FaBolt className="shrink-0" />
+            <span className="truncate">Go to Course</span>
           </button>
         ) : (
           <>
@@ -1031,22 +1023,22 @@ const CourseDetails = ({ id }) => {
                 href={`https://wa.me/${educator.whatsappNumber.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-gray-800 text-slate-900 dark:text-gray-100 rounded-2xl h-14 mx-2 font-bold text-sm"
+                className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 bg-slate-100 dark:bg-gray-800 text-slate-900 dark:text-gray-100 rounded-2xl h-12 sm:h-14 mx-1.5 font-bold text-xs sm:text-sm"
               >
-                <FaWhatsapp />
-                Contact
+                <FaWhatsapp className="shrink-0" />
+                <span className="truncate">Contact</span>
               </a>
             ) : (
-              <div className="flex-1 flex items-center justify-center gap-2 bg-slate-100 text-slate-900 rounded-2xl h-14 mx-2 font-bold text-sm">
-                <FaShoppingCart />
-                Save
+              <div className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 bg-slate-100 text-slate-900 rounded-2xl h-12 sm:h-14 mx-1.5 font-bold text-xs sm:text-sm">
+                <FaShoppingCart className="shrink-0" />
+                <span>Save</span>
               </div>
             )}
             <EnrollButton
               type="course"
               itemId={course._id || course.id}
               price={course.fees}
-              className="flex-1 flex items-center justify-center gap-2 bg-linear-to-br from-blue-600 to-blue-500 text-white rounded-2xl h-14 mx-2 shadow-lg active:scale-[0.98] transition-all duration-150 font-bold text-sm"
+              className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 bg-linear-to-br from-blue-600 to-blue-500 text-white rounded-2xl h-12 sm:h-14 mx-1.5 shadow-lg active:scale-[0.98] transition-all duration-150 font-bold text-xs sm:text-sm"
             />
           </>
         )}

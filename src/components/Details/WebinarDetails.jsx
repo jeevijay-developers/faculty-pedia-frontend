@@ -326,7 +326,7 @@ const WebinarDetails = ({ webinar }) => {
 
       {/* Hero */}
       <section className="relative w-full bg-slate-900" data-aos="fade-up">
-        <div className="relative w-full min-h-[320px] sm:aspect-video sm:min-h-0 max-h-155 overflow-hidden">
+        <div className="relative w-full min-h-[220px] sm:aspect-video sm:min-h-0 max-h-155 overflow-hidden">
           <Image
             src={imageUrl}
             alt={title}
@@ -335,8 +335,10 @@ const WebinarDetails = ({ webinar }) => {
             className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/50 to-slate-950/10" />
-          <div className="absolute inset-x-0 bottom-0">
+
+          {/* Overlay — hidden on mobile, fully visible sm+ */}
+          <div className="hidden sm:block absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/50 to-slate-950/10" />
+          <div className="hidden sm:block absolute inset-x-0 bottom-0">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-5 sm:pb-8 lg:pb-12">
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <span className="inline-flex items-center gap-1 px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white bg-blue-600/90 backdrop-blur-sm rounded-full shadow-sm">
@@ -360,7 +362,6 @@ const WebinarDetails = ({ webinar }) => {
                       src={educatorImage}
                       alt={educatorName}
                       fill
-          
                       sizes="44px"
                       className="object-cover"
                     />
@@ -384,6 +385,59 @@ const WebinarDetails = ({ webinar }) => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Mobile-only: title, badges & educator shown cleanly below the image */}
+        <div className="sm:hidden bg-slate-900 px-4 pt-4 pb-5 space-y-3">
+          {/* Badges */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-white bg-blue-600/90 rounded-full">
+              <FaBook className="w-2.5 h-2.5" />
+              {subject.charAt(0).toUpperCase() + subject.slice(1)}
+            </span>
+            <span className="inline-flex items-center px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-white bg-green-600/90 rounded-full">
+              {webinarType.replace("-", " ")}
+            </span>
+            <span className="inline-flex items-center px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-white bg-orange-500/90 rounded-full">
+              Live
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-xl font-extrabold text-white leading-snug">
+            {prettyTitle}
+          </h1>
+
+          {/* Educator + share row */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="relative w-9 h-9 rounded-full border-2 border-white/60 overflow-hidden bg-white/10 shrink-0">
+                <Image
+                  src={educatorImage}
+                  alt={educatorName}
+                  fill
+                  sizes="36px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="min-w-0">
+                <p className="text-white font-semibold text-sm leading-none truncate">{educatorName}</p>
+                <p className="text-blue-200 text-[11px] mt-0.5">Webinar Instructor</p>
+              </div>
+            </div>
+            <ShareButton
+              title={title || "Webinar"}
+              text={shareText}
+              useCurrentUrl
+              size="sm"
+            />
+          </div>
+
+          {/* Date/time */}
+          <div className="flex items-center gap-2 text-blue-200 text-xs font-medium">
+            <FaCalendarAlt className="shrink-0" />
+            <span>{formattedDate} • {formattedTime}</span>
           </div>
         </div>
       </section>

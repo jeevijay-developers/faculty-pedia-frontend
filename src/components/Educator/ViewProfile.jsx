@@ -1176,8 +1176,7 @@ const ViewProfile = ({ educatorData, showContentSections = true }) => {
                               {qual.title}
                             </p>
                             <p className="text-[#636388] dark:text-gray-400 text-xs">
-                              {qual.institute},{" "}
-                              {safeYear(qual.endDate || qual.startDate)}
+                              {qual.institute}
                             </p>
                           </div>
                         </li>
