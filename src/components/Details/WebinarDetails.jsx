@@ -5,6 +5,7 @@ import { getYouTubeEmbedUrl, getVimeoEmbedUrl, pickImageUrl } from "@/lib/media"
 import { formatDate } from "@/utils/dateFormatter";
 import VimeoPlayer from "@/components/Common/VimeoPlayer";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   FaClock,
   FaUsers,
@@ -129,10 +130,27 @@ const formatHoursFromMinutes = (minutes) => {
 };
 
 const WebinarDetails = ({ webinar }) => {
+  const router = useRouter();
   const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState(false);
   const [educatorName, setEducatorName] = useState(deriveEducatorName(webinar));
   const [educatorImage, setEducatorImage] = useState(deriveEducatorImage(webinar));
   const [educatorPhone, setEducatorPhone] = useState(deriveEducatorPhone(webinar));
+
+  // Derive educator slug or id for profile navigation
+  const educatorObject =
+    (webinar?.educatorID && typeof webinar.educatorID === "object" ? webinar.educatorID : null) ||
+    (webinar?.educatorId && typeof webinar.educatorId === "object" ? webinar.educatorId : null) ||
+    null;
+  const educatorProfileId =
+    educatorObject?.slug ||
+    educatorObject?._id ||
+    educatorObject?.id ||
+    (typeof webinar?.educatorID === "string" ? webinar.educatorID : null) ||
+    (typeof webinar?.educatorId === "string" ? webinar.educatorId : null) ||
+    null;
+  const handleEducatorClick = () => {
+    if (educatorProfileId) router.push(`/profile/educator/${educatorProfileId}`);
+  };
   const [studentId, setStudentId] = useState(null);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
@@ -325,8 +343,9 @@ const WebinarDetails = ({ webinar }) => {
       )}
 
       {/* Hero */}
-      <section className="relative w-full bg-slate-900" data-aos="fade-up">
-        <div className="relative w-full min-h-[220px] sm:aspect-video sm:min-h-0 max-h-155 overflow-hidden">
+      <section className="w-full bg-slate-900" data-aos="fade-up">
+        {/* Banner image — clean, no overlay */}
+        <div className="relative w-full aspect-[16/7] sm:aspect-video lg:aspect-[21/7] overflow-hidden">
           <Image
             src={imageUrl}
             alt={title}
@@ -335,115 +354,91 @@ const WebinarDetails = ({ webinar }) => {
             className="object-cover object-center"
             priority
           />
-
-          {/* Overlay — hidden on mobile, fully visible sm+ */}
-          <div className="hidden sm:block absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/50 to-slate-950/10" />
-          <div className="hidden sm:block absolute inset-x-0 bottom-0">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-5 sm:pb-8 lg:pb-12">
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="inline-flex items-center gap-1 px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white bg-blue-600/90 backdrop-blur-sm rounded-full shadow-sm">
-                  <FaBook className="w-3 h-3" />
-                  {subject.charAt(0).toUpperCase() + subject.slice(1)}
-                </span>
-                <span className="inline-flex items-center px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white bg-green-600/90 backdrop-blur-sm rounded-full shadow-sm">
-                  {webinarType.replace("-", " ")}
-                </span>
-                <span className="inline-flex items-center px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white bg-orange-500/90 backdrop-blur-sm rounded-full shadow-sm">
-                  Live
-                </span>
-              </div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight wrap-break-word max-w-3xl drop-shadow">
-                {prettyTitle}
-              </h1>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="relative w-11 h-11 rounded-full border-2 border-white/70 overflow-hidden bg-white/10 shadow-md">
-                    <Image
-                      src={educatorImage}
-                      alt={educatorName}
-                      fill
-                      sizes="44px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold leading-none">{educatorName}</p>
-                    <p className="text-blue-100 text-xs mt-1">Webinar Instructor</p>
-                  </div>
-                </div>
-                <div className="hidden sm:flex items-center gap-2 text-white/90 text-sm font-medium">
-                  <FaCalendarAlt className="text-blue-200" />
-                  <span>{formattedDate} • {formattedTime}</span>
-                </div>
-                <div className="ml-auto">
-                  <ShareButton
-                    title={title || "Webinar"}
-                    text={shareText}
-                    useCurrentUrl
-                    size="sm"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Mobile-only: title, badges & educator shown cleanly below the image */}
-        <div className="sm:hidden bg-slate-900 px-4 pt-4 pb-5 space-y-3">
-          {/* Badges */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-white bg-blue-600/90 rounded-full">
-              <FaBook className="w-2.5 h-2.5" />
-              {subject.charAt(0).toUpperCase() + subject.slice(1)}
-            </span>
-            <span className="inline-flex items-center px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-white bg-green-600/90 rounded-full">
-              {webinarType.replace("-", " ")}
-            </span>
-            <span className="inline-flex items-center px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase text-white bg-orange-500/90 rounded-full">
-              Live
-            </span>
-          </div>
+        {/* Title block — shown below image on ALL screen sizes */}
+        <div className="bg-slate-900 px-4 sm:px-6 lg:px-8 pt-5 pb-6 sm:pt-6 sm:pb-7">
+          <div className="max-w-7xl mx-auto space-y-3 sm:space-y-4">
+            {/* Badges */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-white bg-blue-600/90 rounded-full">
+                <FaBook className="w-2.5 sm:w-3 h-2.5 sm:h-3" />
+                {subject.charAt(0).toUpperCase() + subject.slice(1)}
+              </span>
+              <span className="inline-flex items-center px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-white bg-green-600/90 rounded-full">
+                {webinarType.replace("-", " ")}
+              </span>
+              <span className="inline-flex items-center px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-white bg-orange-500/90 rounded-full">
+                Live
+              </span>
+            </div>
 
-          {/* Title */}
-          <h1 className="text-xl font-extrabold text-white leading-snug">
-            {prettyTitle}
-          </h1>
+            {/* Title */}
+            <h1 className="text-xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-white leading-snug sm:leading-tight max-w-4xl">
+              {prettyTitle}
+            </h1>
 
-          {/* Educator + share row */}
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="relative w-9 h-9 rounded-full border-2 border-white/60 overflow-hidden bg-white/10 shrink-0">
-                <Image
-                  src={educatorImage}
-                  alt={educatorName}
-                  fill
-                  sizes="36px"
-                  className="object-cover"
+            {/* Educator + date + share */}
+            {/* Mobile: educator & share on one row, date/time on its own row below */}
+            {/* Desktop (sm+): all in a single flex row */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-5">
+                {/* Educator + share: side-by-side on mobile */}
+                <div className="flex items-center justify-between sm:justify-start gap-3">
+                  <button
+                    type="button"
+                    onClick={handleEducatorClick}
+                    className="flex items-center gap-2.5 sm:gap-3 group text-left"
+                  >
+                    <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full border-2 border-white/60 overflow-hidden bg-white/10 shrink-0 group-hover:border-white transition-colors">
+                      <Image
+                        src={educatorImage}
+                        alt={educatorName}
+                        fill
+                        sizes="44px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base leading-none group-hover:underline">{educatorName}</p>
+                      <p className="text-blue-200 text-[11px] sm:text-xs mt-0.5 sm:mt-1">Webinar Instructor</p>
+                    </div>
+                  </button>
+
+                  {/* Share — sits next to educator on mobile, moves to end on desktop */}
+                  <div className="sm:hidden">
+                    <ShareButton
+                      title={title || "Webinar"}
+                      text={shareText}
+                      useCurrentUrl
+                      size="sm"
+                    />
+                  </div>
+                </div>
+
+                {/* Date/time — own row on mobile, inline on desktop */}
+                <div className="flex items-center gap-2 text-blue-100 text-sm sm:text-base font-semibold">
+                  <FaCalendarAlt className="shrink-0" />
+                  <span>{formattedDate} • {formattedTime}</span>
+                </div>
+              </div>
+
+              {/* Share — desktop only (hidden on mobile, shown above instead) */}
+              <div className="hidden sm:block">
+                <ShareButton
+                  title={title || "Webinar"}
+                  text={shareText}
+                  useCurrentUrl
+                  size="sm"
                 />
               </div>
-              <div className="min-w-0">
-                <p className="text-white font-semibold text-sm leading-none truncate">{educatorName}</p>
-                <p className="text-blue-200 text-[11px] mt-0.5">Webinar Instructor</p>
-              </div>
             </div>
-            <ShareButton
-              title={title || "Webinar"}
-              text={shareText}
-              useCurrentUrl
-              size="sm"
-            />
-          </div>
-
-          {/* Date/time */}
-          <div className="flex items-center gap-2 text-blue-200 text-xs font-medium">
-            <FaCalendarAlt className="shrink-0" />
-            <span>{formattedDate} • {formattedTime}</span>
           </div>
         </div>
       </section>
 
       {/* Info strip (glassmorphism) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-3 md:-mt-10 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 relative z-20">
         <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl md:rounded-full p-5 md:px-10 md:py-5 grid grid-cols-2 md:flex md:flex-nowrap md:justify-between md:items-center gap-5 md:gap-6 shadow-xl border border-white/60 dark:border-gray-700/60">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 shrink-0">
