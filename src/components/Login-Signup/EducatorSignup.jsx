@@ -342,10 +342,7 @@ const EducatorSignup = () => {
       const response = await API_CLIENT.post(
         "/api/videos/upload-to-vimeo",
         payload,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          timeout: 600000,
-        }
+        { timeout: 600000 }
       );
 
       const embedUrl =
@@ -400,8 +397,7 @@ const EducatorSignup = () => {
 
       const response = await API_CLIENT.post(
         "/api/upload/image?type=educator",
-        payload,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        payload
       );
 
       const imageUrl = response?.data?.imageUrl;

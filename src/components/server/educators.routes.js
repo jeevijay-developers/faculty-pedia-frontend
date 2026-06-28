@@ -75,11 +75,7 @@ export const updateEducatorImage = async (educatorId, formData) => {
     const response = await API_CLIENT.put(
       `${EDUCATOR_UPDATE_BASE_PATH}/update-image/${educatorId}`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+      {}
     );
     return response.data;
   } catch (error) {
@@ -94,11 +90,7 @@ export const updateEducatorProfile = async (educatorId, formData) => {
     const response = await API_CLIENT.put(
       `${EDUCATOR_UPDATE_BASE_PATH}/update-name-email-number-bio-ivlink/${educatorId}`,
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+      {}
     );
     return response.data;
   } catch (error) {
