@@ -1,8 +1,7 @@
 import API_CLIENT from "./config";
 
-export const createPaymentOrder = async ({ studentId, productId, productType }) => {
+export const createPaymentOrder = async ({ productId, productType }) => {
   const response = await API_CLIENT.post("/api/payments/orders", {
-    studentId,
     productId,
     productType,
   });

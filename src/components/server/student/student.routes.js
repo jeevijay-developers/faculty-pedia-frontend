@@ -158,9 +158,7 @@ export const updateStudentProfile = async (studentId, profileData) => {
         const uploadResponse = await API_CLIENT.post(
           "/api/upload/image",
           uploadData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
+          {}
         );
 
         const imageUrl =

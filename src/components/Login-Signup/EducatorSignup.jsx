@@ -13,6 +13,7 @@ import {
   LuCirclePlus,
   LuHistory,
   LuSchool,
+  LuCamera,
 } from "react-icons/lu";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FiTrash2, FiVideo } from "react-icons/fi";
@@ -92,6 +93,8 @@ const EducatorSignup = () => {
   const [pendingUser, setPendingUser] = useState(null);
   const [showVerificationModal, setShowVerificationModal] = useState(false);
   const [isSameNumber, setIsSameNumber] = useState(false);
+  const [profilePicturePreview, setProfilePicturePreview] = useState(null);
+  const [isUploadingProfilePic, setIsUploadingProfilePic] = useState(false);
 
   const [formData, setFormData] = useState({
     // Personal Information
@@ -104,6 +107,8 @@ const EducatorSignup = () => {
     whatsappNumber: "",
     bio: "",
     introVideoLink: "",
+    profilePicture: "",
+    profilePicturePublicId: "",
     specialization: ["IIT-JEE"],
     subject: [],
 
@@ -343,10 +348,7 @@ const EducatorSignup = () => {
       const response = await API_CLIENT.post(
         "/api/videos/upload-to-vimeo",
         payload,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          timeout: 600000,
-        }
+        { timeout: 600000 }
       );
 
       const embedUrl =
@@ -370,6 +372,67 @@ const EducatorSignup = () => {
     } finally {
       setIsUploadingIntroVideo(false);
     }
+  };
+
+  const handleProfilePictureChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select a valid image file (JPG, PNG, WebP)");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Profile picture must be under 5MB");
+      return;
+    }
+
+    // Show local preview immediately
+    const reader = new FileReader();
+    reader.onload = (ev) => setProfilePicturePreview(ev.target.result);
+    reader.readAsDataURL(file);
+
+    // Auto-upload to ImageKit
+    setIsUploadingProfilePic(true);
+    const toastId = toast.loading("Uploading profile picture...");
+
+    try {
+      const payload = new FormData();
+      payload.append("image", file);
+
+      const response = await API_CLIENT.post(
+        "/api/upload/image?type=educator",
+        payload
+      );
+
+      const imageUrl = response?.data?.imageUrl;
+      const publicId = response?.data?.publicId || "";
+
+      if (!imageUrl) throw new Error("No image URL returned from server");
+
+      setFormData((prev) => ({
+        ...prev,
+        profilePicture: imageUrl,
+        profilePicturePublicId: publicId,
+      }));
+
+      toast.success("Profile picture uploaded", { id: toastId });
+    } catch (error) {
+      console.error("Profile picture upload failed:", error);
+      toast.error(
+        error?.response?.data?.message || error?.message || "Upload failed",
+        { id: toastId }
+      );
+      setProfilePicturePreview(null);
+    } finally {
+      setIsUploadingProfilePic(false);
+    }
+  };
+
+  const removeProfilePicture = () => {
+    setProfilePicturePreview(null);
+    setFormData((prev) => ({ ...prev, profilePicture: "", profilePicturePublicId: "" }));
   };
 
   const addExperience = () => {
@@ -680,6 +743,13 @@ const EducatorSignup = () => {
       submitData.introVideoLink = formData.introVideoLink.trim();
     }
 
+    if (formData.profilePicture) {
+      submitData.profilePicture = formData.profilePicture.trim();
+      if (formData.profilePicturePublicId) {
+        submitData.profilePicturePublicId = formData.profilePicturePublicId.trim();
+      }
+    }
+
     try {
       const response = await signupAsEducator(submitData);
       const createdEducator =
@@ -736,6 +806,55 @@ const EducatorSignup = () => {
 
   const renderPersonalInfo = () => (
     <div className="space-y-8">
+      {/* Profile Picture */}
+      <div className="flex flex-col items-center gap-3">
+        <div className="relative group">
+          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-slate-200 dark:border-gray-700 bg-slate-100 dark:bg-gray-800 flex items-center justify-center shadow-md">
+            {profilePicturePreview ? (
+              <img
+                src={profilePicturePreview}
+                alt="Profile preview"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <LuUser className="w-10 h-10 text-slate-400 dark:text-gray-500" />
+            )}
+          </div>
+          <label
+            htmlFor="profilePictureInput"
+            className={`absolute inset-0 rounded-full flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer ${isUploadingProfilePic ? "pointer-events-none" : ""}`}
+          >
+            {isUploadingProfilePic ? (
+              <LuLoaderCircle className="w-6 h-6 text-white animate-spin" />
+            ) : (
+              <LuCamera className="w-6 h-6 text-white" />
+            )}
+          </label>
+          <input
+            type="file"
+            id="profilePictureInput"
+            accept="image/jpeg,image/jpg,image/png,image/webp"
+            onChange={handleProfilePictureChange}
+            className="hidden"
+          />
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-sm font-semibold text-slate-700 dark:text-gray-200">
+            {formData.profilePicture ? "Profile picture uploaded" : "Add profile picture"}
+          </p>
+          <p className="text-xs text-slate-400 dark:text-gray-500">JPG, PNG or WebP · Max 5MB</p>
+          {formData.profilePicture && (
+            <button
+              type="button"
+              onClick={removeProfilePicture}
+              className="text-xs text-red-500 hover:text-red-700 font-medium mt-0.5 transition-colors"
+            >
+              Remove
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <label className="flex flex-col gap-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">

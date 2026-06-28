@@ -127,7 +127,6 @@ const EnrollButton = ({
       }
 
       const orderResponse = await createPaymentOrder({
-        studentId: actualStudentId,
         productId: itemId,
         productType,
       }).catch((err) => {
