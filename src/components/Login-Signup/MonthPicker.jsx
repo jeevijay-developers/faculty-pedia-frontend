@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { LuCalendar, LuChevronLeft, LuChevronRight } from "react-icons/lu";
@@ -82,33 +82,33 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
         type="button"
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-900 border border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all flex items-center justify-between ${
+        className={`w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 text-slate-900 dark:text-gray-100 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all flex items-center justify-between ${
           disabled
-            ? "bg-slate-50 text-slate-400 cursor-not-allowed"
+            ? "bg-slate-50 dark:bg-gray-800 text-slate-400 dark:text-gray-500 cursor-not-allowed"
             : "cursor-pointer hover:border-slate-300"
         } ${className || ""}`}
       >
-        <span className={!value ? "text-slate-400" : ""}>
+        <span className={!value ? "text-slate-400 dark:text-gray-500" : "dark:text-gray-100"}>
           {getDisplayValue()}
         </span>
         <LuCalendar className="h-5 w-5 text-slate-400" />
       </button>
 
       {isOpen && !disabled && (
-        <div className="absolute top-full mt-2 z-50 bg-white dark:bg-gray-900 border border-slate-200 rounded-xl shadow-xl p-4 w-80">
+        <div className="absolute top-full mt-2 z-50 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-xl shadow-xl p-4 w-80">
           {/* Year Navigation */}
           <div className="flex items-center justify-between mb-4">
             <button
               type="button"
               onClick={() => setSelectedYear(selectedYear - 1)}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-slate-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
             >
               <LuChevronLeft className="h-5 w-5 text-slate-600" />
             </button>
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="text-lg font-semibold text-slate-900 bg-transparent border-none focus:outline-none focus:ring-0 cursor-pointer hover:bg-slate-50 rounded-lg px-3 py-1"
+              className="text-lg font-semibold text-slate-900 dark:text-gray-100 bg-transparent dark:bg-transparent border-none focus:outline-none focus:ring-0 cursor-pointer hover:bg-slate-50 dark:hover:bg-gray-800 rounded-lg px-3 py-1"
             >
               {Array.from({ length: 100 }, (_, i) => currentYear + 10 - i).map(
                 (year) => (
@@ -121,7 +121,7 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
             <button
               type="button"
               onClick={() => setSelectedYear(selectedYear + 1)}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-slate-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
             >
               <LuChevronRight className="h-5 w-5 text-slate-600" />
             </button>
@@ -149,12 +149,12 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
                   disabled={isFutureMonth}
                   className={`py-3 px-4 rounded-lg text-sm font-medium transition-all ${
                     isFutureMonth
-                      ? "bg-slate-100 text-slate-300 cursor-not-allowed"
+                      ? "bg-slate-100 dark:bg-gray-800 text-slate-300 dark:text-gray-600 cursor-not-allowed"
                       : isSelected
                       ? "bg-blue-500 text-white shadow-md"
                       : isCurrent
                       ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 border border-blue-200"
-                      : "bg-slate-50 text-slate-700 hover:bg-slate-100"
+                      : "bg-slate-50 dark:bg-gray-800 text-slate-700 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-gray-700"
                   }`}
                 >
                   {month}
@@ -164,7 +164,7 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
           </div>
 
           {/* Quick Actions */}
-          <div className="flex gap-2 mt-4 pt-4 border-t border-slate-200">
+          <div className="flex gap-2 mt-4 pt-4 border-t border-slate-200 dark:border-gray-700">
             <button
               type="button"
               onClick={() => {
@@ -185,7 +185,7 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
                 onChange("");
                 setIsOpen(false);
               }}
-              className="flex-1 py-2 px-3 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+              className="flex-1 py-2 px-3 text-sm font-medium text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
             >
               Clear
             </button>
@@ -197,3 +197,4 @@ const MonthPicker = ({ value, onChange, disabled, placeholder, className, maxDat
 };
 
 export default MonthPicker;
+

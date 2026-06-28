@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -77,6 +77,12 @@ const parseSubjectInput = (value = "") => {
 
 const EducatorSignup = () => {
   const router = useRouter();
+  const educatorDashboardUrl = (
+    process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL ||
+    (process.env.NODE_ENV === "production"
+      ? "https://educator.facultypedia.com"
+      : "http://localhost:3001")
+  ).trim().replace(/\/+$/, "");
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -143,14 +149,14 @@ const EducatorSignup = () => {
   const progressWidth = `${((currentStep - 1) / (steps.length - 1)) * 100}%`;
 
   const inputClass = (hasError = false) =>
-    `w-full h-12 px-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm text-[#0e121b] placeholder-slate-400 focus:outline-none focus:ring-2 transition-colors ${
+    `w-full h-12 px-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm text-[#0e121b] dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
       hasError
         ? "border-red-300 focus:border-red-500 focus:ring-red-200"
         : "border-slate-200 dark:border-gray-700 focus:border-indigo-500 focus:ring-indigo-100"
     }`;
 
   const textareaClass = (hasError = false) =>
-    `w-full p-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm text-[#0e121b] placeholder-slate-400 focus:outline-none focus:ring-2 transition-colors resize-none ${
+    `w-full p-4 rounded-xl border bg-white dark:bg-gray-900 shadow-sm text-[#0e121b] dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors resize-none ${
       hasError
         ? "border-red-300 focus:border-red-500 focus:ring-red-200"
         : "border-slate-200 dark:border-gray-700 focus:border-indigo-500 focus:ring-indigo-100"
@@ -1108,7 +1114,7 @@ const EducatorSignup = () => {
                     e.target.value
                   )
                 }
-                className={`w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-4 transition-all ${
+                className={`w-full h-12 px-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-4 transition-all ${
                   errors[`workExperience.${index}.title`]
                     ? "border-red-300 focus:border-red-500 focus:ring-red-100"
                     : "border-slate-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500/10"
@@ -1140,7 +1146,7 @@ const EducatorSignup = () => {
                       e.target.value
                     )
                   }
-                  className={`w-full h-12 pl-11 pr-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-4 transition-all ${
+                  className={`w-full h-12 pl-11 pr-4 rounded-lg bg-white dark:bg-gray-900 border text-slate-900 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-4 transition-all ${
                     errors[`workExperience.${index}.company`]
                       ? "border-red-300 focus:border-red-500 focus:ring-red-100"
                       : "border-slate-200 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500/10"
@@ -1359,7 +1365,7 @@ const EducatorSignup = () => {
               id="linkedin"
               value={formData.socials.linkedin}
               onChange={(e) => handleSocialChange("linkedin", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://linkedin.com/in/yourprofile"
             />
           </div>
@@ -1382,7 +1388,7 @@ const EducatorSignup = () => {
               id="twitter"
               value={formData.socials.twitter}
               onChange={(e) => handleSocialChange("twitter", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://twitter.com/yourusername"
             />
           </div>
@@ -1405,7 +1411,7 @@ const EducatorSignup = () => {
               id="youtube"
               value={formData.socials.youtube}
               onChange={(e) => handleSocialChange("youtube", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://youtube.com/@channel"
             />
           </div>
@@ -1428,7 +1434,7 @@ const EducatorSignup = () => {
               id="instagram"
               value={formData.socials.instagram}
               onChange={(e) => handleSocialChange("instagram", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://instagram.com/yourusername"
             />
           </div>
@@ -1451,7 +1457,7 @@ const EducatorSignup = () => {
               id="facebook"
               value={formData.socials.facebook}
               onChange={(e) => handleSocialChange("facebook", e.target.value)}
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://facebook.com/yourprofile"
             />
           </div>
@@ -1472,7 +1478,7 @@ const EducatorSignup = () => {
             <input
               type="url"
               id="website"
-              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 dark:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+              className="w-full pl-11 pr-4 py-3 h-12 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-lg text-sm text-slate-800 dark:text-gray-100 placeholder:text-slate-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
               placeholder="https://yourwebsite.com"
             />
           </div>
@@ -1498,7 +1504,7 @@ const EducatorSignup = () => {
               </div>
             </div>
             <Link
-              href={`${process.env.NEXT_PUBLIC_EDUCATOR_DASHBOARD_URL}/login`}
+              href={`${educatorDashboardUrl}/login`}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-500 text-blue-500 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
             >
               Login
@@ -1619,3 +1625,5 @@ const EducatorSignup = () => {
 };
 
 export default EducatorSignup;
+
+
