@@ -70,8 +70,10 @@ const Login = ({
         return;
       }
 
-      // Call login API
-      const response = await loginUser(formData.email, formData.password, allowEducatorFallback);
+      // Call login API — never fall back to educator endpoint on a role-restricted portal
+      const useEducatorFallback =
+        allowEducatorFallback && restrictToRole !== "student";
+      const response = await loginUser(formData.email, formData.password, useEducatorFallback);
 
       // Block cross-role logins and show a helpful error
       if (restrictToRole === "student" && response.userType === "educator") {
